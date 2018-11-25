@@ -1,5 +1,9 @@
 package blockchyp
 
+import (
+  "errors"
+)
+
 /*
 Default client configuration constants.
 */
@@ -8,6 +12,7 @@ const (
   DefaultTestGatewayHost = "test.blockchyp.com"
   DefaultHTTPS = true
   DefaultRouteCacheTTL = 60 //in minutes
+  DefaultTimeout = 60 // in seconds
 )
 
 /*
@@ -18,6 +23,7 @@ type Client struct {
   GatewayHost string
   HTTPS bool
   RouteCacheTTL uint
+  Timeout uint64 //in seconds
 }
 
 /*
@@ -30,6 +36,18 @@ func NewClient(creds APICredentials) Client {
     HTTPS: DefaultHTTPS,
     RouteCacheTTL: DefaultRouteCacheTTL,
   }
+}
+
+/*
+AsyncCharge executes an asynchronous auth and capture.
+*/
+func (client *Client) AsyncCharge(request AuthorizationRequest, responseChan chan<- AuthorizationResponse) error {
+
+  if !isValidAsyncMethod(request.PaymentMethod) {
+    return newInvalidAsyncRequestError()
+  }
+
+  return nil
 }
 
 /*
@@ -51,11 +69,35 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 }
 
 /*
+AsyncPreauth executes an asynchronous preauthorization.
+*/
+func (client *Client) AsyncPreauth(request AuthorizationRequest, responseChan chan<- AuthorizationResponse) error {
+
+  if !isValidAsyncMethod(request.PaymentMethod) {
+    return newInvalidAsyncRequestError()
+  }
+
+  return nil
+}
+
+/*
 Preauth executes a preauthorization intended to be captured later.
 */
 func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationResponse, error) {
 
   return &AuthorizationResponse{}, nil
+}
+
+/*
+AsyncRefund executes an asynchronous refund
+*/
+func (client *Client) AsyncRefund(request AuthorizationRequest, responseChan chan<- AuthorizationResponse) error {
+
+  if !isValidAsyncMethod(request.PaymentMethod) {
+    return newInvalidAsyncRequestError()
+  }
+
+  return nil
 }
 
 /*
@@ -90,6 +132,19 @@ func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
   return &VoidResponse{}, nil
 }
 
+
+/*
+AsyncEnroll executes an asynchronous vault enrollment.
+*/
+func (client *Client) AsyncEnroll(request EnrollRequest, responseChan chan<- EnrollResponse) error {
+
+  if !isValidAsyncMethod(request.PaymentMethod) {
+    return newInvalidAsyncRequestError()
+  }
+
+  return nil
+}
+
 /*
 Enroll adds a new payment method to the token vault.
 */
@@ -121,4 +176,27 @@ func (client *Client) CloseBatch(request CloseBatchRequest) (*CloseBatchResponse
 
   return &CloseBatchResponse{}, nil
 
+}
+
+func isValidAsyncMethod(method PaymentMethod) bool {
+
+  if method.TerminalName == "" {
+    return false
+  } else if (method.Token != "") {
+    return false
+  } else if (method.Track1 != "") {
+    return false
+  } else if (method.Track2 != "") {
+    return false
+  } else if (method.PAN != "") {
+    return false
+  }
+
+
+  return true
+
+}
+
+func newInvalidAsyncRequestError() error {
+  return errors.New("async requests must be terminal requests")
 }
