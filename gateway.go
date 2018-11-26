@@ -3,6 +3,7 @@ package blockchyp
 import (
   "bytes"
   "net/http"
+  "errors"
   "time"
   "encoding/hex"
   "encoding/json"
@@ -86,6 +87,9 @@ func (client *Client) GatewayPost(path string, requestEntity interface{}, respon
     return err
   }
   defer resp.Body.Close()
+  if resp.StatusCode != 200 {
+    return errors.New(resp.Status)
+  }
 
 	err = consumeResponse(resp, responseEntity)
 
@@ -112,6 +116,9 @@ func (client *Client) GatewayGet(path string, responseEntity interface{}) error 
     return err
   }
   defer resp.Body.Close()
+  if resp.StatusCode != 200 {
+    return errors.New(resp.Status)
+  }
 
 	err = consumeResponse(resp, responseEntity)
 
