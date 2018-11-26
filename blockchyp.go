@@ -64,7 +64,7 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 
   } else {
     authResponse := AuthorizationResponse{}
-    err := client.gatewayPost("/charge", request, &authResponse)
+    err := client.GatewayPost("/charge", request, &authResponse)
     return &authResponse, err
   }
 
@@ -96,7 +96,7 @@ func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationRespo
 
   } else {
     authResponse := AuthorizationResponse{}
-    err := client.gatewayPost("/preauth", request, &authResponse)
+    err := client.GatewayPost("/preauth", request, &authResponse)
     return &authResponse, err
   }
 
@@ -138,7 +138,7 @@ Capture captures a preauthorization.
 func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) {
 
   captureResponse := CaptureResponse{}
-  err := client.gatewayPost("/capture", request, &captureResponse)
+  err := client.GatewayPost("/capture", request, &captureResponse)
   return &captureResponse, err
 
 }
@@ -149,7 +149,7 @@ Void discards a previous preauth transaction.
 func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
 
   voidResponse := VoidResponse{}
-  err := client.gatewayPost("/void", request, &voidResponse)
+  err := client.GatewayPost("/void", request, &voidResponse)
   return &voidResponse, err
 }
 

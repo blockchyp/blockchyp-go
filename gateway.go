@@ -60,7 +60,7 @@ func consumeResponse(resp *http.Response, responseEntity interface{}) error {
   return nil
 }
 
-func (client *Client) gatewayPost(path string, requestEntity interface{}, responseEntity interface{}) error {
+func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}) error {
 
   httpClient := &http.Client{}
 
@@ -89,7 +89,7 @@ func (client *Client) gatewayPost(path string, requestEntity interface{}, respon
   return err
 }
 
-func (client *Client) gatewayGet(path string, responseEntity interface{}) error {
+func (client *Client) GatewayGet(path string, responseEntity interface{}) error {
 
   httpClient := &http.Client{}
 

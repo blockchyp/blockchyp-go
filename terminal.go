@@ -62,7 +62,7 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
   if route == nil {
     path := "/terminal-route?terminal=" + url.QueryEscape(terminalName)
     routeResponse := TerminalRouteResponse{}
-    err := client.gatewayGet(path, &routeResponse)
+    err := client.GatewayGet(path, &routeResponse)
     if err != nil {
       log.Fatal(err)
       return routeResponse.TerminalRoute, err
