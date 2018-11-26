@@ -148,7 +148,9 @@ Void discards a previous preauth transaction.
 */
 func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
 
-  return &VoidResponse{}, nil
+  voidResponse := VoidResponse{}
+  err := client.gatewayPost("/void", request, &voidResponse)
+  return &voidResponse, err
 }
 
 

@@ -72,6 +72,45 @@ func newTestClient(t *testing.T) Client {
 
 }
 
+func TestMSRVoid(t *testing.T) {
+
+	request := AuthorizationRequest{}
+	request.Amount = "45.00"
+	request.Track1 = testTrack1
+	request.Track2 = testTrack2
+
+	logRequest(request)
+
+	client := newTestClient(t)
+
+	response, err := client.Preauth(request)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	logResponse(response)
+
+	assertConventionalApproval(t, *response)
+
+	voidRequest := VoidRequest{}
+	voidRequest.TransactionID = response.TransactionID
+
+
+	logRequest(voidRequest)
+
+	voidResponse, err := client.Void(voidRequest)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	logResponse(voidResponse)
+
+	assertVoidApproval(t, *voidResponse)
+
+}
+
 
 func TestMSRPreauth(t *testing.T) {
 
@@ -202,6 +241,19 @@ func TestMinimalCharge(t *testing.T) {
 
 }
 
+func assertVoidApproval(t *testing.T, response VoidResponse) {
+
+	assert := assert.New(t)
+
+	assert.True(response.Approved)
+	assert.NotEmpty(response.TransactionID)
+	assert.NotEmpty(response.PaymentType)
+	assert.NotEmpty(response.EntryMethod)
+	assert.Equal("Approved", response.ResponseDescription)
+	assert.NotEmpty(response.Timestamp)
+	assert.NotEmpty(response.TickBlock)
+
+}
 
 func assertCaptureApproval(t *testing.T, response CaptureResponse) {
 
@@ -220,7 +272,6 @@ func assertCaptureApproval(t *testing.T, response CaptureResponse) {
 	assert.NotEmpty(response.AuthorizedAmount)
 	assert.NotEmpty(response.TipAmount)
 	assert.NotEmpty(response.TaxAmount)
-
 
 }
 
