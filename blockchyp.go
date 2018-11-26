@@ -2,6 +2,7 @@ package blockchyp
 
 import (
   "errors"
+  "time"
 )
 
 /*
@@ -22,7 +23,7 @@ type Client struct {
   Credentials APICredentials
   GatewayHost string
   HTTPS bool
-  RouteCacheTTL uint
+  RouteCacheTTL time.Duration
   Timeout uint64 //in seconds
 }
 
@@ -56,7 +57,7 @@ Charge executes a standard direct preauth and capture.
 func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationResponse, error) {
 
   if isTerminalRouted(request.PaymentMethod) {
-    _, err := resolveTerminalRoute(client.Credentials, request.TerminalName)
+    _, err := client.resolveTerminalRoute(request.TerminalName)
     if err != nil {
       return nil, err
     }

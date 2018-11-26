@@ -74,12 +74,76 @@ type CoreRequest struct {
 }
 
 /*
+CoreResponse models elements common to all API responses.
+*/
+type CoreResponse struct {
+  TransactionID string `json:"transactionId"`
+  TransactionRef string `json:"transactionRef,omitempty"`
+  TransactionType string `json:"transactionType"`
+  Timestamp string `json:"timestamp"`
+  LatestTickBlock string `json:"latestTickBlock"`
+}
+
+
+/*
+ApprovalResponse models data related to approval or failure of a transaction.
+*/
+type ApprovalResponse struct {
+  Approved bool `json:"approved"`
+  ResponseDescription string `json:"approvalDescription"`
+}
+
+/*
 AuthorizationResponse models the response to authorization requests.
 */
 type AuthorizationResponse struct {
-
+  CoreResponse
+  ApprovalResponse
+  PaymentMethodResponse
+  PaymentAmounts
+  Sig string `json:"sig,omitempty"`
 }
 
+/*
+PaymentAmounts models the amounts and currency data in responses.
+*/
+type PaymentAmounts struct {
+  PartialAuth bool `json:"partialAuth"`
+  AltCurrency bool `json:"altCurrency"`
+  CurrencyCode string `json:"currencyCode"`
+  RequestedAmount string `json:"requestedAmount"`
+  AuthorizedAmount string `json:"authorizedAmount"`
+  TipAmount string `json:"tipAmount,omitempty"`
+  TaxAmount string `json:"taxAmount,omitempty"`
+}
+
+
+/*
+PaymentMethodResponse models response data about payment methods.  Could be
+used for non-authorization transactions that still work with payment methods.
+*/
+type PaymentMethodResponse struct {
+  Token string `json:"token,omitempty"`
+  EntryMethod string `json:"entryMethod,omitempty"`
+  PaymentType string `json:"paymentType,omitempty"`
+  MaskedPAN string `json:"maskedPan,omitempty"`
+  PublicKey string `json:"publicKey,omitempty"`
+  ScopeAlert bool `json:"scopeAlert,omitempty"`
+  ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions,omitempty"`
+}
+
+/*
+ReceiptSuggestions models EMV fields we recommend developers put on their receipts.
+*/
+type ReceiptSuggestions struct {
+  AID string `json:"AID,omitempty"`
+  ARQC string `json:"ARQC,omitempty"`
+  IAD string `json:"IAD,omitempty"`
+  ARC string `json:"ARC,omitempty"`
+  TC string `json:"TC,omitempty"`
+  TVR string `json:"TVR,omitempty"`
+  TSR string `json:"TSR,omitempty"`
+}
 
 /*
 CaptureRequest models the information needed to capture a preauth.

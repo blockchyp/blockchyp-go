@@ -1,5 +1,23 @@
 package blockchyp
 
+import (
+  "log"
+  "time"
+  "net/url"
+  "encoding/json"
+)
+
+
+var (
+  routeCache map[string]routeCacheEntry
+)
+
+
+type routeCacheEntry struct {
+  TTL time.Time
+  Route TerminalRoute
+}
+
 /*
 TerminalRequest adds API credentials to auth requests for use in
 direct terminal transactions.
@@ -35,9 +53,62 @@ type RawPublicKey struct {
 resolveTerminalRoute returns the route to the given terminal along with
 transient credentials mapped to the given API credentials.
 */
-func resolveTerminalRoute(creds APICredentials, terminalName string) (TerminalRoute, error) {
+func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, error) {
 
-  return TerminalRoute{}, nil
+  log.Println("Resolving terminal route...")
+
+  route := client.routeCacheGet(terminalName)
+
+  if route == nil {
+    path := "/terminal-route?terminal=" + url.QueryEscape(terminalName)
+    routeResponse := TerminalRouteResponse{}
+    err := client.gatewayGet(path, &routeResponse)
+    if err != nil {
+      log.Fatal(err)
+      return routeResponse.TerminalRoute, err
+    }
+    if routeResponse.Success {
+      route = &routeResponse.TerminalRoute
+      client.routeCachePut(*route)
+    }
+  }
+
+  content, _ := json.Marshal(route)
+
+  log.Println(string(content))
+
+  return *route, nil
+
+}
+
+func (client *Client) routeCachePut(terminalRoute TerminalRoute) {
+
+  if routeCache == nil {
+    routeCache = make(map[string]routeCacheEntry)
+  }
+
+  cacheEntry := routeCacheEntry{
+    Route: terminalRoute,
+    TTL: time.Now().Add(client.RouteCacheTTL * time.Minute),
+  }
+
+  routeCache[terminalRoute.TerminalName] = cacheEntry
+
+}
+
+func (client *Client) routeCacheGet(terminalName string) *TerminalRoute {
+
+  if routeCache == nil {
+    return nil
+  }
+  route, ok := routeCache[terminalName]
+  if ok {
+    if time.Now().After(route.TTL) {
+      return nil
+    }
+    return &route.Route
+  }
+  return nil
 
 }
 
