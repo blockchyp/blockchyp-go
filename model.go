@@ -91,6 +91,7 @@ ApprovalResponse models data related to approval or failure of a transaction.
 type ApprovalResponse struct {
   Approved bool `json:"approved"`
   ResponseDescription string `json:"approvalDescription"`
+  AuthCode string `json:"authCode"`
 }
 
 /*
