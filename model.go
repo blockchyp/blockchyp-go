@@ -160,7 +160,10 @@ type CaptureRequest struct {
 CaptureResponse models the response to a capture request.
 */
 type CaptureResponse struct {
-
+  CoreResponse
+  ApprovalResponse
+  PaymentMethodResponse
+  PaymentAmounts
 }
 
 /*
@@ -175,7 +178,9 @@ type VoidRequest struct {
 VoidResponse models the response to a void request.
 */
 type VoidResponse struct {
-
+  CoreResponse
+  ApprovalResponse
+  PaymentMethodResponse
 }
 
 /*
