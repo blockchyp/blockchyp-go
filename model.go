@@ -11,7 +11,7 @@ type APICredentials struct {
 }
 
 /*
-AuthorizationRequest models auth requests for charge, preauth, refund,
+AuthorizationRequest models auth requests for charge, preauth,
 and reverse transaction types.
 */
 type AuthorizationRequest struct {
@@ -23,6 +23,17 @@ type AuthorizationRequest struct {
   Description string `json:"description,omitempty"`
   PromptForTip bool `json:"promptForTip,omitempty"`
   AltPrices map[string]string `json:"altPrices,omitempty"`
+}
+
+/*
+RefundRequest models refund requests.
+*/
+type RefundRequest struct {
+  CoreRequest
+  PaymentMethod
+  RequestAmount
+  Subtotals
+  PreviousTransaction
 }
 
 /*

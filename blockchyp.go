@@ -119,7 +119,7 @@ func (client *Client) AsyncRefund(request AuthorizationRequest, responseChan cha
 /*
 Refund executes a refund.
 */
-func (client *Client) Refund(request AuthorizationRequest) (*AuthorizationResponse, error) {
+func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, error) {
 
   return &AuthorizationResponse{}, nil
 }
