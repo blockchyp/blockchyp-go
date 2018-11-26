@@ -7,6 +7,9 @@ import (
   "log"
   "encoding/json"
 	"io/ioutil"
+	"strings"
+
+	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -101,25 +104,7 @@ func TestMSRCharge(t *testing.T) {
 
 	log.Println("SDK Response:", string(content))
 
-	if response.TransactionID == "" {
-		t.Error("transaction id not returned")
-	}
-
-	if !response.Approved {
-		t.Error("transaction was not approved")
-	}
-
-	if response.EntryMethod != "SWIPE" {
-		t.Error("entry method not swipe")
-	}
-
-	if response.PaymentType != "VISA" {
-		t.Error("payment type not VISA")
-	}
-
-	if !response.ScopeAlert {
-		t.Error("transaction failed to trigger scope alert")
-	}
+	assertConventionalApproval(t, *response)
 
 }
 
@@ -157,12 +142,26 @@ func TestMinimalCharge(t *testing.T) {
 
 	log.Println("SDK Response:", string(content))
 
-	if response.TransactionID == "" {
-		t.Error("transaction id not returned")
-	}
+	assertConventionalApproval(t, *response)
+	assert := assert.New(t)
 
-	if response.Approved == false {
-		t.Error("transaction was not approved")
-	}
+	assert.Equal("VISA", response.PaymentType)
+	assert.Equal("SWIPE", response.EntryMethod)
+	assert.True(strings.Contains(response.MaskedPAN, "*1111"))
+
+}
+
+func assertConventionalApproval(t *testing.T, response AuthorizationResponse) {
+
+	assert := assert.New(t)
+
+	assert.True(response.Approved)
+	assert.False(response.PartialAuth)
+	assert.NotEmpty(response.TransactionID)
+	assert.NotEmpty(response.PaymentType)
+	assert.NotEmpty(response.EntryMethod)
+	assert.Equal("Approved", response.ResponseDescription)
+	assert.Equal("USD", response.CurrencyCode)
+
 
 }

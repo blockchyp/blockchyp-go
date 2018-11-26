@@ -77,6 +77,7 @@ type CoreRequest struct {
 CoreResponse models elements common to all API responses.
 */
 type CoreResponse struct {
+  ResponseDescription string `json:"responseDescription"`
   TransactionID string `json:"transactionId"`
   TransactionRef string `json:"transactionRef,omitempty"`
   TransactionType string `json:"transactionType"`
@@ -90,7 +91,6 @@ ApprovalResponse models data related to approval or failure of a transaction.
 */
 type ApprovalResponse struct {
   Approved bool `json:"approved"`
-  ResponseDescription string `json:"approvalDescription"`
   AuthCode string `json:"authCode"`
 }
 
