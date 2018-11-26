@@ -196,7 +196,9 @@ type EnrollRequest struct {
 EnrollResponse models the response to an enroll request.
 */
 type EnrollResponse struct {
-
+  CoreResponse
+  PaymentMethod
+  ApprovalResponse
 }
 
 /*
@@ -211,7 +213,7 @@ type PingRequest struct {
 PingResponse models the response to a ping request.
 */
 type PingResponse struct {
-
+  CoreResponse
 }
 
 /*
