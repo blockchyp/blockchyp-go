@@ -36,12 +36,6 @@ func (client *Client) assembleFullURL(path string) string {
 
   buffer := bytes.Buffer{}
 
-  if client.HTTPS {
-    buffer.WriteString("https://")
-  } else {
-    buffer.WriteString("http://")
-  }
-
   buffer.WriteString(client.GatewayHost)
   buffer.WriteString("/api")
   buffer.WriteString(path)
