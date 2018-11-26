@@ -66,6 +66,35 @@ func consumeResponse(resp *http.Response, responseEntity interface{}) error {
   return nil
 }
 
+func (client *Client) gatewayPost(path string, requestEntity interface{}, responseEntity interface{}) error {
+
+  httpClient := &http.Client{}
+
+  content, err := json.Marshal(requestEntity)
+  if err != nil {
+    return err
+  }
+
+  req, err := http.NewRequest("POST", client.assembleFullURL(path), bytes.NewBuffer(content))
+  if err != nil {
+    return err
+  }
+
+  err = addAPIRequestHeaders(req, client.Credentials)
+  if err != nil {
+    return err
+  }
+  resp, err := httpClient.Do(req)
+  if err != nil {
+    return err
+  }
+  defer resp.Body.Close()
+
+	err = consumeResponse(resp, responseEntity)
+
+  return err
+}
+
 func (client *Client) gatewayGet(path string, responseEntity interface{}) error {
 
   httpClient := &http.Client{}

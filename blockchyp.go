@@ -63,7 +63,9 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
     }
 
   } else {
-
+    authResponse := AuthorizationResponse{}
+    err := client.gatewayPost("/charge", request, &authResponse)
+    return &authResponse, err
   }
 
   return &AuthorizationResponse{}, nil
