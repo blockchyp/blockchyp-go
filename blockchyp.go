@@ -88,7 +88,20 @@ Preauth executes a preauthorization intended to be captured later.
 */
 func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationResponse, error) {
 
+  if isTerminalRouted(request.PaymentMethod) {
+    _, err := client.resolveTerminalRoute(request.TerminalName)
+    if err != nil {
+      return nil, err
+    }
+
+  } else {
+    authResponse := AuthorizationResponse{}
+    err := client.gatewayPost("/preauth", request, &authResponse)
+    return &authResponse, err
+  }
+
   return &AuthorizationResponse{}, nil
+
 }
 
 /*
@@ -124,7 +137,10 @@ Capture captures a preauthorization.
 */
 func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) {
 
-  return &CaptureResponse{}, nil
+  captureResponse := CaptureResponse{}
+  err := client.gatewayPost("/capture", request, &captureResponse)
+  return &captureResponse, err
+
 }
 
 /*

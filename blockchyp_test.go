@@ -7,7 +7,6 @@ import (
   "log"
   "encoding/json"
 	"io/ioutil"
-	"strings"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -71,6 +70,58 @@ func newTestClient(t *testing.T) Client {
 
 	return client
 
+}
+
+
+func TestMSRPreauth(t *testing.T) {
+
+	request := AuthorizationRequest{}
+	request.Amount = "45.00"
+	request.Track1 = testTrack1
+	request.Track2 = testTrack2
+
+	logRequest(request)
+
+	client := newTestClient(t)
+
+	response, err := client.Preauth(request)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	logResponse(response)
+
+	assertConventionalApproval(t, *response)
+
+	captureRequest := CaptureRequest{}
+	captureRequest.TransactionID = response.TransactionID
+	captureRequest.Amount = "50.00"
+	captureRequest.TipAmount = "5.00"
+
+	logRequest(captureRequest)
+
+	captureResponse, err := client.Capture(captureRequest)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	logResponse(captureResponse)
+
+	assertCaptureApproval(t, *captureResponse)
+
+}
+
+func logRequest(request interface{}) {
+	content, _ := json.Marshal(request)
+	log.Println("Request:", string(content))
+}
+
+
+func logResponse(response interface{}) {
+	content, _ := json.Marshal(response)
+	log.Println("Response:", string(content))
 }
 
 func TestMSRCharge(t *testing.T) {
@@ -147,7 +198,29 @@ func TestMinimalCharge(t *testing.T) {
 
 	assert.Equal("VISA", response.PaymentType)
 	assert.Equal("SWIPE", response.EntryMethod)
-	assert.True(strings.Contains(response.MaskedPAN, "*1111"))
+	assert.Contains(response.MaskedPAN, "*1111")
+
+}
+
+
+func assertCaptureApproval(t *testing.T, response CaptureResponse) {
+
+	assert := assert.New(t)
+
+	assert.True(response.Approved)
+	assert.False(response.PartialAuth)
+	assert.NotEmpty(response.TransactionID)
+	assert.NotEmpty(response.PaymentType)
+	assert.NotEmpty(response.EntryMethod)
+	assert.Equal("Approved", response.ResponseDescription)
+	assert.Equal("USD", response.CurrencyCode)
+	assert.NotEmpty(response.Timestamp)
+	assert.NotEmpty(response.TickBlock)
+	assert.NotEmpty(response.RequestedAmount)
+	assert.NotEmpty(response.AuthorizedAmount)
+	assert.NotEmpty(response.TipAmount)
+	assert.NotEmpty(response.TaxAmount)
+
 
 }
 
@@ -163,7 +236,11 @@ func assertConventionalApproval(t *testing.T, response AuthorizationResponse) {
 	assert.Equal("Approved", response.ResponseDescription)
 	assert.Equal("USD", response.CurrencyCode)
 	assert.NotEmpty(response.Timestamp)
-	assert.NotEmpty(response.LatestTickBlock)
+	assert.NotEmpty(response.TickBlock)
+	assert.NotEmpty(response.RequestedAmount)
+	assert.NotEmpty(response.AuthorizedAmount)
+	assert.NotEmpty(response.TipAmount)
+	assert.NotEmpty(response.TaxAmount)
 
 
 }
