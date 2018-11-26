@@ -197,7 +197,7 @@ EnrollResponse models the response to an enroll request.
 */
 type EnrollResponse struct {
   CoreResponse
-  PaymentMethod
+  PaymentMethodResponse
   ApprovalResponse
 }
 
