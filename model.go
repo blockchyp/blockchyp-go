@@ -82,7 +82,7 @@ type CoreResponse struct {
   TransactionRef string `json:"transactionRef,omitempty"`
   TransactionType string `json:"transactionType"`
   Timestamp string `json:"timestamp"`
-  LatestTickBlock string `json:"latestTickBlock"`
+  TickBlock string `json:"tickBlock"`
 }
 
 

@@ -162,6 +162,8 @@ func assertConventionalApproval(t *testing.T, response AuthorizationResponse) {
 	assert.NotEmpty(response.EntryMethod)
 	assert.Equal("Approved", response.ResponseDescription)
 	assert.Equal("USD", response.CurrencyCode)
+	assert.NotEmpty(response.Timestamp)
+	assert.NotEmpty(response.LatestTickBlock)
 
 
 }
