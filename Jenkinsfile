@@ -35,11 +35,13 @@ pipeline {
           }
         }
 
+        /*
         stage('Test') {
           steps {
             sh "make test"
           }
         }
+        */
       }
 
       post {
