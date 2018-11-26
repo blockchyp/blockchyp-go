@@ -121,6 +121,18 @@ Refund executes a refund.
 */
 func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, error) {
 
+  if isTerminalRouted(request.PaymentMethod) {
+    _, err := client.resolveTerminalRoute(request.TerminalName)
+    if err != nil {
+      return nil, err
+    }
+
+  } else {
+    authResponse := AuthorizationResponse{}
+    err := client.GatewayPost("/refund", request, &authResponse)
+    return &authResponse, err
+  }
+
   return &AuthorizationResponse{}, nil
 }
 
@@ -129,7 +141,10 @@ Reverse executes a manual time out reversal.
 */
 func (client *Client) Reverse(request AuthorizationRequest) (*AuthorizationResponse, error) {
 
-  return &AuthorizationResponse{}, nil
+  authResponse := AuthorizationResponse{}
+  err := client.GatewayPost("/reverse", request, &authResponse)
+  return &authResponse, err
+
 }
 
 /*
