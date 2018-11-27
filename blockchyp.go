@@ -186,6 +186,18 @@ Enroll adds a new payment method to the token vault.
 */
 func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 
+  if isTerminalRouted(request.PaymentMethod) {
+    _, err := client.resolveTerminalRoute(request.TerminalName)
+    if err != nil {
+      return nil, err
+    }
+
+  } else {
+    enrollResponse := EnrollResponse{}
+    err := client.GatewayPost("/enroll", request, &enrollResponse)
+    return &enrollResponse, err
+  }
+
   return &EnrollResponse{}, nil
 }
 
