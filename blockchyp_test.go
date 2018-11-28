@@ -198,6 +198,50 @@ func TestMSRCharge(t *testing.T) {
 
 }
 
+func TestCard01(t *testing.T) {
+
+	config := loadTestConfiguration(t)
+
+  request := AuthorizationRequest{}
+  request.Amount = "20.55"
+  request.TerminalName = config.DefaultTerminalName
+
+
+  content, err := json.Marshal(request)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+
+  log.Println("SDK Request:", string(content))
+
+	client := newTestClient(t)
+
+	response, err := client.Charge(request)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	content, err = json.Marshal(response)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	log.Println("SDK Response:", string(content))
+
+	assertConventionalApproval(t, *response)
+	assert := assert.New(t)
+
+	assert.Equal("VISA", response.PaymentType)
+	assert.Equal("CHIP", response.EntryMethod)
+	assert.Contains(response.MaskedPAN, "*0010")
+	assert.NotEmpty(response.ReceiptSuggestions)
+
+}
+
 func TestMinimalCharge(t *testing.T) {
 
 	config := loadTestConfiguration(t)
@@ -292,6 +336,7 @@ func assertConventionalApproval(t *testing.T, response AuthorizationResponse) {
 	assert.NotEmpty(response.AuthorizedAmount)
 	assert.NotEmpty(response.TipAmount)
 	assert.NotEmpty(response.TaxAmount)
+	assert.NotEmpty(response.AuthCode)
 
 
 }

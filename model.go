@@ -154,7 +154,7 @@ type ReceiptSuggestions struct {
   ARC string `json:"ARC,omitempty"`
   TC string `json:"TC,omitempty"`
   TVR string `json:"TVR,omitempty"`
-  TSR string `json:"TSR,omitempty"`
+  TSI string `json:"TSI,omitempty"`
 }
 
 /*
