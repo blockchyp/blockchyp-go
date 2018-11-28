@@ -3,19 +3,19 @@
 package blockchyp
 
 import (
-	"testing"
-  "log"
-  "encoding/json"
+	"encoding/json"
 	"io/ioutil"
+	"log"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 const (
 	defaultConfigLocation = "/etc/blockchyp/sdk-itest-config.json"
-	testPAN = "4111111111111111"
-	testTrack1 = "B4111111111111111^SATOSHI/NAKAMOTO^2512101000003280"
-	testTrack2 = "4111111111111111=2512101000003280"
+	testPAN               = "4111111111111111"
+	testTrack1            = "B4111111111111111^SATOSHI/NAKAMOTO^2512101000003280"
+	testTrack2            = "4111111111111111=2512101000003280"
 )
 
 var (
@@ -23,18 +23,17 @@ var (
 )
 
 type TestConfiguration struct {
-	GatewayHost string `json:"gatewayHost"`
-	DefaultTerminalName string `json:"defaultTerminalName"`
+	GatewayHost            string `json:"gatewayHost"`
+	DefaultTerminalName    string `json:"defaultTerminalName"`
 	DefaultTerminalAddress string `json:"defaultTerminalAddress"`
-	APIKey string `json:"apiKey"`
-	BearerToken string `json:"bearerToken"`
-	SigningKey string `json:"signingKey"`
+	APIKey                 string `json:"apiKey"`
+	BearerToken            string `json:"bearerToken"`
+	SigningKey             string `json:"signingKey"`
 }
 
 func loadTestConfiguration(t *testing.T) TestConfiguration {
 
 	if testConfig == nil {
-
 
 		content, err := ioutil.ReadFile(defaultConfigLocation)
 		if err != nil {
@@ -59,9 +58,9 @@ func newTestClient(t *testing.T) Client {
 	config := loadTestConfiguration(t)
 
 	creds := APICredentials{
-		APIKey: config.APIKey,
+		APIKey:      config.APIKey,
 		BearerToken: config.BearerToken,
-		SigningKey: config.SigningKey,
+		SigningKey:  config.SigningKey,
 	}
 
 	client := NewClient(creds)
@@ -96,7 +95,6 @@ func TestMSRVoid(t *testing.T) {
 	voidRequest := VoidRequest{}
 	voidRequest.TransactionID = response.TransactionID
 
-
 	logRequest(voidRequest)
 
 	voidResponse, err := client.Void(voidRequest)
@@ -110,7 +108,6 @@ func TestMSRVoid(t *testing.T) {
 	assertVoidApproval(t, *voidResponse)
 
 }
-
 
 func TestMSRPreauth(t *testing.T) {
 
@@ -157,7 +154,6 @@ func logRequest(request interface{}) {
 	log.Println("Request:", string(content))
 }
 
-
 func logResponse(response interface{}) {
 	content, _ := json.Marshal(response)
 	log.Println("Response:", string(content))
@@ -202,19 +198,17 @@ func TestCard01(t *testing.T) {
 
 	config := loadTestConfiguration(t)
 
-  request := AuthorizationRequest{}
-  request.Amount = "20.55"
-  request.TerminalName = config.DefaultTerminalName
+	request := AuthorizationRequest{}
+	request.Amount = "20.55"
+	request.TerminalName = config.DefaultTerminalName
 
-
-  content, err := json.Marshal(request)
+	content, err := json.Marshal(request)
 
 	if err != nil {
 		t.Error(err)
 	}
 
-
-  log.Println("SDK Request:", string(content))
+	log.Println("SDK Request:", string(content))
 
 	client := newTestClient(t)
 
@@ -246,19 +240,17 @@ func TestMinimalCharge(t *testing.T) {
 
 	config := loadTestConfiguration(t)
 
-  request := AuthorizationRequest{}
-  request.Amount = "20.55"
-  request.TerminalName = config.DefaultTerminalName
+	request := AuthorizationRequest{}
+	request.Amount = "20.55"
+	request.TerminalName = config.DefaultTerminalName
 
-
-  content, err := json.Marshal(request)
+	content, err := json.Marshal(request)
 
 	if err != nil {
 		t.Error(err)
 	}
 
-
-  log.Println("SDK Request:", string(content))
+	log.Println("SDK Request:", string(content))
 
 	client := newTestClient(t)
 
@@ -337,6 +329,5 @@ func assertConventionalApproval(t *testing.T, response AuthorizationResponse) {
 	assert.NotEmpty(response.TipAmount)
 	assert.NotEmpty(response.TaxAmount)
 	assert.NotEmpty(response.AuthCode)
-
 
 }

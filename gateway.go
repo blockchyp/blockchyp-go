@@ -1,25 +1,25 @@
 package blockchyp
 
 import (
-  "bytes"
-  "net/http"
-  "errors"
-  "time"
-  "encoding/hex"
-  "encoding/json"
-  "math/rand"
-  "crypto/hmac"
-  "crypto/sha256"
-  "io/ioutil"
+	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"io/ioutil"
+	"math/rand"
+	"net/http"
+	"time"
 )
 
 /*
 TerminalRouteResponse models a terminal route response from the gateway.
 */
 type TerminalRouteResponse struct {
-  TerminalRoute
-  Success bool `json:"success"`
-  Error string `json:"error"`
+	TerminalRoute
+	Success bool   `json:"success"`
+	Error   string `json:"error"`
 }
 
 /*
@@ -33,33 +33,32 @@ type APIRequestHeaders struct {
 	Signature   string
 }
 
-
 func (client *Client) assembleGatewayURL(path string) string {
 
-  buffer := bytes.Buffer{}
+	buffer := bytes.Buffer{}
 
-  buffer.WriteString(client.GatewayHost)
-  buffer.WriteString("/api")
-  buffer.WriteString(path)
-  return buffer.String()
+	buffer.WriteString(client.GatewayHost)
+	buffer.WriteString("/api")
+	buffer.WriteString(path)
+	return buffer.String()
 
 }
 
 func consumeResponse(resp *http.Response, responseEntity interface{}) error {
 
-  b, err := ioutil.ReadAll(resp.Body)
+	b, err := ioutil.ReadAll(resp.Body)
 
-  if err != nil {
-    return err
-  }
+	if err != nil {
+		return err
+	}
 
-  err = json.Unmarshal(b, responseEntity)
+	err = json.Unmarshal(b, responseEntity)
 
-  if err != nil {
-    return err
-  }
+	if err != nil {
+		return err
+	}
 
-  return nil
+	return nil
 }
 
 /*
@@ -67,65 +66,65 @@ GatewayPost posts a request to the api gateway.
 */
 func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}) error {
 
-  httpClient := &http.Client{}
+	httpClient := &http.Client{}
 
-  content, err := json.Marshal(requestEntity)
-  if err != nil {
-    return err
-  }
+	content, err := json.Marshal(requestEntity)
+	if err != nil {
+		return err
+	}
 
-  req, err := http.NewRequest("POST", client.assembleGatewayURL(path), bytes.NewBuffer(content))
-  if err != nil {
-    return err
-  }
+	req, err := http.NewRequest("POST", client.assembleGatewayURL(path), bytes.NewBuffer(content))
+	if err != nil {
+		return err
+	}
 
-  err = addAPIRequestHeaders(req, client.Credentials)
-  if err != nil {
-    return err
-  }
-  resp, err := httpClient.Do(req)
-  if err != nil {
-    return err
-  }
-  defer resp.Body.Close()
-  if resp.StatusCode != 200 {
-    return errors.New(resp.Status)
-  }
+	err = addAPIRequestHeaders(req, client.Credentials)
+	if err != nil {
+		return err
+	}
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return errors.New(resp.Status)
+	}
 
 	err = consumeResponse(resp, responseEntity)
 
-  return err
+	return err
 }
+
 /*
 GatewayGet retrieves a get request from the api gateway.
 */
 func (client *Client) GatewayGet(path string, responseEntity interface{}) error {
 
-  httpClient := &http.Client{}
+	httpClient := &http.Client{}
 
-  req, err := http.NewRequest("GET", client.assembleGatewayURL(path), nil)
-  if err != nil {
-    return err
-  }
+	req, err := http.NewRequest("GET", client.assembleGatewayURL(path), nil)
+	if err != nil {
+		return err
+	}
 
-  err = addAPIRequestHeaders(req, client.Credentials)
-  if err != nil {
-    return err
-  }
-  resp, err := httpClient.Do(req)
-  if err != nil {
-    return err
-  }
-  defer resp.Body.Close()
-  if resp.StatusCode != 200 {
-    return errors.New(resp.Status)
-  }
+	err = addAPIRequestHeaders(req, client.Credentials)
+	if err != nil {
+		return err
+	}
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return errors.New(resp.Status)
+	}
 
 	err = consumeResponse(resp, responseEntity)
 
-  return err
+	return err
 }
-
 
 /*
 PopulateHeaders takes header values and adds them to the given http request.
@@ -140,15 +139,14 @@ func populateHeaders(headers APIRequestHeaders, req *http.Request) {
 
 func addAPIRequestHeaders(req *http.Request, creds APICredentials) error {
 
-  headers, err := generateAPIRequestHeaders(creds)
-  if err != nil {
-    return err
-  }
-  populateHeaders(headers, req)
-  return nil
+	headers, err := generateAPIRequestHeaders(creds)
+	if err != nil {
+		return err
+	}
+	populateHeaders(headers, req)
+	return nil
 
 }
-
 
 /*
 generateAPIRequestHeaders returns the standard API requests headers given a set of
@@ -157,9 +155,9 @@ credentials.
 func generateAPIRequestHeaders(creds APICredentials) (APIRequestHeaders, error) {
 
 	headers := APIRequestHeaders{
-    APIKey: creds.APIKey,
-    BearerToken: creds.BearerToken,
-  }
+		APIKey:      creds.APIKey,
+		BearerToken: creds.BearerToken,
+	}
 	headers.Nonce = generateNonce()
 	headers.Timestamp = time.Now().UTC().Format(time.RFC3339)
 
@@ -201,8 +199,8 @@ func computeHmac(headers APIRequestHeaders, signingKey string) (string, error) {
 }
 
 func generateNonce() string {
-  r := rand.New(rand.NewSource(time.Now().UnixNano()))
-  result := make([]byte, 32)
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	result := make([]byte, 32)
 	r.Read(result)
-  return hex.EncodeToString(result)
+	return hex.EncodeToString(result)
 }

@@ -1,35 +1,31 @@
 package blockchyp
 
 import (
-  "bytes"
-  "errors"
-  "log"
-  "time"
-  "net/http"
-  "net/url"
-  "encoding/json"
+	"bytes"
+	"encoding/json"
+	"errors"
+	"log"
+	"net/http"
+	"net/url"
+	"time"
 )
-
 
 var (
-  routeCache map[string]routeCacheEntry
+	routeCache map[string]routeCacheEntry
 )
 
-
 type routeCacheEntry struct {
-  TTL time.Time
-  Route TerminalRoute
+	TTL   time.Time
+	Route TerminalRoute
 }
-
-
 
 /*
 TerminalAuthorizationRequest adds API credentials to auth requests for use in
 direct terminal transactions.
 */
 type TerminalAuthorizationRequest struct {
-  APICredentials
-  Request AuthorizationRequest `json:"request"`
+	APICredentials
+	Request AuthorizationRequest `json:"request"`
 }
 
 /*
@@ -37,20 +33,20 @@ TerminalGiftActivateRequest adds API credentials to gift activation requests
 for use in direct terminal transactions.
 */
 type TerminalGiftActivateRequest struct {
-  APICredentials
-  Request GiftActivateRequest`json:"request"`
+	APICredentials
+	Request GiftActivateRequest `json:"request"`
 }
 
 /*
 TerminalRoute models route information for a payment terminal.
 */
 type TerminalRoute struct {
-  TerminalName string `json:"terminalName"`
-  IPAddress string `json:"ipAddress"`
-  CloudRelayEnabled bool `json:"cloudRelayEnabled"`
-  TransientCredentials APICredentials `json:"transientCredentials,omitempty"`
-  PublicKey string `json:"publicKey"`
-  RawKey RawPublicKey `json:"rawKey"`
+	TerminalName         string         `json:"terminalName"`
+	IPAddress            string         `json:"ipAddress"`
+	CloudRelayEnabled    bool           `json:"cloudRelayEnabled"`
+	TransientCredentials APICredentials `json:"transientCredentials,omitempty"`
+	PublicKey            string         `json:"publicKey"`
+	RawKey               RawPublicKey   `json:"rawKey"`
 }
 
 /*
@@ -58,9 +54,9 @@ RawPublicKey models the primitive form of an ECC public key.  A little
 simpler than X509, ASN and the usual nonsense.
 */
 type RawPublicKey struct {
-  Curve string `json:"curve"`
-  X string `json:"x"`
-  Y string `json:"Y"`
+	Curve string `json:"curve"`
+	X     string `json:"x"`
+	Y     string `json:"Y"`
 }
 
 /*
@@ -69,85 +65,84 @@ transient credentials mapped to the given API credentials.
 */
 func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, error) {
 
-  log.Println("Resolving terminal route...")
+	log.Println("Resolving terminal route...")
 
-  route := client.routeCacheGet(terminalName)
+	route := client.routeCacheGet(terminalName)
 
-  if route == nil {
-    path := "/terminal-route?terminal=" + url.QueryEscape(terminalName)
-    routeResponse := TerminalRouteResponse{}
-    err := client.GatewayGet(path, &routeResponse)
-    if err != nil {
-      log.Fatal(err)
-      return routeResponse.TerminalRoute, err
-    }
-    if routeResponse.Success {
-      route = &routeResponse.TerminalRoute
-      client.routeCachePut(*route)
-    }
-  }
+	if route == nil {
+		path := "/terminal-route?terminal=" + url.QueryEscape(terminalName)
+		routeResponse := TerminalRouteResponse{}
+		err := client.GatewayGet(path, &routeResponse)
+		if err != nil {
+			log.Fatal(err)
+			return routeResponse.TerminalRoute, err
+		}
+		if routeResponse.Success {
+			route = &routeResponse.TerminalRoute
+			client.routeCachePut(*route)
+		}
+	}
 
-  content, _ := json.Marshal(route)
+	content, _ := json.Marshal(route)
 
-  log.Println(string(content))
+	log.Println(string(content))
 
-  return *route, nil
+	return *route, nil
 
 }
 
 func (client *Client) routeCachePut(terminalRoute TerminalRoute) {
 
-  if routeCache == nil {
-    routeCache = make(map[string]routeCacheEntry)
-  }
+	if routeCache == nil {
+		routeCache = make(map[string]routeCacheEntry)
+	}
 
-  cacheEntry := routeCacheEntry{
-    Route: terminalRoute,
-    TTL: time.Now().Add(client.RouteCacheTTL * time.Minute),
-  }
+	cacheEntry := routeCacheEntry{
+		Route: terminalRoute,
+		TTL:   time.Now().Add(client.RouteCacheTTL * time.Minute),
+	}
 
-  routeCache[terminalRoute.TerminalName] = cacheEntry
+	routeCache[terminalRoute.TerminalName] = cacheEntry
 
 }
 
 func (client *Client) routeCacheGet(terminalName string) *TerminalRoute {
 
-  if routeCache == nil {
-    return nil
-  }
-  route, ok := routeCache[terminalName]
-  if ok {
-    if time.Now().After(route.TTL) {
-      return nil
-    }
-    return &route.Route
-  }
-  return nil
+	if routeCache == nil {
+		return nil
+	}
+	route, ok := routeCache[terminalName]
+	if ok {
+		if time.Now().After(route.TTL) {
+			return nil
+		}
+		return &route.Route
+	}
+	return nil
 
 }
 
 func isTerminalRouted(auth PaymentMethod) bool {
-  return auth.TerminalName != ""
+	return auth.TerminalName != ""
 }
-
 
 func (client *Client) assembleTerminalURL(route TerminalRoute, path string) string {
 
-  buffer := bytes.Buffer{}
-  if client.HTTPS {
-    buffer.WriteString("https://")
-  } else {
-    buffer.WriteString("http://")
-  }
-  buffer.WriteString(route.IPAddress)
-  if client.HTTPS {
-    buffer.WriteString(":8443")
-  } else {
-    buffer.WriteString(":8080")
-  }
-  buffer.WriteString("/api")
-  buffer.WriteString(path)
-  return buffer.String()
+	buffer := bytes.Buffer{}
+	if client.HTTPS {
+		buffer.WriteString("https://")
+	} else {
+		buffer.WriteString("http://")
+	}
+	buffer.WriteString(route.IPAddress)
+	if client.HTTPS {
+		buffer.WriteString(":8443")
+	} else {
+		buffer.WriteString(":8080")
+	}
+	buffer.WriteString("/api")
+	buffer.WriteString(path)
+	return buffer.String()
 
 }
 
@@ -156,36 +151,35 @@ terminalPost posts a request to the api gateway.
 */
 func (client *Client) terminalPost(route TerminalRoute, path string, requestEntity interface{}, responseEntity interface{}) error {
 
-  httpClient := &http.Client{}
+	httpClient := &http.Client{}
 
-  content, err := json.Marshal(requestEntity)
-  if err != nil {
-    return err
-  }
+	content, err := json.Marshal(requestEntity)
+	if err != nil {
+		return err
+	}
 
-  req, err := http.NewRequest("POST", client.assembleTerminalURL(route, path), bytes.NewBuffer(content))
-  if err != nil {
-    return err
-  }
+	req, err := http.NewRequest("POST", client.assembleTerminalURL(route, path), bytes.NewBuffer(content))
+	if err != nil {
+		return err
+	}
 
-  err = addAPIRequestHeaders(req, client.Credentials)
-  if err != nil {
-    return err
-  }
-  resp, err := httpClient.Do(req)
-  if err != nil {
-    return err
-  }
-  defer resp.Body.Close()
-  if resp.StatusCode != 200 {
-    return errors.New(resp.Status)
-  }
+	err = addAPIRequestHeaders(req, client.Credentials)
+	if err != nil {
+		return err
+	}
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return errors.New(resp.Status)
+	}
 
 	err = consumeResponse(resp, responseEntity)
 
-  return err
+	return err
 }
-
 
 const terminalRootCA = `
 -----BEGIN CERTIFICATE-----
