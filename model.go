@@ -259,4 +259,10 @@ type CloseBatchRequest struct {
 CloseBatchResponse models the response to a close batch request.
 */
 type CloseBatchResponse struct {
+	CoreResponse
+	BatchID       string            `json:"batchId"`
+	CurrencyCode  string            `json:"currencyCode"`
+	CapturedTotal string            `json:"capturedTotal"`
+	OpenPreauths  string            `json:"openPreauths"`
+	CardBrands    map[string]string `json:"cardBrands"`
 }
