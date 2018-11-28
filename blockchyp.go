@@ -57,18 +57,22 @@ Charge executes a standard direct preauth and capture.
 func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationResponse, error) {
 
   if isTerminalRouted(request.PaymentMethod) {
-    _, err := client.resolveTerminalRoute(request.TerminalName)
+    route, err := client.resolveTerminalRoute(request.TerminalName)
     if err != nil {
       return nil, err
     }
-
-  } else {
+    authRequest := TerminalAuthorizationRequest{
+      APICredentials: route.TransientCredentials,
+      Request: request,
+    }
     authResponse := AuthorizationResponse{}
-    err := client.GatewayPost("/charge", request, &authResponse)
+    err = client.terminalPost(route, "/charge", authRequest, &authResponse)
     return &authResponse, err
   }
+  authResponse := AuthorizationResponse{}
+  err := client.GatewayPost("/charge", request, &authResponse)
+  return &authResponse, err
 
-  return &AuthorizationResponse{}, nil
 }
 
 /*

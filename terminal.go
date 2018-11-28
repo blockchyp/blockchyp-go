@@ -1,8 +1,11 @@
 package blockchyp
 
 import (
+  "bytes"
+  "errors"
   "log"
   "time"
+  "net/http"
   "net/url"
   "encoding/json"
 )
@@ -19,10 +22,10 @@ type routeCacheEntry struct {
 }
 
 /*
-TerminalRequest adds API credentials to auth requests for use in
+TerminalAuthorizationRequest adds API credentials to auth requests for use in
 direct terminal transactions.
 */
-type TerminalRequest struct {
+type TerminalAuthorizationRequest struct {
   APICredentials
   Request AuthorizationRequest `json:"request"`
 }
@@ -114,6 +117,62 @@ func (client *Client) routeCacheGet(terminalName string) *TerminalRoute {
 
 func isTerminalRouted(auth PaymentMethod) bool {
   return auth.TerminalName != ""
+}
+
+
+func (client *Client) assembleTerminalURL(route TerminalRoute, path string) string {
+
+  buffer := bytes.Buffer{}
+  if client.HTTPS {
+    buffer.WriteString("https://")
+  } else {
+    buffer.WriteString("http://")
+  }
+  buffer.WriteString(route.IPAddress)
+  if client.HTTPS {
+    buffer.WriteString(":8443")
+  } else {
+    buffer.WriteString(":8080")
+  }
+  buffer.WriteString("/api")
+  buffer.WriteString(path)
+  return buffer.String()
+
+}
+
+/*
+terminalPost posts a request to the api gateway.
+*/
+func (client *Client) terminalPost(route TerminalRoute, path string, requestEntity interface{}, responseEntity interface{}) error {
+
+  httpClient := &http.Client{}
+
+  content, err := json.Marshal(requestEntity)
+  if err != nil {
+    return err
+  }
+
+  req, err := http.NewRequest("POST", client.assembleTerminalURL(route, path), bytes.NewBuffer(content))
+  if err != nil {
+    return err
+  }
+
+  err = addAPIRequestHeaders(req, client.Credentials)
+  if err != nil {
+    return err
+  }
+  resp, err := httpClient.Do(req)
+  if err != nil {
+    return err
+  }
+  defer resp.Body.Close()
+  if resp.StatusCode != 200 {
+    return errors.New(resp.Status)
+  }
+
+	err = consumeResponse(resp, responseEntity)
+
+  return err
 }
 
 

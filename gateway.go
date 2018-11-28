@@ -34,7 +34,7 @@ type APIRequestHeaders struct {
 }
 
 
-func (client *Client) assembleFullURL(path string) string {
+func (client *Client) assembleGatewayURL(path string) string {
 
   buffer := bytes.Buffer{}
 
@@ -74,7 +74,7 @@ func (client *Client) GatewayPost(path string, requestEntity interface{}, respon
     return err
   }
 
-  req, err := http.NewRequest("POST", client.assembleFullURL(path), bytes.NewBuffer(content))
+  req, err := http.NewRequest("POST", client.assembleGatewayURL(path), bytes.NewBuffer(content))
   if err != nil {
     return err
   }
@@ -103,7 +103,7 @@ func (client *Client) GatewayGet(path string, responseEntity interface{}) error 
 
   httpClient := &http.Client{}
 
-  req, err := http.NewRequest("GET", client.assembleFullURL(path), nil)
+  req, err := http.NewRequest("GET", client.assembleGatewayURL(path), nil)
   if err != nil {
     return err
   }
