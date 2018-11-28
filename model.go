@@ -242,6 +242,7 @@ GiftActivateResponse models the response to a gift activate request.
 */
 type GiftActivateResponse struct {
   CoreResponse
+  Approved bool `json:"approved"`
   Amount string `json:"amount"`
   CurrentBalance string `json:"currentBalance"`
   CurrencyCode string `json:"currencyCode"`
