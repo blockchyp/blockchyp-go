@@ -93,18 +93,23 @@ Preauth executes a preauthorization intended to be captured later.
 func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationResponse, error) {
 
   if isTerminalRouted(request.PaymentMethod) {
-    _, err := client.resolveTerminalRoute(request.TerminalName)
+    route, err := client.resolveTerminalRoute(request.TerminalName)
     if err != nil {
       return nil, err
     }
-
-  } else {
+    authRequest := TerminalAuthorizationRequest{
+      APICredentials: route.TransientCredentials,
+      Request: request,
+    }
     authResponse := AuthorizationResponse{}
-    err := client.GatewayPost("/preauth", request, &authResponse)
+    err = client.terminalPost(route, "/preauth", authRequest, &authResponse)
     return &authResponse, err
+
   }
 
-  return &AuthorizationResponse{}, nil
+  authResponse := AuthorizationResponse{}
+  err := client.GatewayPost("/preauth", request, &authResponse)
+  return &authResponse, err
 
 }
 
@@ -126,18 +131,28 @@ Refund executes a refund.
 func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, error) {
 
   if isTerminalRouted(request.PaymentMethod) {
-    _, err := client.resolveTerminalRoute(request.TerminalName)
+    route, err := client.resolveTerminalRoute(request.TerminalName)
     if err != nil {
       return nil, err
     }
-
-  } else {
+    authRequest := TerminalAuthorizationRequest{
+      APICredentials: route.TransientCredentials,
+      Request: AuthorizationRequest{
+        CoreRequest: request.CoreRequest,
+        PaymentMethod: request.PaymentMethod,
+        RequestAmount: request.RequestAmount,
+        Subtotals: request.Subtotals,
+      },
+    }
     authResponse := AuthorizationResponse{}
-    err := client.GatewayPost("/refund", request, &authResponse)
+    err = client.terminalPost(route, "/refund", authRequest, &authResponse)
     return &authResponse, err
-  }
 
-  return &AuthorizationResponse{}, nil
+  }
+  authResponse := AuthorizationResponse{}
+  err := client.GatewayPost("/refund", request, &authResponse)
+  return &authResponse, err
+
 }
 
 /*

@@ -31,15 +31,6 @@ type TerminalAuthorizationRequest struct {
 }
 
 /*
-TerminalRefundRequest adds API credentials to refund requests for use in
-direct terminal transactions.
-*/
-type TerminalRefundRequest struct {
-  APICredentials
-  Request RefundRequest `json:"request"`
-}
-
-/*
 TerminalRoute models route information for a payment terminal.
 */
 type TerminalRoute struct {
