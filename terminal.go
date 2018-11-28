@@ -21,6 +21,8 @@ type routeCacheEntry struct {
   Route TerminalRoute
 }
 
+
+
 /*
 TerminalAuthorizationRequest adds API credentials to auth requests for use in
 direct terminal transactions.
@@ -28,6 +30,15 @@ direct terminal transactions.
 type TerminalAuthorizationRequest struct {
   APICredentials
   Request AuthorizationRequest `json:"request"`
+}
+
+/*
+TerminalGiftActivateRequest adds API credentials to gift activation requests
+for use in direct terminal transactions.
+*/
+type TerminalGiftActivateRequest struct {
+  APICredentials
+  Request GiftActivateRequest`json:"request"`
 }
 
 /*
