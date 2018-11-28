@@ -241,7 +241,12 @@ type GiftActivateRequest struct {
 GiftActivateResponse models the response to a gift activate request.
 */
 type GiftActivateResponse struct {
-
+  CoreResponse
+  Amount string `json:"amount"`
+  CurrentBalance string `json:"currentBalance"`
+  CurrencyCode string `json:"currencyCode"`
+  PublicKey string `json:"publicKey"`
+  Sig string `json:"sig,omitempty"`
 }
 
 /*
