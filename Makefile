@@ -14,7 +14,7 @@ XUNIT = $(MODSUPPORT) go2xunit
 
 # Default target
 .PHONY: all
-all: clean lint test
+all: clean lint test tidy
 
 # Runs go lint and revive linter
 .PHONY: lint
@@ -29,6 +29,11 @@ test:
 	$(TESTENV) $(GO) test $(TESTFLAGS) $(if $(TEST), -run=$(TEST),) $(PKGS) \
 		| tee -i /dev/stderr \
 		| $(XUNIT) -fail -output $(REPORTDIR)/unit.xml
+
+# Runs mod tidy to remove unused dependencies
+.PHONY: tidy
+tidy:
+	$(GO) mod tidy
 
 .PHONY: clean
 clean:
