@@ -66,7 +66,9 @@ GatewayPost posts a request to the api gateway.
 */
 func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}) error {
 
-	httpClient := &http.Client{}
+	httpClient := &http.Client{
+		Timeout: time.Duration(client.Timeout) * time.Second,
+	}
 
 	content, err := json.Marshal(requestEntity)
 	if err != nil {
@@ -101,7 +103,9 @@ GatewayGet retrieves a get request from the api gateway.
 */
 func (client *Client) GatewayGet(path string, responseEntity interface{}) error {
 
-	httpClient := &http.Client{}
+	httpClient := &http.Client{
+		Timeout: time.Duration(client.Timeout) * time.Second,
+	}
 
 	req, err := http.NewRequest("GET", client.assembleGatewayURL(path), nil)
 	if err != nil {

@@ -13,7 +13,7 @@ const (
 	DefaultTestGatewayHost = "test.blockchyp.com"
 	DefaultHTTPS           = true
 	DefaultRouteCacheTTL   = 60 //in minutes
-	DefaultTimeout         = 60 // in seconds
+	DefaultTimeout         = 20 // in seconds
 )
 
 /*
