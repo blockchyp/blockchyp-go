@@ -36,6 +36,7 @@ func NewClient(creds APICredentials) Client {
 		GatewayHost:   DefaultGatewayHost,
 		HTTPS:         DefaultHTTPS,
 		RouteCacheTTL: DefaultRouteCacheTTL,
+		Timeout:       DefaultTimeout,
 	}
 }
 
