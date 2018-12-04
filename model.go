@@ -145,13 +145,14 @@ type PaymentMethodResponse struct {
 ReceiptSuggestions models EMV fields we recommend developers put on their receipts.
 */
 type ReceiptSuggestions struct {
-	AID  string `json:"AID,omitempty"`
-	ARQC string `json:"ARQC,omitempty"`
-	IAD  string `json:"IAD,omitempty"`
-	ARC  string `json:"ARC,omitempty"`
-	TC   string `json:"TC,omitempty"`
-	TVR  string `json:"TVR,omitempty"`
-	TSI  string `json:"TSI,omitempty"`
+	AID              string `json:"AID,omitempty"`
+	ARQC             string `json:"ARQC,omitempty"`
+	IAD              string `json:"IAD,omitempty"`
+	ARC              string `json:"ARC,omitempty"`
+	TC               string `json:"TC,omitempty"`
+	TVR              string `json:"TVR,omitempty"`
+	TSI              string `json:"TSI,omitempty"`
+	RequestSignature bool   `json:"requestSignature"`
 }
 
 /*
