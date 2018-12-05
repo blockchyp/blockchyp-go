@@ -89,6 +89,7 @@ CoreResponse models elements common to all API responses.
 type CoreResponse struct {
 	ResponseDescription string `json:"responseDescription"`
 	TransactionID       string `json:"transactionId"`
+	BatchID             string `json:"batchId,omitempty"`
 	TransactionRef      string `json:"transactionRef,omitempty"`
 	TransactionType     string `json:"transactionType"`
 	Timestamp           string `json:"timestamp"`
@@ -261,7 +262,6 @@ CloseBatchResponse models the response to a close batch request.
 */
 type CloseBatchResponse struct {
 	CoreResponse
-	BatchID       string            `json:"batchId"`
 	CurrencyCode  string            `json:"currencyCode"`
 	CapturedTotal string            `json:"capturedTotal"`
 	OpenPreauths  string            `json:"openPreauths"`
