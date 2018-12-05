@@ -14,7 +14,8 @@ const (
 	DefaultTestGatewayHost = "test.blockchyp.com"
 	DefaultHTTPS           = true
 	DefaultRouteCacheTTL   = 60 * time.Minute
-	DefaultTimeout         = 20 * time.Second
+	DefaultGatewayTimeout  = 20 * time.Second
+	DefaultTerminalTimeout = 2 * time.Minute
 )
 
 /*
@@ -25,8 +26,9 @@ type Client struct {
 	GatewayHost string
 	HTTPS       bool
 
-	routeCacheTTL time.Duration
-	httpClient    *http.Client
+	routeCacheTTL      time.Duration
+	gatewayHTTPClient  *http.Client
+	terminalHTTPClient *http.Client
 }
 
 /*
@@ -34,13 +36,12 @@ NewClient returns a default Client configured with the given credentials.
 */
 func NewClient(creds APICredentials) Client {
 	return Client{
-		Credentials:   creds,
-		GatewayHost:   DefaultGatewayHost,
-		HTTPS:         DefaultHTTPS,
-		routeCacheTTL: DefaultRouteCacheTTL,
-		httpClient: &http.Client{
-			Timeout: DefaultTimeout,
-		},
+		Credentials:        creds,
+		GatewayHost:        DefaultGatewayHost,
+		HTTPS:              DefaultHTTPS,
+		routeCacheTTL:      DefaultRouteCacheTTL,
+		gatewayHTTPClient:  &http.Client{Timeout: DefaultGatewayTimeout},
+		terminalHTTPClient: &http.Client{Timeout: DefaultTerminalTimeout},
 	}
 }
 

@@ -151,8 +151,6 @@ terminalPost posts a request to the api gateway.
 */
 func (client *Client) terminalPost(route TerminalRoute, path string, requestEntity interface{}, responseEntity interface{}) error {
 
-	httpClient := &http.Client{}
-
 	content, err := json.Marshal(requestEntity)
 	if err != nil {
 		return err
@@ -167,7 +165,7 @@ func (client *Client) terminalPost(route TerminalRoute, path string, requestEnti
 	if err != nil {
 		return err
 	}
-	resp, err := httpClient.Do(req)
+	resp, err := client.terminalHTTPClient.Do(req)
 	if err != nil {
 		return err
 	}

@@ -80,7 +80,7 @@ func (client *Client) GatewayPost(path string, requestEntity interface{}, respon
 	if err != nil {
 		return err
 	}
-	resp, err := client.httpClient.Do(req)
+	resp, err := client.gatewayHTTPClient.Do(req)
 	if err != nil {
 		return err
 	}
@@ -108,7 +108,7 @@ func (client *Client) GatewayGet(path string, responseEntity interface{}) error 
 	if err != nil {
 		return err
 	}
-	resp, err := client.httpClient.Do(req)
+	resp, err := client.gatewayHTTPClient.Do(req)
 	if err != nil {
 		return err
 	}
