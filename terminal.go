@@ -2,6 +2,7 @@ package blockchyp
 
 import (
 	"bytes"
+	"crypto/x509"
 	"encoding/json"
 	"errors"
 	"log"
@@ -177,6 +178,14 @@ func (client *Client) terminalPost(route TerminalRoute, path string, requestEnti
 	err = consumeResponse(resp, responseEntity)
 
 	return err
+}
+
+func terminalCertPool() *x509.CertPool {
+	pool := x509.NewCertPool()
+
+	pool.AppendCertsFromPEM([]byte(terminalRootCA))
+
+	return pool
 }
 
 const terminalRootCA = `

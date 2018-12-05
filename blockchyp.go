@@ -1,6 +1,7 @@
 package blockchyp
 
 import (
+	"crypto/tls"
 	"errors"
 	"net/http"
 	"time"
@@ -36,12 +37,21 @@ NewClient returns a default Client configured with the given credentials.
 */
 func NewClient(creds APICredentials) Client {
 	return Client{
-		Credentials:        creds,
-		GatewayHost:        DefaultGatewayHost,
-		HTTPS:              DefaultHTTPS,
-		routeCacheTTL:      DefaultRouteCacheTTL,
-		gatewayHTTPClient:  &http.Client{Timeout: DefaultGatewayTimeout},
-		terminalHTTPClient: &http.Client{Timeout: DefaultTerminalTimeout},
+		Credentials:   creds,
+		GatewayHost:   DefaultGatewayHost,
+		HTTPS:         DefaultHTTPS,
+		routeCacheTTL: DefaultRouteCacheTTL,
+		gatewayHTTPClient: &http.Client{
+			Timeout: DefaultGatewayTimeout,
+		},
+		terminalHTTPClient: &http.Client{
+			Timeout: DefaultTerminalTimeout,
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					RootCAs: terminalCertPool(),
+				},
+			},
+		},
 	}
 }
 
