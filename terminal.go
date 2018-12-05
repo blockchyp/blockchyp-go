@@ -99,7 +99,7 @@ func (client *Client) routeCachePut(terminalRoute TerminalRoute) {
 
 	cacheEntry := routeCacheEntry{
 		Route: terminalRoute,
-		TTL:   time.Now().Add(client.RouteCacheTTL * time.Minute),
+		TTL:   time.Now().Add(client.routeCacheTTL),
 	}
 
 	routeCache[terminalRoute.TerminalName] = cacheEntry

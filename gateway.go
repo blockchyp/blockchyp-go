@@ -66,10 +66,6 @@ GatewayPost posts a request to the api gateway.
 */
 func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}) error {
 
-	httpClient := &http.Client{
-		Timeout: time.Duration(client.Timeout) * time.Second,
-	}
-
 	content, err := json.Marshal(requestEntity)
 	if err != nil {
 		return err
@@ -84,7 +80,7 @@ func (client *Client) GatewayPost(path string, requestEntity interface{}, respon
 	if err != nil {
 		return err
 	}
-	resp, err := httpClient.Do(req)
+	resp, err := client.httpClient.Do(req)
 	if err != nil {
 		return err
 	}
@@ -103,10 +99,6 @@ GatewayGet retrieves a get request from the api gateway.
 */
 func (client *Client) GatewayGet(path string, responseEntity interface{}) error {
 
-	httpClient := &http.Client{
-		Timeout: time.Duration(client.Timeout) * time.Second,
-	}
-
 	req, err := http.NewRequest("GET", client.assembleGatewayURL(path), nil)
 	if err != nil {
 		return err
@@ -116,7 +108,7 @@ func (client *Client) GatewayGet(path string, responseEntity interface{}) error 
 	if err != nil {
 		return err
 	}
-	resp, err := httpClient.Do(req)
+	resp, err := client.httpClient.Do(req)
 	if err != nil {
 		return err
 	}

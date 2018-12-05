@@ -2,6 +2,7 @@ package blockchyp
 
 import (
 	"errors"
+	"net/http"
 	"time"
 )
 
@@ -12,19 +13,20 @@ const (
 	DefaultGatewayHost     = "api.blockchyp.com"
 	DefaultTestGatewayHost = "test.blockchyp.com"
 	DefaultHTTPS           = true
-	DefaultRouteCacheTTL   = 60 //in minutes
-	DefaultTimeout         = 20 // in seconds
+	DefaultRouteCacheTTL   = 60 * time.Minute
+	DefaultTimeout         = 20 * time.Second
 )
 
 /*
 Client is the main interface used by application developers.
 */
 type Client struct {
-	Credentials   APICredentials
-	GatewayHost   string
-	HTTPS         bool
-	RouteCacheTTL time.Duration
-	Timeout       uint64 //in seconds
+	Credentials APICredentials
+	GatewayHost string
+	HTTPS       bool
+
+	routeCacheTTL time.Duration
+	httpClient    *http.Client
 }
 
 /*
@@ -35,8 +37,10 @@ func NewClient(creds APICredentials) Client {
 		Credentials:   creds,
 		GatewayHost:   DefaultGatewayHost,
 		HTTPS:         DefaultHTTPS,
-		RouteCacheTTL: DefaultRouteCacheTTL,
-		Timeout:       DefaultTimeout,
+		routeCacheTTL: DefaultRouteCacheTTL,
+		httpClient: &http.Client{
+			Timeout: DefaultTimeout,
+		},
 	}
 }
 
