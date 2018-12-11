@@ -139,6 +139,7 @@ type PaymentMethodResponse struct {
 	MaskedPAN          string             `json:"maskedPan,omitempty"`
 	PublicKey          string             `json:"publicKey,omitempty"`
 	ScopeAlert         bool               `json:"scopeAlert,omitempty"`
+	CardHolder         string             `json:"cardHolder,omitempty"`
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions,omitempty"`
 }
 
