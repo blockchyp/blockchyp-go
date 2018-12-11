@@ -153,6 +153,7 @@ type ReceiptSuggestions struct {
 	TC               string `json:"TC,omitempty"`
 	TVR              string `json:"TVR,omitempty"`
 	TSI              string `json:"TSI,omitempty"`
+	ApplicationLabel string `json:"applicationLabel,omitempty"`
 	RequestSignature bool   `json:"requestSignature"`
 }
 
