@@ -87,9 +87,9 @@ A typical blockchyp.json file looks like this:
 
 ```
 {
-	"apiKey":"ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-	"bearerToken":"ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-	"signingKey":"9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+  "apiKey":"ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+  "bearerToken":"ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+  "signingKey":"9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
   "routeCacheTTL": 60,
   "gatewayTimeout": 20,
   "terminalimeout": 2
