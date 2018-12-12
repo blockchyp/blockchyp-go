@@ -6,8 +6,8 @@ It's based on the [BlockChyp SDK Developers Guide](https://docs.blockchyp.com/sd
 
 BlockChyp is still pre-release and developer access is by invitation only.  Godocs are coming soon.
 
-This project contains a full native Go client for BlockChyp along with a wrapper library
-for Linux and Windows C/C++ developers.
+This project contains a full native Go client for BlockChyp along with a CLI for Windows,
+Linux, and Mac OS developers.
 
 ## Go Installation
 
