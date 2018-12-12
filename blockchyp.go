@@ -23,9 +23,10 @@ const (
 Client is the main interface used by application developers.
 */
 type Client struct {
-	Credentials APICredentials
-	GatewayHost string
-	HTTPS       bool
+	Credentials     APICredentials
+	GatewayHost     string
+	TestGatewayHost string
+	HTTPS           bool
 
 	routeCacheTTL      time.Duration
 	gatewayHTTPClient  *http.Client
@@ -239,8 +240,13 @@ func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 Ping tests connectivity with a payment terminal.
 */
 func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
-
-	return &PingResponse{}, nil
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		return nil, err
+	}
+	pingResponse := PingResponse{}
+	err = client.terminalPost(route, "/test", request, &pingResponse)
+	return &pingResponse, err
 }
 
 /*

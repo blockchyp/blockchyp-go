@@ -225,6 +225,7 @@ type PingRequest struct {
 PingResponse models the response to a ping request.
 */
 type PingResponse struct {
+	Success bool `json:"success"`
 	CoreResponse
 }
 
