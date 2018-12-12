@@ -114,15 +114,15 @@ func resolveCredentials(args commandLineArguments) (*blockchyp.APICredentials, e
 	}
 
 	if creds.APIKey == "" {
-		fmt.Println("-apiKey or .blockchyp file required")
+		fmt.Println("-apiKey or blockchyp.json file required")
 		handleFatal()
 	}
 	if creds.BearerToken == "" {
-		fmt.Println("-bearerToken or .blockchyp file required")
+		fmt.Println("-bearerToken or blockchyp.json file required")
 		handleFatal()
 	}
 	if creds.SigningKey == "" {
-		fmt.Println("-signingKey or .blockchyp file required")
+		fmt.Println("-signingKey or blockchyp.json file required")
 		handleFatal()
 	}
 
@@ -140,7 +140,7 @@ func loadConfigSettings(args commandLineArguments) (*configSettings, error) {
 	if fileName == "" {
 		if runtime.GOOS == "windows" {
 			configHome := os.Getenv("userprofile")
-			fileName = configHome + "\\.blockchyp"
+			fileName = configHome + "\\blockchyp.json"
 		} else {
 			configHome := os.Getenv("XDG_CONFIG_HOME")
 			if configHome == "" {
@@ -150,7 +150,7 @@ func loadConfigSettings(args commandLineArguments) (*configSettings, error) {
 				}
 				configHome = user.HomeDir + "/.config"
 			}
-			fileName = configHome + "/blockchyp"
+			fileName = configHome + "/blockchyp.json"
 		}
 	}
 

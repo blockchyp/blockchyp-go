@@ -76,3 +76,28 @@ On Windows, use the following command to build the Windows CLI:
 
 This will create a Windows exe file at `/build/blockchyp.exe` that you can then deploy
 as part of your solution.
+
+## Configuration
+
+Key settings like API credentials can be passsed in on the command line with
+every request, but the best option is to configure the command line by dropping a
+`blockchyp.json` file on your file system.
+
+You can specify the location of this file via the `-f` command line argument, but
+BlockChyp looks for this file a few default locations.
+
+For **Linux**, BlockChyp looks for the file in the directory specified by the
+`XDG_CONFIG_HOME` environment variable.  If the environment variable isn't defined,
+the file location is assumed to be `~/.config/blockchyp.json`.
+
+For **Windows**, BlockChyp looks for the file in the user's home directory.
+
+These default locations are fine for development, but we recommend production systems
+explicitly specify a file location via the `-f` argument.
+
+## Command Line Options
+
+| Option         | Description                            | Example                      |
+|----------------|----------------------------------------|------------------------------|
+| -f             | Specifies config file location.        | -f="/path/to/blockchyp.json" |
+| -t, -t=false   | Flags the transaction as a test transaction.   |  -t (no value required) |
