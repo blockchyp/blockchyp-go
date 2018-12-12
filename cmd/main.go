@@ -10,7 +10,6 @@ import (
 	"os/user"
 	"runtime"
 
-	"github.com/blockchyp/blockchyp-core/pkg/logging"
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
@@ -52,8 +51,6 @@ var currentConfig *configSettings
 func main() {
 
 	commandLineArgs := parseArgs()
-
-	logging.LogJSON(commandLineArgs)
 
 	processCommand(commandLineArgs)
 

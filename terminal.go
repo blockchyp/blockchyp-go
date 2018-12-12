@@ -74,8 +74,6 @@ transient credentials mapped to the given API credentials.
 */
 func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, error) {
 
-	log.Println("Resolving terminal route...")
-
 	route := client.routeCacheGet(terminalName)
 
 	if route == nil {
@@ -91,10 +89,6 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 			client.routeCachePut(*route)
 		}
 	}
-
-	content, _ := json.Marshal(route)
-
-	log.Println(string(content))
 
 	return *route, nil
 

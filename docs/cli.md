@@ -117,3 +117,143 @@ explicitly specify a file location via the `-f` argument.
 | -txRef         | Transaction reference.  Typically your application's internal ID. Required for reversable transactions  |  -txRef=MYID |
 | -desc          | Narrative description of the transaction.   | -desc="Adventures Underground #1"  |
 | -secure   | Can disable https for terminal transactions. Defaults to true.  | -secure=false   |
+
+
+## Sample Transactions
+
+The section below gives a few sample transactions for most common scenarios.
+
+Note  that responses are shown below with standard JSON pretty printing white space.
+Real CLI responses are more compact.
+
+### Terminal Ping
+
+This transaction tests connectivity with a payment terminal.
+
+```
+$ ./blockchyp -type=ping -terminal="Test Terminal"
+{
+  "success":true
+}
+```
+
+### Charge
+
+This transaction executes a direct auth and capture transaction against a BlockChyp
+payment terminal.
+
+```
+> blockchyp.exe -type=charge -terminal="Test Terminal" -amount="50.00"
+{
+  "responseDescription":"Approved",
+  "transactionId":"DD62YVH6G4I6RM33NSLM7WZLHE",
+  "transactionType":"charge",
+  "timestamp":"2018-12-12T21:11:58Z",
+  "tickBlock":"009991a8ac7b6a4420760e1e14e1689c88be2a610a033d6908c1b04b5c00f9da",
+  "approved":true,
+  "authCode":"190390",
+  "entryMethod":"CHIP",
+  "paymentType":"VISA",
+  "maskedPan":"************0119",
+  "cardHolder":"01",
+  "partialAuth":false,
+  "altCurrency":false,
+  "currencyCode":"USD",
+  "requestedAmount":"50.00",
+  "authorizedAmount":"50.00",
+  "tipAmount":"0.00",
+  "taxAmount":"0.00",
+  "receiptSuggestions":{
+    "AID":"A0000000031010",
+    "ARQC":"FB81D5DE827469CA",
+    "IAD":"06010A03A0A800",
+    "TVR":"8000008000",
+    "TSI":"6800",
+    "requestSignature":true
+  }
+}
+```
+
+### Preauth
+
+This transaction executes a preauthorization against a BlockChyp
+payment terminal.
+
+```
+./blockchyp -type=preauth -terminal="Test Terminal" -amount="50.00"
+{
+  "responseDescription":"Approved",
+  "transactionId":"DD62YXX6G4I6RM34NSLM7WZLHE",
+  "transactionType":"preauth",
+  "timestamp":"2018-12-12T21:17:08Z",
+  "tickBlock":"009991a8ac7b6a4420760e1e14e1689c88be2a610a033d6908c1b04b5c00f9da",
+  "approved":true,
+  "authCode":"762708",
+  "entryMethod":"CHIP",
+  "paymentType":"VISA",
+  "maskedPan":"************0119",
+  "partialAuth":false,
+  "altCurrency":false,
+  "currencyCode":"USD",
+  "requestedAmount":"50.00",
+  "authorizedAmount":"50.00",
+  "tipAmount":"0.00",
+  "taxAmount":"0.00",
+  "receiptSuggestions":{
+    "AID":"A0000000031010",
+    "ARQC":"A7095FEDC22B7E51",
+    "IAD":"06010A03A0A800",
+    "TVR":"8000008000",
+    "TSI":"6800",
+    "requestSignature":true
+  }
+}
+```
+
+### Capture
+
+Captures an existing preauthorization.  `-tx` is required and developers have
+the option of adding tip adjustments or changing the amount.
+
+```
+> blockchyp.exe -type=capture -tx=DD62YXX6G4INSLM7WZLHE -tip=5.00 -amount=55.00
+{
+  "responseDescription":"Approved",
+  "transactionId":"DD62YXX6G4I6RM35NSLM7WZLHE",
+  "batchId":"OGMJ72X5MUI6RD7MNSLM7WZLHE",
+  "transactionType":"capture",
+  "timestamp":"2018-12-12T21:20:11Z",
+  "tickBlock":"009991a8ac7b6a4420760e1e14e1689c88be2a610a033d6908c1b04b5c00f9da",
+  "approved":true,
+  "authCode":"349143",
+  "entryMethod":"CHIP",
+  "paymentType":"VISA",
+  "partialAuth":false,
+  "altCurrency":false,
+  "currencyCode":"USD",
+  "requestedAmount":"55.00",
+  "authorizedAmount":"55.00",
+  "tipAmount":"5.00",
+  "taxAmount":"0.00"
+}
+```
+
+### Void
+
+Voids an existing transaction in the current batch.  `-tx` is required.
+
+```
+$ ./blockchyp -type=void -tx=DD62YVH6G4I6RM33NSLM7WZLHE
+{
+  "responseDescription":"Approved",
+  "transactionId":"DD62YXX6G4I6RM36NSLM7WZLHE",
+  "batchId":"OGMJ72X5MUI6RD7MNSLM7WZLHE",
+  "transactionType":"void",
+  "timestamp":"2018-12-12T21:24:19Z",
+  "tickBlock":"009991a8ac7b6a4420760e1e14e1689c88be2a610a033d6908c1b04b5c00f9da",
+  "approved":true,
+  "authCode":"686941",
+  "entryMethod":"CHIP",
+  "paymentType":"VISA"
+}
+```
