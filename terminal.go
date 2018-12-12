@@ -39,6 +39,14 @@ type TerminalGiftActivateRequest struct {
 }
 
 /*
+TerminalPingRequest adds API credentials to a terminal ping request.
+*/
+type TerminalPingRequest struct {
+	APICredentials
+	Request PingRequest `json:"request"`
+}
+
+/*
 TerminalRoute models route information for a payment terminal.
 */
 type TerminalRoute struct {

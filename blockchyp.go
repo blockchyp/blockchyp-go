@@ -244,8 +244,12 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	terminalRequest := TerminalPingRequest{
+		APICredentials: route.TransientCredentials,
+		Request:        request,
+	}
 	pingResponse := PingResponse{}
-	err = client.terminalPost(route, "/test", request, &pingResponse)
+	err = client.terminalPost(route, "/test", terminalRequest, &pingResponse)
 	return &pingResponse, err
 }
 
