@@ -258,7 +258,7 @@ func processRefund(client *blockchyp.Client, args commandLineArguments) {
 }
 
 func processReverse(client *blockchyp.Client, args commandLineArguments) {
-	validateRequired(args.TransactionID, "txRef")
+	validateRequired(args.TransactionRef, "txRef")
 	req := blockchyp.AuthorizationRequest{}
 	req.TransactionRef = args.TransactionRef
 	req.Test = args.Test
