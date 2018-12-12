@@ -334,7 +334,7 @@ $ ./blockchyp -type=close-batch
   }
 
 }
-
+```
 
 ## What Are Tick Blocks?
 
