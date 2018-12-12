@@ -83,6 +83,23 @@ Key settings like API credentials can be passsed in on the command line with
 every request, but the best option is to configure the command line by dropping a
 `blockchyp.json` file on your file system.
 
+A typical blockchyp.json file looks like this:
+
+```
+{
+	"apiKey":"ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+	"bearerToken":"ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+	"signingKey":"9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+  "routeCacheTTL": 60,
+  "gatewayTimeout": 20,
+  "terminalimeout": 2
+}
+```
+
+The TTL and timeout settings are optional and so are the credentials, but the
+credentials are highly recommended.  Otherwise malicious users might be able
+to see your API credentials by looking at your shell command history.
+
 You can specify the location of this file via the `-f` command line argument, but
 BlockChyp looks for this file a few default locations.
 
