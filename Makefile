@@ -35,6 +35,17 @@ test:
 tidy:
 	$(GO) mod tidy
 
+
+.PHONY: cli-linux
+cli-linux:
+	go build -o build/blockchyp cmd/main.go
+
+.PHONY: cli-windows
+cli-windows:
+	GOOS=windows GOARCH=386 go build -o build/blockchyp.exe cmd/main.go
+
+GOOS=windows GOARCH=386 go
+
 .PHONY: clean
 clean:
 	$(GO) clean -cache $(PKGS)
