@@ -83,7 +83,7 @@ Key settings like API credentials can be passsed in on the command line with
 every request, but the best option is to configure the command line by dropping a
 `blockchyp.json` file on your file system.
 
-A typical blockchyp.json file looks like this:
+A typical `blockchyp.json` file looks like this:
 
 ```
 {
@@ -101,7 +101,7 @@ credentials are highly recommended.  Otherwise malicious users might be able
 to see your API credentials by looking at your shell command history.
 
 You can specify the location of this file via the `-f` command line argument, but
-BlockChyp looks for this file a few default locations.
+BlockChyp does look for this file a few default locations depending on your operation system.
 
 For **Linux**, BlockChyp looks for the file in the directory specified by the
 `XDG_CONFIG_HOME` environment variable.  If the environment variable isn't defined,
@@ -116,24 +116,24 @@ explicitly specify a file location via the `-f` argument.
 
 | Option         | Description                                    | Example                                  |
 |----------------|------------------------------------------------|------------------------------------------|
-| -f             | Specifies config file location.                | -f="/path/to/blockchyp.json"             |
-| -t             | Flags the transaction as a test transaction.   | -t (no value required)                   |
-| -type          | Transaction type (charge, preauth, etc)        | -type=charge                             |
-| -gateway       | Used to override gateway host name.            | -gateway=https://api.blockchyp.com       |
-| -testGateway   | Used to override the test gateway host name.   | -testGateway=https://test.blockchyp.com  |
-| -apiKey        | Used to override the API Key.                  | -apiKey=ZDSMMZLGRPBPRTJUBTAFBYZ33Q       |
-| -bearerToken   | Used to override the bearer token.             | -bearerToken=ZLBW5NR4U5PKD5PNP3ZP3OZS5U  |
-| -signingKey    | Used to override the signing key.              | -signingKey=9c6a5e8e763df1c9256e3d72..   |
-| -terminal      | Name of the terminal for terminal transactions.| -terminal="Cashier #1"                   |
-| -token         | Token for token based transactions.            | -token= ZLBW5NR4U5PKD5PNP3ZP3OZS5U       |
-| -amount        | Amount to authorize for the transaction.       | -amount=50.00                            |
-| -tip           | Tip amount, if needed.                         | -tip=5.00                                |
-| -tax           | Tax amount, if needed.                         | -tax=23.45                               |
-| -currency      | Currency code, defaults to USD.                | -currency=USD                            |
-| -tx            | Transaction ID.  Required for voids and captures.   | -tx=DD62YSX6G4I6RM3XNSLM7WZLHE      |
-| -txRef         | Transaction reference.  Typically your application's internal ID. Required for reversable transactions  |  -txRef=MYID |
-| -desc          | Narrative description of the transaction.   | -desc="Adventures Underground #1"  |
-| -secure   | Can disable https for terminal transactions. Defaults to true.  | -secure=false   |
+| `-f`             | Specifies config file location.                | `-f="/path/to/blockchyp.json"`             |
+| `-t`             | Flags the transaction as a test transaction.   | `-t` (no value required)                   |
+| `-type`          | Transaction type (charge, preauth, etc)        | `-type=charge`                             |
+| `-gateway`       | Used to override gateway host name.            | `-gateway=https://api.blockchyp.com`       |
+| `-testGateway`   | Used to override the test gateway host name.   | `-testGateway=https://test.blockchyp.com`  |
+| `-apiKey`        | Used to override the API Key.                  | `-apiKey=ZDSMMZLGRPBPRTJUBTAFBYZ33Q`     |
+| `-bearerToken`   | Used to override the bearer token.             | `-bearerToken=ZLBW5NR4U5PKD5PNP3ZP3OZS5U`  |
+| `-signingKey`    | Used to override the signing key.              | `-signingKey=9c6a5e8e763df1c9256e3d72..`   |
+| `-terminal`      | Name of the terminal for terminal transactions.| `-terminal="Cashier #1"`                   |
+| `-token`         | Token for token based transactions.            | `-token=ZLBW5NR4U5PKD5PNP3ZP3OZS5U`       |
+| `-amount`        | Amount to authorize for the transaction.       | `-amount=50.00`                            |
+| `-tip`           | Tip amount, if needed.                         | `-tip=5.00`                                |
+| `-tax`           | Tax amount, if needed.                         | `-tax=23.45`                               |
+| `-currency`      | Currency code, defaults to USD.                | `-currency=USD`                            |
+| `-tx`            | Transaction ID.  Required for voids and captures.   | `-tx=DD62YSX6G4I6RM3XNSLM7WZLHE`      |
+| `-txRef`         | Transaction reference.  Typically your application's internal ID. Required for reversable transactions  |  `-txRef=MYID` |
+| `-desc`          | Narrative description of the transaction.   | `-desc="Adventures Underground #1"`  |
+| `-secure`   | Can disable https for terminal transactions. Defaults to true.  | `-secure=false`   |
 
 
 ## Sample Transactions
