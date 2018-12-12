@@ -257,8 +257,17 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 GiftActivate activates or recharges a gift card.
 */
 func (client *Client) GiftActivate(request GiftActivateRequest) (*GiftActivateResponse, error) {
-
-	return &GiftActivateResponse{}, nil
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		return nil, err
+	}
+	terminalRequest := TerminalGiftActivateRequest{
+		APICredentials: route.TransientCredentials,
+		Request:        request,
+	}
+	giftResponse := GiftActivateResponse{}
+	err = client.terminalPost(route, "/gift-activate", terminalRequest, &giftResponse)
+	return &giftResponse, err
 }
 
 /*
