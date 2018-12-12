@@ -15,10 +15,12 @@ For Go developers, you can install BlockChyp in the usual way with `go get`.
 go get github.com/blockchyp/blockchyp-go
 ```
 
-## Linux Binaries
+## Command Line Interface
 
-TBD
+In addition to the standard Go SDK, the Makefile includes special targets for
+Windows and Linux command line binaries.
 
-## Windows Binaries
+These binaries are intended for unique situations where using an SDK or doing
+a direct REST integration aren't practical.
 
-TBD
+[CLI Documentation](docs/cli.md)
