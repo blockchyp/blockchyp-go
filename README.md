@@ -17,7 +17,7 @@ Windows and Linux command line binaries.
 These binaries are intended for unique situations where using an SDK or doing
 a direct REST integration aren't practical.
 
-[CLI Documentation](docs/cli.md)
+Check out the [CLI Reference](docs/cli.md) for more information.
 
 ## Go Installation
 
