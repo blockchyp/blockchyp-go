@@ -19,6 +19,9 @@ const (
 	DefaultTerminalTimeout = 2 * time.Minute
 )
 
+// terminalCN is the common name on a terminal certificate.
+const terminalCN = "blockchyp-terminal"
+
 /*
 Client is the main interface used by application developers.
 */
@@ -49,7 +52,8 @@ func NewClient(creds APICredentials) Client {
 			Timeout: DefaultTerminalTimeout,
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{
-					RootCAs: terminalCertPool(),
+					RootCAs:    terminalCertPool(),
+					ServerName: terminalCN,
 				},
 			},
 		},
