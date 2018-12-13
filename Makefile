@@ -8,6 +8,7 @@ REPORTDIR = $(BUILDDIR)/test-reports
 PKGS = $(shell go list ./... | grep -v /vendor/)
 LINUX_BUILDENV = GOOS=linux GOARCH=amd64
 WIN_BUILDENV = GOOS=windows GOARCH=386
+SOURCES = $(shell find . -name '*.go')
 
 # Executables
 GO = $(MODSUPPORT) go
@@ -54,5 +55,5 @@ clean:
 	rm -f $(BUILDDIR)/core
 	rm -f $(BUILDDIR)/blockchyp*
 
-$(BUILDDIR)/%: $(wildcard $(CMDDIR)/**/*)
+$(BUILDDIR)/%: $(wildcard $(CMDDIR)/**/*) $(SOURCES)
 	$(BUILDENV) $(GO) build -o $@ $<
