@@ -200,7 +200,7 @@ func resolveClient(args commandLineArguments) (*blockchyp.Client, error) {
 
 	if args.TestGatewayHost != "" {
 		client.TestGatewayHost = args.TestGatewayHost
-	} else if settings.TestGatewayHost != "" {
+	} else if settings != nil && settings.TestGatewayHost != "" {
 		client.TestGatewayHost = settings.TestGatewayHost
 	} else {
 		client.TestGatewayHost = "https://test.blockchyp.com"
