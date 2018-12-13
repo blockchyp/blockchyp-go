@@ -3,8 +3,11 @@ MODSUPPORT = GO111MODULE=on # TODO: Remove this when on is default
 TESTFLAGS = -v -race
 TESTENV =
 BUILDDIR = build
+CMDDIR = cmd
 REPORTDIR = $(BUILDDIR)/test-reports
 PKGS = $(shell go list ./... | grep -v /vendor/)
+LINUX_BUILDENV = GOOS=linux GOARCH=amd64
+WIN_BUILDENV = GOOS=windows GOARCH=386
 
 # Executables
 GO = $(MODSUPPORT) go
@@ -35,20 +38,21 @@ test:
 tidy:
 	$(GO) mod tidy
 
-
+# Builds the linux CLI executable
 .PHONY: cli-linux
 cli-linux:
-	go build -o build/blockchyp cmd/main.go
+	$(LINUX_BUILDENV) $(MAKE) $(BUILDDIR)/blockchyp
 
+# Builds the windows CLI executable
 .PHONY: cli-windows
 cli-windows:
-	GOOS=windows GOARCH=386 go build -o build/blockchyp.exe cmd/main.go
-
-GOOS=windows GOARCH=386 go
+	$(WINDOWS_BUILDENV) $(MAKE) $(BUILDDIR)/blockchyp.exe
 
 .PHONY: clean
 clean:
 	$(GO) clean -cache $(PKGS)
 	rm -f $(BUILDDIR)/core
+	rm -f $(BUILDDIR)/blockchyp*
 
-.PHONY: all lint test integration
+$(BUILDDIR)/%: $(wildcard $(CMDDIR)/**/*)
+	$(BUILDENV) $(GO) build -o $@ $<

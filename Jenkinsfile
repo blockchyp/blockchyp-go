@@ -35,6 +35,12 @@ pipeline {
           }
         }
 
+        stage('Build') {
+          steps {
+            sh "make cli-linux cli-windows"
+          }
+        }
+
         /*
         stage('Test') {
           steps {
