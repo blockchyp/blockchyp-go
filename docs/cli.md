@@ -56,6 +56,8 @@ If you're not already using `make`, install make as well.
 In both cases, the build process is very fast and should add very little time
 to your build process.
 
+
+
 ### For Linux and Mac OS
 
 On Linux systems, use the following command to build the Linux CLI:
@@ -67,6 +69,17 @@ $ make cli-linux
 This will create a Linux binary at `/build/blockchyp` that you can then deploy as part of your solution.
 
 ### For Windows
+
+---
+**NOTE**
+
+These instructions assume you have a git client installed and available on your
+path.  If you don't have a Windows git client, you can get the standard git
+Windows client here...
+
+https://git-scm.com/download/
+
+---
 
 If you have `make` in your Windows development environment, use the following command to build the Windows CLI:
 
