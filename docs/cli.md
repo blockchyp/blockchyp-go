@@ -68,10 +68,16 @@ This will create a Linux binary at `/build/blockchyp` that you can then deploy a
 
 ### For Windows
 
-On Windows, use the following command to build the Windows CLI:
+If you have `make` in your Windows development environment, use the following command to build the Windows CLI:
 
 ```
 > make cli-windows
+```
+
+If you don't have `make`, you can use `go build` directly...
+
+```
+go build -o builds\blockchyp.exe cmd\blockchyp\main.go
 ```
 
 This will create a Windows exe file at `/build/blockchyp.exe` that you can then deploy
