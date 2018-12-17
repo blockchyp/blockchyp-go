@@ -154,6 +154,9 @@ type ReceiptSuggestions struct {
 	TC               string `json:"TC,omitempty"`
 	TVR              string `json:"TVR,omitempty"`
 	TSI              string `json:"TSI,omitempty"`
+	TerminalID       string `json:"terminalId,omitempty"`
+	MerchantID       string `json:"merchantId,omitempty"`
+	MerchantKey      string `json:"merchantKey,omitempty"`
 	ApplicationLabel string `json:"applicationLabel,omitempty"`
 	RequestSignature bool   `json:"requestSignature"`
 }
