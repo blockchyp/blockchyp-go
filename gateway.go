@@ -183,7 +183,7 @@ func computeHmac(headers APIRequestHeaders, signingKey string) (string, error) {
 	key, err := hex.DecodeString(signingKey)
 
 	if err != nil {
-		return "", err
+		return "", errors.New("Malformed Signing Key")
 	}
 
 	mac := hmac.New(sha256.New, key)

@@ -5,7 +5,6 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -82,7 +81,6 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 		routeResponse := TerminalRouteResponse{}
 		err := client.GatewayGet(path, &routeResponse)
 		if err != nil {
-			log.Fatal(err)
 			return routeResponse.TerminalRoute, err
 		}
 		if routeResponse.Success {

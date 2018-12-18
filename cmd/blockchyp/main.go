@@ -373,7 +373,7 @@ func processPing(client *blockchyp.Client, args commandLineArguments) {
 	}
 	res, err := client.Ping(req)
 	if err != nil {
-		handleFatalError(err)
+		handleError(err)
 	}
 	dumpResponse(res)
 }
@@ -395,6 +395,15 @@ func dumpResponse(res interface{}) {
 
 }
 
+func handleError(err error) {
+
+	ack := blockchyp.Acknowledgement{}
+	ack.Error = err.Error()
+	dumpResponse(ack)
+	handleFatal()
+
+}
+
 func handleFatalError(err error) {
 
 	fmt.Println(err)
@@ -404,7 +413,6 @@ func handleFatalError(err error) {
 
 func handleFatal() {
 
-	//fmt.Println("Type 'help' for a list of commands.")
 	os.Exit(1)
 
 }

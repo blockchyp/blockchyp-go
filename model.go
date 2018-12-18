@@ -173,6 +173,14 @@ type CaptureRequest struct {
 }
 
 /*
+Acknowledgement models a basic api acknowledgement.
+*/
+type Acknowledgement struct {
+	Success bool   `json:"success"`
+	Error   string `json:"error"`
+}
+
+/*
 CaptureResponse models the response to a capture request.
 */
 type CaptureResponse struct {
