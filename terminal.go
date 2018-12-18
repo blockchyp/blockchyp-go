@@ -50,6 +50,7 @@ type TerminalPingRequest struct {
 TerminalRoute models route information for a payment terminal.
 */
 type TerminalRoute struct {
+	Exists               bool           `json:"exists"`
 	TerminalName         string         `json:"terminalName"`
 	IPAddress            string         `json:"ipAddress"`
 	CloudRelayEnabled    bool           `json:"cloudRelayEnabled"`
@@ -86,7 +87,11 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 		}
 		if routeResponse.Success {
 			route = &routeResponse.TerminalRoute
+			route.Exists = true
 			client.routeCachePut(*route)
+		} else {
+			route = &TerminalRoute{}
+			route.Exists = false
 		}
 	}
 

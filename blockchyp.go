@@ -3,6 +3,7 @@ package blockchyp
 import (
 	"crypto/tls"
 	"errors"
+	"net"
 	"net/http"
 	"time"
 )
@@ -248,12 +249,26 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	pingResponse := PingResponse{}
+	if !route.Exists {
+		pingResponse.Success = false
+		pingResponse.ResponseDescription = "Unknown Terminal"
+		return &pingResponse, err
+	}
+
 	terminalRequest := TerminalPingRequest{
 		APICredentials: route.TransientCredentials,
 		Request:        request,
 	}
-	pingResponse := PingResponse{}
 	err = client.terminalPost(route, "/test", terminalRequest, &pingResponse)
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		pingResponse.Success = false
+		pingResponse.ResponseDescription = "Request Timed Out"
+		return &pingResponse, nil
+	} else if err != nil {
+		pingResponse.Success = false
+		pingResponse.ResponseDescription = err.Error()
+	}
 	return &pingResponse, err
 }
 
