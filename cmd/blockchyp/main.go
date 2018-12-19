@@ -39,6 +39,7 @@ type commandLineArguments struct {
 	TerminalName    string `arg:"terminal"`
 	Token           string `arg:"token"`
 	Amount          string `arg:"amount"`
+	PromptForTip    bool   `arg:"promptForTip"`
 	TipAmount       string `arg:"tip"`
 	TaxAmount       string `arg:"tax"`
 	CurrencyCode    string `arg:"currency"`
@@ -77,6 +78,7 @@ func parseArgs() commandLineArguments {
 	flag.StringVar(&args.TransactionID, "tx", "", "transaction id")
 	flag.StringVar(&args.Description, "desc", "", "transaction description")
 	flag.BoolVar(&args.Test, "test", false, "sets test mode")
+	flag.BoolVar(&args.PromptForTip, "promptForTip", false, "prompt for tip flag")
 	flag.BoolVar(&args.HTTPS, "secure", true, "enables or disables https with terminal")
 
 	flag.Parse()
@@ -347,6 +349,7 @@ func processAuth(client *blockchyp.Client, args commandLineArguments) {
 	req.Token = args.Token
 	req.Description = args.Description
 	req.Amount = args.Amount
+	req.PromptForTip = args.PromptForTip
 	req.TaxAmount = args.TaxAmount
 	req.TipAmount = args.TipAmount
 	req.Test = args.Test
@@ -361,7 +364,11 @@ func processAuth(client *blockchyp.Client, args commandLineArguments) {
 	}
 
 	if err != nil {
-		handleFatalError(err)
+		if res == nil {
+			handleError(err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(err)
+		}
 	}
 	dumpResponse(res)
 }
@@ -373,7 +380,11 @@ func processPing(client *blockchyp.Client, args commandLineArguments) {
 	}
 	res, err := client.Ping(req)
 	if err != nil {
-		handleError(err)
+		if res == nil {
+			handleError(err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(err)
+		}
 	}
 	dumpResponse(res)
 }

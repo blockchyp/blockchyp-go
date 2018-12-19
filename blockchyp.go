@@ -83,12 +83,24 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 		if err != nil {
 			return nil, err
 		}
+		authResponse := AuthorizationResponse{}
+		if !route.Exists {
+			authResponse.Approved = false
+			authResponse.ResponseDescription = "Unknown Terminal"
+			return &authResponse, err
+		}
 		authRequest := TerminalAuthorizationRequest{
 			APICredentials: route.TransientCredentials,
 			Request:        request,
 		}
-		authResponse := AuthorizationResponse{}
 		err = client.terminalPost(route, "/charge", authRequest, &authResponse)
+		if err, ok := err.(net.Error); ok && err.Timeout() {
+			authResponse.Approved = false
+			authResponse.ResponseDescription = "Request Timed Out"
+		} else if err != nil {
+			authResponse.Approved = false
+			authResponse.ResponseDescription = err.Error()
+		}
 		return &authResponse, err
 	}
 	authResponse := AuthorizationResponse{}
@@ -264,7 +276,6 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		pingResponse.Success = false
 		pingResponse.ResponseDescription = "Request Timed Out"
-		return &pingResponse, nil
 	} else if err != nil {
 		pingResponse.Success = false
 		pingResponse.ResponseDescription = err.Error()
