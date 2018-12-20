@@ -281,6 +281,7 @@ CloseBatchResponse models the response to a close batch request.
 */
 type CloseBatchResponse struct {
 	CoreResponse
+	Success       bool              `json:"success"`
 	CurrencyCode  string            `json:"currencyCode"`
 	CapturedTotal string            `json:"capturedTotal"`
 	OpenPreauths  string            `json:"openPreauths"`
