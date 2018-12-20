@@ -305,7 +305,9 @@ CloseBatch closes the current credit card batch.
 */
 func (client *Client) CloseBatch(request CloseBatchRequest) (*CloseBatchResponse, error) {
 
-	return &CloseBatchResponse{}, nil
+	response := CloseBatchResponse{}
+	err := client.GatewayPost("/close-batch", request, &response)
+	return &response, err
 
 }
 
