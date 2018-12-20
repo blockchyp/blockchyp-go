@@ -159,7 +159,7 @@ type ReceiptSuggestions struct {
 	MerchantID       string `json:"merchantId,omitempty"`
 	MerchantKey      string `json:"merchantKey,omitempty"`
 	ApplicationLabel string `json:"applicationLabel,omitempty"`
-	RequestSignature bool   `json:"requestSignature"`
+	RequestSignature bool   `json:"requestSignature,omitempty"`
 }
 
 /*
