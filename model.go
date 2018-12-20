@@ -160,6 +160,10 @@ type ReceiptSuggestions struct {
 	MerchantKey      string `json:"merchantKey,omitempty"`
 	ApplicationLabel string `json:"applicationLabel,omitempty"`
 	RequestSignature bool   `json:"requestSignature,omitempty"`
+	MaskedPAN        string `json:"maskedPan,omitempty"`
+	AuthorizedAmount string `json:"authorizedAmount"`
+	TransactionType  string `json:"transactionType"`
+	EntryMethod      string `json:"entryMethod,omitempty"`
 }
 
 /*
