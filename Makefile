@@ -11,8 +11,8 @@ WIN_BUILDENV = GOOS=windows GOARCH=386
 SOURCES = $(shell find . -name '*.go')
 HASH = $(shell git log -1 --pretty=%h)
 TAG = $(shell git tag --points-at HEAD | sort --version-sort | tail -n 1)
-TAR_ARCHIVE = $(BUILDDIR)/blockchyp-go-$(or $(TAG:v%=%), $(HASH)).tar.gz
-ZIP_ARCHIVE = $(BUILDDIR)/blockchyp-go-$(or $(TAG:v%=%), $(HASH)).zip
+TAR_ARCHIVE = blockchyp-cli-$(or $(TAG:v%=%), $(HASH)).tar.gz
+ZIP_ARCHIVE = blockchyp-cli-$(or $(TAG:v%=%), $(HASH)).zip
 
 # Executables
 GO = $(MODSUPPORT) go
@@ -48,16 +48,16 @@ tidy:
 # Builds the linux CLI executable
 .PHONY: cli-linux
 cli-linux:
-	$(LINUX_BUILDENV) $(MAKE) $(BUILDDIR)/blockchyp
+	GOOS=linux GOARCH=amd64 $(MAKE) $(BUILDDIR)/blockchyp/linux/amd64/blockchyp
 
 # Builds the windows CLI executable
 .PHONY: cli-windows
 cli-windows:
-	$(WINDOWS_BUILDENV) $(MAKE) $(BUILDDIR)/blockchyp.exe
+	GOOS=windows GOARCH=386 $(MAKE) $(BUILDDIR)/blockchyp/windows/386/blockchyp.exe
 
 # Builds distribution archives
 .PHONY: dist
-dist: $(TAR_ARCHIVE) $(ZIP_ARCHIVE)
+dist: $(BUILDDIR)/$(TAR_ARCHIVE) $(BUILDDIR)/$(ZIP_ARCHIVE)
 
 .PHONY: clean
 clean:
@@ -67,11 +67,11 @@ clean:
 	rm -f $(BUILDDIR)/*.tar.gz
 	rm -f $(BUILDDIR)/*.zip
 
-$(TAR_ARCHIVE): $(BUILDDIR)/blockchyp
-	$(TAR) -czvf $(TAR_ARCHIVE) $(BUILDDIR)/blockchyp
+$(BUILDDIR)/$(TAR_ARCHIVE): cli-linux cli-windows
+	cd $(BUILDDIR); $(TAR) -czvf $(TAR_ARCHIVE) ./blockchyp/
 
-$(ZIP_ARCHIVE): $(BUILDDIR)/blockchyp.exe
-	$(ZIP) $(ZIP_ARCHIVE) $(BUILDDIR)/blockchyp.exe
+$(BUILDDIR)/$(ZIP_ARCHIVE): cli-linux cli-windows
+	cd $(BUILDDIR); $(ZIP) -r $(ZIP_ARCHIVE) ./blockchyp/
 
 $(BUILDDIR)/%: $(wildcard $(CMDDIR)/**/*) $(SOURCES)
 	$(BUILDENV) $(GO) build -o $@ $<
