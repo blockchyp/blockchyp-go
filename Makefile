@@ -16,9 +16,9 @@ ZIP_ARCHIVE = $(BUILDDIR)/blockchyp-go-$(or $(TAG), $(HASH)).zip
 
 # Executables
 GO = $(MODSUPPORT) go
-GOLINT = $(MODSUPPORT) golint
-REVIVE = $(MODSUPPORT) revive
-XUNIT = $(MODSUPPORT) go2xunit
+GOLINT = $(GO) run github.com/golang/lint/golint
+REVIVE = $(MODSUPPORT) $(GO) run github.com/mgechev/revive
+XUNIT = $(GO) run github.com/tebeka/go2xunit
 ZIP = zip
 TAR = tar
 
