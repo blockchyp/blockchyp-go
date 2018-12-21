@@ -219,6 +219,13 @@ func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) 
 
 	captureResponse := CaptureResponse{}
 	err := client.GatewayPost("/capture", request, &captureResponse)
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		captureResponse.Approved = false
+		captureResponse.ResponseDescription = "Request Timed Out"
+	} else if err != nil {
+		captureResponse.Approved = false
+		captureResponse.ResponseDescription = err.Error()
+	}
 	return &captureResponse, err
 
 }
@@ -230,6 +237,13 @@ func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
 
 	voidResponse := VoidResponse{}
 	err := client.GatewayPost("/void", request, &voidResponse)
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		voidResponse.Approved = false
+		voidResponse.ResponseDescription = "Request Timed Out"
+	} else if err != nil {
+		voidResponse.Approved = false
+		voidResponse.ResponseDescription = err.Error()
+	}
 	return &voidResponse, err
 }
 

@@ -297,7 +297,11 @@ func processVoid(client *blockchyp.Client, args commandLineArguments) {
 	res, err := client.Void(req)
 
 	if err != nil {
-		handleFatalError(err)
+		if res == nil {
+			handleError(err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(err)
+		}
 	}
 	dumpResponse(res)
 }
@@ -315,7 +319,11 @@ func processCapture(client *blockchyp.Client, args commandLineArguments) {
 	res, err := client.Capture(req)
 
 	if err != nil {
-		handleFatalError(err)
+		if res == nil {
+			handleError(err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(err)
+		}
 	}
 	dumpResponse(res)
 }
@@ -402,7 +410,7 @@ func dumpResponse(res interface{}) {
 	if err != nil {
 		handleFatalError(err)
 	}
-	fmt.Print(string(content))
+	fmt.Println(string(content))
 
 }
 
