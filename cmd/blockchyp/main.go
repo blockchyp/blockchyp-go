@@ -254,7 +254,11 @@ func processRefund(client *blockchyp.Client, args commandLineArguments) {
 	res, err := client.Refund(req)
 
 	if err != nil {
-		handleFatalError(err)
+		if res == nil {
+			handleError(err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(err)
+		}
 	}
 	dumpResponse(res)
 }
@@ -286,9 +290,12 @@ func processCloseBatch(client *blockchyp.Client, args commandLineArguments) {
 	res, err := client.CloseBatch(req)
 
 	if err != nil {
-		handleFatalError(err)
+		if res == nil {
+			handleError(err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(err)
+		}
 	}
-	dumpResponse(res)
 }
 
 func processVoid(client *blockchyp.Client, args commandLineArguments) {
