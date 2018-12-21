@@ -12,8 +12,8 @@ import (
 Default client configuration constants.
 */
 const (
-	DefaultGatewayHost     = "api.blockchyp.com"
-	DefaultTestGatewayHost = "test.blockchyp.com"
+	DefaultGatewayHost     = "https://api.blockchyp.com"
+	DefaultTestGatewayHost = "https://test.blockchyp.com"
 	DefaultHTTPS           = true
 	DefaultRouteCacheTTL   = 60 * time.Minute
 	DefaultGatewayTimeout  = 20 * time.Second
@@ -197,6 +197,13 @@ func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, err
 	}
 	authResponse := AuthorizationResponse{}
 	err := client.GatewayPost("/refund", request, &authResponse)
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		authResponse.Approved = false
+		authResponse.ResponseDescription = "Request Timed Out"
+	} else if err != nil {
+		authResponse.Approved = false
+		authResponse.ResponseDescription = err.Error()
+	}
 	return &authResponse, err
 
 }
@@ -340,6 +347,13 @@ func (client *Client) CloseBatch(request CloseBatchRequest) (*CloseBatchResponse
 
 	response := CloseBatchResponse{}
 	err := client.GatewayPost("/close-batch", request, &response)
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.Success = false
+		response.ResponseDescription = "Request Timed Out"
+	} else if err != nil {
+		response.Success = false
+		response.ResponseDescription = err.Error()
+	}
 	return &response, err
 
 }
