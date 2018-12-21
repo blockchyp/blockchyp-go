@@ -268,7 +268,11 @@ func processReverse(client *blockchyp.Client, args commandLineArguments) {
 	res, err := client.Reverse(req)
 
 	if err != nil {
-		handleFatalError(err)
+		if res == nil {
+			handleError(err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(err)
+		}
 	}
 	dumpResponse(res)
 }

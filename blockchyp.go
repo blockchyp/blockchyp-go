@@ -208,6 +208,13 @@ func (client *Client) Reverse(request AuthorizationRequest) (*AuthorizationRespo
 
 	authResponse := AuthorizationResponse{}
 	err := client.GatewayPost("/reverse", request, &authResponse)
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		authResponse.Approved = false
+		authResponse.ResponseDescription = "Request Timed Out"
+	} else if err != nil {
+		authResponse.Approved = false
+		authResponse.ResponseDescription = err.Error()
+	}
 	return &authResponse, err
 
 }
