@@ -2,7 +2,7 @@ language: go
 go:
 - 1.11.x
 before_deploy:
-  - export RELEASE_NAME="Version ${TRAVIS_TAG#v}"
+  - export RELEASE_NAME="BlockChyp CLI Version ${TRAVIS_TAG#v}"
 deploy:
   provider: releases
   name: "$RELEASE_NAME"
