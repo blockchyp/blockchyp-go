@@ -1,5 +1,10 @@
 # BlockChyp Go SDK
 
+[![Travis CI](https://img.shields.io/travis/blockchyp/blockchyp-go.svg?style=shield)](https://travis-ci.org/blockchyp/blockchyp-go)
+[![Release](https://img.shields.io/github/release/blockchyp/blockchyp-go/all.svg?style=shield)](https://github.com/blockchyp/blockchyp-go/releases/latest)
+[![Go Report Card](https://goreportcard.com/badge/github.com/blockchyp/blockchyp-go)](https://goreportcard.com/report/github.com/blockchyp/blockchyp-go)
+[![GoDoc](https://godoc.org/github.com/blockchyp/blockchyp-go?status.svg)](https://godoc.org/github.com/blockchyp/blockchyp-go)
+
 This is the reference SDK implementation for BlockChyp maintained by the BlockChyp engineering team.
 
 It's based on the [BlockChyp SDK Developers Guide](https://docs.blockchyp.com/sdk-guide/index.html).
