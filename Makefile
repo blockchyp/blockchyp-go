@@ -9,16 +9,22 @@ PKGS = $(shell go list ./... | grep -v /vendor/)
 LINUX_BUILDENV = GOOS=linux GOARCH=amd64
 WIN_BUILDENV = GOOS=windows GOARCH=386
 SOURCES = $(shell find . -name '*.go')
+HASH = $(shell git log -1 --pretty=%h)
+TAG = $(shell git tag --points-at HEAD | sort --version-sort | tail -n 1)
+TAR_ARCHIVE = $(BUILDDIR)/blockchyp-go-$(or $(TAG), $(HASH)).tar.gz
+ZIP_ARCHIVE = $(BUILDDIR)/blockchyp-go-$(or $(TAG), $(HASH)).zip
 
 # Executables
 GO = $(MODSUPPORT) go
 GOLINT = $(MODSUPPORT) golint
 REVIVE = $(MODSUPPORT) revive
 XUNIT = $(MODSUPPORT) go2xunit
+ZIP = zip
+TAR = tar
 
 # Default target
 .PHONY: all
-all: clean lint test tidy
+all: clean lint tidy dist
 
 # Runs go lint and revive linter
 .PHONY: lint
@@ -49,11 +55,23 @@ cli-linux:
 cli-windows:
 	$(WINDOWS_BUILDENV) $(MAKE) $(BUILDDIR)/blockchyp.exe
 
+# Builds distribution archives
+.PHONY: dist
+dist: $(TAR_ARCHIVE) $(ZIP_ARCHIVE)
+
 .PHONY: clean
 clean:
 	$(GO) clean -cache $(PKGS)
 	rm -f $(BUILDDIR)/core
 	rm -f $(BUILDDIR)/blockchyp*
+	rm -f $(BUILDDIR)/*.tar.gz
+	rm -f $(BUILDDIR)/*.zip
+
+$(TAR_ARCHIVE): $(BUILDDIR)/blockchyp
+	$(TAR) -czvf $(TAR_ARCHIVE) $(BUILDDIR)/blockchyp
+
+$(ZIP_ARCHIVE): $(BUILDDIR)/blockchyp.exe
+	$(ZIP) $(ZIP_ARCHIVE) $(BUILDDIR)/blockchyp.exe
 
 $(BUILDDIR)/%: $(wildcard $(CMDDIR)/**/*) $(SOURCES)
 	$(BUILDENV) $(GO) build -o $@ $<
