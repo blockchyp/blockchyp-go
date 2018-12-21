@@ -11,8 +11,8 @@ WIN_BUILDENV = GOOS=windows GOARCH=386
 SOURCES = $(shell find . -name '*.go')
 HASH = $(shell git log -1 --pretty=%h)
 TAG = $(shell git tag --points-at HEAD | sort --version-sort | tail -n 1)
-TAR_ARCHIVE = $(BUILDDIR)/blockchyp-go-$(or $(TAG), $(HASH)).tar.gz
-ZIP_ARCHIVE = $(BUILDDIR)/blockchyp-go-$(or $(TAG), $(HASH)).zip
+TAR_ARCHIVE = $(BUILDDIR)/blockchyp-go-$(or $(TAG:v%=%), $(HASH)).tar.gz
+ZIP_ARCHIVE = $(BUILDDIR)/blockchyp-go-$(or $(TAG:v%=%), $(HASH)).zip
 
 # Executables
 GO = $(MODSUPPORT) go

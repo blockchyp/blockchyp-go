@@ -1,8 +1,11 @@
 language: go
 go:
 - 1.11.x
+before_deploy:
+  - export RELEASE_NAME="Version ${TRAVIS_TAG#v}"
 deploy:
   provider: releases
+  name: "$RELEASE_NAME"
   api_key:
     secure: Uo8BV5b8ZpswR7srS/IJhZCR6rnoYzhu4JPmuwhI567PQJtCswMFOBf7P+47bPbkU1NzG4WD0tb3AIqNXjLjuPw70dR17fc1zz9pqxTNnq84pFZZBGIHwQeKWoO6xQv+DC+hx7bf/o45TfceBOnNBacK03+sR5wJPH56R1MckUc+7bpRTK6SZeJFruXx01PXFvqkhqgQhbn3384YiPAdgJDcSaZXL+n8rp4qTU2Rs+GQhFdWE4jNaUBXgyiuYnLHGwwaRfrcdDQlFmfmIPkbuCKC+e5QKJv0zVAw9z+qlEnAs4W9flWiG/RdUsgDXFw15v0CA+FSfA7bNOmPbX5gxOZkOrSQ9EW7ZjxM1zQM5FrxllEyyEIrQFTWv1xkyWDvZ0Iermsu44VosnZcAFPAAFvxtt9Y+k8AMXTplihuSggCVFDK7mUczL5fLwp3wiQ1okOWnWMfFQrvkgSPUjJ3j6D3vkbzBmhg/g8WVNOMCfZYiKzsD/XXk7KzOeYqSXlKga5ybOLcNeqPPLy4aME89G5rKFMwuMajnFOcF7/t11X9q1nNOfUEGMq12OHFUxZUtVSK73r79FYtrIUVFGCbe23ZoJtl3x8DM78GFeIo6tUnuPbdttHrPuQFRmkE4ADct+5Ajpms3A9bsVqQKGQA1x/nmTMCmPgAE1x/ivCPoGE=
   file_glob: true
