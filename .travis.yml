@@ -1,16 +1,17 @@
 language: go
-
 go:
 - 1.11.x
-
 deploy:
   provider: releases
   api_key:
     secure: Uo8BV5b8ZpswR7srS/IJhZCR6rnoYzhu4JPmuwhI567PQJtCswMFOBf7P+47bPbkU1NzG4WD0tb3AIqNXjLjuPw70dR17fc1zz9pqxTNnq84pFZZBGIHwQeKWoO6xQv+DC+hx7bf/o45TfceBOnNBacK03+sR5wJPH56R1MckUc+7bpRTK6SZeJFruXx01PXFvqkhqgQhbn3384YiPAdgJDcSaZXL+n8rp4qTU2Rs+GQhFdWE4jNaUBXgyiuYnLHGwwaRfrcdDQlFmfmIPkbuCKC+e5QKJv0zVAw9z+qlEnAs4W9flWiG/RdUsgDXFw15v0CA+FSfA7bNOmPbX5gxOZkOrSQ9EW7ZjxM1zQM5FrxllEyyEIrQFTWv1xkyWDvZ0Iermsu44VosnZcAFPAAFvxtt9Y+k8AMXTplihuSggCVFDK7mUczL5fLwp3wiQ1okOWnWMfFQrvkgSPUjJ3j6D3vkbzBmhg/g8WVNOMCfZYiKzsD/XXk7KzOeYqSXlKga5ybOLcNeqPPLy4aME89G5rKFMwuMajnFOcF7/t11X9q1nNOfUEGMq12OHFUxZUtVSK73r79FYtrIUVFGCbe23ZoJtl3x8DM78GFeIo6tUnuPbdttHrPuQFRmkE4ADct+5Ajpms3A9bsVqQKGQA1x/nmTMCmPgAE1x/ivCPoGE=
   file_glob: true
   file:
-    - build/*.tar.gz
-    - build/*.zip
+  - build/*.tar.gz
+  - build/*.zip
   skip_cleanup: true
   on:
     tags: true
+notifications:
+  slack:
+    secure: iNWmUfeCC5HtgPW9/mrvqOfLaDqpTkz07v3ymCM81ZkbY2/+hrL2lfKHIAMTTh749x+EYEmZFkZTDz1YA+Ub5ty0mNmwrgXMd/UeAVD9tcsQSGIOClImA2Y/58t/osr1UwqDb1StfGKD5BsLoH3xaP8EYc/L43QDKsXG4P8rd1hmscmJdlrUMuRFUHuRUkiYFLWVx6w13mE9cO5EfHMZSvMr6fc2koS+CeQWsjSaKypBBbFNoVA/DfPhhFMWHyglFVYKBJpvEa2qo8015QU6q8OifgreGuHEemjX7mEe/C+V6wh9Q1O2uLilfNBJV5ktPYz+3ey9sh3DjBgdFa4nCxmahTebFlvb4c1s/EgaJxiQYkDIFfJHW9KpxJ4dYalnQ0OJFhFmVpfPQz4lbeK8d57ka0VKacaefz91vAayTy7vkuoIS863IcssI6EqyrnBdu62umVCGo84v30E74l2ewzLqdZGSWcvgOiGpukWW4+4VRf35Ph8Ut9jFOQJQqr0TthxnuXfj5cxZ+1VB9i0kl9mEjAtCSZifUFD34R5BjhE09wWdHUTu01LPYGgSlrpfZbmamO9dYEwQhxf6Cz77KEauIKMTrkEi3SCC8GlKs2cNxeaD8Blx2JHTubzJm3NLeVnR7CU9Y/fh3+6zuVF61o1je6y2KyiAUdr9cVEJ10=
