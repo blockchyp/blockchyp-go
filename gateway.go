@@ -33,11 +33,15 @@ type APIRequestHeaders struct {
 	Signature   string
 }
 
-func (client *Client) assembleGatewayURL(path string) string {
+func (client *Client) assembleGatewayURL(path string, testTx bool) string {
 
 	buffer := bytes.Buffer{}
 
-	buffer.WriteString(client.GatewayHost)
+	if testTx {
+		buffer.WriteString(client.TestGatewayHost)
+	} else {
+		buffer.WriteString(client.GatewayHost)
+	}
 	buffer.WriteString("/api")
 	buffer.WriteString(path)
 	return buffer.String()
@@ -64,14 +68,14 @@ func consumeResponse(resp *http.Response, responseEntity interface{}) error {
 /*
 GatewayPost posts a request to the api gateway.
 */
-func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}) error {
+func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}, testTx bool) error {
 
 	content, err := json.Marshal(requestEntity)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", client.assembleGatewayURL(path), bytes.NewBuffer(content))
+	req, err := http.NewRequest("POST", client.assembleGatewayURL(path, testTx), bytes.NewBuffer(content))
 	if err != nil {
 		return err
 	}
@@ -99,7 +103,7 @@ GatewayGet retrieves a get request from the api gateway.
 */
 func (client *Client) GatewayGet(path string, responseEntity interface{}) error {
 
-	req, err := http.NewRequest("GET", client.assembleGatewayURL(path), nil)
+	req, err := http.NewRequest("GET", client.assembleGatewayURL(path, false), nil)
 	if err != nil {
 		return err
 	}

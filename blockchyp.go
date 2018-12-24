@@ -104,7 +104,7 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 		return &authResponse, err
 	}
 	authResponse := AuthorizationResponse{}
-	err := client.GatewayPost("/charge", request, &authResponse)
+	err := client.GatewayPost("/charge", request, &authResponse, request.Test)
 	return &authResponse, err
 
 }
@@ -154,7 +154,7 @@ func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationRespo
 	}
 
 	authResponse := AuthorizationResponse{}
-	err := client.GatewayPost("/preauth", request, &authResponse)
+	err := client.GatewayPost("/preauth", request, &authResponse, request.Test)
 	return &authResponse, err
 
 }
@@ -196,7 +196,7 @@ func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, err
 
 	}
 	authResponse := AuthorizationResponse{}
-	err := client.GatewayPost("/refund", request, &authResponse)
+	err := client.GatewayPost("/refund", request, &authResponse, request.Test)
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		authResponse.Approved = false
 		authResponse.ResponseDescription = "Request Timed Out"
@@ -214,7 +214,7 @@ Reverse executes a manual time out reversal.
 func (client *Client) Reverse(request AuthorizationRequest) (*AuthorizationResponse, error) {
 
 	authResponse := AuthorizationResponse{}
-	err := client.GatewayPost("/reverse", request, &authResponse)
+	err := client.GatewayPost("/reverse", request, &authResponse, request.Test)
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		authResponse.Approved = false
 		authResponse.ResponseDescription = "Request Timed Out"
@@ -232,7 +232,7 @@ Capture captures a preauthorization.
 func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) {
 
 	captureResponse := CaptureResponse{}
-	err := client.GatewayPost("/capture", request, &captureResponse)
+	err := client.GatewayPost("/capture", request, &captureResponse, request.Test)
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		captureResponse.Approved = false
 		captureResponse.ResponseDescription = "Request Timed Out"
@@ -250,7 +250,7 @@ Void discards a previous preauth transaction.
 func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
 
 	voidResponse := VoidResponse{}
-	err := client.GatewayPost("/void", request, &voidResponse)
+	err := client.GatewayPost("/void", request, &voidResponse, request.Test)
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		voidResponse.Approved = false
 		voidResponse.ResponseDescription = "Request Timed Out"
@@ -286,7 +286,7 @@ func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 
 	} else {
 		enrollResponse := EnrollResponse{}
-		err := client.GatewayPost("/enroll", request, &enrollResponse)
+		err := client.GatewayPost("/enroll", request, &enrollResponse, request.Test)
 		return &enrollResponse, err
 	}
 
@@ -346,7 +346,7 @@ CloseBatch closes the current credit card batch.
 func (client *Client) CloseBatch(request CloseBatchRequest) (*CloseBatchResponse, error) {
 
 	response := CloseBatchResponse{}
-	err := client.GatewayPost("/close-batch", request, &response)
+	err := client.GatewayPost("/close-batch", request, &response, request.Test)
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.Success = false
 		response.ResponseDescription = "Request Timed Out"
