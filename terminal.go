@@ -171,6 +171,7 @@ func (client *Client) terminalPost(route TerminalRoute, path string, requestEnti
 	if err != nil {
 		return err
 	}
+
 	resp, err := client.terminalHTTPClient.Do(req)
 	if err != nil {
 		return err

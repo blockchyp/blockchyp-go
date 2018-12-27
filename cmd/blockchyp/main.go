@@ -296,6 +296,7 @@ func processCloseBatch(client *blockchyp.Client, args commandLineArguments) {
 			handleError(err)
 		}
 	}
+	dumpResponse(res)
 }
 
 func processVoid(client *blockchyp.Client, args commandLineArguments) {
