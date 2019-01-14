@@ -84,8 +84,7 @@ func parseArgs() commandLineArguments {
 	flag.Parse()
 
 	if args.Type == "" {
-		fmt.Println("-type is required")
-		handleFatal()
+		fatalError("-type is required")
 	}
 
 	return args
@@ -113,16 +112,13 @@ func resolveCredentials(args commandLineArguments) (*blockchyp.APICredentials, e
 	}
 
 	if creds.APIKey == "" {
-		fmt.Println("-apiKey or blockchyp.json file required")
-		handleFatal()
+		fatalError("-apiKey or blockchyp.json file required")
 	}
 	if creds.BearerToken == "" {
-		fmt.Println("-bearerToken or blockchyp.json file required")
-		handleFatal()
+		fatalError("-bearerToken or blockchyp.json file required")
 	}
 	if creds.SigningKey == "" {
-		fmt.Println("-signingKey or blockchyp.json file required")
-		handleFatal()
+		fatalError("-signingKey or blockchyp.json file required")
 	}
 
 	return creds, nil
@@ -194,7 +190,7 @@ func resolveClient(args commandLineArguments) (*blockchyp.Client, error) {
 
 	if args.GatewayHost != "" {
 		client.GatewayHost = args.GatewayHost
-	} else if settings.GatewayHost != "" {
+	} else if settings != nil && settings.GatewayHost != "" {
 		client.GatewayHost = settings.GatewayHost
 	} else {
 		client.GatewayHost = "https://api.blockchyp.com"
@@ -216,8 +212,7 @@ func processCommand(args commandLineArguments) {
 	client, err := resolveClient(args)
 
 	if err != nil {
-		fmt.Println(err)
-		handleFatal()
+		handleFatalError(err)
 	}
 
 	switch args.Type {
@@ -238,8 +233,7 @@ func processCommand(args commandLineArguments) {
 	case "close-batch":
 		processCloseBatch(client, args)
 	default:
-		fmt.Println(args.Type, "is unknown transaction type")
-		handleFatal()
+		fatalErrorf("%s is unknown transaction type", args.Type)
 	}
 
 }
@@ -360,8 +354,7 @@ func processGiftActivate(client *blockchyp.Client, args commandLineArguments) {
 func processAuth(client *blockchyp.Client, args commandLineArguments) {
 	validateRequired(args.Amount, "amount")
 	if (args.TerminalName == "") && (args.Token == "") {
-		fmt.Println("-terminal or -token requred")
-		handleFatal()
+		fatalError("-terminal or -token requred")
 	}
 	req := blockchyp.AuthorizationRequest{}
 	req.TerminalName = args.TerminalName
@@ -411,8 +404,7 @@ func processPing(client *blockchyp.Client, args commandLineArguments) {
 
 func validateRequired(value string, arg string) {
 	if value == "" {
-		fmt.Println("-" + arg + " is required")
-		handleFatal()
+		fatalErrorf("-%s is required", arg)
 	}
 }
 
@@ -439,6 +431,18 @@ func handleFatalError(err error) {
 
 	fmt.Println(err)
 	handleFatal()
+
+}
+
+func fatalError(msg string) {
+
+	handleFatalError(errors.New(msg))
+
+}
+
+func fatalErrorf(format string, args ...interface{}) {
+
+	handleFatalError(fmt.Errorf(format, args...))
 
 }
 
