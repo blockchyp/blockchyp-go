@@ -15,32 +15,37 @@ the results are returned to stdout as JSON.
 The following example shows a basic CLI charge transaction.
 
 ```
-$ ./blockchyp -type=charge -terminal="Test Terminal" -amount="25.00"
+$ ./blockchyp -type=charge -terminal="Test Terminal" -amount="25.55"
 {
-  "responseDescription":"Approved",
-  "transactionId":"DD62YSX6G4I6RM3XNSLM7WZLHE",
-  "transactionType":"charge",
-  "timestamp":"2018-12-12T20:23:57Z",
-  "tickBlock":"009991a8ac7b6a4420760e1e14e1689c88be2a610a033d6908c1b04b5c00f9da",
   "approved":true,
-  "authCode":"554738",
+  "responseDescription":"Approved",
+  "transactionId":"NZ6FGYAYLYI6TLVWNSLM7WZLHE",
+  "transactionRef":"cfd068099a4280f1f09a965d9cc522f25ef4e06a95c9a9461d59fa5deed62180",
+  "transactionType":"charge","timestamp":"2019-01-15T00:42:36Z",
+  "tickBlock":"000e61f8204a2a372cac288f833a8e0949dd50d0074d5133432dce4e78d97913",
+  "authCode":"612797",
   "entryMethod":"CHIP",
   "paymentType":"VISA",
-  "maskedPan":"************0119",
+  "maskedPan":"************0010",
+  "cardHolder":"Test/Card 01              ",
   "partialAuth":false,
   "altCurrency":false,
   "currencyCode":"USD",
-  "requestedAmount":"25.00",
-  "authorizedAmount":"25.00",
-  "tipAmount":"0.00",
-  "taxAmount":"0.00",
+  "requestedAmount":"20.55",
+  "authorizedAmount":"20.55",
   "receiptSuggestions":{
     "AID":"A0000000031010",
-    "ARQC":"8A3054E0EA328A2A",
-    "IAD":"06010A03A0A800",
-    "TVR":"8000008000",
-    "TSI":"6800",
-    "requestSignature":true
+    "ARQC":"E0A09074268A87F4",
+    "IAD":"06010A03A0B800",
+    "TVR":"0240008000",
+    "TSI":"E800",
+    "merchantName":"Test Merchant",
+    "applicationLabel":"VISA CREDIT",
+    "requestSignature":true,
+    "maskedPan":"************0010",
+    "authorizedAmount":"20.55",
+    "transactionType":"charge",
+    "entryMethod":"CHIP"
   }
 }
 ```
@@ -179,33 +184,37 @@ This transaction executes a direct auth and capture transaction against a BlockC
 payment terminal.
 
 ```
-> blockchyp.exe -type=charge -terminal="Test Terminal" -amount="50.00"
+> blockchyp.exe -type=charge -terminal="Test Terminal" -amount="20.55"
 {
-  "responseDescription":"Approved",
-  "transactionId":"DD62YVH6G4I6RM33NSLM7WZLHE",
-  "transactionType":"charge",
-  "timestamp":"2018-12-12T21:11:58Z",
-  "tickBlock":"009991a8ac7b6a4420760e1e14e1689c88be2a610a033d6908c1b04b5c00f9da",
   "approved":true,
-  "authCode":"190390",
+  "responseDescription":"Approved",
+  "transactionId":"NZ6FGYAYLYI6TLVWNSLM7WZLHE",
+  "transactionRef":"cfd068099a4280f1f09a965d9cc522f25ef4e06a95c9a9461d59fa5deed62180",
+  "transactionType":"charge","timestamp":"2019-01-15T00:42:36Z",
+  "tickBlock":"000e61f8204a2a372cac288f833a8e0949dd50d0074d5133432dce4e78d97913",
+  "authCode":"612797",
   "entryMethod":"CHIP",
   "paymentType":"VISA",
-  "maskedPan":"************0119",
-  "cardHolder":"01",
+  "maskedPan":"************0010",
+  "cardHolder":"Test/Card 01              ",
   "partialAuth":false,
   "altCurrency":false,
   "currencyCode":"USD",
-  "requestedAmount":"50.00",
-  "authorizedAmount":"50.00",
-  "tipAmount":"0.00",
-  "taxAmount":"0.00",
+  "requestedAmount":"20.55",
+  "authorizedAmount":"20.55",
   "receiptSuggestions":{
     "AID":"A0000000031010",
-    "ARQC":"FB81D5DE827469CA",
-    "IAD":"06010A03A0A800",
-    "TVR":"8000008000",
-    "TSI":"6800",
-    "requestSignature":true
+    "ARQC":"E0A09074268A87F4",
+    "IAD":"06010A03A0B800",
+    "TVR":"0240008000",
+    "TSI":"E800",
+    "merchantName":"Test Merchant",
+    "applicationLabel":"VISA CREDIT",
+    "requestSignature":true,
+    "maskedPan":"************0010",
+    "authorizedAmount":"20.55",
+    "transactionType":"charge",
+    "entryMethod":"CHIP"
   }
 }
 ```
@@ -216,32 +225,38 @@ This transaction executes a preauthorization against a BlockChyp
 payment terminal.
 
 ```
-./blockchyp -type=preauth -terminal="Test Terminal" -amount="50.00"
+./blockchyp -type=preauth -terminal="Test Terminal" -amount="20.55"
 {
-  "responseDescription":"Approved",
-  "transactionId":"DD62YXX6G4I6RM34NSLM7WZLHE",
-  "transactionType":"preauth",
-  "timestamp":"2018-12-12T21:17:08Z",
-  "tickBlock":"009991a8ac7b6a4420760e1e14e1689c88be2a610a033d6908c1b04b5c00f9da",
   "approved":true,
-  "authCode":"762708",
+  "responseDescription":"Approved",
+  "transactionId":"NZ6FGYAYLYI6TLVWNSLM7WZLHE",
+  "transactionRef":"cfd068099a4280f1f09a965d9cc522f25ef4e06a95c9a9461d59fa5deed62180",
+  "transactionType":"preauth",
+  "timestamp":"2019-01-15T00:42:36Z",
+  "tickBlock":"000e61f8204a2a372cac288f833a8e0949dd50d0074d5133432dce4e78d97913",
+  "authCode":"612797",
   "entryMethod":"CHIP",
   "paymentType":"VISA",
-  "maskedPan":"************0119",
+  "maskedPan":"************0010",
+  "cardHolder":"Test/Card 01              ",
   "partialAuth":false,
   "altCurrency":false,
   "currencyCode":"USD",
-  "requestedAmount":"50.00",
-  "authorizedAmount":"50.00",
-  "tipAmount":"0.00",
-  "taxAmount":"0.00",
+  "requestedAmount":"20.55",
+  "authorizedAmount":"20.55",
   "receiptSuggestions":{
     "AID":"A0000000031010",
-    "ARQC":"A7095FEDC22B7E51",
-    "IAD":"06010A03A0A800",
-    "TVR":"8000008000",
-    "TSI":"6800",
-    "requestSignature":true
+    "ARQC":"E0A09074268A87F4",
+    "IAD":"06010A03A0B800",
+    "TVR":"0240008000",
+    "TSI":"E800",
+    "merchantName":"Test Merchant",
+    "applicationLabel":"VISA CREDIT",
+    "requestSignature":true,
+    "maskedPan":"************0010",
+    "authorizedAmount":"20.55",
+    "transactionType":"charge",
+    "entryMethod":"CHIP"
   }
 }
 ```
