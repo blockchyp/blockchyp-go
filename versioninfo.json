@@ -1,0 +1,30 @@
+{
+	"FixedFileInfo": {
+		"FileVersion": {
+		},
+		"ProductVersion": {
+		},
+		"FileFlagsMask": "3f",
+		"FileFlags ": "00",
+		"FileOS": "040004",
+		"FileType": "01",
+		"FileSubType": "00"
+	},
+	"StringFileInfo": {
+		"Comments": "",
+		"CompanyName": "BlockChyp, Inc.",
+		"FileDescription": "",
+		"InternalName": "blockchyp-cli",
+		"LegalCopyright": "© BlockChyp",
+		"LegalTrademarks": "",
+		"OriginalFilename": "blockchyp",
+		"PrivateBuild": "",
+		"ProductName": "BlockChyp CLI"
+	},
+	"VarFileInfo": {
+		"Translation": {
+			"LangID": "0409",
+			"CharsetID": "04B0"
+		}
+	}
+}

@@ -13,10 +13,12 @@ HASH = $(shell git log -1 --pretty=%h)
 TAG = $(shell git tag --points-at HEAD | sort --version-sort | tail -n 1)
 TAR_ARCHIVE = blockchyp-cli-$(or $(TAG:v%=%), $(HASH)).tar.gz
 ZIP_ARCHIVE = blockchyp-cli-$(or $(TAG:v%=%), $(HASH)).zip
+ICON = assets/blockchyp.ico
 
 # Executables
 GO = $(MODSUPPORT) go
 GOLINT = $(GO) run github.com/golang/lint/golint
+GOVERSIONINFO = $(GO) run github.com/josephspurrier/goversioninfo/cmd/goversioninfo
 REVIVE = $(MODSUPPORT) $(GO) run github.com/mgechev/revive
 XUNIT = $(GO) run github.com/tebeka/go2xunit
 ZIP = zip
@@ -53,6 +55,7 @@ cli-linux:
 # Builds the windows CLI executable
 .PHONY: cli-windows
 cli-windows:
+	$(GOVERSIONINFO) -icon=$(ICON) -manifest=blockchyp.exe.manifest
 	GOOS=windows GOARCH=386 $(MAKE) $(BUILDDIR)/blockchyp/windows/386/blockchyp.exe
 
 # Builds distribution archives
