@@ -57,6 +57,7 @@ cli-linux:
 cli-windows:
 	$(GOVERSIONINFO) -icon=$(ICON) -manifest=blockchyp.exe.manifest
 	GOOS=windows GOARCH=386 $(MAKE) $(BUILDDIR)/blockchyp/windows/386/blockchyp.exe
+	rm *.syso
 
 # Builds distribution archives
 .PHONY: dist
