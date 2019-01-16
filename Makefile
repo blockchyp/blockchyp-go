@@ -56,7 +56,7 @@ cli-linux:
 # Builds the windows CLI executable
 .PHONY: cli-windows
 cli-windows:
-	$(GOVERSIONINFO) -icon=$(ICON) -manifest=blockchyp.exe.manifest
+	$(GOVERSIONINFO) -icon=$(ICON)
 	GOOS=windows GOARCH=386 $(MAKE) $(BUILDDIR)/blockchyp/windows/386/blockchyp.exe
 	rm *.syso
 
@@ -67,10 +67,7 @@ dist: $(BUILDDIR)/$(TAR_ARCHIVE) $(BUILDDIR)/$(ZIP_ARCHIVE)
 .PHONY: clean
 clean:
 	$(GO) clean -cache $(PKGS)
-	rm -f $(BUILDDIR)/core
-	rm -f $(BUILDDIR)/blockchyp*
-	rm -f $(BUILDDIR)/*.tar.gz
-	rm -f $(BUILDDIR)/*.zip
+	rm -rf $(BUILDDIR)
 
 $(BUILDDIR)/$(TAR_ARCHIVE): cli-linux cli-windows
 	cd $(BUILDDIR); $(TAR) -czvf $(TAR_ARCHIVE) ./blockchyp/
