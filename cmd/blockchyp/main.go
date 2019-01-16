@@ -45,9 +45,14 @@ type commandLineArguments struct {
 	CurrencyCode    string `arg:"currency"`
 	TransactionID   string `arg:"txId"`
 	HTTPS           bool   `arg:"secure"`
+	Version         bool   `arg:"version"`
 }
 
 var currentConfig *configSettings
+
+// compileTimeVersion is populated at build time. It contains the version
+// string of the current build.
+var compileTimeVersion string
 
 func main() {
 
@@ -80,8 +85,14 @@ func parseArgs() commandLineArguments {
 	flag.BoolVar(&args.Test, "test", false, "sets test mode")
 	flag.BoolVar(&args.PromptForTip, "promptForTip", false, "prompt for tip flag")
 	flag.BoolVar(&args.HTTPS, "secure", true, "enables or disables https with terminal")
+	flag.BoolVar(&args.Version, "version", false, "print version and exit")
 
 	flag.Parse()
+
+	if args.Version {
+		fmt.Println(compileTimeVersion)
+		os.Exit(0)
+	}
 
 	if args.Type == "" {
 		fatalError("-type is required")

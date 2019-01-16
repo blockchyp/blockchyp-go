@@ -158,6 +158,7 @@ explicitly specify a file location via the `-f` argument.
 | `-txRef`         | Transaction reference.  Typically your application's internal ID. Required for reversable transactions  |  `-txRef=MYID` |
 | `-desc`          | Narrative description of the transaction.   | `-desc="Adventures Underground #1"`  |
 | `-secure`   | Can disable https for terminal transactions. Defaults to true.  | `-secure=false`   |
+| `-version`  | Print the CLI version and exit. | `-version`  |
 
 
 ## Sample Transactions
