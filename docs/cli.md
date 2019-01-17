@@ -116,7 +116,7 @@ A typical `blockchyp.json` file looks like this:
   "signingKey":"9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
   "routeCacheTTL": 60,
   "gatewayTimeout": 20,
-  "terminalimeout": 2
+  "terminalTimeout": 2
 }
 ```
 
@@ -127,11 +127,13 @@ to see your API credentials by looking at your shell command history.
 You can specify the location of this file via the `-f` command line argument, but
 BlockChyp does look for this file in a few default locations depending on your operating system.
 
-For **Linux**, BlockChyp looks for the file in the directory specified by the
-`XDG_CONFIG_HOME` environment variable.  If the environment variable isn't defined,
-the file location is assumed to be `~/.config/blockchyp.json`.
+For **Unix Like Systems**, BlockChyp looks for the file at
+`$XDG_CONFIG_HOME/blockchyp/blockchyp.json`.  If the environment variable
+isn't defined, the file location is assumed to be
+`~/.config/blockchyp/blockchyp.json`.
 
-For **Windows**, BlockChyp looks for the file in the user's home directory.
+For **Windows**, BlockChyp looks for the file in
+`%HomeDrive%%HomePath%\blockchyp\blockchyp.json`.
 
 These default locations are fine for development, but we recommend production systems
 explicitly specify a file location via the `-f` argument.

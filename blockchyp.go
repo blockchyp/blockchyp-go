@@ -20,6 +20,14 @@ const (
 	DefaultTerminalTimeout = 2 * time.Minute
 )
 
+/*
+Default filesystem configuration.
+*/
+const (
+	ConfigDir  = "blockchyp"
+	ConfigFile = "blockchyp.json"
+)
+
 // terminalCN is the common name on a terminal certificate.
 const terminalCN = "blockchyp-terminal"
 

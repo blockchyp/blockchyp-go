@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
+	"path/filepath"
 	"runtime"
 
 	blockchyp "github.com/blockchyp/blockchyp-go"
@@ -144,11 +145,12 @@ func loadConfigSettings(args commandLineArguments) (*configSettings, error) {
 
 	fileName := args.ConfigFile
 	if fileName == "" {
+		var configHome string
+
 		if runtime.GOOS == "windows" {
-			configHome := os.Getenv("userprofile")
-			fileName = configHome + "\\blockchyp.json"
+			configHome = os.Getenv("userprofile")
 		} else {
-			configHome := os.Getenv("XDG_CONFIG_HOME")
+			configHome = os.Getenv("XDG_CONFIG_HOME")
 			if configHome == "" {
 				user, err := user.Current()
 				if err != nil {
@@ -156,8 +158,9 @@ func loadConfigSettings(args commandLineArguments) (*configSettings, error) {
 				}
 				configHome = user.HomeDir + "/.config"
 			}
-			fileName = configHome + "/blockchyp.json"
 		}
+
+		fileName = filepath.Join(configHome, blockchyp.ConfigDir, blockchyp.ConfigFile)
 	}
 
 	if _, err := os.Stat(fileName); os.IsNotExist(err) {
