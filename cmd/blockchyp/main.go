@@ -45,6 +45,8 @@ type commandLineArguments struct {
 	TaxAmount       string `arg:"tax"`
 	CurrencyCode    string `arg:"currency"`
 	TransactionID   string `arg:"txId"`
+	RouteCache      string `arg:"routeCache"`
+	OutputFile      string `arg:"out"`
 	HTTPS           bool   `arg:"secure"`
 	Version         bool   `arg:"version"`
 }
@@ -87,6 +89,8 @@ func parseArgs() commandLineArguments {
 	flag.BoolVar(&args.PromptForTip, "promptForTip", false, "prompt for tip flag")
 	flag.BoolVar(&args.HTTPS, "secure", true, "enables or disables https with terminal")
 	flag.BoolVar(&args.Version, "version", false, "print version and exit")
+	flag.StringVar(&args.RouteCache, "routeCache", "", "specifies local file location for route cache")
+	flag.StringVar(&args.OutputFile, "out", "", "directs output to a file instead of stdout")
 
 	flag.Parse()
 
@@ -263,12 +267,12 @@ func processRefund(client *blockchyp.Client, args commandLineArguments) {
 
 	if err != nil {
 		if res == nil {
-			handleError(err)
+			handleError(&args, err)
 		} else if len(res.ResponseDescription) == 0 {
-			handleError(err)
+			handleError(&args, err)
 		}
 	}
-	dumpResponse(res)
+	dumpResponse(&args, res)
 }
 
 func processReverse(client *blockchyp.Client, args commandLineArguments) {
@@ -281,12 +285,12 @@ func processReverse(client *blockchyp.Client, args commandLineArguments) {
 
 	if err != nil {
 		if res == nil {
-			handleError(err)
+			handleError(&args, err)
 		} else if len(res.ResponseDescription) == 0 {
-			handleError(err)
+			handleError(&args, err)
 		}
 	}
-	dumpResponse(res)
+	dumpResponse(&args, res)
 }
 
 func processCloseBatch(client *blockchyp.Client, args commandLineArguments) {
@@ -299,12 +303,12 @@ func processCloseBatch(client *blockchyp.Client, args commandLineArguments) {
 
 	if err != nil {
 		if res == nil {
-			handleError(err)
+			handleError(&args, err)
 		} else if len(res.ResponseDescription) == 0 {
-			handleError(err)
+			handleError(&args, err)
 		}
 	}
-	dumpResponse(res)
+	dumpResponse(&args, res)
 }
 
 func processVoid(client *blockchyp.Client, args commandLineArguments) {
@@ -318,12 +322,12 @@ func processVoid(client *blockchyp.Client, args commandLineArguments) {
 
 	if err != nil {
 		if res == nil {
-			handleError(err)
+			handleError(&args, err)
 		} else if len(res.ResponseDescription) == 0 {
-			handleError(err)
+			handleError(&args, err)
 		}
 	}
-	dumpResponse(res)
+	dumpResponse(&args, res)
 }
 
 func processCapture(client *blockchyp.Client, args commandLineArguments) {
@@ -340,12 +344,12 @@ func processCapture(client *blockchyp.Client, args commandLineArguments) {
 
 	if err != nil {
 		if res == nil {
-			handleError(err)
+			handleError(&args, err)
 		} else if len(res.ResponseDescription) == 0 {
-			handleError(err)
+			handleError(&args, err)
 		}
 	}
-	dumpResponse(res)
+	dumpResponse(&args, res)
 }
 
 func processGiftActivate(client *blockchyp.Client, args commandLineArguments) {
@@ -362,7 +366,7 @@ func processGiftActivate(client *blockchyp.Client, args commandLineArguments) {
 	if err != nil {
 		handleFatalError(err)
 	}
-	dumpResponse(res)
+	dumpResponse(&args, res)
 }
 
 func processAuth(client *blockchyp.Client, args commandLineArguments) {
@@ -392,12 +396,12 @@ func processAuth(client *blockchyp.Client, args commandLineArguments) {
 
 	if err != nil {
 		if res == nil {
-			handleError(err)
+			handleError(&args, err)
 		} else if len(res.ResponseDescription) == 0 {
-			handleError(err)
+			handleError(&args, err)
 		}
 	}
-	dumpResponse(res)
+	dumpResponse(&args, res)
 }
 
 func processPing(client *blockchyp.Client, args commandLineArguments) {
@@ -408,12 +412,12 @@ func processPing(client *blockchyp.Client, args commandLineArguments) {
 	res, err := client.Ping(req)
 	if err != nil {
 		if res == nil {
-			handleError(err)
+			handleError(&args, err)
 		} else if len(res.ResponseDescription) == 0 {
-			handleError(err)
+			handleError(&args, err)
 		}
 	}
-	dumpResponse(res)
+	dumpResponse(&args, res)
 }
 
 func validateRequired(value string, arg string) {
@@ -422,21 +426,28 @@ func validateRequired(value string, arg string) {
 	}
 }
 
-func dumpResponse(res interface{}) {
+func dumpResponse(args *commandLineArguments, res interface{}) {
 
 	content, err := json.Marshal(res)
 	if err != nil {
 		handleFatalError(err)
 	}
-	fmt.Println(string(content))
+	if args.OutputFile != "" {
+		err := ioutil.WriteFile(args.OutputFile, content, 0644)
+		if err != nil {
+			fmt.Print(err)
+		}
+	} else {
+		fmt.Println(string(content))
+	}
 
 }
 
-func handleError(err error) {
+func handleError(args *commandLineArguments, err error) {
 
 	ack := blockchyp.Acknowledgement{}
 	ack.Error = err.Error()
-	dumpResponse(ack)
+	dumpResponse(args, ack)
 	handleFatal()
 
 }

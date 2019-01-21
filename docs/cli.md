@@ -161,6 +161,7 @@ explicitly specify a file location via the `-f` argument.
 | `-desc`          | Narrative description of the transaction.   | `-desc="Adventures Underground #1"`  |
 | `-secure`   | Can disable https for terminal transactions. Defaults to true.  | `-secure=false`   |
 | `-version`  | Print the CLI version and exit. | `-version`  |
+| `-out`   | Direct output to a file instead of stdout.  | `-out="output.json"`  |
 
 
 ## Sample Transactions

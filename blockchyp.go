@@ -18,6 +18,7 @@ const (
 	DefaultRouteCacheTTL   = 60 * time.Minute
 	DefaultGatewayTimeout  = 20 * time.Second
 	DefaultTerminalTimeout = 2 * time.Minute
+	RouteCache             = ".blockchyp_routes"
 )
 
 /*
