@@ -2,16 +2,25 @@ package blockchyp
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"crypto/x509"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 )
 
 var (
 	routeCache map[string]routeCacheEntry
+)
+
+const (
+	offlineFixedKey = "cb22789c9d5c344a10e0474f134db39e25eb3bbf5a1b1a5e89b507f15ea9519c"
 )
 
 type routeCacheEntry struct {
@@ -56,6 +65,14 @@ type TerminalRoute struct {
 	TransientCredentials APICredentials `json:"transientCredentials,omitempty"`
 	PublicKey            string         `json:"publicKey"`
 	RawKey               RawPublicKey   `json:"rawKey"`
+	Timestamp            time.Time      `json:"timestamp"`
+}
+
+/*
+RouteCache models offline route cache information.
+*/
+type RouteCache struct {
+	Routes map[string]routeCacheEntry `json:"routes"`
 }
 
 /*
@@ -66,6 +83,48 @@ type RawPublicKey struct {
 	Curve string `json:"curve"`
 	X     string `json:"x"`
 	Y     string `json:"Y"`
+}
+
+func (client *Client) readFromOfflineCache(terminalName string) *routeCacheEntry {
+
+	cache := client.readOfflineCache()
+
+	if cache == nil {
+		return nil
+	}
+
+	route, ok := cache.Routes[client.Credentials.APIKey+terminalName]
+	if ok {
+		return &route
+	}
+
+	return nil
+
+}
+
+func (client *Client) readOfflineCache() *RouteCache {
+
+	if _, err := os.Stat(client.RouteCache); os.IsNotExist(err) {
+		return nil
+	}
+
+	content, err := ioutil.ReadFile(client.RouteCache)
+
+	if err != nil {
+		fmt.Print(err)
+		return nil
+	}
+
+	cache := RouteCache{}
+
+	err = json.Unmarshal(content, &cache)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	return &cache
 }
 
 /*
@@ -108,22 +167,103 @@ func (client *Client) routeCachePut(terminalRoute TerminalRoute) {
 		TTL:   time.Now().Add(client.routeCacheTTL),
 	}
 
-	routeCache[terminalRoute.TerminalName] = cacheEntry
+	routeCache[client.Credentials.APIKey+terminalRoute.TerminalName] = cacheEntry
+
+	go client.updateOfflineCache(&cacheEntry)
+
+}
+
+func (client *Client) deriveOfflineKey() []byte {
+
+	hash := sha256.New()
+	fixedKey, err := hex.DecodeString(offlineFixedKey)
+	if err != nil {
+		fmt.Println(err)
+		return []byte{}
+	}
+	hash.Write(fixedKey)
+	dynamicKey, err := hex.DecodeString(client.Credentials.SigningKey)
+	if err != nil {
+		fmt.Println(err)
+		return []byte{}
+	}
+	hash.Write(dynamicKey)
+	return hash.Sum(nil)
+
+}
+
+func (client *Client) encrypt(value string) string {
+
+	key := client.deriveOfflineKey()
+	return Encrypt(key, value)
+
+}
+
+func (client *Client) decrypt(value string) string {
+
+	key := client.deriveOfflineKey()
+	return Decrypt(key, value)
+
+}
+
+func (client *Client) updateOfflineCache(cacheEntry *routeCacheEntry) {
+
+	cache := client.readOfflineCache()
+
+	if cache == nil {
+		cache = &RouteCache{}
+	}
+
+	if cache.Routes == nil {
+		cache.Routes = make(map[string]routeCacheEntry)
+	}
+
+	cacheEntry.Route.TransientCredentials.APIKey = client.encrypt(cacheEntry.Route.TransientCredentials.APIKey)
+	cacheEntry.Route.TransientCredentials.BearerToken = client.encrypt(cacheEntry.Route.TransientCredentials.BearerToken)
+	cacheEntry.Route.TransientCredentials.SigningKey = client.encrypt(cacheEntry.Route.TransientCredentials.SigningKey)
+
+	cache.Routes[client.Credentials.APIKey+cacheEntry.Route.TerminalName] = *cacheEntry
+
+	content, err := json.Marshal(cache)
+
+	if err != nil {
+		fmt.Print(err)
+		return
+	}
+
+	err = ioutil.WriteFile(client.RouteCache, content, 0644)
+
+	if err != nil {
+		fmt.Print(err)
+	}
 
 }
 
 func (client *Client) routeCacheGet(terminalName string) *TerminalRoute {
 
-	if routeCache == nil {
-		return nil
+	if routeCache != nil {
+		route, ok := routeCache[terminalName]
+		if ok {
+			if time.Now().After(route.TTL) {
+				return nil
+			}
+			return &route.Route
+		}
 	}
-	route, ok := routeCache[terminalName]
-	if ok {
-		if time.Now().After(route.TTL) {
+
+	cacheEntry := client.readFromOfflineCache(terminalName)
+
+	//check expiry
+	if cacheEntry != nil {
+		if time.Now().After(cacheEntry.TTL) {
 			return nil
 		}
-		return &route.Route
+		cacheEntry.Route.TransientCredentials.APIKey = client.decrypt(cacheEntry.Route.TransientCredentials.APIKey)
+		cacheEntry.Route.TransientCredentials.BearerToken = client.decrypt(cacheEntry.Route.TransientCredentials.BearerToken)
+		cacheEntry.Route.TransientCredentials.SigningKey = client.decrypt(cacheEntry.Route.TransientCredentials.SigningKey)
+		return &cacheEntry.Route
 	}
+
 	return nil
 
 }

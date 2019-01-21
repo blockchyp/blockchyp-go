@@ -5,6 +5,8 @@ import (
 	"errors"
 	"net"
 	"net/http"
+	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -18,7 +20,6 @@ const (
 	DefaultRouteCacheTTL   = 60 * time.Minute
 	DefaultGatewayTimeout  = 20 * time.Second
 	DefaultTerminalTimeout = 2 * time.Minute
-	RouteCache             = ".blockchyp_routes"
 )
 
 /*
@@ -36,11 +37,11 @@ const terminalCN = "blockchyp-terminal"
 Client is the main interface used by application developers.
 */
 type Client struct {
-	Credentials     APICredentials
-	GatewayHost     string
-	TestGatewayHost string
-	HTTPS           bool
-
+	Credentials        APICredentials
+	GatewayHost        string
+	TestGatewayHost    string
+	HTTPS              bool
+	RouteCache         string
 	routeCacheTTL      time.Duration
 	gatewayHTTPClient  *http.Client
 	terminalHTTPClient *http.Client
@@ -55,6 +56,7 @@ func NewClient(creds APICredentials) Client {
 		GatewayHost:   DefaultGatewayHost,
 		HTTPS:         DefaultHTTPS,
 		routeCacheTTL: DefaultRouteCacheTTL,
+		RouteCache:    filepath.Join(os.TempDir(), ".blockchyp_routes"),
 		gatewayHTTPClient: &http.Client{
 			Timeout: DefaultGatewayTimeout,
 		},

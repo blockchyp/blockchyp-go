@@ -222,6 +222,10 @@ func resolveClient(args commandLineArguments) (*blockchyp.Client, error) {
 		client.TestGatewayHost = "https://test.blockchyp.com"
 	}
 
+	if args.RouteCache != "" {
+		client.RouteCache = args.RouteCache
+	}
+
 	return &client, nil
 }
 

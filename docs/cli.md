@@ -162,6 +162,7 @@ explicitly specify a file location via the `-f` argument.
 | `-secure`   | Can disable https for terminal transactions. Defaults to true.  | `-secure=false`   |
 | `-version`  | Print the CLI version and exit. | `-version`  |
 | `-out`   | Direct output to a file instead of stdout.  | `-out="output.json"`  |
+| `-routeCache`   | Specify a custom offline route cache location.  | `-routeCache="route_cache.json"`  |
 
 
 ## Sample Transactions
@@ -390,6 +391,25 @@ $ ./blockchyp -type=close-batch
 
 }
 ```
+
+## The Route Cache
+
+BlockChyp automatically locates payment terminals on your network, even if you
+stick with DHCP (which you shouldn't do).  Every time a payment terminal comes
+online, it reports its internal IP address to the BlockChyp gateway.  It also
+updates its network status periodically.
+
+When the CLI is asked to run a tranaction, it starts by looking up the terminal
+on the gateway.  The gateway returns the IP Address, Public Key, and a set of
+transient credentials.  For most BlockChyp SDK's, the SDK maintains an in memory
+cache of recent terminal routes.  For the CLI, this is problematic because every
+invocation of the CLI is a new process, making in memory caches unfeasible.  We
+address this by maintaining an offline cache file.  This file is stored in your
+temp directory by default. You can use the `-routeCache`
+parameter to override this location if you'd like.
+
+
+
 
 ## What Are Tick Blocks?
 
