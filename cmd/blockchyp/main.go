@@ -266,6 +266,9 @@ func processRefund(client *blockchyp.Client, args commandLineArguments) {
 	req.TransactionRef = args.TransactionRef
 	req.TransactionID = args.TransactionID
 	req.Amount = args.Amount
+	if req.TransactionID == "" {
+		req.TerminalName = args.TerminalName
+	}
 	req.Test = args.Test
 
 	res, err := client.Refund(req)

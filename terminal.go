@@ -38,6 +38,15 @@ type TerminalAuthorizationRequest struct {
 }
 
 /*
+TerminalRefundAuthorizationRequest adds API credentials to refund requests for use in
+free range refund transactions.
+*/
+type TerminalRefundAuthorizationRequest struct {
+	APICredentials
+	Request RefundRequest `json:"request"`
+}
+
+/*
 TerminalGiftActivateRequest adds API credentials to gift activation requests
 for use in direct terminal transactions.
 */

@@ -192,17 +192,24 @@ func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, err
 		if err != nil {
 			return nil, err
 		}
-		authRequest := TerminalAuthorizationRequest{
-			APICredentials: route.TransientCredentials,
-			Request: AuthorizationRequest{
-				CoreRequest:   request.CoreRequest,
-				PaymentMethod: request.PaymentMethod,
-				RequestAmount: request.RequestAmount,
-				Subtotals:     request.Subtotals,
-			},
-		}
 		authResponse := AuthorizationResponse{}
+		if !route.Exists {
+			authResponse.Approved = false
+			authResponse.ResponseDescription = "Unknown Terminal"
+			return &authResponse, err
+		}
+		authRequest := TerminalRefundAuthorizationRequest{
+			APICredentials: route.TransientCredentials,
+			Request:        request,
+		}
 		err = client.terminalPost(route, "/refund", authRequest, &authResponse)
+		if err, ok := err.(net.Error); ok && err.Timeout() {
+			authResponse.Approved = false
+			authResponse.ResponseDescription = "Request Timed Out"
+		} else if err != nil {
+			authResponse.Approved = false
+			authResponse.ResponseDescription = err.Error()
+		}
 		return &authResponse, err
 
 	}
