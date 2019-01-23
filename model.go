@@ -50,6 +50,10 @@ type PaymentMethod struct {
 	CVV            string `json:"cvv,omitempty"`
 	Address        string `json:"address,omitempty"`
 	PostalCode     string `json:"postalCode,omitempty"`
+
+	// ManualEntry specifies that the payment entry method is a manual keyed
+	// transaction. If this is true, no other payment method will be accepted.
+	ManualEntry bool `json:"manualEntry,omitempty"`
 }
 
 /*
