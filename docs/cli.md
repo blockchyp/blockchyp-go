@@ -103,7 +103,7 @@ as part of your solution.
 
 ## Configuration
 
-Key settings like API credentials can be passsed in on the command line with
+Key settings like API credentials can be passed in on the command line with
 every request, but the best option is to configure the command line by dropping a
 `blockchyp.json` file on your file system.
 
@@ -412,7 +412,7 @@ stick with DHCP (which you shouldn't do).  Every time a payment terminal comes
 online, it reports its internal IP address to the BlockChyp gateway.  It also
 updates its network status periodically.
 
-When the CLI is asked to run a tranaction, it starts by looking up the terminal
+When the CLI is asked to run a transaction, it starts by looking up the terminal
 on the gateway.  The gateway returns the IP Address, Public Key, and a set of
 transient credentials.  For most BlockChyp SDK's, the SDK maintains an in memory
 cache of recent terminal routes.  For the CLI, this is problematic because every
