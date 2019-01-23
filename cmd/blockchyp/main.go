@@ -261,10 +261,11 @@ func processCommand(args commandLineArguments) {
 }
 
 func processRefund(client *blockchyp.Client, args commandLineArguments) {
-	validateRequired(args.TransactionID, "tx")
+
 	req := blockchyp.RefundRequest{}
 	req.TransactionRef = args.TransactionRef
 	req.TransactionID = args.TransactionID
+	req.Amount = args.Amount
 	req.Test = args.Test
 
 	res, err := client.Refund(req)

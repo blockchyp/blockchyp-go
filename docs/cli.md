@@ -164,6 +164,19 @@ explicitly specify a file location via the `-f` argument.
 | `-out`   | Direct output to a file instead of stdout.  | `-out="output.json"`  |
 | `-routeCache`   | Specify a custom offline route cache location.  | `-routeCache="route_cache.json"`  |
 
+## Test Transactions
+
+BlockChyp's test system is designed to prevent mixups about whether a configuration
+is pointed at live or test environments.  When using test credentials, all transactions
+must have the `-test` flag set.
+
+To run the sample transactions below against a test merchant account, just append
+`-test` to the list of arguments.  For example,
+
+```
+> blockchyp.exe -type=charge -terminal="Test Terminal" -amount="20.55" -test
+```
+
 
 ## Sample Transactions
 
