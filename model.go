@@ -100,8 +100,9 @@ type CoreResponse struct {
 ApprovalResponse models data related to approval or failure of a transaction.
 */
 type ApprovalResponse struct {
-	Approved bool   `json:"approved"`
-	AuthCode string `json:"authCode"`
+	Approved   bool   `json:"approved"`
+	AuthCode   string `json:"authCode"`
+	SigCapture string `json:"sigCapture"`
 }
 
 /*
