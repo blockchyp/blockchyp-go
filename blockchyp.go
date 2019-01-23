@@ -3,7 +3,6 @@ package blockchyp
 import (
 	"crypto/tls"
 	"errors"
-	"fmt"
 	"net"
 	"net/http"
 	"os"
@@ -113,7 +112,6 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 			authResponse.Approved = false
 			authResponse.ResponseDescription = err.Error()
 		}
-		fmt.Println("Auth Response Sig", authResponse.Sig)
 		return &authResponse, err
 	}
 	authResponse := AuthorizationResponse{}
