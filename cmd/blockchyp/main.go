@@ -28,6 +28,7 @@ type configSettings struct {
 
 type commandLineArguments struct {
 	Type            string `arg:"type"`
+	ManualEntry     bool   `arg:"manual"`
 	ConfigFile      string `arg:"f"`
 	GatewayHost     string `arg:"gateway"`
 	TestGatewayHost string `arg:"testGateway"`
@@ -87,6 +88,7 @@ func parseArgs() commandLineArguments {
 	flag.StringVar(&args.Description, "desc", "", "transaction description")
 	flag.BoolVar(&args.Test, "test", false, "sets test mode")
 	flag.BoolVar(&args.PromptForTip, "promptForTip", false, "prompt for tip flag")
+	flag.BoolVar(&args.ManualEntry, "manual", false, "key in card data manually")
 	flag.BoolVar(&args.HTTPS, "secure", true, "enables or disables https with terminal")
 	flag.BoolVar(&args.Version, "version", false, "print version and exit")
 	flag.StringVar(&args.RouteCache, "routeCache", "", "specifies local file location for route cache")
@@ -270,6 +272,7 @@ func processRefund(client *blockchyp.Client, args commandLineArguments) {
 		req.TerminalName = args.TerminalName
 	}
 	req.Test = args.Test
+	req.ManualEntry = args.ManualEntry
 
 	res, err := client.Refund(req)
 
@@ -288,6 +291,7 @@ func processReverse(client *blockchyp.Client, args commandLineArguments) {
 	req := blockchyp.AuthorizationRequest{}
 	req.TransactionRef = args.TransactionRef
 	req.Test = args.Test
+	req.ManualEntry = args.ManualEntry
 
 	res, err := client.Reverse(req)
 
@@ -392,6 +396,7 @@ func processAuth(client *blockchyp.Client, args commandLineArguments) {
 	req.TaxAmount = args.TaxAmount
 	req.TipAmount = args.TipAmount
 	req.Test = args.Test
+	req.ManualEntry = args.ManualEntry
 
 	res := &blockchyp.AuthorizationResponse{}
 	var err error
