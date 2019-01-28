@@ -98,6 +98,7 @@ type CoreResponse struct {
 	TransactionType     string `json:"transactionType"`
 	Timestamp           string `json:"timestamp"`
 	TickBlock           string `json:"tickBlock"`
+	Test                string `json:"test"`
 }
 
 /*
