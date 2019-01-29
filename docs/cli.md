@@ -164,6 +164,9 @@ explicitly specify a file location via the `-f` argument.
 | `-version`       | Print the CLI version and exit.                     | `-version`                                 |
 | `-out`           | Direct output to a file instead of stdout.          | `-out="output.json"`                       |
 | `-routeCache`    | Specify a custom offline route cache location.      | `-routeCache="route_cache.json"`           |
+| `-sigFormat`    | File format for signatures, if you'd like it returned with the transaction.  gif, jpeg, and png are supported.      | `-sigFormat="png"`           |
+| `-sigWidth`    | If provided, signature images will be scaled to this max width.      | `-sigWidth="300"`           |
+| `-sigFile`    | By default, signatures are returned in the response as hex.  If you'd rather have a file, use this option.     | `-sigFile="signature.png"`           |    
 
 ## Test Transactions
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"flag"
@@ -50,6 +51,7 @@ type commandLineArguments struct {
 	OutputFile      string `arg:"out"`
 	SigFormat       string `arg:"sigFormat"`
 	SigWidth        int    `arg:"sigWidth"`
+	SigFile         string `arg:"sigFile"`
 	HTTPS           bool   `arg:"secure"`
 	Version         bool   `arg:"version"`
 }
@@ -97,6 +99,7 @@ func parseArgs() commandLineArguments {
 	flag.StringVar(&args.OutputFile, "out", "", "directs output to a file instead of stdout")
 	flag.StringVar(&args.SigFormat, "sigFormat", "", "format for signature file (jpeg, png, gif)")
 	flag.IntVar(&args.SigWidth, "sigWidth", -1, "optional width in pixels the signature file should be scaled to")
+	flag.StringVar(&args.SigFile, "sigFile", "", "optional location to output sig file")
 
 	flag.Parse()
 
@@ -289,6 +292,15 @@ func processRefund(client *blockchyp.Client, args commandLineArguments) {
 			handleError(&args, err)
 		}
 	}
+	if args.SigFile != "" && res.SigFile != "" {
+		content, err := hex.DecodeString(res.SigFile)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			ioutil.WriteFile(args.SigFile, content, 0644)
+			res.SigFile = ""
+		}
+	}
 	dumpResponse(&args, res)
 }
 
@@ -420,6 +432,15 @@ func processAuth(client *blockchyp.Client, args commandLineArguments) {
 			handleError(&args, err)
 		} else if len(res.ResponseDescription) == 0 {
 			handleError(&args, err)
+		}
+	}
+	if args.SigFile != "" && res.SigFile != "" {
+		content, err := hex.DecodeString(res.SigFile)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			ioutil.WriteFile(args.SigFile, content, 0644)
+			res.SigFile = ""
 		}
 	}
 	dumpResponse(&args, res)
