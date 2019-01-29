@@ -54,6 +54,10 @@ type PaymentMethod struct {
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
 	ManualEntry bool `json:"manualEntry,omitempty"`
+
+	//optional parameters for returning signatures with requests
+	SigFormat string `json:"sigFormat,omitEmpty"`
+	SigWidth  int    `json:"sigWidth,omitEmpty"`
 }
 
 /*
@@ -105,9 +109,9 @@ type CoreResponse struct {
 ApprovalResponse models data related to approval or failure of a transaction.
 */
 type ApprovalResponse struct {
-	Approved   bool   `json:"approved"`
-	AuthCode   string `json:"authCode"`
-	SigCapture string `json:"sigCapture"`
+	Approved bool   `json:"approved"`
+	AuthCode string `json:"authCode"`
+	SigFile  string `json:"sigFile"`
 }
 
 /*

@@ -48,6 +48,8 @@ type commandLineArguments struct {
 	TransactionID   string `arg:"txId"`
 	RouteCache      string `arg:"routeCache"`
 	OutputFile      string `arg:"out"`
+	SigFormat       string `arg:"sigFormat"`
+	SigWidth        int    `arg:"sigWidth"`
 	HTTPS           bool   `arg:"secure"`
 	Version         bool   `arg:"version"`
 }
@@ -93,6 +95,8 @@ func parseArgs() commandLineArguments {
 	flag.BoolVar(&args.Version, "version", false, "print version and exit")
 	flag.StringVar(&args.RouteCache, "routeCache", "", "specifies local file location for route cache")
 	flag.StringVar(&args.OutputFile, "out", "", "directs output to a file instead of stdout")
+	flag.StringVar(&args.SigFormat, "sigFormat", "", "format for signature file (jpeg, png, gif)")
+	flag.IntVar(&args.SigWidth, "sigWidth", -1, "optional width in pixels the signature file should be scaled to")
 
 	flag.Parse()
 
@@ -273,6 +277,8 @@ func processRefund(client *blockchyp.Client, args commandLineArguments) {
 	}
 	req.Test = args.Test
 	req.ManualEntry = args.ManualEntry
+	req.SigWidth = args.SigWidth
+	req.SigFormat = args.SigFormat
 
 	res, err := client.Refund(req)
 
@@ -397,6 +403,8 @@ func processAuth(client *blockchyp.Client, args commandLineArguments) {
 	req.TipAmount = args.TipAmount
 	req.Test = args.Test
 	req.ManualEntry = args.ManualEntry
+	req.SigWidth = args.SigWidth
+	req.SigFormat = args.SigFormat
 
 	res := &blockchyp.AuthorizationResponse{}
 	var err error
