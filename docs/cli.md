@@ -331,6 +331,96 @@ $ ./blockchyp -type=void -tx=DD62YVH6G4I6RM33NSLM7WZLHE
 }
 ```
 
+### Refunds
+
+BlockChyp supports refunds that reference previous transactions and refunds that
+do not reference a previous transaction, (which we call free range refunds).
+
+We strongly recommend that refunds always reference a previous transaction.
+
+The example below shows how to refund the entire amound of a previous transaction.
+
+```
+$ ./blockchyp -type=refund -tx=IU245GBFV4I6THQ3AJBKYEIAAY
+  {
+    "responseDescription":"Approved",
+    "transactionId":"IU245GBFV4I6THQ3AJBKYEIAAY",
+    "transactionType":"refund",
+    "timestamp":"2019-01-31T23:37:56Z",
+    "tickBlock":"00014bd97158fdbc02a0923a5a339db853c074aa3a460b9f54aafd003e630296",
+    "test":false,
+    "approved":true,
+    "authCode":"313097",
+    "currencyCode":"USD",
+    "authorizedAmount":"55.55"
+  }
+```
+
+#### Partial refunds
+
+To refund some, but not all, of a previous transaction, just add an amount argument
+as shown below...
+
+```
+$ ./blockchyp -type=refund -tx=IU245HBFV4I6THQ3AJBKYEIAAY -amount="25.00"
+  {
+    "responseDescription":"Approved",
+    "transactionId":"IU245HBFV4I6THQ3AJBKYEIAAY",
+    "transactionType":"refund",
+    "timestamp":"2019-01-31T23:41:25Z",
+    "tickBlock":"00014bd97158fdbc02a0923a5a339db853c074aa3a460b9f54aafd003e630296",
+    "test":false,
+    "approved":true,
+    "authCode":"139089",
+    "entryMethod":"CHIP",
+    "paymentType":"MC",
+    "currencyCode":"USD",
+    "requestedAmount":"25.00",
+    "authorizedAmount":"25.00"
+  }
+```
+
+#### Free Range Refunds
+
+If you have to refund a card directly without referencing a previous transaction,
+the syntax is similar to charge and preauth transactions.
+
+```
+$ ./blockchyp -type=refund -terminal="Test Terminal" -amount="25.00"
+  {
+    "responseDescription":"Approved",
+    "transactionId":"IU245HRFV4I6THQ3AJBKYEIAAY",
+    "transactionRef":"2073d065659065e1ab0a565765992743993bc75e8875bdaad5e00947dddc029c",
+    "transactionType":"refund",
+    "timestamp":"2019-01-31T23:43:55Z",
+    "tickBlock":"00014bd97158fdbc02a0923a5a339db853c074aa3a460b9f54aafd003e630296",
+    "test":false,
+    "approved":true,
+    "authCode":"557464",
+    "sigFile":"",
+    "entryMethod":"CHIP",
+    "paymentType":"MC",
+    "maskedPan":"************0434",
+    "cardHolder":"Test/Card 10            ",
+    "currencyCode":"USD",
+    "requestedAmount":"25.00",
+    "authorizedAmount":"25.00",
+    "receiptSuggestions":{
+      "AID":"A0000000041010",
+      "ARQC":"47197067E0E722D2",
+      "IAD":"0110A0000F220000000000000000000000FF",
+      "TVR":"0840008000",
+      "TSI":"E800",
+      "merchantName":"Test Merchant",
+      "applicationLabel":"MasterCard",
+      "maskedPan":"************0434",
+      "authorizedAmount":"25.00",
+      "transactionType":"refund",
+      "entryMethod":"CHIP"
+    }
+  }
+```
+
 ### Time Out Reversals
 
 Time out reversals are used to cancel transactions that may or may not have
@@ -408,6 +498,8 @@ $ ./blockchyp -type=close-batch
 
 }
 ```
+
+## The Route Cache
 
 ## The Route Cache
 
