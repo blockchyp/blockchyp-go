@@ -11,9 +11,17 @@ import (
 	"os/user"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
+
+var validSignatureFormats = []string{
+	"gif",
+	"jpeg",
+	"jpg",
+	"png",
+}
 
 type configSettings struct {
 	APIKey          string `json:"apiKey"`
@@ -108,12 +116,36 @@ func parseArgs() commandLineArguments {
 		os.Exit(0)
 	}
 
+	validateArgs(&args)
+
+	return args
+
+}
+
+func validateArgs(args *commandLineArguments) {
 	if args.Type == "" {
 		fatalError("-type is required")
 	}
 
-	return args
+	if args.SigFile != "" {
+		if args.SigFormat == "" {
+			args.SigFormat = strings.TrimPrefix(filepath.Ext(args.SigFile), ".")
+		}
 
+		if !validSigFormat(args.SigFormat) {
+			fatalErrorf("Invalid signature format: %s", args.SigFormat)
+		}
+	}
+}
+
+func validSigFormat(format string) bool {
+	for _, valid := range validSignatureFormats {
+		if format == valid {
+			return true
+		}
+	}
+
+	return false
 }
 
 func resolveCredentials(args commandLineArguments) (*blockchyp.APICredentials, error) {
