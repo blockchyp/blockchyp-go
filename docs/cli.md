@@ -503,12 +503,13 @@ $ ./blockchyp -type=close-batch
 
 ## Manual/Keyed Transactions
 
-If enabled in the Dashboard (under Merchant Settings), the system will fall back
-to keyed entry if chip and magstripes both fail.  There's nothing special you need
-to do as a developer to support this.  It will just work.
+If enabled in the Dashboard (under Merchant Settings), you can bypass
+the usual terminal behavior and enter keyed transactions manually.
 
-On the otherhand, if you want to explicitly put the terminal into a keyed
-transaction mode for scenarios like telephone orders, just add `-manual`
+We don't recommend this for conventional retail transactions, but it might
+be necessary for telephone orders.
+
+To explicitly put the terminal in manual mode, just add `-manual`
 to the arguments to a `charge`, `preauth`, or `refund` transaction.
 
 The example below shows a typical manual transaction.
@@ -544,7 +545,7 @@ The example below shows a typical manual transaction.
 ## Signature Images
 
 If digital signature capture is enabled in the dashboard, BlockChyp will upload the
-signature iamge to the gateway for achival after each transaction.  You can easily
+signature image to the gateway for archival after each transaction.  You can easily
 bring up the transaction in the dashboard if you need to and inspect the signature,
 so by default signatures are not returned with API calls.
 
@@ -596,7 +597,7 @@ in hex.
 
 As you can see, that clutters up your JSON and you might prefer to convert the image directly to a file.
 
-Just add the `-sigFile` argument as shown below and the hex will go away and the image will be written to the
+Just add the `-sigFile` argument as shown below.  The hex will go away and the image will be written to the
 file you specify.  This example is shown without the -sigWidth option to show
 how a signature image can be captured in full resolution.
 
@@ -644,9 +645,6 @@ invocation of the CLI is a new process, making in memory caches unfeasible.  We
 address this by maintaining an offline cache file.  This file is stored in your
 temp directory by default. You can use the `-routeCache`
 parameter to override this location if you'd like.
-
-
-
 
 ## What Are Tick Blocks?
 
