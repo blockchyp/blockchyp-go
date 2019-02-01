@@ -510,7 +510,7 @@ We don't recommend this for conventional retail transactions, but it might
 be necessary for telephone orders.
 
 To explicitly put the terminal in manual mode, just add `-manual`
-to the arguments to a `charge`, `preauth`, or `refund` transaction.
+to the arguments for a `charge`, `preauth`, or `refund` transaction.
 
 The example below shows a typical manual transaction.
 
@@ -554,7 +554,9 @@ must have the signatures, you have options for returning them with the transacti
 
 You can retrieve the signature file in png, jpeg, or gif format and you can also
 scale the signature image to whatever maximum width you specify.  If you leave
-out a width argument, the image will be returned in its native resolution.
+out a width argument, the image will be returned in its native resolution.  We recommend
+using images in their native resolution because terminal response time will be
+all that much faster.
 
 Images can be returned in the JSON request as hex or you can specify a file to
 write the image to if that works better you.  We like to give you options.
