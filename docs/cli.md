@@ -594,16 +594,38 @@ in hex.
 
 ### As A File
 
-As you can see, that clutters up your JSON, and you might prefer to convert the image directly to a file.
+As you can see, that clutters up your JSON and you might prefer to convert the image directly to a file.
 
 Just add the `-sigFile` argument as shown below and the hex will go away and the image will be written to the
 file you specify.  This example is shown without the -sigWidth option to show
 how a signature image can be captured in full resolution.
 
 ```
-./blockchyp -type=charge -terminal="Test Terminal" -amount="25.00" -sigFormat=jpeg -sigFile="sig.jpeg" 
-
-
+./blockchyp -type=charge -terminal="Test Terminal" -amount="25.00" -sigFormat=jpeg -sigFile="sig.jpeg"
+  {
+    "responseDescription":"Approved",
+    "transactionId":"ITAK4GZFWUI6TONDAJBKYEIAAM",
+    "transactionRef":"d940770e8b1aacc7ea831f53a5311558afc40da0f50f0517ab762a4c820d84b1",
+    "transactionType":"charge",
+    "timestamp":"2019-02-01T00:20:16Z",
+    "tickBlock":"000e5faa310afb68fb78792d6728b55a07fb5476cd37a33a86154765b4905201",
+    "test":false,
+    "approved":true,
+    "authCode":"086848",
+    "entryMethod":"SWIPE",
+    "paymentType":"MC",
+    "maskedPan":"************5118",
+    "currencyCode":"USD",
+    "requestedAmount":"25.00",
+    "authorizedAmount":"25.00",
+    "receiptSuggestions":{
+      "merchantName":"Test Merchant",
+      "maskedPan":"************5118",
+      "authorizedAmount":"25.00",
+      "transactionType":"charge",
+      "entryMethod":"SWIPE"
+    },
+  }
 ```
 
 
