@@ -129,7 +129,7 @@ func validateArgs(args *commandLineArguments) {
 
 	if args.SigFile != "" {
 		if args.SigFormat == "" {
-			args.SigFormat = strings.TrimPrefix(filepath.Ext(args.SigFile), ".")
+			args.SigFormat = strings.ToLower(strings.TrimPrefix(filepath.Ext(args.SigFile), "."))
 		}
 
 		if !validSigFormat(args.SigFormat) {
