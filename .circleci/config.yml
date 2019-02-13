@@ -1,0 +1,70 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.11
+    working_directory: /go/src/github.com/blockchyp/blockchyp-go
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - mod-{{ checksum "go.sum" }}
+
+      - run:
+          name: Lint
+          command: make lint
+      - run:
+          name: Test
+          command: make test
+      - run:
+          name: Build
+          command: make dist
+
+      - save_cache:
+          key: mod-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg"
+
+      - store_test_results:
+          path: /go/src/github.com/blockchyp-blockchyp-go/build/test-reports
+
+      - persist_to_workspace:
+          root: build
+          paths:
+            - dist
+
+  publish-github-release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: build
+      - run:
+          name: Publish
+          command: |
+            VERSION=$CIRCLE_TAG
+            ghr \
+              -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} \
+              -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} \
+              -delete \
+              ${VERSION} \
+              build/dist
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^v\d+\.\d+\.\d+$/
+      - publish-github-release:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d+\.\d+\.\d+$/
