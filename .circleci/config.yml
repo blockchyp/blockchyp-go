@@ -37,7 +37,7 @@ jobs:
 
   publish-github-release:
     docker:
-      - image: cibuilds/github:0.10
+      - image: cibuilds/github:0.12
     steps:
       - attach_workspace:
           at: build
@@ -47,9 +47,9 @@ jobs:
             VERSION=$CIRCLE_TAG
             ghr \
               -n "BlockChyp CLI ${VERSION#v}" \
-              -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} \
+              -u ${CIRCLE_PROJECT_USERNAME} \
               -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} \
-              -delete \
+              -recreate \
               ${VERSION} \
               build/dist
 
