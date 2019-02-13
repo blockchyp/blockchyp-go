@@ -46,6 +46,7 @@ jobs:
           command: |
             VERSION=$CIRCLE_TAG
             ghr \
+              -n "BlockChyp CLI ${VERSION#v}" \
               -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} \
               -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} \
               -delete \
