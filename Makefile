@@ -19,10 +19,10 @@ BUILDFLAGS := -ldflags "-X main.compileTimeVersion=$(or $(TAG:v%=%), $(HASH))"
 
 # Executables
 GO := $(MODSUPPORT) go
+GOJUNITREPORT := $(GO) run github.com/jstemmer/go-junit-report
 GOLINT := $(GO) run github.com/golang/lint/golint
 GOVERSIONINFO := $(GO) run github.com/josephspurrier/goversioninfo/cmd/goversioninfo
 REVIVE := $(MODSUPPORT) $(GO) run github.com/mgechev/revive
-XUNIT := $(GO) run github.com/tebeka/go2xunit
 ZIP := zip
 TAR := tar
 
@@ -39,10 +39,10 @@ lint:
 # Runs unit tests
 .PHONY: test
 test:
-	mkdir -p $(REPORTDIR)
+	mkdir -p $(REPORTDIR)/xUnit
 	$(TESTENV) $(GO) test $(TESTFLAGS) $(if $(TEST), -run=$(TEST),) $(PKGS) \
 		| tee -i /dev/stderr \
-		| $(XUNIT) -fail -output $(REPORTDIR)/unit.xml
+		| $(GOJUNITREPORT) -set-exit-code >$(REPORTDIR)/xUnit/test-report.xml
 
 # Runs mod tidy to remove unused dependencies
 .PHONY: tidy
