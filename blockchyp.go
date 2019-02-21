@@ -94,25 +94,27 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 		if err != nil {
 			return nil, err
 		}
-		authResponse := AuthorizationResponse{}
-		if !route.Exists {
-			authResponse.Approved = false
-			authResponse.ResponseDescription = "Unknown Terminal"
+		if !route.CloudRelayEnabled {
+			authResponse := AuthorizationResponse{}
+			if !route.Exists {
+				authResponse.Approved = false
+				authResponse.ResponseDescription = "Unknown Terminal"
+				return &authResponse, err
+			}
+			authRequest := TerminalAuthorizationRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalPost(route, "/charge", authRequest, &authResponse)
+			if err, ok := err.(net.Error); ok && err.Timeout() {
+				authResponse.Approved = false
+				authResponse.ResponseDescription = "Request Timed Out"
+			} else if err != nil {
+				authResponse.Approved = false
+				authResponse.ResponseDescription = err.Error()
+			}
 			return &authResponse, err
 		}
-		authRequest := TerminalAuthorizationRequest{
-			APICredentials: route.TransientCredentials,
-			Request:        request,
-		}
-		err = client.terminalPost(route, "/charge", authRequest, &authResponse)
-		if err, ok := err.(net.Error); ok && err.Timeout() {
-			authResponse.Approved = false
-			authResponse.ResponseDescription = "Request Timed Out"
-		} else if err != nil {
-			authResponse.Approved = false
-			authResponse.ResponseDescription = err.Error()
-		}
-		return &authResponse, err
 	}
 	authResponse := AuthorizationResponse{}
 	err := client.GatewayPost("/charge", request, &authResponse, request.Test)
@@ -142,26 +144,27 @@ func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationRespo
 		if err != nil {
 			return nil, err
 		}
-		authResponse := AuthorizationResponse{}
-		if !route.Exists {
-			authResponse.Approved = false
-			authResponse.ResponseDescription = "Unknown Terminal"
+		if !route.CloudRelayEnabled {
+			authResponse := AuthorizationResponse{}
+			if !route.Exists {
+				authResponse.Approved = false
+				authResponse.ResponseDescription = "Unknown Terminal"
+				return &authResponse, err
+			}
+			authRequest := TerminalAuthorizationRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalPost(route, "/preauth", authRequest, &authResponse)
+			if err, ok := err.(net.Error); ok && err.Timeout() {
+				authResponse.Approved = false
+				authResponse.ResponseDescription = "Request Timed Out"
+			} else if err != nil {
+				authResponse.Approved = false
+				authResponse.ResponseDescription = err.Error()
+			}
 			return &authResponse, err
 		}
-		authRequest := TerminalAuthorizationRequest{
-			APICredentials: route.TransientCredentials,
-			Request:        request,
-		}
-		err = client.terminalPost(route, "/preauth", authRequest, &authResponse)
-		if err, ok := err.(net.Error); ok && err.Timeout() {
-			authResponse.Approved = false
-			authResponse.ResponseDescription = "Request Timed Out"
-		} else if err != nil {
-			authResponse.Approved = false
-			authResponse.ResponseDescription = err.Error()
-		}
-		return &authResponse, err
-
 	}
 
 	authResponse := AuthorizationResponse{}
@@ -192,26 +195,27 @@ func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, err
 		if err != nil {
 			return nil, err
 		}
-		authResponse := AuthorizationResponse{}
-		if !route.Exists {
-			authResponse.Approved = false
-			authResponse.ResponseDescription = "Unknown Terminal"
+		if !route.CloudRelayEnabled {
+			authResponse := AuthorizationResponse{}
+			if !route.Exists {
+				authResponse.Approved = false
+				authResponse.ResponseDescription = "Unknown Terminal"
+				return &authResponse, err
+			}
+			authRequest := TerminalRefundAuthorizationRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalPost(route, "/refund", authRequest, &authResponse)
+			if err, ok := err.(net.Error); ok && err.Timeout() {
+				authResponse.Approved = false
+				authResponse.ResponseDescription = "Request Timed Out"
+			} else if err != nil {
+				authResponse.Approved = false
+				authResponse.ResponseDescription = err.Error()
+			}
 			return &authResponse, err
 		}
-		authRequest := TerminalRefundAuthorizationRequest{
-			APICredentials: route.TransientCredentials,
-			Request:        request,
-		}
-		err = client.terminalPost(route, "/refund", authRequest, &authResponse)
-		if err, ok := err.(net.Error); ok && err.Timeout() {
-			authResponse.Approved = false
-			authResponse.ResponseDescription = "Request Timed Out"
-		} else if err != nil {
-			authResponse.Approved = false
-			authResponse.ResponseDescription = err.Error()
-		}
-		return &authResponse, err
-
 	}
 	authResponse := AuthorizationResponse{}
 	err := client.GatewayPost("/refund", request, &authResponse, request.Test)
@@ -319,7 +323,9 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	pingResponse := PingResponse{}
+
+	var pingResponse PingResponse
+
 	if !route.Exists {
 		pingResponse.Success = false
 		pingResponse.ResponseDescription = "Unknown Terminal"
@@ -330,7 +336,13 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 		APICredentials: route.TransientCredentials,
 		Request:        request,
 	}
-	err = client.terminalPost(route, "/test", terminalRequest, &pingResponse)
+
+	if route.CloudRelayEnabled {
+		err = client.GatewayPost("/terminal-test", request, &pingResponse, request.Test)
+	} else {
+		err = client.terminalPost(route, "/test", terminalRequest, &pingResponse)
+	}
+
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		pingResponse.Success = false
 		pingResponse.ResponseDescription = "Request Timed Out"
@@ -338,6 +350,7 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 		pingResponse.Success = false
 		pingResponse.ResponseDescription = err.Error()
 	}
+
 	return &pingResponse, err
 }
 
