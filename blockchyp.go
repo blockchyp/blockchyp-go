@@ -323,7 +323,9 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	pingResponse := PingResponse{}
+
+	var pingResponse PingResponse
+
 	if !route.Exists {
 		pingResponse.Success = false
 		pingResponse.ResponseDescription = "Unknown Terminal"
@@ -334,7 +336,13 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 		APICredentials: route.TransientCredentials,
 		Request:        request,
 	}
-	err = client.terminalPost(route, "/test", terminalRequest, &pingResponse)
+
+	if route.CloudRelayEnabled {
+		err = client.GatewayPost("/terminal-test", request, &pingResponse, request.Test)
+	} else {
+		err = client.terminalPost(route, "/test", terminalRequest, &pingResponse)
+	}
+
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		pingResponse.Success = false
 		pingResponse.ResponseDescription = "Request Timed Out"
@@ -342,6 +350,7 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 		pingResponse.Success = false
 		pingResponse.ResponseDescription = err.Error()
 	}
+
 	return &pingResponse, err
 }
 
