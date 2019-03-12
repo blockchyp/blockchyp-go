@@ -25,12 +25,26 @@ var validSignatureFormats = []string{
 // string of the current build.
 var compileTimeVersion string
 
+var config *blockchyp.ConfigSettings
+
 func main() {
 
 	commandLineArgs := parseArgs()
 
+	loadConfig(commandLineArgs)
+
 	processCommand(commandLineArgs)
 
+}
+
+// loadConfig loads configuration from disk.
+func loadConfig(args blockchyp.CommandLineArguments) {
+	c, err := blockchyp.LoadConfigSettings(args)
+	if err != nil {
+		fatalErrorf("Failed to load configuration: %+v", err)
+	}
+
+	config = c
 }
 
 func parseArgs() blockchyp.CommandLineArguments {
@@ -112,15 +126,9 @@ func resolveCredentials(args blockchyp.CommandLineArguments) (*blockchyp.APICred
 		creds.BearerToken = args.BearerToken
 		creds.SigningKey = args.SigningKey
 	} else {
-		settings, err := blockchyp.LoadConfigSettings(args)
-		if err != nil {
-			return nil, err
-		}
-		if settings != nil {
-			creds.APIKey = settings.APIKey
-			creds.BearerToken = settings.BearerToken
-			creds.SigningKey = settings.SigningKey
-		}
+		creds.APIKey = config.APIKey
+		creds.BearerToken = config.BearerToken
+		creds.SigningKey = config.SigningKey
 	}
 
 	if creds.APIKey == "" {
@@ -145,32 +153,22 @@ func resolveClient(args blockchyp.CommandLineArguments) (*blockchyp.Client, erro
 	}
 	client := blockchyp.NewClient(*creds)
 
-	settings, err := blockchyp.LoadConfigSettings(args)
-
-	if err != nil {
-		return nil, err
-	}
-
 	if !args.HTTPS {
 		client.HTTPS = args.HTTPS
-	} else if settings != nil {
-		client.HTTPS = settings.Secure
+	} else {
+		client.HTTPS = config.Secure
 	}
 
 	if args.GatewayHost != "" {
 		client.GatewayHost = args.GatewayHost
-	} else if settings != nil && settings.GatewayHost != "" {
-		client.GatewayHost = settings.GatewayHost
 	} else {
-		client.GatewayHost = "https://api.blockchyp.com"
+		client.GatewayHost = config.GatewayHost
 	}
 
 	if args.TestGatewayHost != "" {
 		client.TestGatewayHost = args.TestGatewayHost
-	} else if settings != nil && settings.TestGatewayHost != "" {
-		client.TestGatewayHost = settings.TestGatewayHost
 	} else {
-		client.TestGatewayHost = "https://test.blockchyp.com"
+		client.TestGatewayHost = config.TestGatewayHost
 	}
 
 	if args.RouteCache != "" {

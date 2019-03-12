@@ -53,6 +53,12 @@ type CommandLineArguments struct {
 	Version         bool   `arg:"version"`
 }
 
+var defaultSettings = &ConfigSettings{
+	GatewayHost:     "https://api.blockchyp.com",
+	TestGatewayHost: "https://test.blockchyp.com",
+	Secure:          true,
+}
+
 // LoadConfigSettings loads settings from the command line and/or the
 // configuration file.
 func LoadConfigSettings(args CommandLineArguments) (*ConfigSettings, error) {
@@ -80,7 +86,7 @@ func LoadConfigSettings(args CommandLineArguments) (*ConfigSettings, error) {
 		if args.ConfigFile != "" {
 			return nil, errors.New(fileName + " not found")
 		}
-		return nil, nil
+		return defaultSettings, nil
 	}
 
 	b, err := ioutil.ReadFile(fileName)
