@@ -8,9 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"path/filepath"
-	"runtime"
 	"strings"
 
 	blockchyp "github.com/blockchyp/blockchyp-go"
@@ -22,51 +20,6 @@ var validSignatureFormats = []string{
 	"jpg",
 	"png",
 }
-
-// ConfigSettings contains configuration options for the CLI.
-type ConfigSettings struct {
-	APIKey          string `json:"apiKey"`
-	BearerToken     string `json:"bearerToken"`
-	SigningKey      string `json:"signingKey"`
-	GatewayHost     string `json:"gateway"`
-	TestGatewayHost string `json:"testGateway"`
-	Secure          bool   `json:"https"`
-	RouteCacheTTL   int    `json:"routeCacheTTL"`
-	GatewayTimeout  int    `json:"gatewayTimeout"`
-	TerminalTimeout int    `json:"terminalTimeout"`
-}
-
-// CommandLineArguments contains arguments which are passed in at runtime.
-type CommandLineArguments struct {
-	Type            string `arg:"type"`
-	ManualEntry     bool   `arg:"manual"`
-	ConfigFile      string `arg:"f"`
-	GatewayHost     string `arg:"gateway"`
-	TestGatewayHost string `arg:"testGateway"`
-	Test            bool   `arg:"test"`
-	APIKey          string `arg:"apiKey"`
-	BearerToken     string `arg:"bearerToken"`
-	SigningKey      string `arg:"signingKey"`
-	TransactionRef  string `arg:"txRef"`
-	Description     string `arg:"desc"`
-	TerminalName    string `arg:"terminal"`
-	Token           string `arg:"token"`
-	Amount          string `arg:"amount"`
-	PromptForTip    bool   `arg:"promptForTip"`
-	TipAmount       string `arg:"tip"`
-	TaxAmount       string `arg:"tax"`
-	CurrencyCode    string `arg:"currency"`
-	TransactionID   string `arg:"txId"`
-	RouteCache      string `arg:"routeCache"`
-	OutputFile      string `arg:"out"`
-	SigFormat       string `arg:"sigFormat"`
-	SigWidth        int    `arg:"sigWidth"`
-	SigFile         string `arg:"sigFile"`
-	HTTPS           bool   `arg:"secure"`
-	Version         bool   `arg:"version"`
-}
-
-var currentConfig *ConfigSettings
 
 // compileTimeVersion is populated at build time. It contains the version
 // string of the current build.
@@ -80,9 +33,9 @@ func main() {
 
 }
 
-func parseArgs() CommandLineArguments {
+func parseArgs() blockchyp.CommandLineArguments {
 
-	args := CommandLineArguments{}
+	args := blockchyp.CommandLineArguments{}
 
 	flag.StringVar(&args.Type, "type", "", "transaction type")
 	flag.StringVar(&args.ConfigFile, "f", "", "config location")
@@ -124,7 +77,7 @@ func parseArgs() CommandLineArguments {
 
 }
 
-func validateArgs(args *CommandLineArguments) {
+func validateArgs(args *blockchyp.CommandLineArguments) {
 	if args.Type == "" {
 		fatalError("-type is required")
 	}
@@ -150,7 +103,7 @@ func validSigFormat(format string) bool {
 	return false
 }
 
-func resolveCredentials(args CommandLineArguments) (*blockchyp.APICredentials, error) {
+func resolveCredentials(args blockchyp.CommandLineArguments) (*blockchyp.APICredentials, error) {
 
 	creds := &blockchyp.APICredentials{}
 
@@ -159,7 +112,7 @@ func resolveCredentials(args CommandLineArguments) (*blockchyp.APICredentials, e
 		creds.BearerToken = args.BearerToken
 		creds.SigningKey = args.SigningKey
 	} else {
-		settings, err := LoadConfigSettings(args)
+		settings, err := blockchyp.LoadConfigSettings(args)
 		if err != nil {
 			return nil, err
 		}
@@ -184,54 +137,7 @@ func resolveCredentials(args CommandLineArguments) (*blockchyp.APICredentials, e
 
 }
 
-// LoadConfigSettings loads settings from the command line and/or the
-// configuration file.
-func LoadConfigSettings(args CommandLineArguments) (*ConfigSettings, error) {
-
-	if currentConfig != nil {
-		return currentConfig, nil
-	}
-
-	fileName := args.ConfigFile
-	if fileName == "" {
-		var configHome string
-
-		if runtime.GOOS == "windows" {
-			configHome = os.Getenv("userprofile")
-		} else {
-			configHome = os.Getenv("XDG_CONFIG_HOME")
-			if configHome == "" {
-				user, err := user.Current()
-				if err != nil {
-					return nil, err
-				}
-				configHome = user.HomeDir + "/.config"
-			}
-		}
-
-		fileName = filepath.Join(configHome, blockchyp.ConfigDir, blockchyp.ConfigFile)
-	}
-
-	if _, err := os.Stat(fileName); os.IsNotExist(err) {
-		if args.ConfigFile != "" {
-			return nil, errors.New(fileName + " not found")
-		}
-		return nil, nil
-	}
-
-	b, err := ioutil.ReadFile(fileName)
-
-	if err != nil {
-		return nil, err
-	}
-
-	currentConfig = &ConfigSettings{}
-	err = json.Unmarshal(b, currentConfig)
-	return currentConfig, err
-
-}
-
-func resolveClient(args CommandLineArguments) (*blockchyp.Client, error) {
+func resolveClient(args blockchyp.CommandLineArguments) (*blockchyp.Client, error) {
 
 	creds, err := resolveCredentials(args)
 	if err != nil {
@@ -239,7 +145,7 @@ func resolveClient(args CommandLineArguments) (*blockchyp.Client, error) {
 	}
 	client := blockchyp.NewClient(*creds)
 
-	settings, err := LoadConfigSettings(args)
+	settings, err := blockchyp.LoadConfigSettings(args)
 
 	if err != nil {
 		return nil, err
@@ -274,7 +180,7 @@ func resolveClient(args CommandLineArguments) (*blockchyp.Client, error) {
 	return &client, nil
 }
 
-func processCommand(args CommandLineArguments) {
+func processCommand(args blockchyp.CommandLineArguments) {
 
 	client, err := resolveClient(args)
 
@@ -305,7 +211,7 @@ func processCommand(args CommandLineArguments) {
 
 }
 
-func processRefund(client *blockchyp.Client, args CommandLineArguments) {
+func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
 	req := blockchyp.RefundRequest{}
 	req.TransactionRef = args.TransactionRef
@@ -340,7 +246,7 @@ func processRefund(client *blockchyp.Client, args CommandLineArguments) {
 	dumpResponse(&args, res)
 }
 
-func processReverse(client *blockchyp.Client, args CommandLineArguments) {
+func processReverse(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TransactionRef, "txRef")
 	req := blockchyp.AuthorizationRequest{}
 	req.TransactionRef = args.TransactionRef
@@ -359,7 +265,7 @@ func processReverse(client *blockchyp.Client, args CommandLineArguments) {
 	dumpResponse(&args, res)
 }
 
-func processCloseBatch(client *blockchyp.Client, args CommandLineArguments) {
+func processCloseBatch(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
 	req := blockchyp.CloseBatchRequest{}
 	req.TransactionRef = args.TransactionRef
@@ -377,7 +283,7 @@ func processCloseBatch(client *blockchyp.Client, args CommandLineArguments) {
 	dumpResponse(&args, res)
 }
 
-func processVoid(client *blockchyp.Client, args CommandLineArguments) {
+func processVoid(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TransactionID, "tx")
 	req := blockchyp.VoidRequest{}
 	req.TransactionRef = args.TransactionRef
@@ -396,7 +302,7 @@ func processVoid(client *blockchyp.Client, args CommandLineArguments) {
 	dumpResponse(&args, res)
 }
 
-func processCapture(client *blockchyp.Client, args CommandLineArguments) {
+func processCapture(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TransactionID, "tx")
 	req := blockchyp.CaptureRequest{}
 	req.TransactionRef = args.TransactionRef
@@ -418,7 +324,7 @@ func processCapture(client *blockchyp.Client, args CommandLineArguments) {
 	dumpResponse(&args, res)
 }
 
-func processGiftActivate(client *blockchyp.Client, args CommandLineArguments) {
+func processGiftActivate(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.Amount, "amount")
 	validateRequired(args.TerminalName, "terminal")
 	req := blockchyp.GiftActivateRequest{}
@@ -435,7 +341,7 @@ func processGiftActivate(client *blockchyp.Client, args CommandLineArguments) {
 	dumpResponse(&args, res)
 }
 
-func processAuth(client *blockchyp.Client, args CommandLineArguments) {
+func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.Amount, "amount")
 	if (args.TerminalName == "") && (args.Token == "") {
 		fatalError("-terminal or -token requred")
@@ -482,7 +388,7 @@ func processAuth(client *blockchyp.Client, args CommandLineArguments) {
 	dumpResponse(&args, res)
 }
 
-func processPing(client *blockchyp.Client, args CommandLineArguments) {
+func processPing(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TerminalName, "terminal")
 	req := blockchyp.PingRequest{
 		TerminalName: args.TerminalName,
@@ -504,7 +410,7 @@ func validateRequired(value string, arg string) {
 	}
 }
 
-func dumpResponse(args *CommandLineArguments, res interface{}) {
+func dumpResponse(args *blockchyp.CommandLineArguments, res interface{}) {
 
 	content, err := json.Marshal(res)
 	if err != nil {
@@ -521,7 +427,7 @@ func dumpResponse(args *CommandLineArguments, res interface{}) {
 
 }
 
-func handleError(args *CommandLineArguments, err error) {
+func handleError(args *blockchyp.CommandLineArguments, err error) {
 
 	ack := blockchyp.Acknowledgement{}
 	ack.Error = err.Error()
