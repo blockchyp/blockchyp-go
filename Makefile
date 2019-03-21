@@ -20,7 +20,7 @@ BUILDFLAGS := -ldflags "-X main.compileTimeVersion=$(or $(TAG:v%=%), $(HASH))"
 # Executables
 GO := $(MODSUPPORT) go
 GOJUNITREPORT := $(GO) run github.com/jstemmer/go-junit-report
-GOLINT := $(GO) run github.com/golang/lint/golint
+GOLINT := $(GO) run golang.org/x/lint/golint
 GOVERSIONINFO := $(GO) run github.com/josephspurrier/goversioninfo/cmd/goversioninfo
 REVIVE := $(MODSUPPORT) $(GO) run github.com/mgechev/revive
 ZIP := zip
