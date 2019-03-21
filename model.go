@@ -305,7 +305,7 @@ type TransactionDisplayRequest struct {
 	TerminalName string `json:"terminalName"`
 
 	// Transaction is the transaction to display on the terminal.
-	Transaction TransactionDisplayTransaction `json:"transaction"`
+	Transaction *TransactionDisplayTransaction `json:"transaction"`
 }
 
 // TransactionDisplayTransaction contains the items to display on a terminal.
@@ -316,7 +316,7 @@ type TransactionDisplayTransaction struct {
 	Total    string `json:"total"`
 
 	// Items can be overwritten or appended, based on the request type.
-	Items []TransactionDisplayItem `json:"items"`
+	Items []*TransactionDisplayItem `json:"items"`
 }
 
 // TransactionDisplayItem is an item category in a transaction display. Groups
@@ -330,7 +330,7 @@ type TransactionDisplayItem struct {
 	Subtotal string `json:"subtotal"`
 
 	// Discounts are displayed under their corresponding item.
-	Discounts []TransactionDisplayDiscount `json:"discounts"`
+	Discounts []*TransactionDisplayDiscount `json:"discounts"`
 }
 
 // TransactionDisplayDiscount is an item level discount for transaction
