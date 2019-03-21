@@ -326,6 +326,9 @@ type TransactionDisplayItem struct {
 	Price       string `json:"price"`
 	Quantity    int    `json:"quantity"`
 
+	// Subtotal is calculated automatically by the formula: Price x Quantity
+	Subtotal string `json:"subtotal"`
+
 	// Discounts are displayed under their corresponding item.
 	Discounts []TransactionDisplayDiscount `json:"discounts"`
 }
