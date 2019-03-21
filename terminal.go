@@ -63,6 +63,13 @@ type TerminalPingRequest struct {
 	Request PingRequest `json:"request"`
 }
 
+// TerminalTransactionDisplayRequest adds API credentials to a terminal line
+// item display request.
+type TerminalTransactionDisplayRequest struct {
+	APICredentials
+	Request TransactionDisplayRequest `json:"request"`
+}
+
 /*
 TerminalRoute models route information for a payment terminal.
 */
@@ -305,13 +312,17 @@ func (client *Client) assembleTerminalURL(route TerminalRoute, path string) stri
 terminalPost posts a request to the api gateway.
 */
 func (client *Client) terminalPost(route TerminalRoute, path string, requestEntity interface{}, responseEntity interface{}) error {
+	return client.terminalRequest(route, path, http.MethodPost, requestEntity, responseEntity)
+}
 
+// terminalRequest sends an HTTP request to a terminal.
+func (client *Client) terminalRequest(route TerminalRoute, path, method string, requestEntity, responseEntity interface{}) error {
 	content, err := json.Marshal(requestEntity)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", client.assembleTerminalURL(route, path), bytes.NewBuffer(content))
+	req, err := http.NewRequest(method, client.assembleTerminalURL(route, path), bytes.NewBuffer(content))
 	if err != nil {
 		return err
 	}
@@ -321,18 +332,16 @@ func (client *Client) terminalPost(route TerminalRoute, path string, requestEnti
 		return err
 	}
 
-	resp, err := client.terminalHTTPClient.Do(req)
+	res, err := client.terminalHTTPClient.Do(req)
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
-	if resp.StatusCode != 200 {
-		return errors.New(resp.Status)
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusOK {
+		return errors.New(res.Status)
 	}
 
-	err = consumeResponse(resp, responseEntity)
-
-	return err
+	return consumeResponse(res, responseEntity)
 }
 
 func terminalCertPool() *x509.CertPool {

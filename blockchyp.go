@@ -389,6 +389,60 @@ func (client *Client) CloseBatch(request CloseBatchRequest) (*CloseBatchResponse
 
 }
 
+// NewTransactionDisplay displays a new transaction on the terminal.
+func (client *Client) NewTransactionDisplay(request TransactionDisplayRequest) error {
+	return client.sendTransactionDisplay(request, http.MethodPost)
+}
+
+// UpdateTransactionDisplay appends items to an existing transaction display.
+// Subtotal, Tax, and Total are overwritten by the request. Items with the same
+// description are combined into groups.
+func (client *Client) UpdateTransactionDisplay(request TransactionDisplayRequest) error {
+	return client.sendTransactionDisplay(request, http.MethodPut)
+}
+
+// ClearTransactionDisplay resets the displayed transaction and returns the
+// terminal to idle.
+func (client *Client) ClearTransactionDisplay(terminalName string) error {
+	request := TransactionDisplayRequest{
+		TerminalName: terminalName,
+	}
+
+	return client.sendTransactionDisplay(request, http.MethodDelete)
+}
+
+// sendTransactionDisplay sends a transaction display request to a terminal.
+func (client *Client) sendTransactionDisplay(request TransactionDisplayRequest, method string) error {
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		return err
+	}
+
+	if !route.Exists {
+		return errors.New("Unknown Terminal")
+	}
+
+	response := &Acknowledgement{}
+	if route.CloudRelayEnabled {
+		err = client.GatewayRequest("/terminal-txdisplay", method, request, response, false)
+	} else {
+		terminalRequest := TerminalTransactionDisplayRequest{
+			APICredentials: route.TransientCredentials,
+			Request:        request,
+		}
+		err = client.terminalRequest(route, "/txdisplay", method, terminalRequest, response)
+	}
+	if err != nil {
+		return err
+	}
+
+	if !response.Success {
+		return errors.New(response.Error)
+	}
+
+	return nil
+}
+
 func isValidAsyncMethod(method PaymentMethod) bool {
 
 	if method.TerminalName == "" {

@@ -65,65 +65,47 @@ func consumeResponse(resp *http.Response, responseEntity interface{}) error {
 	return nil
 }
 
-/*
-GatewayPost posts a request to the api gateway.
-*/
-func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}, testTx bool) error {
-
+// GatewayRequest sends an HTTP request to the gateway.
+func (client *Client) GatewayRequest(path, method string, requestEntity, responseEntity interface{}, testTx bool) error {
 	content, err := json.Marshal(requestEntity)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", client.assembleGatewayURL(path, testTx), bytes.NewBuffer(content))
+	req, err := http.NewRequest(method, client.assembleGatewayURL(path, testTx), bytes.NewBuffer(content))
 	if err != nil {
 		return err
 	}
 
-	err = addAPIRequestHeaders(req, client.Credentials)
+	if err := addAPIRequestHeaders(req, client.Credentials); err != nil {
+		return err
+	}
+
+	res, err := client.gatewayHTTPClient.Do(req)
 	if err != nil {
 		return err
 	}
-	resp, err := client.gatewayHTTPClient.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != 200 {
-		return errors.New(resp.Status)
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return errors.New(res.Status)
 	}
 
-	err = consumeResponse(resp, responseEntity)
+	return consumeResponse(res, responseEntity)
+}
 
-	return err
+/*
+GatewayPost posts a request to the api gateway.
+*/
+func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}, testTx bool) error {
+	return client.GatewayRequest(path, http.MethodPost, requestEntity, responseEntity, testTx)
 }
 
 /*
 GatewayGet retrieves a get request from the api gateway.
 */
 func (client *Client) GatewayGet(path string, responseEntity interface{}) error {
-
-	req, err := http.NewRequest("GET", client.assembleGatewayURL(path, false), nil)
-	if err != nil {
-		return err
-	}
-
-	err = addAPIRequestHeaders(req, client.Credentials)
-	if err != nil {
-		return err
-	}
-	resp, err := client.gatewayHTTPClient.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != 200 {
-		return errors.New(resp.Status)
-	}
-
-	err = consumeResponse(resp, responseEntity)
-
-	return err
+	return client.GatewayRequest(path, http.MethodGet, nil, responseEntity, false)
 }
 
 /*

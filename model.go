@@ -297,3 +297,42 @@ type CloseBatchResponse struct {
 	OpenPreauths  string            `json:"openPreauths"`
 	CardBrands    map[string]string `json:"cardBrands"`
 }
+
+// TransactionDisplayRequest is used to start or update a transaction line item
+// display on a terminal.
+type TransactionDisplayRequest struct {
+	CoreRequest
+	TerminalName string `json:"terminalName"`
+
+	// Transaction is the transaction to display on the terminal.
+	Transaction TransactionDisplayTransaction `json:"transaction"`
+}
+
+// TransactionDisplayTransaction contains the items to display on a terminal.
+type TransactionDisplayTransaction struct {
+	// Subtotal, Tax, and Total are always overwritten.
+	Subtotal string `json:"subtotal"`
+	Tax      string `json:"tax"`
+	Total    string `json:"total"`
+
+	// Items can be overwritten or appended, based on the request type.
+	Items []TransactionDisplayItem `json:"items"`
+}
+
+// TransactionDisplayItem is an item category in a transaction display. Groups
+// combine if their descriptions match.
+type TransactionDisplayItem struct {
+	Description string `json:"description"`
+	Price       string `json:"price"`
+	Quantity    int    `json:"quantity"`
+
+	// Discounts are displayed under their corresponding item.
+	Discounts []TransactionDisplayDiscount `json:"discounts"`
+}
+
+// TransactionDisplayDiscount is an item level discount for transaction
+// display. Discounts never combine.
+type TransactionDisplayDiscount struct {
+	Description string `json:"description"`
+	Amount      string `json:"amount"`
+}
