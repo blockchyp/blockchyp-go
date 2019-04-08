@@ -161,7 +161,9 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 		if routeResponse.Success {
 			route = &routeResponse.TerminalRoute
 			route.Exists = true
-			client.routeCachePut(*route)
+			if len(route.IPAddress) > 0 {
+				client.routeCachePut(*route)
+			}
 		} else {
 			route = &TerminalRoute{}
 			route.Exists = false
