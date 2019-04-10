@@ -44,6 +44,7 @@ type PaymentMethod struct {
 	Track1         string `json:"track1,omitempty"`
 	Track2         string `json:"track2,omitempty"`
 	PAN            string `json:"pan,omitempty"`
+	RoutingNumber  string `json:"routingNumber,omitempty"`
 	CardholderName string `json:"cardholderName,omitempty"`
 	ExpMonth       string `json:"expMonth,omitempty"`
 	ExpYear        string `json:"expYear,omitempty"`
