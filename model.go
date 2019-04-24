@@ -87,6 +87,10 @@ type PaymentMethod struct {
 	//optional parameters for returning signatures with requests
 	SigFormat string `json:"sigFormat,omitEmpty"`
 	SigWidth  int    `json:"sigWidth,omitEmpty"`
+
+	// Online PIN
+	KSN      string `json:"ksn,omitEmpty"`
+	PINBlock string `json:"pinblock,omitEmpty"`
 }
 
 // RequestAmount models currency amounts in transaction requests.
