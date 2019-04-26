@@ -91,6 +91,9 @@ type PaymentMethod struct {
 	// Online PIN
 	KSN      string `json:"ksn,omitEmpty"`
 	PINBlock string `json:"pinblock,omitEmpty"`
+
+	// CardType designates categories of cards: credit, debit, EBT.
+	CardType CardType `json:"cardType,omitEmpty"`
 }
 
 // RequestAmount models currency amounts in transaction requests.
@@ -391,3 +394,13 @@ type TransactionDisplayDiscount struct {
 	Description string `json:"description"`
 	Amount      string `json:"amount"`
 }
+
+// CardType is used to differentiate credit, debit, and EBT.
+type CardType int
+
+// CardTypes.
+const (
+	CardTypeCredit CardType = iota
+	CardTypeDebit
+	CardTypeEBT
+)
