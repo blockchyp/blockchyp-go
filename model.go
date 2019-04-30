@@ -321,13 +321,18 @@ type TransactionDisplayTransaction struct {
 }
 
 // TransactionDisplayItem is an item category in a transaction display. Groups
-// combine if their descriptions match.
+// combine if their descriptions match. Calculated subtotal amounts are
+// rounded to two decimal places of precision. Quantity is a floating point
+// number that is not rounded at all.
 type TransactionDisplayItem struct {
-	Description string `json:"description"`
-	Price       string `json:"price"`
-	Quantity    int    `json:"quantity"`
+	Description string  `json:"description"`
+	Price       string  `json:"price"`
+	Quantity    float64 `json:"quantity"`
 
-	// Subtotal is calculated automatically by the formula: Price x Quantity
+	// If subtotal is not provided, then it is calculated automatically
+	// by the formula: Price x Quantity
+	// If subtotal is provided, it is passed in as-is.
+	// Passed subtotals will overwrite existing subtotals in an append.
 	Subtotal string `json:"subtotal"`
 
 	// Discounts are displayed under their corresponding item.
