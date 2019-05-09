@@ -75,6 +75,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.HTTPS, "secure", true, "enables or disables https with terminal")
 	flag.BoolVar(&args.Version, "version", false, "print version and exit")
 	flag.StringVar(&args.Message, "message", "", "short message to be displayed on the terminal")
+	flag.BoolVar(&args.EBT, "ebt", false, "EBT transaction")
 	flag.StringVar(&args.RouteCache, "routeCache", "", "specifies local file location for route cache")
 	flag.StringVar(&args.OutputFile, "out", "", "directs output to a file instead of stdout")
 	flag.StringVar(&args.SigFormat, "sigFormat", "", "format for signature file (jpeg, png, gif)")
@@ -395,6 +396,9 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req.ManualEntry = args.ManualEntry
 	req.SigWidth = args.SigWidth
 	req.SigFormat = args.SigFormat
+	if args.EBT {
+		req.CardType = blockchyp.CardTypeEBT
+	}
 
 	res, err := client.Refund(req)
 
@@ -423,6 +427,9 @@ func processReverse(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	req.TransactionRef = args.TransactionRef
 	req.Test = args.Test
 	req.ManualEntry = args.ManualEntry
+	if args.EBT {
+		req.CardType = blockchyp.CardTypeEBT
+	}
 
 	res, err := client.Reverse(req)
 
@@ -530,6 +537,9 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	req.ManualEntry = args.ManualEntry
 	req.SigWidth = args.SigWidth
 	req.SigFormat = args.SigFormat
+	if args.EBT {
+		req.CardType = blockchyp.CardTypeEBT
+	}
 
 	res := &blockchyp.AuthorizationResponse{}
 	var err error
