@@ -54,6 +54,7 @@ type AuthorizationRequest struct {
 	Description  string            `json:"description,omitempty"`
 	PromptForTip bool              `json:"promptForTip,omitempty"`
 	AltPrices    map[string]string `json:"altPrices,omitempty"`
+	PreviousTransaction
 }
 
 // RefundRequest models refund requests.

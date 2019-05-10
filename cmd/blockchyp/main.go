@@ -392,13 +392,17 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	if req.TransactionID == "" {
 		req.TerminalName = args.TerminalName
 	}
+
+	if args.EBT {
+		req.CardType = blockchyp.CardTypeEBT
+		// EBT free range refunds are not permitted.
+		req.TerminalName = args.TerminalName
+	}
+
 	req.Test = args.Test
 	req.ManualEntry = args.ManualEntry
 	req.SigWidth = args.SigWidth
 	req.SigFormat = args.SigFormat
-	if args.EBT {
-		req.CardType = blockchyp.CardTypeEBT
-	}
 
 	res, err := client.Refund(req)
 
