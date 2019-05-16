@@ -88,8 +88,9 @@ type PreviousTransaction struct {
 CoreRequest models fields that are common to all API requests.
 */
 type CoreRequest struct {
-	TransactionRef string `json:"transactionRef,omitempty"`
-	Test           bool   `json:"test"`
+	TransactionRef     string `json:"transactionRef,omitempty"`
+	DestinationAccount string `json:"destinationAccount"`
+	Test               bool   `json:"test"`
 }
 
 /*
