@@ -106,8 +106,9 @@ type RequestAmount struct {
 
 // Subtotals models subtotals like tip and tax amounts.
 type Subtotals struct {
-	TipAmount string `json:"tipAmount,omitempty"`
-	TaxAmount string `json:"taxAmount,omitempty"`
+	TipAmount      string `json:"tipAmount,omitempty"`
+	TaxAmount      string `json:"taxAmount,omitempty"`
+	CashBackAmount string `json:"cashBackAmount"`
 }
 
 // PreviousTransaction models reference to a previous transaction.
