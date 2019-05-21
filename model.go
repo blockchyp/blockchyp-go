@@ -201,6 +201,10 @@ type ReceiptSuggestions struct {
 	AuthorizedAmount string `json:"authorizedAmount"`
 	TransactionType  string `json:"transactionType"`
 	EntryMethod      string `json:"entryMethod,omitempty"`
+
+	// PINVerified is used to designate that offline PIN verification was
+	// performed.
+	PINVerified bool `json:"pinVerified,omitempty"`
 }
 
 /*
