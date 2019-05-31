@@ -85,6 +85,43 @@ func (client *Client) AsyncCharge(request AuthorizationRequest, responseChan cha
 }
 
 /*
+Message displays a short message on the terminal.
+*/
+func (client *Client) Message(request MessageRequest) (*Acknowledgement, error) {
+
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		return nil, err
+	}
+	if !route.CloudRelayEnabled {
+		ack := Acknowledgement{}
+		if !route.Exists {
+			ack.Success = false
+			ack.Error = "Unknown Terminal"
+			return &ack, err
+		}
+		msgRequest := TerminalMessageRequest{
+			APICredentials: route.TransientCredentials,
+			Request:        request,
+		}
+		err = client.terminalPost(route, "/message", msgRequest, &ack)
+		if err, ok := err.(net.Error); ok && err.Timeout() {
+			ack.Success = false
+			ack.Error = "Request Timed Out"
+		} else if err != nil {
+			ack.Success = false
+			ack.Error = err.Error()
+		}
+		return &ack, err
+	}
+
+	ack := Acknowledgement{}
+	err = client.GatewayPost("/message", request, &ack, request.Test)
+	return &ack, err
+
+}
+
+/*
 Charge executes a standard direct preauth and capture.
 */
 func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationResponse, error) {

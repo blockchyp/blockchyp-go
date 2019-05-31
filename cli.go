@@ -40,6 +40,7 @@ type CommandLineArguments struct {
 	Token           string `arg:"token"`
 	Amount          string `arg:"amount"`
 	PromptForTip    bool   `arg:"promptForTip"`
+	Message         string `arg:"message"`
 	TipAmount       string `arg:"tip"`
 	TaxAmount       string `arg:"tax"`
 	CurrencyCode    string `arg:"currency"`

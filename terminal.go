@@ -38,6 +38,15 @@ type TerminalAuthorizationRequest struct {
 }
 
 /*
+TerminalMessageRequest adds API credentials to auth requests for use in
+direct terminal message display requests.
+*/
+type TerminalMessageRequest struct {
+	APICredentials
+	Request MessageRequest `json:"request"`
+}
+
+/*
 TerminalRefundAuthorizationRequest adds API credentials to refund requests for use in
 free range refund transactions.
 */

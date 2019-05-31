@@ -72,6 +72,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.ManualEntry, "manual", false, "key in card data manually")
 	flag.BoolVar(&args.HTTPS, "secure", true, "enables or disables https with terminal")
 	flag.BoolVar(&args.Version, "version", false, "print version and exit")
+	flag.StringVar(&args.Message, "message", "", "short message to be displayed on the terminal")
 	flag.StringVar(&args.RouteCache, "routeCache", "", "specifies local file location for route cache")
 	flag.StringVar(&args.OutputFile, "out", "", "directs output to a file instead of stdout")
 	flag.StringVar(&args.SigFormat, "sigFormat", "", "format for signature file (jpeg, png, gif)")
@@ -203,10 +204,39 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processReverse(client, args)
 	case "close-batch":
 		processCloseBatch(client, args)
+	case "message":
+		processMessage(client, args)
+	case "prompt":
+		processPrompt(client, args)
 	default:
 		fatalErrorf("%s is unknown transaction type", args.Type)
 	}
 
+}
+
+func processMessage(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.Message, "message")
+	validateRequired(args.TerminalName, "terminal")
+
+	req := blockchyp.MessageRequest{}
+	req.Message = args.Message
+	req.TerminalName = args.TerminalName
+	req.Test = args.Test
+
+	res, err := client.Message(req)
+	if err != nil {
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(&args, err)
+		}
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processPrompt(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	fmt.Println("not supported yet")
 }
 
 func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments) {

@@ -9,7 +9,9 @@ type APICredentials struct {
 
 // MessageRequest models a message to be displayed on the terminal screen.
 type MessageRequest struct {
-	Message string `json:"message"`
+	CoreRequest
+	TerminalName string `json:"terminalName"`
+	Message      string `json:"message"`
 }
 
 // AuthorizationRequest models auth requests for charge, preauth, and reverse transaction types.
