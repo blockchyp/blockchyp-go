@@ -227,7 +227,7 @@ func processMessage(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	if err != nil {
 		if res == nil {
 			handleError(&args, err)
-		} else if len(res.ResponseDescription) == 0 {
+		} else if len(res.Error) == 0 {
 			handleError(&args, err)
 		}
 	}
