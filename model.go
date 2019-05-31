@@ -1,18 +1,18 @@
 package blockchyp
 
-/*
-APICredentials models gateway credentials.
-*/
+// APICredentials models gateway credentials.
 type APICredentials struct {
 	APIKey      string `json:"apiKey"`
 	BearerToken string `json:"bearerToken"`
 	SigningKey  string `json:"signingKey"`
 }
 
-/*
-AuthorizationRequest models auth requests for charge, preauth,
-and reverse transaction types.
-*/
+// MessageRequest models a message to be displayed on the terminal screen.
+type MessageRequest struct {
+	Message string `json:"message"`
+}
+
+// AuthorizationRequest models auth requests for charge, preauth, and reverse transaction types.
 type AuthorizationRequest struct {
 	CoreRequest
 	PaymentMethod
@@ -24,9 +24,7 @@ type AuthorizationRequest struct {
 	AltPrices    map[string]string `json:"altPrices,omitempty"`
 }
 
-/*
-RefundRequest models refund requests.
-*/
+// RefundRequest models refund requests.
 type RefundRequest struct {
 	CoreRequest
 	PaymentMethod
@@ -35,9 +33,7 @@ type RefundRequest struct {
 	PreviousTransaction
 }
 
-/*
-PaymentMethod models fields for transactions that work with payment method data.
-*/
+// PaymentMethod models fields for transactions that work with payment method data.
 type PaymentMethod struct {
 	TerminalName   string `json:"terminalName,omitempty"`
 	Token          string `json:"token,omitempty"`
@@ -61,41 +57,32 @@ type PaymentMethod struct {
 	SigWidth  int    `json:"sigWidth,omitEmpty"`
 }
 
-/*
-RequestAmount models currency amounts in transaction requests.
-*/
+// RequestAmount models currency amounts in transaction requests.
 type RequestAmount struct {
 	CurrencyCode string `json:"currencyCode"`
 	Amount       string `json:"amount"`
+	TaxExempt    bool   `json:"taxExempt"`
 }
 
-/*
-Subtotals models subtotals like tip and tax amounts.
-*/
+// Subtotals models subtotals like tip and tax amounts.
 type Subtotals struct {
 	TipAmount string `json:"tipAmount,omitempty"`
 	TaxAmount string `json:"taxAmount,omitempty"`
 }
 
-/*
-PreviousTransaction models reference to a previous transaction.
-*/
+// PreviousTransaction models reference to a previous transaction.
 type PreviousTransaction struct {
 	TransactionID string `json:"transactionId"`
 }
 
-/*
-CoreRequest models fields that are common to all API requests.
-*/
+// CoreRequest models fields that are common to all API requests.
 type CoreRequest struct {
 	TransactionRef     string `json:"transactionRef,omitempty"`
 	DestinationAccount string `json:"destinationAccount"`
 	Test               bool   `json:"test"`
 }
 
-/*
-CoreResponse models elements common to all API responses.
-*/
+// CoreResponse models elements common to all API responses.
 type CoreResponse struct {
 	ResponseDescription string `json:"responseDescription"`
 	TransactionID       string `json:"transactionId"`
@@ -116,20 +103,17 @@ type ApprovalResponse struct {
 	SigFile  string `json:"sigFile"`
 }
 
-/*
-AuthorizationResponse models the response to authorization requests.
-*/
+// AuthorizationResponse models the response to authorization requests.
 type AuthorizationResponse struct {
 	CoreResponse
 	ApprovalResponse
 	PaymentMethodResponse
 	PaymentAmounts
-	Sig string `json:"sig,omitempty"`
+	Sig             string `json:"sig,omitempty"`
+	StoreAndForward bool   `json:"storeAndForward"`
 }
 
-/*
-PaymentAmounts models the amounts and currency data in responses.
-*/
+// PaymentAmounts models the amounts and currency data in responses.
 type PaymentAmounts struct {
 	PartialAuth      bool   `json:"partialAuth"`
 	AltCurrency      bool   `json:"altCurrency"`
