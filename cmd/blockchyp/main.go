@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	blockchyp "github.com/blockchyp/blockchyp-go"
@@ -64,6 +65,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.Amount, "amount", "", "requested tx amount")
 	flag.StringVar(&args.TipAmount, "tip", "0.00", "tip amount")
 	flag.StringVar(&args.TaxAmount, "tax", "0.00", "tax amount")
+	flag.BoolVar(&args.TaxExempt, "taxExempt", false, "tax exempt flag")
 	flag.StringVar(&args.CurrencyCode, "currency", "USD", "currency code")
 	flag.StringVar(&args.TransactionID, "tx", "", "transaction id")
 	flag.StringVar(&args.Description, "desc", "", "transaction description")
@@ -78,6 +80,18 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.SigFormat, "sigFormat", "", "format for signature file (jpeg, png, gif)")
 	flag.IntVar(&args.SigWidth, "sigWidth", -1, "optional width in pixels the signature file should be scaled to")
 	flag.StringVar(&args.SigFile, "sigFile", "", "optional location to output sig file")
+	flag.StringVar(&args.DisplayTotal, "displayTotal", "", "grand total for line item display")
+	flag.StringVar(&args.DisplayTax, "displayTax", "", "tax for line item display")
+	flag.StringVar(&args.DisplaySubtotal, "displaySubtotal", "", "subtotal for line item display")
+	flag.StringVar(&args.LineItemDescription, "lineItemDescription", "", "line item description")
+	flag.StringVar(&args.LineItemPrice, "lineItemPrice", "", "line item price")
+	flag.StringVar(&args.LineItemQty, "lineItemQty", "", "line item qty")
+	flag.StringVar(&args.LineItemSubtotal, "lineItemSubtotal", "", "line item subtotal")
+	flag.StringVar(&args.LineItemDiscountDescription, "lineItemDiscountDescription", "", "line item discount description")
+	flag.StringVar(&args.LineItemDiscountAmount, "lineItemDiscountAmount", "", "line item discount description")
+	flag.StringVar(&args.Prompt, "prompt", "", "prompt for boolean or text prompts")
+	flag.StringVar(&args.YesCaption, "yesCaption", "Yes", "caption for the 'yes' button")
+	flag.StringVar(&args.NoCaption, "noCaption", "No", "caption for the 'no' button")
 
 	flag.Parse()
 
@@ -206,11 +220,87 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processCloseBatch(client, args)
 	case "message":
 		processMessage(client, args)
-	case "prompt":
-		processPrompt(client, args)
+	case "boolean-prompt":
+		processBooleanPrompt(client, args)
+	case "clear":
+		processClear(client, args)
+	case "display":
+		processDisplay(client, args)
 	default:
 		fatalErrorf("%s is unknown transaction type", args.Type)
 	}
+
+}
+
+func processClear(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.TerminalName, "terminal")
+
+	err := client.ClearTransactionDisplay(args.TerminalName)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, blockchyp.Acknowledgement{Success: true})
+
+}
+
+func processDisplay(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.TerminalName, "terminal")
+
+	request := blockchyp.TransactionDisplayRequest{}
+	request.TerminalName = args.TerminalName
+	request.Transaction = &blockchyp.TransactionDisplayTransaction{}
+	request.Transaction.Subtotal = args.DisplaySubtotal
+	request.Transaction.Tax = args.DisplayTax
+	request.Transaction.Total = args.DisplayTotal
+
+	descs := strings.Split(args.LineItemDescription, "|")
+	prices := strings.Split(args.LineItemPrice, "|")
+	qtys := strings.Split(args.LineItemQty, "|")
+	subtotals := strings.Split(args.LineItemSubtotal, "|")
+	discounts := strings.Split(args.LineItemDiscountDescription, "|")
+	discountAmounts := strings.Split(args.LineItemDiscountAmount, "|")
+
+	lines := make([]*blockchyp.TransactionDisplayItem, 0)
+	for idx, desc := range descs {
+		line := &blockchyp.TransactionDisplayItem{}
+		line.Description = desc
+		if len(qtys) >= (idx - 1) {
+			line.Quantity, _ = strconv.ParseFloat(qtys[idx], 64)
+		}
+
+		if len(prices) >= (idx - 1) {
+			line.Price = prices[idx]
+		}
+
+		if len(subtotals) >= (idx - 1) {
+			line.Subtotal = subtotals[idx]
+		}
+
+		if len(discounts) >= (idx - 1) {
+
+			discountLines := make([]*blockchyp.TransactionDisplayDiscount, 0)
+			discountLine := blockchyp.TransactionDisplayDiscount{}
+			discountLine.Description = discounts[idx]
+			if len(discountAmounts) >= (idx - 1) {
+				discountLine.Amount = discountAmounts[idx]
+			}
+
+			discountLines = append(discountLines, &discountLine)
+			line.Discounts = discountLines
+		}
+
+		lines = append(lines, line)
+	}
+
+	request.Transaction.Items = lines
+
+	err := client.UpdateTransactionDisplay(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, blockchyp.Acknowledgement{Success: true})
 
 }
 
@@ -235,8 +325,27 @@ func processMessage(client *blockchyp.Client, args blockchyp.CommandLineArgument
 
 }
 
-func processPrompt(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
-	fmt.Println("not supported yet")
+func processBooleanPrompt(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.Message, "prompt")
+	validateRequired(args.TerminalName, "terminal")
+
+	req := blockchyp.BooleanPromptRequest{}
+	req.Prompt = args.Prompt
+	req.TerminalName = args.TerminalName
+	req.YesCaption = args.YesCaption
+	req.NoCaption = args.NoCaption
+	req.Test = args.Test
+
+	res, err := client.BooleanPrompt(req)
+	if err != nil {
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.Error) == 0 {
+			handleError(&args, err)
+		}
+	}
+	dumpResponse(&args, res)
+
 }
 
 func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments) {

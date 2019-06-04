@@ -85,6 +85,43 @@ func (client *Client) AsyncCharge(request AuthorizationRequest, responseChan cha
 }
 
 /*
+BooleanPrompt asks the consumer a yes/no question.
+*/
+func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromptResponse, error) {
+
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		return nil, err
+	}
+	if !route.CloudRelayEnabled {
+		ack := BooleanPromptResponse{}
+		if !route.Exists {
+			ack.Success = false
+			ack.Error = "Unknown Terminal"
+			return &ack, err
+		}
+		promptRequest := TerminalBooleanPromptRequest{
+			APICredentials: route.TransientCredentials,
+			Request:        request,
+		}
+		err = client.terminalPost(route, "/boolean-prompt", promptRequest, &ack)
+		if err, ok := err.(net.Error); ok && err.Timeout() {
+			ack.Success = false
+			ack.Error = "Request Timed Out"
+		} else if err != nil {
+			ack.Success = false
+			ack.Error = err.Error()
+		}
+		return &ack, err
+	}
+
+	ack := BooleanPromptResponse{}
+	err = client.GatewayPost("/boolean-prompt", request, &ack, request.Test)
+	return &ack, err
+
+}
+
+/*
 Message displays a short message on the terminal.
 */
 func (client *Client) Message(request MessageRequest) (*Acknowledgement, error) {

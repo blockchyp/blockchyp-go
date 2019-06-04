@@ -14,6 +14,21 @@ type MessageRequest struct {
 	Message      string `json:"message"`
 }
 
+// BooleanPromptRequest models a simple yes no prompt request
+type BooleanPromptRequest struct {
+	CoreRequest
+	TerminalName string `json:"terminalName"`
+	Prompt       string `json:"prompt"`
+	YesCaption   string `json:"yesCaption"`
+	NoCaption    string `json:"noCaption"`
+}
+
+// BooleanPromptResponse models the response to a boolean prompt request
+type BooleanPromptResponse struct {
+	Acknowledgement
+	Response bool `json:"response"`
+}
+
 // AuthorizationRequest models auth requests for charge, preauth, and reverse transaction types.
 type AuthorizationRequest struct {
 	CoreRequest
