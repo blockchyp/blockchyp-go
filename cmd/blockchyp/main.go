@@ -326,7 +326,7 @@ func processMessage(client *blockchyp.Client, args blockchyp.CommandLineArgument
 }
 
 func processBooleanPrompt(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
-	validateRequired(args.Message, "prompt")
+	validateRequired(args.Prompt, "prompt")
 	validateRequired(args.TerminalName, "terminal")
 
 	req := blockchyp.BooleanPromptRequest{}

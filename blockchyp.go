@@ -93,6 +93,7 @@ func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromp
 	if err != nil {
 		return nil, err
 	}
+
 	if !route.CloudRelayEnabled {
 		ack := BooleanPromptResponse{}
 		if !route.Exists {
