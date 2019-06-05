@@ -55,6 +55,14 @@ type TerminalBooleanPromptRequest struct {
 }
 
 /*
+TerminalTextPromptRequest adds API credentials to boolean prompt requests.
+*/
+type TerminalTextPromptRequest struct {
+	APICredentials
+	Request TextPromptRequest `json:"request"`
+}
+
+/*
 TerminalRefundAuthorizationRequest adds API credentials to refund requests for use in
 free range refund transactions.
 */

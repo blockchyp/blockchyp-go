@@ -63,6 +63,7 @@ type CommandLineArguments struct {
 	LineItemDiscountDescription string `arg:"lineItemDiscountDescription"`
 	LineItemDiscountAmount      string `arg:"lineItemDiscountAmount"`
 	Prompt                      string `arg:"prompt"`
+	PromptType                  string `arg:"promptType"`
 	YesCaption                  string `arg:"yesCaption"`
 	NoCaption                   string `arg:"noCaption"`
 }

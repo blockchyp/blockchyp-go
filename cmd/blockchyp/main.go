@@ -92,6 +92,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.Prompt, "prompt", "", "prompt for boolean or text prompts")
 	flag.StringVar(&args.YesCaption, "yesCaption", "Yes", "caption for the 'yes' button")
 	flag.StringVar(&args.NoCaption, "noCaption", "No", "caption for the 'no' button")
+	flag.StringVar(&args.PromptType, "promptType", "", "type of prompt: email, phone, customer-number, rewards-number")
 
 	flag.Parse()
 
@@ -222,6 +223,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processMessage(client, args)
 	case "boolean-prompt":
 		processBooleanPrompt(client, args)
+	case "text-prompt":
+		processTextPrompt(client, args)
 	case "clear":
 		processClear(client, args)
 	case "display":
@@ -337,6 +340,27 @@ func processBooleanPrompt(client *blockchyp.Client, args blockchyp.CommandLineAr
 	req.Test = args.Test
 
 	res, err := client.BooleanPrompt(req)
+	if err != nil {
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.Error) == 0 {
+			handleError(&args, err)
+		}
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processTextPrompt(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.PromptType, "promptType")
+	validateRequired(args.TerminalName, "terminal")
+
+	req := blockchyp.TextPromptRequest{}
+	req.PromptType = args.PromptType
+	req.TerminalName = args.TerminalName
+	req.Test = args.Test
+
+	res, err := client.TextPrompt(req)
 	if err != nil {
 		if res == nil {
 			handleError(&args, err)

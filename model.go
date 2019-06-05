@@ -23,6 +23,19 @@ type BooleanPromptRequest struct {
 	NoCaption    string `json:"noCaption"`
 }
 
+// TextPromptRequest models a text prompt request.
+type TextPromptRequest struct {
+	CoreRequest
+	TerminalName string `json:"terminalName"`
+	PromptType   string `json:"promptType"` //phone, email, customer-number, or rewards number
+}
+
+// TextPromptResponse models the response to a text prompt request
+type TextPromptResponse struct {
+	Acknowledgement
+	Response string `json:"response"`
+}
+
 // BooleanPromptResponse models the response to a boolean prompt request
 type BooleanPromptResponse struct {
 	Acknowledgement

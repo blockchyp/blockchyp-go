@@ -85,6 +85,44 @@ func (client *Client) AsyncCharge(request AuthorizationRequest, responseChan cha
 }
 
 /*
+TextPrompt asks the consumer text based question.
+*/
+func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse, error) {
+
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		return nil, err
+	}
+
+	if !route.CloudRelayEnabled {
+		ack := TextPromptResponse{}
+		if !route.Exists {
+			ack.Success = false
+			ack.Error = "Unknown Terminal"
+			return &ack, err
+		}
+		promptRequest := TerminalTextPromptRequest{
+			APICredentials: route.TransientCredentials,
+			Request:        request,
+		}
+		err = client.terminalPost(route, "/text-prompt", promptRequest, &ack)
+		if err, ok := err.(net.Error); ok && err.Timeout() {
+			ack.Success = false
+			ack.Error = "Request Timed Out"
+		} else if err != nil {
+			ack.Success = false
+			ack.Error = err.Error()
+		}
+		return &ack, err
+	}
+
+	ack := TextPromptResponse{}
+	err = client.GatewayPost("/text-prompt", request, &ack, request.Test)
+	return &ack, err
+
+}
+
+/*
 BooleanPrompt asks the consumer a yes/no question.
 */
 func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromptResponse, error) {
