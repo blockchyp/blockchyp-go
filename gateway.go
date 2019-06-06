@@ -38,9 +38,17 @@ func (client *Client) assembleGatewayURL(path string, testTx bool) string {
 	buffer := bytes.Buffer{}
 
 	if testTx {
-		buffer.WriteString(client.TestGatewayHost)
+		if len(client.TestGatewayHost) > 0 {
+			buffer.WriteString(client.TestGatewayHost)
+		} else {
+			buffer.WriteString("https://test.blockchyp.com")
+		}
 	} else {
-		buffer.WriteString(client.GatewayHost)
+		if len(client.GatewayHost) > 0 {
+			buffer.WriteString(client.GatewayHost)
+		} else {
+			buffer.WriteString("https://api.blockchyp.com")
+		}
 	}
 	buffer.WriteString("/api")
 	buffer.WriteString(path)
