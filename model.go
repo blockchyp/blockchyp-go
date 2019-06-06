@@ -122,6 +122,7 @@ type CoreResponse struct {
 	Timestamp           string `json:"timestamp"`
 	TickBlock           string `json:"tickBlock"`
 	Test                bool   `json:"test"`
+	Sig                 string `json:"sig,omitempty"`
 }
 
 /*
@@ -139,8 +140,7 @@ type AuthorizationResponse struct {
 	ApprovalResponse
 	PaymentMethodResponse
 	PaymentAmounts
-	Sig             string `json:"sig,omitempty"`
-	StoreAndForward bool   `json:"storeAndForward"`
+	StoreAndForward bool `json:"storeAndForward"`
 }
 
 // PaymentAmounts models the amounts and currency data in responses.
