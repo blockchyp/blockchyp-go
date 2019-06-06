@@ -1,5 +1,7 @@
 package blockchyp
 
+import "time"
+
 // APICredentials models gateway credentials.
 type APICredentials struct {
 	APIKey      string `json:"apiKey"`
@@ -300,6 +302,19 @@ card batch.
 */
 type CloseBatchRequest struct {
 	CoreRequest
+}
+
+/*
+HeartbeatResponse models the response to a basic API health check.
+If the security context permits it, the response may also include the
+public key of the current merchant.
+*/
+type HeartbeatResponse struct {
+	Acknowledgement
+	Timestamp         time.Time `json:"timestamp"`
+	Clockchain        string    `json:"clockchain"`
+	LatestTick        string    `json:"latestTick"`
+	MerchantPublicKey string    `json:"merchantPk"`
 }
 
 /*

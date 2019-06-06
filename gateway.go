@@ -7,7 +7,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
+	"math"
 	"math/rand"
 	"net/http"
 	"time"
@@ -41,13 +43,13 @@ func (client *Client) assembleGatewayURL(path string, testTx bool) string {
 		if len(client.TestGatewayHost) > 0 {
 			buffer.WriteString(client.TestGatewayHost)
 		} else {
-			buffer.WriteString("https://test.blockchyp.com")
+			buffer.WriteString(DefaultTestGatewayHost)
 		}
 	} else {
 		if len(client.GatewayHost) > 0 {
 			buffer.WriteString(client.GatewayHost)
 		} else {
-			buffer.WriteString("https://api.blockchyp.com")
+			buffer.WriteString(DefaultGatewayHost)
 		}
 	}
 	buffer.WriteString("/api")
@@ -95,11 +97,38 @@ func (client *Client) GatewayRequest(path, method string, requestEntity, respons
 	}
 	defer res.Body.Close()
 
+	if res.StatusCode == http.StatusForbidden {
+		//on 403's we check time diffs in order to help troubleshoot time issues
+		if client.highClockDiff() {
+			return errors.New("high clock drift, reset time on client")
+		}
+	}
+
 	if res.StatusCode != http.StatusOK {
 		return errors.New(res.Status)
 	}
 
 	return consumeResponse(res, responseEntity)
+}
+
+func (client *Client) highClockDiff() bool {
+
+	response := HeartbeatResponse{}
+	err := client.GatewayGet("/heartbeat", &response)
+
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	dur := time.Since(response.Timestamp)
+
+	if math.Abs(dur.Minutes()) > 10 {
+		return true
+	}
+
+	return false
+
 }
 
 /*
