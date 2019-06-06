@@ -156,6 +156,7 @@ explicitly specify a file location via the `-f` argument.
 | `-amount`        | Amount to authorize for the transaction.            | `-amount=50.00`                            |
 | `-tip`           | Tip amount, if needed.                              | `-tip=5.00`                                |
 | `-tax`           | Tax amount, if needed.                              | `-tax=23.45`                               |
+| `-taxExempt`     | Flags a transaction as tax exempt for Level 2 processing.  | `-taxExempt`                        |
 | `-currency`      | Currency code, defaults to USD.                     | `-currency=USD`                            |
 | `-tx`            | Transaction ID.  Required for voids and captures.   | `-tx=DD62YSX6G4I6RM3XNSLM7WZLHE`           |
 | `-txRef`         | Transaction reference.  Typically your application's internal ID. Required for reversable transactions  |  `-txRef=MYID` |
@@ -167,6 +168,20 @@ explicitly specify a file location via the `-f` argument.
 | `-sigFormat`    | File format for signatures, if you'd like it returned with the transaction.  gif, jpeg, and png formats are supported.      | `-sigFormat="png"`           |
 | `-sigWidth`    | If provided, signature images will be scaled to this max width.      | `-sigWidth="300"`           |
 | `-sigFile`    | By default, signatures are returned in the response as hex.  If you'd rather have a file, use this option.     | `-sigFile="signature.png"`           |
+| `-sigWidth`    | If provided, signature images will be scaled to this max width.      | `-sigWidth="300"`           |
+| `-lineItemDescription`    | Description of a line item for line item display.     | `-lineItemDescription="Black Diamond Trekking Poles"`           |
+| `-lineItemQty`    | Quantity of the associated line item.  Decimals are supported.     | `-lineItemQty="2"`           |
+| `-lineItemPrice`    | Price of the line item.    | `-lineItemPrice="129.99"`           |
+| `-lineItemSubtotal`    | Price times quantity less discounts.  Will auto-calculate if you don't provide it.   | `-lineItemSubtotal="259.98"`           |
+| `-lineItemDiscountDescription`    | A line item specific discount.  | `-lineItemDiscountDescription="Member Discount"`           |
+| `-lineItemDiscountAmount`    | Amount of the discount. | `-lineItemDiscountDiscountAmount="20.00"`           |
+| `-displaySubtotal`    | Subtotal for all line items on the display. | `-displaySubtotal="239.98"`           |
+| `-displayTax`    | Tax to be displayed on the terminal | `-displayTax="11.02"`           |
+| `-displayTotal`    | Grand total for the line item display | `-displayTotal="250.00"`           |
+| `-prompt`    | Text to be display on a boolean prompt screen. | `-prompt="Would you like to supersize that?"`           |
+| `-promptType`    | Type of prompt for text-prompts. Could be 'email', 'phone', 'customer-number', or 'rewards-number' | `-prompt="email"`           |
+| `-yesCaption`    | Overrides the label for the 'Yes' button on boolean-prompt screens. | `-yesCaption="Definitely"`           |
+| `-noCaption`    | Overrides the label for the 'No' button on boolean-prompt screens. | `-noCaption="I Think Not"`           |
 
 ## Test Transactions
 
@@ -540,6 +555,76 @@ The example below shows a typical manual transaction.
       "entryMethod":"MANUAL"
     }
   }
+```
+
+### Line Item Display
+
+This command add items to the line item display.
+
+If you run a charge or preauth transaction immediately after populating the line item display, the line item data will be used for Level 3 processing and the display data will be cleared after the transaction.
+
+-displaySubtotal, -displayTax, and -displayTotal are required.  -lineItemSubtotal will be autocalculated if you don't provide it.
+
+```
+$ ./blockchyp -type=display -terminal="Test Terminal" -displaySubtotal="120.05" -displayTax="5.00" -displayTotal="125.05" -lineItemDescription="Leki Trekking Poles" -lineItemQty=1 -lineItemPrice="135.05" -lineItemDiscountDescription="Member Discount" -lineItemDiscountAmount="10.00" -lineItemSubtotal="120.05"
+{
+  "success":true,
+  "error":""
+}
+```
+
+### Clear Terminal
+
+This command clears the terminal if a transaction is in progress. It also clears the line item display buffer.
+
+```
+$ ./blockchyp -type=clear -terminal="Test Terminal"
+{
+  "success":true,
+  "error":""
+}
+```
+
+### Display Message
+
+This command displays a free form message on the terminal.
+
+```
+$ ./blockchyp -type=message -terminal="Test Terminal" -message="Thank you for your business."
+{
+  "success":true,
+  "error":""
+}
+```
+
+### Boolean Prompt
+
+This command asks the user a yes or no question.
+
+-yesCaption and -noCaption are optional.
+
+```
+$ ./blockchyp -type="boolean-prompt" -terminal="Test Terminal" -prompt="Would you like to become a member?" -yesCaption="Yes" -noCaption="No"
+{
+  "success":true,
+  "error":"",
+  "response": true
+}
+```
+
+### Text Prompt
+
+This command captures text input from the user.  Due to PCI restrictions, free
+form prompts are not allowed. You must pick between email, phone numbers, customer
+numbers, and rewards numbers.  We'll add more types over time.
+
+```
+$ ./blockchyp -type="text-prompt" -terminal="Test Terminal" -promptType="phone"
+{
+  "success":true,
+  "error":"",
+  "response": "5095901945"
+}
 ```
 
 ## Signature Images
