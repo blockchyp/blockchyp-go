@@ -239,12 +239,15 @@ func processCommand(args blockchyp.CommandLineArguments) {
 func processClear(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TerminalName, "terminal")
 
-	err := client.ClearTransactionDisplay(args.TerminalName)
+	request := blockchyp.ClearTerminalRequest{}
+	request.TerminalName = args.TerminalName
+
+	ack, err := client.Clear(request)
 	if err != nil {
 		handleError(&args, err)
 	}
 
-	dumpResponse(&args, blockchyp.Acknowledgement{Success: true})
+	dumpResponse(&args, ack)
 
 }
 

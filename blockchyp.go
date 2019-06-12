@@ -514,14 +514,43 @@ func (client *Client) UpdateTransactionDisplay(request TransactionDisplayRequest
 	return client.sendTransactionDisplay(request, http.MethodPut)
 }
 
-// ClearTransactionDisplay resets the displayed transaction and returns the
-// terminal to idle.
-func (client *Client) ClearTransactionDisplay(terminalName string) error {
-	request := TransactionDisplayRequest{
-		TerminalName: terminalName,
+// Clear clears the line item display and any in progress transaction
+func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, error) {
+
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		return nil, err
 	}
 
-	return client.sendTransactionDisplay(request, http.MethodDelete)
+	var ack Acknowledgement
+
+	if !route.Exists {
+		ack.Success = false
+		ack.Error = "Unknown Terminal"
+		return &ack, err
+	}
+
+	terminalRequest := TerminalClearTerminalRequest{
+		APICredentials: route.TransientCredentials,
+		Request:        request,
+	}
+
+	if route.CloudRelayEnabled {
+		err = client.GatewayPost("/terminal-clear", request, &ack, request.Test)
+	} else {
+		err = client.terminalPost(route, "/clear", terminalRequest, &ack)
+	}
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		ack.Success = false
+		ack.Error = "Request Timed Out"
+	} else if err != nil {
+		ack.Success = false
+		ack.Error = err.Error()
+	}
+
+	return &ack, err
+
 }
 
 // sendTransactionDisplay sends a transaction display request to a terminal.

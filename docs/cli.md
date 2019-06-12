@@ -169,10 +169,11 @@ explicitly specify a file location via the `-f` argument.
 | `-sigWidth`    | If provided, signature images will be scaled to this max width.      | `-sigWidth="300"`           |
 | `-sigFile`    | By default, signatures are returned in the response as hex.  If you'd rather have a file, use this option.     | `-sigFile="signature.png"`           |
 | `-sigWidth`    | If provided, signature images will be scaled to this max width.      | `-sigWidth="300"`           |
+| `-lineItemId`    | Optional ID for a line item.   | `-lineItemId="1234"`           |
 | `-lineItemDescription`    | Description of a line item for line item display.     | `-lineItemDescription="Black Diamond Trekking Poles"`           |
 | `-lineItemQty`    | Quantity of the associated line item.  Decimals are supported.     | `-lineItemQty="2"`           |
 | `-lineItemPrice`    | Price of the line item.    | `-lineItemPrice="129.99"`           |
-| `-lineItemSubtotal`    | Price times quantity less discounts.  Will auto-calculate if you don't provide it.   | `-lineItemSubtotal="259.98"`           |
+| `-lineItemExtended`    | Price times quantity less discounts.  Will auto-calculate if you don't provide it.   | `-lineItemExtended="259.98"`           |
 | `-lineItemDiscountDescription`    | A line item specific discount.  | `-lineItemDiscountDescription="Member Discount"`           |
 | `-lineItemDiscountAmount`    | Amount of the discount. | `-lineItemDiscountDiscountAmount="20.00"`           |
 | `-displaySubtotal`    | Subtotal for all line items on the display. | `-displaySubtotal="239.98"`           |
