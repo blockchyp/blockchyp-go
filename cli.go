@@ -56,10 +56,11 @@ type CommandLineArguments struct {
 	DisplayTotal                string `arg:"displayTotal"`
 	DisplayTax                  string `arg:"displayTax"`
 	DisplaySubtotal             string `arg:"displaySubtotal"`
+	LineItemID                  string `arg:"lineItemId"`
 	LineItemDescription         string `arg:"lineItemDescription"`
 	LineItemPrice               string `arg:"lineItemPrice"`
 	LineItemQty                 string `arg:"lineItemQty"`
-	LineItemSubtotal            string `arg:"lineItemSubtotal"`
+	LineItemExtended            string `arg:"lineItemExtended"`
 	LineItemDiscountDescription string `arg:"lineItemDiscountDescription"`
 	LineItemDiscountAmount      string `arg:"lineItemDiscountAmount"`
 	Prompt                      string `arg:"prompt"`

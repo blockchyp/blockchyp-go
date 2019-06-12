@@ -83,10 +83,11 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.DisplayTotal, "displayTotal", "", "grand total for line item display")
 	flag.StringVar(&args.DisplayTax, "displayTax", "", "tax for line item display")
 	flag.StringVar(&args.DisplaySubtotal, "displaySubtotal", "", "subtotal for line item display")
+	flag.StringVar(&args.LineItemID, "lineItemId", "", "line item id")
 	flag.StringVar(&args.LineItemDescription, "lineItemDescription", "", "line item description")
 	flag.StringVar(&args.LineItemPrice, "lineItemPrice", "", "line item price")
 	flag.StringVar(&args.LineItemQty, "lineItemQty", "", "line item qty")
-	flag.StringVar(&args.LineItemSubtotal, "lineItemSubtotal", "", "line item subtotal")
+	flag.StringVar(&args.LineItemExtended, "lineItemExtended", "", "line item extended total")
 	flag.StringVar(&args.LineItemDiscountDescription, "lineItemDiscountDescription", "", "line item discount description")
 	flag.StringVar(&args.LineItemDiscountAmount, "lineItemDiscountAmount", "", "line item discount description")
 	flag.StringVar(&args.Prompt, "prompt", "", "prompt for boolean or text prompts")
@@ -257,10 +258,11 @@ func processDisplay(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	request.Transaction.Tax = args.DisplayTax
 	request.Transaction.Total = args.DisplayTotal
 
+	ids := strings.Split(args.LineItemID, "|")
 	descs := strings.Split(args.LineItemDescription, "|")
 	prices := strings.Split(args.LineItemPrice, "|")
 	qtys := strings.Split(args.LineItemQty, "|")
-	subtotals := strings.Split(args.LineItemSubtotal, "|")
+	extendeds := strings.Split(args.LineItemExtended, "|")
 	discounts := strings.Split(args.LineItemDiscountDescription, "|")
 	discountAmounts := strings.Split(args.LineItemDiscountAmount, "|")
 
@@ -268,6 +270,11 @@ func processDisplay(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	for idx, desc := range descs {
 		line := &blockchyp.TransactionDisplayItem{}
 		line.Description = desc
+
+		if len(ids) >= (idx - 1) {
+			line.ID = ids[idx]
+		}
+
 		if len(qtys) >= (idx - 1) {
 			line.Quantity, _ = strconv.ParseFloat(qtys[idx], 64)
 		}
@@ -276,8 +283,8 @@ func processDisplay(client *blockchyp.Client, args blockchyp.CommandLineArgument
 			line.Price = prices[idx]
 		}
 
-		if len(subtotals) >= (idx - 1) {
-			line.Subtotal = subtotals[idx]
+		if len(extendeds) >= (idx - 1) {
+			line.Extended = extendeds[idx]
 		}
 
 		if len(discounts) >= (idx - 1) {

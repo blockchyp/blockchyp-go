@@ -266,6 +266,14 @@ type PingRequest struct {
 }
 
 /*
+ClearTerminalRequest models the information needed to clear a terminal.
+*/
+type ClearTerminalRequest struct {
+	CoreRequest
+	TerminalName string `json:"terminalName"`
+}
+
+/*
 PingResponse models the response to a ping request.
 */
 type PingResponse struct {
