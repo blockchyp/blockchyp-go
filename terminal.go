@@ -47,6 +47,14 @@ type TerminalMessageRequest struct {
 }
 
 /*
+TerminalClearTerminalRequest adds API credentials to a clear terminal request.
+*/
+type TerminalClearTerminalRequest struct {
+	APICredentials
+	Request ClearTerminalRequest `json:"request"`
+}
+
+/*
 TerminalBooleanPromptRequest adds API credentials to boolean prompt requests.
 */
 type TerminalBooleanPromptRequest struct {
