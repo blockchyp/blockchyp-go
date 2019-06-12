@@ -355,15 +355,19 @@ type TransactionDisplayTransaction struct {
 // rounded to two decimal places of precision. Quantity is a floating point
 // number that is not rounded at all.
 type TransactionDisplayItem struct {
+
+	// ID is not required, but recommended since it is required to update or delete line items
+	ID string `json:"id"`
+
 	Description string  `json:"description"`
 	Price       string  `json:"price"`
 	Quantity    float64 `json:"quantity"`
 
-	// If subtotal is not provided, then it is calculated automatically
+	// If extended is not provided, then it is calculated automatically
 	// by the formula: Price x Quantity
-	// If subtotal is provided, it is passed in as-is.
+	// If extended is provided, it is passed in as-is.
 	// Passed subtotals will overwrite existing subtotals in an append.
-	Subtotal string `json:"subtotal"`
+	Extended string `json:"extended"`
 
 	// Discounts are displayed under their corresponding item.
 	Discounts []*TransactionDisplayDiscount `json:"discounts"`
