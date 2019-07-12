@@ -67,6 +67,7 @@ type CommandLineArguments struct {
 	PromptType                  string `arg:"promptType"`
 	YesCaption                  string `arg:"yesCaption"`
 	NoCaption                   string `arg:"noCaption"`
+	EBT                         bool   `arg:"ebt"`
 }
 
 var defaultSettings = &ConfigSettings{

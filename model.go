@@ -54,6 +54,7 @@ type AuthorizationRequest struct {
 	Description  string            `json:"description,omitempty"`
 	PromptForTip bool              `json:"promptForTip,omitempty"`
 	AltPrices    map[string]string `json:"altPrices,omitempty"`
+	PreviousTransaction
 }
 
 // RefundRequest models refund requests.
@@ -87,6 +88,13 @@ type PaymentMethod struct {
 	//optional parameters for returning signatures with requests
 	SigFormat string `json:"sigFormat,omitEmpty"`
 	SigWidth  int    `json:"sigWidth,omitEmpty"`
+
+	// Online PIN
+	KSN      string `json:"ksn,omitEmpty"`
+	PINBlock string `json:"pinblock,omitEmpty"`
+
+	// CardType designates categories of cards: credit, debit, EBT.
+	CardType CardType `json:"cardType,omitEmpty"`
 }
 
 // RequestAmount models currency amounts in transaction requests.
@@ -98,8 +106,9 @@ type RequestAmount struct {
 
 // Subtotals models subtotals like tip and tax amounts.
 type Subtotals struct {
-	TipAmount string `json:"tipAmount,omitempty"`
-	TaxAmount string `json:"taxAmount,omitempty"`
+	TipAmount      string `json:"tipAmount,omitempty"`
+	TaxAmount      string `json:"taxAmount,omitempty"`
+	CashBackAmount string `json:"cashBackAmount"`
 }
 
 // PreviousTransaction models reference to a previous transaction.
@@ -192,6 +201,10 @@ type ReceiptSuggestions struct {
 	AuthorizedAmount string `json:"authorizedAmount"`
 	TransactionType  string `json:"transactionType"`
 	EntryMethod      string `json:"entryMethod,omitempty"`
+
+	// PINVerified is used to designate that offline PIN verification was
+	// performed.
+	PINVerified bool `json:"pinVerified,omitempty"`
 }
 
 /*
@@ -387,3 +400,13 @@ type TransactionDisplayDiscount struct {
 	Description string `json:"description"`
 	Amount      string `json:"amount"`
 }
+
+// CardType is used to differentiate credit, debit, and EBT.
+type CardType int
+
+// CardTypes.
+const (
+	CardTypeCredit CardType = iota
+	CardTypeDebit
+	CardTypeEBT
+)
