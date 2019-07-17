@@ -95,6 +95,10 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.YesCaption, "yesCaption", "Yes", "caption for the 'yes' button")
 	flag.StringVar(&args.NoCaption, "noCaption", "No", "caption for the 'no' button")
 	flag.StringVar(&args.PromptType, "promptType", "", "type of prompt: email, phone, customer-number, rewards-number")
+	flag.StringVar(&args.TCAlias, "tcAlias", "", "alias for a terms and conditions template")
+	flag.StringVar(&args.TCName, "tcName", "", "optional name for a terms and conditions template")
+	flag.StringVar(&args.TCContent, "tcContent", "", "raw content for the terms and conditions, supports markdown or plain text")
+	flag.IntVar(&args.Timeout, "timeout", 90, "overrides default timeouts for terminal interaction")
 
 	flag.Parse()
 
@@ -231,6 +235,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processClear(client, args)
 	case "display":
 		processDisplay(client, args)
+	case "tc":
+		processTermsAndConditions(client, args)
 	default:
 		fatalErrorf("%s is unknown transaction type", args.Type)
 	}
@@ -244,6 +250,27 @@ func processClear(client *blockchyp.Client, args blockchyp.CommandLineArguments)
 	request.TerminalName = args.TerminalName
 
 	ack, err := client.Clear(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
+
+}
+
+func processTermsAndConditions(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.TerminalName, "terminal")
+
+	request := blockchyp.TermsAndConditionsRequest{}
+	request.TerminalName = args.TerminalName
+	request.Timeout = args.Timeout
+	request.TCAlias = args.TCAlias
+	request.TCName = args.TCName
+	request.TCContent = args.TCContent
+	request.TransactionID = args.TransactionID
+	request.TransactionRef = args.TransactionRef
+
+	ack, err := client.TC(request)
 	if err != nil {
 		handleError(&args, err)
 	}

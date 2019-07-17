@@ -121,6 +121,25 @@ type CoreRequest struct {
 	TransactionRef     string `json:"transactionRef,omitempty"`
 	DestinationAccount string `json:"destinationAccount"`
 	Test               bool   `json:"test"`
+	Timeout            int    `json:"timeout"`
+}
+
+// TermsAndConditionsRequest models the fields needed for custom T&C prompts.
+type TermsAndConditionsRequest struct {
+	CoreRequest
+	PreviousTransaction
+	TerminalName string `json:"terminalName"`
+	TCAlias      string `json:"tcAlias"`
+	TCName       string `json:"tcName"`
+	TCContent    string `json:"tcContent"`
+	SigFormat    string `json:"sigFormat,omitEmpty"`
+	SigWidth     int    `json:"sigWidth,omitEmpty"`
+}
+
+// TermsAndConditionsResponse models a T&C signature capture response.
+type TermsAndConditionsResponse struct {
+	Acknowledgement
+	CoreResponse
 }
 
 // CoreResponse models elements common to all API responses.

@@ -29,6 +29,15 @@ type routeCacheEntry struct {
 }
 
 /*
+TerminalTermsAndConditionsRequest adds API credentials to auth requests for use in
+direct terminal transactions.
+*/
+type TerminalTermsAndConditionsRequest struct {
+	APICredentials
+	Request TermsAndConditionsRequest `json:"request"`
+}
+
+/*
 TerminalAuthorizationRequest adds API credentials to auth requests for use in
 direct terminal transactions.
 */
