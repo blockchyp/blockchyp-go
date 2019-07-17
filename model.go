@@ -129,7 +129,7 @@ type TermsAndConditionsRequest struct {
 	CoreRequest
 	PreviousTransaction
 	TerminalName string `json:"terminalName"`
-	TCAlias      string `json:"txAlias"`
+	TCAlias      string `json:"tcAlias"`
 	TCName       string `json:"tcName"`
 	TCContent    string `json:"tcContent"`
 	SigFormat    string `json:"sigFormat,omitEmpty"`
