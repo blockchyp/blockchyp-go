@@ -271,6 +271,8 @@ func processTermsAndConditions(client *blockchyp.Client, args blockchyp.CommandL
 	request.TransactionID = args.TransactionID
 	request.TransactionRef = args.TransactionRef
 	request.SigRequired = args.SigRequired
+	request.SigFormat = args.SigFormat
+	request.SigWidth = args.SigWidth
 
 	ack, err := client.TC(request)
 	if err != nil {
