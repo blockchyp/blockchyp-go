@@ -72,6 +72,7 @@ type CommandLineArguments struct {
 	TCName                      string `arg:"tcName"`
 	TCContent                   string `arg:"tcContent"`
 	Timeout                     int    `arg:"timeout"`
+	SigRequired                 bool   `arg:"sigRequired"`
 }
 
 var defaultSettings = &ConfigSettings{

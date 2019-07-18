@@ -134,12 +134,14 @@ type TermsAndConditionsRequest struct {
 	TCContent    string `json:"tcContent"`
 	SigFormat    string `json:"sigFormat,omitEmpty"`
 	SigWidth     int    `json:"sigWidth,omitEmpty"`
+	SigRequired  bool   `json:"sigRequired,omitEmpty"`
 }
 
 // TermsAndConditionsResponse models a T&C signature capture response.
 type TermsAndConditionsResponse struct {
 	Acknowledgement
 	CoreResponse
+	SigFile string `json:"sigFile"`
 }
 
 // CoreResponse models elements common to all API responses.

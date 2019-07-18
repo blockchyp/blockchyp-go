@@ -97,7 +97,8 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.PromptType, "promptType", "", "type of prompt: email, phone, customer-number, rewards-number")
 	flag.StringVar(&args.TCAlias, "tcAlias", "", "alias for a terms and conditions template")
 	flag.StringVar(&args.TCName, "tcName", "", "optional name for a terms and conditions template")
-	flag.StringVar(&args.TCContent, "tcContent", "", "raw content for the terms and conditions, supports markdown or plain text")
+	flag.StringVar(&args.TCContent, "tcContent", "", "raw content for the terms and conditions, plain text")
+	flag.BoolVar(&args.SigRequired, "sigRequired", true, "optional flag that indicates whether signatures are required, defaults to true")
 	flag.IntVar(&args.Timeout, "timeout", 90, "overrides default timeouts for terminal interaction")
 
 	flag.Parse()
@@ -269,6 +270,7 @@ func processTermsAndConditions(client *blockchyp.Client, args blockchyp.CommandL
 	request.TCContent = args.TCContent
 	request.TransactionID = args.TransactionID
 	request.TransactionRef = args.TransactionRef
+	request.SigRequired = args.SigRequired
 
 	ack, err := client.TC(request)
 	if err != nil {
