@@ -86,15 +86,18 @@ type PaymentMethod struct {
 	ManualEntry bool `json:"manualEntry,omitempty"`
 
 	//optional parameters for returning signatures with requests
-	SigFormat string `json:"sigFormat,omitEmpty"`
-	SigWidth  int    `json:"sigWidth,omitEmpty"`
+	SigFormat string `json:"sigFormat,omitempty"`
+	SigWidth  int    `json:"sigWidth,omitempty"`
 
 	// Online PIN
-	KSN      string `json:"ksn,omitEmpty"`
-	PINBlock string `json:"pinblock,omitEmpty"`
+	KSN      string `json:"ksn,omitempty"`
+	PINBlock string `json:"pinblock,omitempty"`
 
 	// CardType designates categories of cards: credit, debit, EBT.
-	CardType CardType `json:"cardType,omitEmpty"`
+	CardType CardType `json:"cardType,omitempty"`
+
+	// PaymentType designates brands of payment methods: Visa, Discover, etc.
+	PaymentType string `json:"paymentType,omitempty"`
 }
 
 // RequestAmount models currency amounts in transaction requests.
