@@ -185,6 +185,7 @@ type PaymentAmounts struct {
 	CurrencyCode     string `json:"currencyCode"`
 	RequestedAmount  string `json:"requestedAmount"`
 	AuthorizedAmount string `json:"authorizedAmount"`
+	RemainingBalance string `json:"remainingBalance,omitempty"`
 	TipAmount        string `json:"tipAmount,omitempty"`
 	TaxAmount        string `json:"taxAmount,omitempty"`
 }
