@@ -341,7 +341,12 @@ Refund executes a refund.
 */
 func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, error) {
 
+	if request.TransactionID != "" {
+		request.TerminalName = ""
+	}
+
 	if isTerminalRouted(request.PaymentMethod) {
+
 		route, err := client.resolveTerminalRoute(request.TerminalName)
 		if err != nil {
 			return nil, err
