@@ -434,4 +434,5 @@ const (
 	CardTypeCredit CardType = iota
 	CardTypeDebit
 	CardTypeEBT
+	CardTypeBlockChypGift
 )

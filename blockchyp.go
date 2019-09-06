@@ -117,7 +117,7 @@ func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse
 	}
 
 	ack := TextPromptResponse{}
-	err = client.GatewayPost("/text-prompt", request, &ack, request.Test)
+	err = client.GatewayPost("/text-prompt", request, &ack, request.Test, true)
 	return &ack, err
 
 }
@@ -155,7 +155,7 @@ func (client *Client) TC(request TermsAndConditionsRequest) (*TermsAndConditions
 	}
 
 	ack := TermsAndConditionsResponse{}
-	err = client.GatewayPost("/tc", request, &ack, request.Test)
+	err = client.GatewayPost("/tc", request, &ack, request.Test, true)
 	return &ack, err
 
 }
@@ -193,7 +193,7 @@ func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromp
 	}
 
 	ack := BooleanPromptResponse{}
-	err = client.GatewayPost("/boolean-prompt", request, &ack, request.Test)
+	err = client.GatewayPost("/boolean-prompt", request, &ack, request.Test, true)
 	return &ack, err
 
 }
@@ -230,7 +230,7 @@ func (client *Client) Message(request MessageRequest) (*Acknowledgement, error) 
 	}
 
 	ack := Acknowledgement{}
-	err = client.GatewayPost("/message", request, &ack, request.Test)
+	err = client.GatewayPost("/message", request, &ack, request.Test, true)
 	return &ack, err
 
 }
@@ -268,7 +268,7 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 		}
 	}
 	authResponse := AuthorizationResponse{}
-	err := client.GatewayPost("/charge", request, &authResponse, request.Test)
+	err := client.GatewayPost("/charge", request, &authResponse, request.Test, request.TerminalName != "")
 	return &authResponse, err
 
 }
@@ -319,7 +319,7 @@ func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationRespo
 	}
 
 	authResponse := AuthorizationResponse{}
-	err := client.GatewayPost("/preauth", request, &authResponse, request.Test)
+	err := client.GatewayPost("/preauth", request, &authResponse, request.Test, request.TerminalName != "")
 	return &authResponse, err
 
 }
@@ -374,7 +374,7 @@ func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, err
 		}
 	}
 	authResponse := AuthorizationResponse{}
-	err := client.GatewayPost("/refund", request, &authResponse, request.Test)
+	err := client.GatewayPost("/refund", request, &authResponse, request.Test, request.TerminalName != "")
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		authResponse.Approved = false
 		authResponse.ResponseDescription = "Request Timed Out"
@@ -392,7 +392,7 @@ Reverse executes a manual time out reversal.
 func (client *Client) Reverse(request AuthorizationRequest) (*AuthorizationResponse, error) {
 
 	authResponse := AuthorizationResponse{}
-	err := client.GatewayPost("/reverse", request, &authResponse, request.Test)
+	err := client.GatewayPost("/reverse", request, &authResponse, request.Test, false)
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		authResponse.Approved = false
 		authResponse.ResponseDescription = "Request Timed Out"
@@ -410,7 +410,7 @@ Capture captures a preauthorization.
 func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) {
 
 	captureResponse := CaptureResponse{}
-	err := client.GatewayPost("/capture", request, &captureResponse, request.Test)
+	err := client.GatewayPost("/capture", request, &captureResponse, request.Test, false)
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		captureResponse.Approved = false
 		captureResponse.ResponseDescription = "Request Timed Out"
@@ -428,7 +428,7 @@ Void discards a previous preauth transaction.
 func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
 
 	voidResponse := VoidResponse{}
-	err := client.GatewayPost("/void", request, &voidResponse, request.Test)
+	err := client.GatewayPost("/void", request, &voidResponse, request.Test, false)
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		voidResponse.Approved = false
 		voidResponse.ResponseDescription = "Request Timed Out"
@@ -464,7 +464,7 @@ func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 
 	} else {
 		enrollResponse := EnrollResponse{}
-		err := client.GatewayPost("/enroll", request, &enrollResponse, request.Test)
+		err := client.GatewayPost("/enroll", request, &enrollResponse, request.Test, request.TerminalName != "")
 		return &enrollResponse, err
 	}
 
@@ -494,7 +494,7 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 	}
 
 	if route.CloudRelayEnabled {
-		err = client.GatewayPost("/terminal-test", request, &pingResponse, request.Test)
+		err = client.GatewayPost("/terminal-test", request, &pingResponse, request.Test, true)
 	} else {
 		err = client.terminalPost(route, "/test", terminalRequest, &pingResponse)
 	}
@@ -533,7 +533,7 @@ CloseBatch closes the current credit card batch.
 func (client *Client) CloseBatch(request CloseBatchRequest) (*CloseBatchResponse, error) {
 
 	response := CloseBatchResponse{}
-	err := client.GatewayPost("/close-batch", request, &response, request.Test)
+	err := client.GatewayPost("/close-batch", request, &response, request.Test, false)
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.Success = false
 		response.ResponseDescription = "Request Timed Out"
@@ -579,7 +579,7 @@ func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, err
 	}
 
 	if route.CloudRelayEnabled {
-		err = client.GatewayPost("/terminal-clear", request, &ack, request.Test)
+		err = client.GatewayPost("/terminal-clear", request, &ack, request.Test, true)
 	} else {
 		err = client.terminalPost(route, "/clear", terminalRequest, &ack)
 	}
@@ -609,7 +609,7 @@ func (client *Client) sendTransactionDisplay(request TransactionDisplayRequest, 
 
 	response := &Acknowledgement{}
 	if route.CloudRelayEnabled {
-		err = client.GatewayRequest("/terminal-txdisplay", method, request, response, false)
+		err = client.GatewayRequest("/terminal-txdisplay", method, request, response, false, true)
 	} else {
 		terminalRequest := TerminalTransactionDisplayRequest{
 			APICredentials: route.TransientCredentials,

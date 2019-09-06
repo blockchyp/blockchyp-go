@@ -76,7 +76,7 @@ func consumeResponse(resp *http.Response, responseEntity interface{}) error {
 }
 
 // GatewayRequest sends an HTTP request to the gateway.
-func (client *Client) GatewayRequest(path, method string, requestEntity, responseEntity interface{}, testTx bool) error {
+func (client *Client) GatewayRequest(path, method string, requestEntity, responseEntity interface{}, testTx bool, relayRequest bool) error {
 	content, err := json.Marshal(requestEntity)
 	if err != nil {
 		return err
@@ -89,6 +89,12 @@ func (client *Client) GatewayRequest(path, method string, requestEntity, respons
 
 	if err := addAPIRequestHeaders(req, client.Credentials); err != nil {
 		return err
+	}
+
+	if relayRequest {
+		client.gatewayHTTPClient.Timeout = DefaultTerminalTimeout
+	} else {
+		client.gatewayHTTPClient.Timeout = DefaultGatewayTimeout
 	}
 
 	res, err := client.gatewayHTTPClient.Do(req)
@@ -134,15 +140,15 @@ func (client *Client) highClockDiff() bool {
 /*
 GatewayPost posts a request to the api gateway.
 */
-func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}, testTx bool) error {
-	return client.GatewayRequest(path, http.MethodPost, requestEntity, responseEntity, testTx)
+func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}, testTx bool, relayRequest bool) error {
+	return client.GatewayRequest(path, http.MethodPost, requestEntity, responseEntity, testTx, relayRequest)
 }
 
 /*
 GatewayGet retrieves a get request from the api gateway.
 */
 func (client *Client) GatewayGet(path string, responseEntity interface{}) error {
-	return client.GatewayRequest(path, http.MethodGet, nil, responseEntity, false)
+	return client.GatewayRequest(path, http.MethodGet, nil, responseEntity, false, false)
 }
 
 /*
