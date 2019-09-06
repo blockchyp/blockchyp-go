@@ -78,12 +78,12 @@ func consumeResponse(resp *http.Response, responseEntity interface{}) error {
 
 // GatewayRequest sends a gateway request with the default timeout.
 func (client *Client) GatewayRequest(path, method string, request, response interface{}, testTx bool) error {
-	return client.GatewayRequestWithTimeout(method, path, request, response, testTx, DefaultGatewayTimeout)
+	return client.GatewayRequestWithTimeout(path, method, request, response, testTx, DefaultGatewayTimeout)
 }
 
 // RelayRequest sends a gateway request with the cloud relay timeout.
 func (client *Client) RelayRequest(path, method string, request, response interface{}, testTx bool) error {
-	return client.GatewayRequestWithTimeout(method, path, request, response, testTx, DefaultTerminalTimeout)
+	return client.GatewayRequestWithTimeout(path, method, request, response, testTx, DefaultTerminalTimeout)
 }
 
 // GatewayRequestWithTimeout sends an HTTP request to the gateway using a

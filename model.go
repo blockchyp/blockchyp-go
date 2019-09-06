@@ -100,6 +100,12 @@ type PaymentMethod struct {
 	PaymentType string `json:"paymentType,omitempty"`
 }
 
+// IsTerminalRouted returns whether or not the request should be sent to a
+// terminal or direct to the cloud.
+func (p PaymentMethod) IsTerminalRouted() bool {
+	return p.TerminalName != ""
+}
+
 // RequestAmount models currency amounts in transaction requests.
 type RequestAmount struct {
 	CurrencyCode string `json:"currencyCode"`

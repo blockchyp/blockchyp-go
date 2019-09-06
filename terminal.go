@@ -328,10 +328,6 @@ func (client *Client) routeCacheGet(terminalName string) *TerminalRoute {
 
 }
 
-func isTerminalRouted(auth PaymentMethod) bool {
-	return auth.TerminalName != ""
-}
-
 func (client *Client) assembleTerminalURL(route TerminalRoute, path string) string {
 
 	buffer := bytes.Buffer{}
