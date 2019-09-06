@@ -196,7 +196,7 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 	if route == nil {
 		path := "/terminal-route?terminal=" + url.QueryEscape(terminalName)
 		routeResponse := TerminalRouteResponse{}
-		err := client.GatewayGet(path, &routeResponse)
+		err := client.GatewayRequest(path, http.MethodGet, nil, &routeResponse, false)
 		if err != nil {
 			return routeResponse.TerminalRoute, err
 		}
