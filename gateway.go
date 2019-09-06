@@ -2,6 +2,7 @@ package blockchyp
 
 import (
 	"bytes"
+	"context"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
@@ -75,9 +76,20 @@ func consumeResponse(resp *http.Response, responseEntity interface{}) error {
 	return nil
 }
 
-// GatewayRequest sends an HTTP request to the gateway.
-func (client *Client) GatewayRequest(path, method string, requestEntity, responseEntity interface{}, testTx bool) error {
-	content, err := json.Marshal(requestEntity)
+// GatewayRequest sends a gateway request with the default timeout.
+func (client *Client) GatewayRequest(path, method string, request, response interface{}, testTx bool) error {
+	return client.GatewayRequestWithTimeout(path, method, request, response, testTx, DefaultGatewayTimeout)
+}
+
+// RelayRequest sends a gateway request with the cloud relay timeout.
+func (client *Client) RelayRequest(path, method string, request, response interface{}, testTx bool) error {
+	return client.GatewayRequestWithTimeout(path, method, request, response, testTx, DefaultTerminalTimeout)
+}
+
+// GatewayRequestWithTimeout sends an HTTP request to the gateway using a
+// context to set timeout per request.
+func (client *Client) GatewayRequestWithTimeout(path, method string, request, response interface{}, testTx bool, timeout time.Duration) error {
+	content, err := json.Marshal(request)
 	if err != nil {
 		return err
 	}
@@ -91,7 +103,10 @@ func (client *Client) GatewayRequest(path, method string, requestEntity, respons
 		return err
 	}
 
-	res, err := client.gatewayHTTPClient.Do(req)
+	ctx, cancel := context.WithTimeout(req.Context(), timeout)
+	defer cancel()
+
+	res, err := client.gatewayHTTPClient.Do(req.WithContext(ctx))
 	if err != nil {
 		return err
 	}
@@ -108,13 +123,13 @@ func (client *Client) GatewayRequest(path, method string, requestEntity, respons
 		return errors.New(res.Status)
 	}
 
-	return consumeResponse(res, responseEntity)
+	return consumeResponse(res, response)
 }
 
 func (client *Client) highClockDiff() bool {
 
 	response := HeartbeatResponse{}
-	err := client.GatewayGet("/heartbeat", &response)
+	err := client.GatewayRequest(http.MethodGet, "/heartbeat", nil, &response, false)
 
 	if err != nil {
 		fmt.Println(err)
@@ -129,20 +144,6 @@ func (client *Client) highClockDiff() bool {
 
 	return false
 
-}
-
-/*
-GatewayPost posts a request to the api gateway.
-*/
-func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}, testTx bool) error {
-	return client.GatewayRequest(path, http.MethodPost, requestEntity, responseEntity, testTx)
-}
-
-/*
-GatewayGet retrieves a get request from the api gateway.
-*/
-func (client *Client) GatewayGet(path string, responseEntity interface{}) error {
-	return client.GatewayRequest(path, http.MethodGet, nil, responseEntity, false)
 }
 
 /*

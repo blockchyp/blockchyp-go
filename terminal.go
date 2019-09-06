@@ -196,7 +196,7 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 	if route == nil {
 		path := "/terminal-route?terminal=" + url.QueryEscape(terminalName)
 		routeResponse := TerminalRouteResponse{}
-		err := client.GatewayGet(path, &routeResponse)
+		err := client.GatewayRequest(path, http.MethodGet, nil, &routeResponse, false)
 		if err != nil {
 			return routeResponse.TerminalRoute, err
 		}
@@ -326,10 +326,6 @@ func (client *Client) routeCacheGet(terminalName string) *TerminalRoute {
 
 	return nil
 
-}
-
-func isTerminalRouted(auth PaymentMethod) bool {
-	return auth.TerminalName != ""
 }
 
 func (client *Client) assembleTerminalURL(route TerminalRoute, path string) string {
