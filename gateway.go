@@ -126,6 +126,20 @@ func (client *Client) GatewayRequestWithTimeout(path, method string, request, re
 	return consumeResponse(res, response)
 }
 
+/*
+GatewayPost posts a request to the api gateway.
+*/
+func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}, testTx bool) error {
+	return client.GatewayRequest(path, http.MethodPost, requestEntity, responseEntity, testTx)
+}
+
+/*
+GatewayGet retrieves a get request from the api gateway.
+*/
+func (client *Client) GatewayGet(path string, responseEntity interface{}) error {
+	return client.GatewayRequest(path, http.MethodGet, nil, responseEntity, false)
+}
+
 func (client *Client) highClockDiff() bool {
 
 	response := HeartbeatResponse{}
