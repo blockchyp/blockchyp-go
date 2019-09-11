@@ -176,8 +176,8 @@ func resolveClient(args blockchyp.CommandLineArguments) (*blockchyp.Client, erro
 	}
 	client := blockchyp.NewClient(*creds)
 
-	if !args.HTTPS {
-		client.HTTPS = args.HTTPS
+	if args.HTTPS {
+		client.HTTPS = true
 	} else {
 		client.HTTPS = config.Secure
 	}
