@@ -191,14 +191,18 @@ transient credentials mapped to the given API credentials.
 */
 func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, error) {
 
-	route := client.routeCacheGet(terminalName)
+	route := client.routeCacheGet(terminalName, false)
 
 	if route == nil {
 		path := "/terminal-route?terminal=" + url.QueryEscape(terminalName)
 		routeResponse := TerminalRouteResponse{}
 		err := client.GatewayRequest(path, http.MethodGet, nil, &routeResponse, false)
 		if err != nil {
-			return routeResponse.TerminalRoute, err
+			route = client.routeCacheGet(terminalName, true)
+			if route != nil {
+				return *route, nil
+			}
+			return TerminalRoute{}, err
 		}
 		if routeResponse.Success {
 			route = &routeResponse.TerminalRoute
@@ -206,9 +210,6 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 			if len(route.IPAddress) > 0 {
 				client.routeCachePut(*route)
 			}
-		} else {
-			route = &TerminalRoute{}
-			route.Exists = false
 		}
 	}
 
@@ -299,7 +300,7 @@ func (client *Client) updateOfflineCache(cacheEntry *routeCacheEntry) {
 
 }
 
-func (client *Client) routeCacheGet(terminalName string) *TerminalRoute {
+func (client *Client) routeCacheGet(terminalName string, stale bool) *TerminalRoute {
 
 	if routeCache != nil {
 		route, ok := routeCache[terminalName]
@@ -313,9 +314,8 @@ func (client *Client) routeCacheGet(terminalName string) *TerminalRoute {
 
 	cacheEntry := client.readFromOfflineCache(terminalName)
 
-	//check expiry
 	if cacheEntry != nil {
-		if time.Now().After(cacheEntry.TTL) {
+		if !stale && time.Now().After(cacheEntry.TTL) {
 			return nil
 		}
 		cacheEntry.Route.TransientCredentials.APIKey = client.decrypt(cacheEntry.Route.TransientCredentials.APIKey)
