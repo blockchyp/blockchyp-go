@@ -198,7 +198,7 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 		routeResponse := TerminalRouteResponse{}
 		err := client.GatewayGet(path, &routeResponse)
 		if err != nil {
-			return routeResponse.TerminalRoute, err
+			return *route, nil
 		}
 		if routeResponse.Success {
 			route = &routeResponse.TerminalRoute
@@ -206,7 +206,7 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 			if len(route.IPAddress) > 0 {
 				client.routeCachePut(*route)
 			}
-		} else {
+		} else if !route.Exists {
 			route = &TerminalRoute{}
 			route.Exists = false
 		}
