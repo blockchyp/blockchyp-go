@@ -50,10 +50,13 @@ type AuthorizationRequest struct {
 	PaymentMethod
 	RequestAmount
 	Subtotals
-	Enroll       bool              `json:"enroll"`
-	Description  string            `json:"description,omitempty"`
-	PromptForTip bool              `json:"promptForTip,omitempty"`
-	AltPrices    map[string]string `json:"altPrices,omitempty"`
+
+	//for online eligible gift cards
+	OnlineAuthCode string            `json:"onlineAuthCode"`
+	Enroll         bool              `json:"enroll"`
+	Description    string            `json:"description,omitempty"`
+	PromptForTip   bool              `json:"promptForTip,omitempty"`
+	AltPrices      map[string]string `json:"altPrices,omitempty"`
 	PreviousTransaction
 }
 
