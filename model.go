@@ -189,14 +189,16 @@ type AuthorizationResponse struct {
 
 // PaymentAmounts models the amounts and currency data in responses.
 type PaymentAmounts struct {
-	PartialAuth      bool   `json:"partialAuth"`
-	AltCurrency      bool   `json:"altCurrency"`
-	CurrencyCode     string `json:"currencyCode"`
-	RequestedAmount  string `json:"requestedAmount"`
-	AuthorizedAmount string `json:"authorizedAmount"`
-	RemainingBalance string `json:"remainingBalance,omitempty"`
-	TipAmount        string `json:"tipAmount,omitempty"`
-	TaxAmount        string `json:"taxAmount,omitempty"`
+	PartialAuth              bool   `json:"partialAuth"`
+	AltCurrency              bool   `json:"altCurrency"`
+	CurrencyCode             string `json:"currencyCode"`
+	RequestedAmount          string `json:"requestedAmount"`
+	AuthorizedAmount         string `json:"authorizedAmount"`
+	RemainingBalance         string `json:"remainingBalance,omitempty"`
+	TipAmount                string `json:"tipAmount,omitempty"`
+	TaxAmount                string `json:"taxAmount,omitempty"`
+	RequestedCashBackAmount  string `json:"requestedCashBackAmount"`
+	AuthorizedCashBackAmount string `json:"authorizedCashBackAmount"`
 }
 
 /*
@@ -239,6 +241,9 @@ type ReceiptSuggestions struct {
 	// PINVerified is used to designate that offline PIN verification was
 	// performed.
 	PINVerified bool `json:"pinVerified,omitempty"`
+
+	// CashBackAmount is the amount of cash back that was approved.
+	CashBackAmount string `json:"cashBackAmount,omitempty"`
 }
 
 /*
