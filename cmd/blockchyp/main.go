@@ -22,10 +22,6 @@ var validSignatureFormats = []string{
 	"png",
 }
 
-// compileTimeVersion is populated at build time. It contains the version
-// string of the current build.
-var compileTimeVersion string
-
 var config *blockchyp.ConfigSettings
 
 func main() {
@@ -104,7 +100,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.Parse()
 
 	if args.Version {
-		fmt.Println(compileTimeVersion)
+		fmt.Println(blockchyp.Version)
 		os.Exit(0)
 	}
 
