@@ -43,6 +43,9 @@ const (
 // asynchronously.
 var ErrInvalidAsyncRequest = errors.New("async requests must be terminal requests")
 
+// Version contains the version at build time
+var Version string
+
 /*
 Client is the main interface used by application developers.
 */
@@ -62,20 +65,28 @@ NewClient returns a default Client configured with the given credentials.
 */
 func NewClient(creds APICredentials) Client {
 	return Client{
-		Credentials:       creds,
-		GatewayHost:       DefaultGatewayHost,
-		HTTPS:             DefaultHTTPS,
-		routeCacheTTL:     DefaultRouteCacheTTL,
-		RouteCache:        filepath.Join(os.TempDir(), ".blockchyp_routes"),
-		gatewayHTTPClient: &http.Client{}, // Timeout is set per request
+		Credentials:   creds,
+		GatewayHost:   DefaultGatewayHost,
+		HTTPS:         DefaultHTTPS,
+		routeCacheTTL: DefaultRouteCacheTTL,
+		RouteCache:    filepath.Join(os.TempDir(), ".blockchyp_routes"),
+		gatewayHTTPClient: &http.Client{
+			Transport: AddUserAgent(
+				&http.Transport{},
+				BuildUserAgent(),
+			),
+		}, // Timeout is set per request
 		terminalHTTPClient: &http.Client{
 			Timeout: DefaultTerminalTimeout,
-			Transport: &http.Transport{
-				TLSClientConfig: &tls.Config{
-					RootCAs:    terminalCertPool(),
-					ServerName: terminalCN,
+			Transport: AddUserAgent(
+				&http.Transport{
+					TLSClientConfig: &tls.Config{
+						RootCAs:    terminalCertPool(),
+						ServerName: terminalCN,
+					},
 				},
-			},
+				BuildUserAgent(),
+			),
 		},
 	}
 }

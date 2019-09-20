@@ -15,7 +15,7 @@ TAG := $(shell git tag --points-at HEAD | sort --version-sort | tail -n 1)
 TAR_ARCHIVE := blockchyp-cli-$(or $(TAG:v%=%), $(HASH)).tar.gz
 ZIP_ARCHIVE := blockchyp-cli-$(or $(TAG:v%=%), $(HASH)).zip
 ICON := assets/blockchyp.ico
-BUILDFLAGS := -ldflags "-X main.compileTimeVersion=$(or $(TAG:v%=%), $(HASH))"
+BUILDFLAGS := -ldflags "-X github.com/blockchyp/blockchyp-go.Version=$(or $(TAG:v%=%), $(HASH))"
 
 # Executables
 GO := $(MODSUPPORT) go
