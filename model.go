@@ -241,6 +241,9 @@ type ReceiptSuggestions struct {
 	// PINVerified is used to designate that offline PIN verification was
 	// performed.
 	PINVerified bool `json:"pinVerified,omitempty"`
+
+	// CashBackAmount is the amount of cash back that was approved.
+	CashBackAmount string `json:"cashBackAmount,omitempty"`
 }
 
 /*
