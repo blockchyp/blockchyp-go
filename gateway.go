@@ -8,7 +8,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"math"
 	"math/rand"
@@ -143,10 +142,8 @@ func (client *Client) GatewayGet(path string, responseEntity interface{}) error 
 func (client *Client) highClockDiff() bool {
 
 	response := HeartbeatResponse{}
-	err := client.GatewayRequest(http.MethodGet, "/heartbeat", nil, &response, false)
-
+	err := client.GatewayRequest("/heartbeat", http.MethodGet, nil, &response, false)
 	if err != nil {
-		fmt.Println(err)
 		return false
 	}
 
