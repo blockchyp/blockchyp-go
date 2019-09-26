@@ -58,6 +58,11 @@ type AuthorizationRequest struct {
 	PromptForTip   bool              `json:"promptForTip,omitempty"`
 	AltPrices      map[string]string `json:"altPrices,omitempty"`
 	PreviousTransaction
+
+	// CashBackEnabled enables or disables cash back for a transaction. Cash
+	// back and PIN entry must also be enabled for the merchant, and the card
+	// being used for the transaction must be an eligible debit card.
+	CashBackEnabled bool
 }
 
 // RefundRequest models refund requests.
