@@ -73,6 +73,7 @@ type CommandLineArguments struct {
 	TCContent                   string `arg:"tcContent"`
 	Timeout                     int    `arg:"timeout"`
 	SigRequired                 bool   `arg:"sigRequired"`
+	CashBackEnabled             bool   `arg:"cashback"`
 }
 
 var defaultSettings = &ConfigSettings{
