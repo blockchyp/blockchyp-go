@@ -213,6 +213,10 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 		}
 	}
 
+	if route == nil {
+		return TerminalRoute{}, nil
+	}
+
 	return *route, nil
 
 }
