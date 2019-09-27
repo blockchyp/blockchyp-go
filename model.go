@@ -62,7 +62,7 @@ type AuthorizationRequest struct {
 	// CashBackEnabled enables or disables cash back for a transaction. Cash
 	// back and PIN entry must also be enabled for the merchant, and the card
 	// being used for the transaction must be an eligible debit card.
-	CashBackEnabled bool
+	CashBackEnabled bool `json:"cashBackEnabled"`
 }
 
 // RefundRequest models refund requests.
