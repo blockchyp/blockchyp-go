@@ -38,6 +38,14 @@ type TextPromptResponse struct {
 	Response string `json:"response"`
 }
 
+// WhiteListedCard shows details about a white listed card
+type WhiteListedCard struct {
+	Bin    string `json:"bin"`
+	Track1 string `json:"track1"`
+	Track2 string `json:"track2"`
+	PAN    string `json:"pan"`
+}
+
 // BooleanPromptResponse models the response to a boolean prompt request
 type BooleanPromptResponse struct {
 	Acknowledgement
@@ -190,7 +198,8 @@ type AuthorizationResponse struct {
 	ApprovalResponse
 	PaymentMethodResponse
 	PaymentAmounts
-	StoreAndForward bool `json:"storeAndForward"`
+	WhiteListedCard *WhiteListedCard `json:"whiteListedCard"`
+	StoreAndForward bool             `json:"storeAndForward"`
 }
 
 // PaymentAmounts models the amounts and currency data in responses.
