@@ -86,8 +86,21 @@ type PaymentMethod struct {
 	ExpMonth       string `json:"expMonth,omitempty"`
 	ExpYear        string `json:"expYear,omitempty"`
 	CVV            string `json:"cvv,omitempty"`
-	Address        string `json:"address,omitempty"`
-	PostalCode     string `json:"postalCode,omitempty"`
+
+	// Address can be passed in or requested by the terminal.
+	Address string `json:"address,omitempty"`
+
+	// AddressPrompt causes the terminal to prompt for an address.
+	AddressPrompt bool `json:"addressPrompt,omitempty"`
+
+	// AddressNumberPrompt prompts only for the number portion of an address.
+	AddressNumberPrompt bool `json:"addressNumberPromt,omitempty"`
+
+	// PostalCode can be passed in or requested by the terminal.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// PostalCodePrompt causes the terminal to prompt for a postal code.
+	PostalCodePrompt bool `json:"postalCodePrompt,omitempty"`
 
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
