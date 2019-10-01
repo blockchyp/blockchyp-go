@@ -126,6 +126,7 @@ type Subtotals struct {
 	TipAmount      string `json:"tipAmount,omitempty"`
 	TaxAmount      string `json:"taxAmount,omitempty"`
 	CashBackAmount string `json:"cashBackAmount"`
+	FSAAmount      string `json:"fsaAmount"`
 }
 
 // PreviousTransaction models reference to a previous transaction.
@@ -196,6 +197,7 @@ type AuthorizationResponse struct {
 type PaymentAmounts struct {
 	PartialAuth              bool   `json:"partialAuth"`
 	AltCurrency              bool   `json:"altCurrency"`
+	FSAAuth                  bool   `json:"fsaAuth"`
 	CurrencyCode             string `json:"currencyCode"`
 	RequestedAmount          string `json:"requestedAmount"`
 	AuthorizedAmount         string `json:"authorizedAmount"`
