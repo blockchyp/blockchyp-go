@@ -28,6 +28,12 @@ type routeCacheEntry struct {
 	Route TerminalRoute
 }
 
+// ErrUnknownTerminal is returned when there is no route to a given terminal.
+var ErrUnknownTerminal = errors.New("unknown terminal")
+
+// ErrNoChange is returned when a route refresh does not produce a new route.
+var ErrNoChange = errors.New("route unchanged")
+
 /*
 TerminalTermsAndConditionsRequest adds API credentials to auth requests for use in
 direct terminal transactions.
@@ -190,13 +196,10 @@ resolveTerminalRoute returns the route to the given terminal along with
 transient credentials mapped to the given API credentials.
 */
 func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, error) {
-
 	route := client.routeCacheGet(terminalName, false)
-
 	if route == nil {
-		path := "/terminal-route?terminal=" + url.QueryEscape(terminalName)
-		routeResponse := TerminalRouteResponse{}
-		err := client.GatewayRequest(path, http.MethodGet, nil, &routeResponse, false)
+		var err error
+		route, err = client.requestRouteFromGateway(terminalName)
 		if err != nil {
 			route = client.routeCacheGet(terminalName, true)
 			if route != nil {
@@ -204,21 +207,31 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 			}
 			return TerminalRoute{}, err
 		}
-		if routeResponse.Success {
-			route = &routeResponse.TerminalRoute
-			route.Exists = true
-			if len(route.IPAddress) > 0 {
-				client.routeCachePut(*route)
-			}
-		}
-	}
 
-	if route == nil {
-		return TerminalRoute{}, nil
+		client.routeCachePut(*route)
 	}
 
 	return *route, nil
 
+}
+
+// requestRouteFromGateway resolves a terminal route via the gateway.
+func (client *Client) requestRouteFromGateway(terminalName string) (*TerminalRoute, error) {
+	path := "/terminal-route?terminal=" + url.QueryEscape(terminalName)
+
+	var res TerminalRouteResponse
+	if err := client.GatewayRequest(path, http.MethodGet, nil, &res, false); err != nil {
+		return nil, err
+	}
+
+	if res.Success && res.IPAddress != "" {
+		route := &res.TerminalRoute
+		route.Exists = true
+
+		return route, nil
+	}
+
+	return nil, ErrUnknownTerminal
 }
 
 func (client *Client) routeCachePut(terminalRoute TerminalRoute) {
@@ -378,14 +391,38 @@ func (client *Client) terminalRequest(route TerminalRoute, path, method string, 
 
 	res, err := client.terminalHTTPClient.Do(req)
 	if err != nil {
+		// Try to resolve the route again.
+		// If the route has changed, retry the request.
+		rRoute, rErr := client.refreshRoute(route)
+		if rErr == nil {
+			client.routeCachePut(*rRoute)
+			return client.terminalRequest(*rRoute, path, method, requestEntity, responseEntity)
+		}
+
 		return err
 	}
+
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusOK {
 		return errors.New(res.Status)
 	}
 
 	return consumeResponse(res, responseEntity)
+}
+
+// refreshRoute attempts a route refresh from the gateway and notifies the
+// caller whether or not the route changed.
+func (client *Client) refreshRoute(route TerminalRoute) (*TerminalRoute, error) {
+	res, err := client.requestRouteFromGateway(route.TerminalName)
+	if err != nil {
+		return nil, err
+	}
+
+	if res.IPAddress != route.IPAddress {
+		return res, nil
+	}
+
+	return nil, ErrNoChange
 }
 
 func terminalCertPool() *x509.CertPool {
