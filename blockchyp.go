@@ -108,16 +108,16 @@ TextPrompt asks the consumer text based question.
 */
 func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse, error) {
 
-	route, err := client.resolveTerminalRoute(request.TerminalName)
-	if err != nil {
-		return nil, err
-	}
-
 	var response TextPromptResponse
 
-	if !route.Exists {
-		response.Error = ResponseUnknownTerminal
-		return &response, err
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		if err == ErrUnknownTerminal {
+			response.Error = ResponseUnknownTerminal
+			return &response, err
+		}
+
+		return nil, err
 	}
 
 	if route.CloudRelayEnabled {
@@ -145,16 +145,16 @@ TC prompts the user to accept terms and conditions.
 */
 func (client *Client) TC(request TermsAndConditionsRequest) (*TermsAndConditionsResponse, error) {
 
-	route, err := client.resolveTerminalRoute(request.TerminalName)
-	if err != nil {
-		return nil, err
-	}
-
 	var response TermsAndConditionsResponse
 
-	if !route.Exists {
-		response.Error = ResponseUnknownTerminal
-		return &response, err
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		if err == ErrUnknownTerminal {
+			response.Error = ResponseUnknownTerminal
+			return &response, err
+		}
+
+		return nil, err
 	}
 
 	if route.CloudRelayEnabled {
@@ -182,16 +182,16 @@ BooleanPrompt asks the consumer a yes/no question.
 */
 func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromptResponse, error) {
 
-	route, err := client.resolveTerminalRoute(request.TerminalName)
-	if err != nil {
-		return nil, err
-	}
-
 	var response BooleanPromptResponse
 
-	if !route.Exists {
-		response.Error = ResponseUnknownTerminal
-		return &response, err
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		if err == ErrUnknownTerminal {
+			response.Error = ResponseUnknownTerminal
+			return &response, err
+		}
+
+		return nil, err
 	}
 
 	if route.CloudRelayEnabled {
@@ -219,16 +219,16 @@ Message displays a short message on the terminal.
 */
 func (client *Client) Message(request MessageRequest) (*Acknowledgement, error) {
 
-	route, err := client.resolveTerminalRoute(request.TerminalName)
-	if err != nil {
-		return nil, err
-	}
-
 	var response Acknowledgement
 
-	if !route.Exists {
-		response.Error = ResponseUnknownTerminal
-		return &response, err
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		if err == ErrUnknownTerminal {
+			response.Error = ResponseUnknownTerminal
+			return &response, err
+		}
+
+		return nil, err
 	}
 
 	if route.CloudRelayEnabled {
@@ -263,13 +263,12 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 		var route TerminalRoute
 		route, err = client.resolveTerminalRoute(request.TerminalName)
 		if err != nil {
-			return nil, err
-		}
+			if err == ErrUnknownTerminal {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
 
-		if !route.Exists {
-			response.Approved = false
-			response.ResponseDescription = ResponseUnknownTerminal
-			return &response, err
+			return nil, err
 		}
 
 		if route.CloudRelayEnabled {
@@ -319,13 +318,12 @@ func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationRespo
 		var route TerminalRoute
 		route, err = client.resolveTerminalRoute(request.TerminalName)
 		if err != nil {
-			return nil, err
-		}
+			if err == ErrUnknownTerminal {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
 
-		if !route.Exists {
-			response.Approved = false
-			response.ResponseDescription = ResponseUnknownTerminal
-			return &response, err
+			return nil, err
 		}
 
 		if route.CloudRelayEnabled {
@@ -379,12 +377,12 @@ func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, err
 		var route TerminalRoute
 		route, err = client.resolveTerminalRoute(request.TerminalName)
 		if err != nil {
-			return nil, err
-		}
+			if err == ErrUnknownTerminal {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
 
-		if !route.Exists {
-			response.ResponseDescription = ResponseUnknownTerminal
-			return &response, err
+			return nil, err
 		}
 
 		if route.CloudRelayEnabled {
@@ -493,6 +491,11 @@ func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 	if request.IsTerminalRouted() {
 		_, err = client.resolveTerminalRoute(request.TerminalName)
 		if err != nil {
+			if err == ErrUnknownTerminal {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
 			return nil, err
 		}
 	} else {
@@ -512,16 +515,16 @@ func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 Ping tests connectivity with a payment terminal.
 */
 func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
-	route, err := client.resolveTerminalRoute(request.TerminalName)
-	if err != nil {
-		return nil, err
-	}
-
 	var response PingResponse
 
-	if !route.Exists {
-		response.ResponseDescription = ResponseUnknownTerminal
-		return &response, err
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		if err == ErrUnknownTerminal {
+			response.ResponseDescription = ResponseUnknownTerminal
+			return &response, err
+		}
+
+		return nil, err
 	}
 
 	if route.CloudRelayEnabled {
@@ -547,16 +550,16 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 GiftActivate activates or recharges a gift card.
 */
 func (client *Client) GiftActivate(request GiftActivateRequest) (*GiftActivateResponse, error) {
-	route, err := client.resolveTerminalRoute(request.TerminalName)
-	if err != nil {
-		return nil, err
-	}
-
 	var response GiftActivateResponse
 
-	if !route.Exists {
-		response.ResponseDescription = ResponseUnknownTerminal
-		return &response, err
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		if err == ErrUnknownTerminal {
+			response.ResponseDescription = ResponseUnknownTerminal
+			return &response, err
+		}
+
+		return nil, err
 	}
 
 	if route.CloudRelayEnabled {
@@ -610,17 +613,16 @@ func (client *Client) UpdateTransactionDisplay(request TransactionDisplayRequest
 
 // Clear clears the line item display and any in progress transaction
 func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, error) {
+	var ack Acknowledgement
 
 	route, err := client.resolveTerminalRoute(request.TerminalName)
 	if err != nil {
+		if err == ErrUnknownTerminal {
+			ack.Error = ResponseUnknownTerminal
+			return &ack, err
+		}
+
 		return nil, err
-	}
-
-	var ack Acknowledgement
-
-	if !route.Exists {
-		ack.Error = ResponseUnknownTerminal
-		return &ack, err
 	}
 
 	if route.CloudRelayEnabled {
@@ -645,16 +647,12 @@ func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, err
 
 // sendTransactionDisplay sends a transaction display request to a terminal.
 func (client *Client) sendTransactionDisplay(request TransactionDisplayRequest, method string) error {
+	var response Acknowledgement
+
 	route, err := client.resolveTerminalRoute(request.TerminalName)
 	if err != nil {
 		return err
 	}
-
-	if !route.Exists {
-		return errors.New(ResponseUnknownTerminal)
-	}
-
-	var response Acknowledgement
 
 	if route.CloudRelayEnabled {
 		err = client.RelayRequest("/terminal-txdisplay", method, request, &response, false)
