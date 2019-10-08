@@ -145,6 +145,7 @@ type PreviousTransaction struct {
 // CoreRequest models fields that are common to all API requests.
 type CoreRequest struct {
 	TransactionRef     string `json:"transactionRef,omitempty"`
+	OrderRef           string `json:"orderRef,omitempty"`
 	DestinationAccount string `json:"destinationAccount"`
 	Test               bool   `json:"test"`
 	Timeout            int    `json:"timeout"`
@@ -177,7 +178,6 @@ type CoreResponse struct {
 	BatchID             string `json:"batchId,omitempty"`
 	TransactionRef      string `json:"transactionRef,omitempty"`
 	TransactionType     string `json:"transactionType"`
-	OrderRef            string `json:"orderRef"`
 	Timestamp           string `json:"timestamp"`
 	TickBlock           string `json:"tickBlock"`
 	Test                bool   `json:"test"`
