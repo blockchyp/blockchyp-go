@@ -177,6 +177,7 @@ type CoreResponse struct {
 	BatchID             string `json:"batchId,omitempty"`
 	TransactionRef      string `json:"transactionRef,omitempty"`
 	TransactionType     string `json:"transactionType"`
+	OrderRef            string `json:"orderRef"`
 	Timestamp           string `json:"timestamp"`
 	TickBlock           string `json:"tickBlock"`
 	Test                bool   `json:"test"`
