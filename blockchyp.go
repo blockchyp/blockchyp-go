@@ -92,6 +92,27 @@ func NewClient(creds APICredentials) Client {
 }
 
 /*
+ExpireRouteCache invalidates the route cache to for testing.
+*/
+func (client *Client) ExpireRouteCache() {
+
+	for key, value := range routeCache {
+		value.TTL = time.Now()
+		routeCache[key] = value
+	}
+
+	offlineCache := client.readOfflineCache()
+
+	if offlineCache != nil {
+		for _, route := range offlineCache.Routes {
+			route.TTL = time.Now()
+			client.updateOfflineCache(&route)
+		}
+	}
+
+}
+
+/*
 AsyncCharge executes an asynchronous auth and capture.
 */
 func (client *Client) AsyncCharge(request AuthorizationRequest, responseChan chan<- AuthorizationResponse) error {

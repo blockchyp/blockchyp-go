@@ -235,9 +235,25 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processDisplay(client, args)
 	case "tc":
 		processTermsAndConditions(client, args)
+	case "cache":
+		processCache(client, args)
+	case "cache-expire":
+		processCacheExpire(client, args)
 	default:
 		fatalErrorf("%s is unknown transaction type", args.Type)
 	}
+
+}
+
+func processCacheExpire(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	client.ExpireRouteCache()
+
+}
+
+func processCache(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	fmt.Println("Cache Location:", client.RouteCache)
 
 }
 
