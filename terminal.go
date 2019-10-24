@@ -53,6 +53,15 @@ type TerminalAuthorizationRequest struct {
 }
 
 /*
+TerminalEnrollRequest adds API credentials to enroll requests for use in
+direct terminal transactions.
+*/
+type TerminalEnrollRequest struct {
+	APICredentials
+	Request EnrollRequest `json:"request"`
+}
+
+/*
 TerminalMessageRequest adds API credentials to auth requests for use in
 direct terminal message display requests.
 */

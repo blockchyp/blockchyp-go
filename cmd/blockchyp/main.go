@@ -209,6 +209,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 	switch args.Type {
 	case "ping":
 		processPing(client, args)
+	case "enroll":
+		processEnroll(client, args)
 	case "charge", "preauth":
 		processAuth(client, args)
 	case "gift-activate":
@@ -562,6 +564,29 @@ func processGiftActivate(client *blockchyp.Client, args blockchyp.CommandLineArg
 	if err != nil {
 		handleFatalError(err)
 	}
+	dumpResponse(&args, res)
+}
+
+func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	if (args.TerminalName == "") && (args.Token == "") {
+		fatalError("-terminal or -token requred")
+	}
+	req := blockchyp.EnrollRequest{}
+	req.TerminalName = args.TerminalName
+	req.TransactionRef = args.TransactionRef
+	req.Test = args.Test
+	req.ManualEntry = args.ManualEntry
+
+	res, err := client.Enroll(req)
+
+	if err != nil {
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(&args, err)
+		}
+	}
+
 	dumpResponse(&args, res)
 }
 
