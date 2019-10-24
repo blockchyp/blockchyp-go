@@ -97,6 +97,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.SigRequired, "sigRequired", true, "optional flag that indicates whether signatures are required, defaults to true")
 	flag.IntVar(&args.Timeout, "timeout", 90, "overrides default timeouts for terminal interaction")
 	flag.BoolVar(&args.CashBackEnabled, "cashback", false, "enables cash back transactions")
+	flag.BoolVar(&args.Enroll, "enroll", false, "enroll the payment in the token vault")
 
 	flag.Parse()
 
@@ -605,6 +606,7 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	req.TaxAmount = args.TaxAmount
 	req.TipAmount = args.TipAmount
 	req.Test = args.Test
+	req.Enroll = args.Enroll
 	req.ManualEntry = args.ManualEntry
 	req.SigWidth = args.SigWidth
 	req.SigFormat = args.SigFormat

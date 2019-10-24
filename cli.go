@@ -74,6 +74,7 @@ type CommandLineArguments struct {
 	Timeout                     int    `arg:"timeout"`
 	SigRequired                 bool   `arg:"sigRequired"`
 	CashBackEnabled             bool   `arg:"cashback"`
+	Enroll                      bool   `arg:"enroll"`
 }
 
 var defaultSettings = &ConfigSettings{
