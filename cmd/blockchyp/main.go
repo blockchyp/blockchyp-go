@@ -439,7 +439,7 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 
 	res, err := client.Refund(req)
 
-	if res == nil || len(res.ResponseDescription) == 0 {
+	if err != nil {
 		handleError(&args, err)
 	}
 
@@ -467,7 +467,7 @@ func processReverse(client *blockchyp.Client, args blockchyp.CommandLineArgument
 
 	res, err := client.Reverse(req)
 
-	if res == nil || len(res.ResponseDescription) == 0 {
+	if err != nil {
 		handleError(&args, err)
 	}
 	dumpResponse(&args, res)
@@ -481,7 +481,7 @@ func processCloseBatch(client *blockchyp.Client, args blockchyp.CommandLineArgum
 
 	res, err := client.CloseBatch(req)
 
-	if res == nil || len(res.ResponseDescription) == 0 {
+	if err != nil {
 		handleError(&args, err)
 	}
 	dumpResponse(&args, res)
@@ -496,7 +496,7 @@ func processVoid(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 
 	res, err := client.Void(req)
 
-	if res == nil || len(res.ResponseDescription) == 0 {
+	if err != nil {
 		handleError(&args, err)
 	}
 	dumpResponse(&args, res)
@@ -514,7 +514,7 @@ func processCapture(client *blockchyp.Client, args blockchyp.CommandLineArgument
 
 	res, err := client.Capture(req)
 
-	if res == nil || len(res.ResponseDescription) == 0 {
+	if err != nil {
 		handleError(&args, err)
 	}
 	dumpResponse(&args, res)
@@ -549,7 +549,7 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 
 	res, err := client.Enroll(req)
 
-	if res == nil || len(res.ResponseDescription) == 0 {
+	if err != nil {
 		handleError(&args, err)
 	}
 
@@ -589,7 +589,7 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 		res, err = client.Preauth(req)
 	}
 
-	if res == nil || len(res.ResponseDescription) == 0 {
+	if err != nil {
 		handleError(&args, err)
 	}
 	if args.SigFile != "" && res.SigFile != "" {
@@ -610,7 +610,7 @@ func processPing(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 		TerminalName: args.TerminalName,
 	}
 	res, err := client.Ping(req)
-	if res == nil || len(res.ResponseDescription) == 0 {
+	if err != nil {
 		handleError(&args, err)
 	}
 	dumpResponse(&args, res)
