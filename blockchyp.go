@@ -510,7 +510,8 @@ func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 	var err error
 
 	if request.IsTerminalRouted() {
-		_, err = client.resolveTerminalRoute(request.TerminalName)
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
 		if err != nil {
 			if err == ErrUnknownTerminal {
 				response.ResponseDescription = ResponseUnknownTerminal
@@ -519,11 +520,21 @@ func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 
 			return nil, err
 		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/enroll", http.MethodPost, request, &response, request.Test)
+		} else {
+			enrollRequest := TerminalEnrollRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalPost(route, "/enroll", enrollRequest, &response)
+		}
 	} else {
 		err = client.GatewayRequest("/enroll", http.MethodPost, request, &response, request.Test)
 	}
 
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
 	} else if err != nil {
 		response.ResponseDescription = err.Error()
