@@ -199,6 +199,43 @@ func (client *Client) TC(request TermsAndConditionsRequest) (*TermsAndConditions
 }
 
 /*
+Balance retrives the balance of a payment method, if applicable.
+*/
+func (client *Client) Balance(request BalanceRequest) (*BalanceResponse, error) {
+
+	var response BalanceResponse
+
+	route, err := client.resolveTerminalRoute(request.TerminalName)
+	if err != nil {
+		if err == ErrUnknownTerminal {
+			response.Error = ResponseUnknownTerminal
+			return &response, err
+		}
+
+		return nil, err
+	}
+
+	if route.CloudRelayEnabled {
+		err = client.RelayRequest("/balance", http.MethodPost, request, &response, request.Test)
+	} else {
+		terminalRequest := TerminalBalanceRequest{
+			APICredentials: route.TransientCredentials,
+			Request:        request,
+		}
+		err = client.terminalPost(route, "/balance", terminalRequest, &response)
+	}
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.Error = ResponseTimedOut
+	} else if err != nil {
+		response.Error = err.Error()
+	}
+
+	return &response, err
+
+}
+
+/*
 BooleanPrompt asks the consumer a yes/no question.
 */
 func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromptResponse, error) {

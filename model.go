@@ -73,6 +73,19 @@ type AuthorizationRequest struct {
 	CashBackEnabled bool `json:"cashBackEnabled"`
 }
 
+// BalanceRequest models balance request
+type BalanceRequest struct {
+	CoreRequest
+	PaymentMethod
+}
+
+// BalanceResponse models balance response
+type BalanceResponse struct {
+	Acknowledgement
+	CoreResponse
+	RemainingBalance string `json:"remainingBalance,omitempty"`
+}
+
 // RefundRequest models refund requests.
 type RefundRequest struct {
 	CoreRequest
