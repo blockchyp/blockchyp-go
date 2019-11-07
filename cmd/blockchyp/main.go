@@ -265,10 +265,10 @@ func processCache(client *blockchyp.Client, args blockchyp.CommandLineArguments)
 func processBalance(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TerminalName, "terminal")
 
-	request := blockchyp.ClearTerminalRequest{}
+	request := blockchyp.BalanceRequest{}
 	request.TerminalName = args.TerminalName
 
-	ack, err := client.Clear(request)
+	ack, err := client.Balance(request)
 	if err != nil {
 		handleError(&args, err)
 	}

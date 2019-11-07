@@ -83,6 +83,7 @@ type BalanceRequest struct {
 type BalanceResponse struct {
 	Acknowledgement
 	CoreResponse
+	PaymentMethodResponse
 	RemainingBalance string `json:"remainingBalance,omitempty"`
 }
 
