@@ -151,7 +151,7 @@ func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse
 		err = client.terminalPost(route, "/text-prompt", terminalRequest, &response)
 	}
 
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.Error = ResponseTimedOut
 	} else if err != nil {
 		response.Error = err.Error()
@@ -188,7 +188,7 @@ func (client *Client) TC(request TermsAndConditionsRequest) (*TermsAndConditions
 		err = client.terminalPost(route, "/tc", terminalRequest, &response)
 	}
 
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.Error = ResponseTimedOut
 	} else if err != nil {
 		response.Error = err.Error()
@@ -225,7 +225,7 @@ func (client *Client) Balance(request BalanceRequest) (*BalanceResponse, error) 
 		err = client.terminalPost(route, "/balance", terminalRequest, &response)
 	}
 
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.Error = ResponseTimedOut
 	} else if err != nil {
 		response.Error = err.Error()
@@ -262,7 +262,7 @@ func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromp
 		err = client.terminalPost(route, "/boolean-prompt", terminalRequest, &response)
 	}
 
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.Error = ResponseTimedOut
 	} else if err != nil {
 		response.Error = err.Error()
@@ -299,7 +299,7 @@ func (client *Client) Message(request MessageRequest) (*Acknowledgement, error) 
 		err = client.terminalPost(route, "/message", terminalRequest, &response)
 	}
 
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.Error = ResponseTimedOut
 	} else if err != nil {
 		response.Error = err.Error()
@@ -397,7 +397,7 @@ func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationRespo
 		err = client.GatewayRequest("/preauth", http.MethodPost, request, &response, request.Test)
 	}
 
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
 	} else if err != nil {
 		response.ResponseDescription = err.Error()
@@ -462,7 +462,7 @@ func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, err
 		return &response, err
 	}
 
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
 	} else if err != nil {
 		response.ResponseDescription = err.Error()
@@ -481,7 +481,7 @@ func (client *Client) Reverse(request AuthorizationRequest) (*AuthorizationRespo
 
 	err := client.GatewayRequest("/reverse", http.MethodPost, request, &response, request.Test)
 
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
 	} else if err != nil {
 		response.ResponseDescription = err.Error()
@@ -499,7 +499,7 @@ func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) 
 	var captureResponse CaptureResponse
 
 	err := client.GatewayRequest("/capture", http.MethodPost, request, &captureResponse, request.Test)
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		captureResponse.ResponseDescription = ResponseTimedOut
 	} else if err != nil {
 		captureResponse.ResponseDescription = err.Error()
@@ -517,7 +517,7 @@ func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
 	var response VoidResponse
 
 	err := client.GatewayRequest("/void", http.MethodPost, request, &response, request.Test)
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
 	} else if err != nil {
 		response.ResponseDescription = err.Error()
@@ -606,7 +606,7 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 		err = client.terminalPost(route, "/test", terminalRequest, &response)
 	}
 
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
 	} else if err != nil {
 		response.ResponseDescription = err.Error()
@@ -641,7 +641,7 @@ func (client *Client) GiftActivate(request GiftActivateRequest) (*GiftActivateRe
 		err = client.terminalPost(route, "/gift-activate", terminalRequest, &response)
 	}
 
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
 	} else if err != nil {
 		response.ResponseDescription = err.Error()
@@ -658,7 +658,7 @@ func (client *Client) CloseBatch(request CloseBatchRequest) (*CloseBatchResponse
 	var response CloseBatchResponse
 
 	err := client.GatewayRequest("/close-batch", http.MethodPost, request, &response, request.Test)
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
 	} else if err != nil {
 		response.ResponseDescription = err.Error()
@@ -704,7 +704,7 @@ func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, err
 		err = client.terminalPost(route, "/clear", terminalRequest, &ack)
 	}
 
-	if err, ok := err.(net.Error); ok && err.Timeout() {
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
 		ack.Error = ResponseTimedOut
 	} else if err != nil {
 		ack.Error = err.Error()
