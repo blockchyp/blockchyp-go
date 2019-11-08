@@ -44,6 +44,15 @@ type TerminalTermsAndConditionsRequest struct {
 }
 
 /*
+TerminalBalanceRequest adds API credentials to balance requests for use in
+direct terminal transactions.
+*/
+type TerminalBalanceRequest struct {
+	APICredentials
+	Request BalanceRequest `json:"request"`
+}
+
+/*
 TerminalAuthorizationRequest adds API credentials to auth requests for use in
 direct terminal transactions.
 */

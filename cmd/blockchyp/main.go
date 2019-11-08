@@ -234,6 +234,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processTextPrompt(client, args)
 	case "clear":
 		processClear(client, args)
+	case "balance":
+		processBalance(client, args)
 	case "display":
 		processDisplay(client, args)
 	case "tc":
@@ -257,6 +259,21 @@ func processCacheExpire(client *blockchyp.Client, args blockchyp.CommandLineArgu
 func processCache(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
 	fmt.Println("Cache Location:", client.RouteCache)
+
+}
+
+func processBalance(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.TerminalName, "terminal")
+
+	request := blockchyp.BalanceRequest{}
+	request.TerminalName = args.TerminalName
+
+	ack, err := client.Balance(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
 
 }
 
