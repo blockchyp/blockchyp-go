@@ -267,6 +267,12 @@ func processBalance(client *blockchyp.Client, args blockchyp.CommandLineArgument
 
 	request := blockchyp.BalanceRequest{}
 	request.TerminalName = args.TerminalName
+	request.ManualEntry = args.ManualEntry
+	request.Test = args.Test
+
+	if args.EBT {
+		request.CardType = blockchyp.CardTypeEBT
+	}
 
 	ack, err := client.Balance(request)
 	if err != nil {
