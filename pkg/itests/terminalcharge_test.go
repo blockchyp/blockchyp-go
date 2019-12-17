@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	blockchyp "github.com/blockchyp/sdk-generator/platforms/go/project"
+	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
 func TestTerminalCharge(t *testing.T) {

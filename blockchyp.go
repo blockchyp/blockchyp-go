@@ -225,6 +225,47 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 
 }
 
+// Balance checks the remaining balance on a payment method.
+func (client *Client) Balance(request BalanceRequest) (*BalanceResponse, error) {
+
+	var response BalanceResponse
+	var err error
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if err == ErrUnknownTerminal {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/balance", "POST", request, &response, request.Test)
+		} else {
+			authRequest := TerminalBalanceRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/balance", "POST", authRequest, &response)
+		}
+	} else {
+		err = client.GatewayRequest("/balance", "POST", request, &response, request.Test)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+
+}
+
 // Clear clears the line item display and any in progress transaction.
 func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, error) {
 

@@ -31,7 +31,7 @@ type Acknowledgement struct {
 	ResponseDescription string `json:"responseDescription"`
 }
 
-// PingRequest models information needed to test connectivity with a terminal
+// PingRequest models information needed to test connectivity with a terminal.
 type PingRequest struct {
 	TransactionRef string `json:"transactionRef,omitempty"`
 
@@ -46,7 +46,7 @@ type PingRequest struct {
 	TerminalName string `json:"terminalName,omitempty"`
 }
 
-// PingResponse models the response to a ping request
+// PingResponse models the response to a ping request.
 type PingResponse struct {
 	Success bool `json:"success"`
 
@@ -71,7 +71,7 @@ type PingResponse struct {
 	Sig string `json:"sig,omitempty"`
 }
 
-// MessageRequest models a message to be displayed on the terminal screen
+// MessageRequest models a message to be displayed on the terminal screen.
 type MessageRequest struct {
 	TransactionRef string `json:"transactionRef,omitempty"`
 
@@ -88,7 +88,7 @@ type MessageRequest struct {
 	Message string `json:"message"`
 }
 
-// BooleanPromptRequest models a simple yes no prompt request
+// BooleanPromptRequest models a simple yes no prompt request.
 type BooleanPromptRequest struct {
 	TransactionRef string `json:"transactionRef,omitempty"`
 
@@ -109,7 +109,7 @@ type BooleanPromptRequest struct {
 	Prompt string `json:"prompt"`
 }
 
-// TextPromptRequest models a text prompt request
+// TextPromptRequest models a text prompt request.
 type TextPromptRequest struct {
 	TransactionRef string `json:"transactionRef,omitempty"`
 
@@ -126,7 +126,7 @@ type TextPromptRequest struct {
 	PromptType string `json:"promptType"`
 }
 
-// TextPromptResponse models the response to a text prompt request
+// TextPromptResponse models the response to a text prompt request.
 type TextPromptResponse struct {
 	Success bool `json:"success"`
 
@@ -137,7 +137,7 @@ type TextPromptResponse struct {
 	Response string `json:"response"`
 }
 
-// BooleanPromptResponse models the response to a boolean prompt request
+// BooleanPromptResponse models the response to a boolean prompt request.
 type BooleanPromptResponse struct {
 	Success bool `json:"success"`
 
@@ -148,7 +148,7 @@ type BooleanPromptResponse struct {
 	Response bool `json:"response"`
 }
 
-// WhiteListedCard shows details about a white listed card
+// WhiteListedCard shows details about a white listed card.
 type WhiteListedCard struct {
 	Bin string `json:"bin"`
 
@@ -195,7 +195,7 @@ type AuthorizationRequest struct {
 
 	PostalCode string `json:"postalCode,omitempty"`
 
-	// ManualEntry specifies that the payment entry method is a manual keyed transaction. If this is true, no other payment method will be accepted
+	// ManualEntry specifies that the payment entry method is a manual keyed transaction. If this is true, no other payment method will be accepted.
 	ManualEntry bool `json:"manualEntry,omitempty"`
 
 	// KSN is the key serial number used for DUKPT encryption.
@@ -253,7 +253,103 @@ type AuthorizationRequest struct {
 	AltPrices map[string]string `json:"altPrices,omitempty"`
 }
 
-// RefundRequest models refund requests
+// BalanceRequest models balance requests.
+type BalanceRequest struct {
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	OrderRef string `json:"orderRef,omitempty"`
+
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	Test bool `json:"test"`
+
+	Timeout int `json:"timeout"`
+
+	Token string `json:"token,omitempty"`
+
+	Track1 string `json:"track1,omitempty"`
+
+	Track2 string `json:"track2,omitempty"`
+
+	PAN string `json:"pan,omitempty"`
+
+	RoutingNumber string `json:"routingNumber,omitempty"`
+
+	CardholderName string `json:"cardholderName,omitempty"`
+
+	ExpMonth string `json:"expMonth,omitempty"`
+
+	ExpYear string `json:"expYear,omitempty"`
+
+	CVV string `json:"cvv,omitempty"`
+
+	Address string `json:"address,omitempty"`
+
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// ManualEntry specifies that the payment entry method is a manual keyed transaction. If this is true, no other payment method will be accepted.
+	ManualEntry bool `json:"manualEntry,omitempty"`
+
+	// KSN is the key serial number used for DUKPT encryption.
+	KSN string `json:"ksn,omitempty"`
+
+	// PINBlock is the encrypted pin block.
+	PINBlock string `json:"pinBlock,omitempty"`
+
+	// CardType designates categories of cards: credit, debit, EBT.
+	CardType CardType `json:"cardType,omitempty"`
+
+	// PaymentType designates brands of payment methods: Visa, Discover, etc.
+	PaymentType string `json:"paymentType,omitempty"`
+
+	TerminalName string `json:"terminalName,omitempty"`
+}
+
+// BalanceResponse models the response to a balance request.
+type BalanceResponse struct {
+	Success bool `json:"success"`
+
+	Error string `json:"error"`
+
+	ResponseDescription string `json:"responseDescription"`
+
+	TransactionID string `json:"transactionId"`
+
+	BatchID string `json:"batchId,omitempty"`
+
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	TransactionType string `json:"transactionType"`
+
+	Timestamp string `json:"timestamp"`
+
+	TickBlock string `json:"tickBlock"`
+
+	Test bool `json:"test"`
+
+	Sig string `json:"sig,omitempty"`
+
+	Token string `json:"token,omitempty"`
+
+	EntryMethod string `json:"entryMethod,omitempty"`
+
+	PaymentType string `json:"paymentType,omitempty"`
+
+	MaskedPAN string `json:"maskedPan,omitempty"`
+
+	PublicKey string `json:"publicKey,omitempty"`
+
+	ScopeAlert bool `json:"ScopeAlert,omitempty"`
+
+	CardHolder string `json:"cardHolder,omitempty"`
+
+	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
+
+	// RemainingBalance remaining balance on the payment method.
+	RemainingBalance string `json:"remainingBalance,omitempty"`
+}
+
+// RefundRequest models refund requests.
 type RefundRequest struct {
 	TransactionRef string `json:"transactionRef,omitempty"`
 
@@ -289,7 +385,7 @@ type RefundRequest struct {
 
 	PostalCode string `json:"postalCode,omitempty"`
 
-	// ManualEntry specifies that the payment entry method is a manual keyed transaction. If this is true, no other payment method will be accepted
+	// ManualEntry specifies that the payment entry method is a manual keyed transaction. If this is true, no other payment method will be accepted.
 	ManualEntry bool `json:"manualEntry,omitempty"`
 
 	// KSN is the key serial number used for DUKPT encryption.
@@ -533,7 +629,7 @@ type EnrollRequest struct {
 
 	PostalCode string `json:"postalCode,omitempty"`
 
-	// ManualEntry specifies that the payment entry method is a manual keyed transaction. If this is true, no other payment method will be accepted
+	// ManualEntry specifies that the payment entry method is a manual keyed transaction. If this is true, no other payment method will be accepted.
 	ManualEntry bool `json:"manualEntry,omitempty"`
 
 	// KSN is the key serial number used for DUKPT encryption.
@@ -632,7 +728,7 @@ type GiftActivateRequest struct {
 	TerminalName string `json:"terminalName,omitempty"`
 }
 
-// GiftActivateResponse models the response to a gift activate request
+// GiftActivateResponse models the response to a gift activate request.
 type GiftActivateResponse struct {
 	Success bool `json:"success"`
 
@@ -746,7 +842,7 @@ type TermsAndConditionsRequest struct {
 	SigRequired bool `json:"sigRequired"`
 }
 
-// TermsAndConditionsResponse models a T&C signature capture response
+// TermsAndConditionsResponse models a T&C signature capture response.
 type TermsAndConditionsResponse struct {
 	Success bool `json:"success"`
 
@@ -822,7 +918,7 @@ type ReceiptSuggestions struct {
 	CashBackAmount string `json:"cashBackAmount,omitempty"`
 }
 
-// AuthorizationResponse models the response to authorization requests
+// AuthorizationResponse models the response to authorization requests.
 type AuthorizationResponse struct {
 	Success bool `json:"success"`
 
@@ -994,10 +1090,16 @@ type TerminalTextPromptRequest struct {
 	Request TextPromptRequest `json:"request"`
 }
 
-// TerminalAuthorizationRequest models auth requests for charge, preauth, and reverse transaction types..
+// TerminalAuthorizationRequest models auth requests for charge, preauth, and reverse transaction types.
 type TerminalAuthorizationRequest struct {
 	APICredentials
 	Request AuthorizationRequest `json:"request"`
+}
+
+// TerminalBalanceRequest models balance requests.
+type TerminalBalanceRequest struct {
+	APICredentials
+	Request BalanceRequest `json:"request"`
 }
 
 // TerminalRefundRequest models refund requests.
@@ -1006,25 +1108,25 @@ type TerminalRefundRequest struct {
 	Request RefundRequest `json:"request"`
 }
 
-// TerminalEnrollRequest models the information needed to enroll a new payment method in the token vault..
+// TerminalEnrollRequest models the information needed to enroll a new payment method in the token vault.
 type TerminalEnrollRequest struct {
 	APICredentials
 	Request EnrollRequest `json:"request"`
 }
 
-// TerminalClearTerminalRequest models the information needed to enroll a new payment method in the token vault..
+// TerminalClearTerminalRequest models the information needed to enroll a new payment method in the token vault.
 type TerminalClearTerminalRequest struct {
 	APICredentials
 	Request ClearTerminalRequest `json:"request"`
 }
 
-// TerminalGiftActivateRequest models the information needed to activate or recharge a gift card..
+// TerminalGiftActivateRequest models the information needed to activate or recharge a gift card.
 type TerminalGiftActivateRequest struct {
 	APICredentials
 	Request GiftActivateRequest `json:"request"`
 }
 
-// TerminalTermsAndConditionsRequest models the fields needed for custom T&C prompts..
+// TerminalTermsAndConditionsRequest models the fields needed for custom T&C prompts.
 type TerminalTermsAndConditionsRequest struct {
 	APICredentials
 	Request TermsAndConditionsRequest `json:"request"`
@@ -1036,7 +1138,7 @@ type TerminalTermsAndConditionsResponse struct {
 	Request TermsAndConditionsResponse `json:"request"`
 }
 
-// TerminalTransactionDisplayRequest is used to start or update a transaction line item display on a terminal..
+// TerminalTransactionDisplayRequest is used to start or update a transaction line item display on a terminal.
 type TerminalTransactionDisplayRequest struct {
 	APICredentials
 	Request TransactionDisplayRequest `json:"request"`

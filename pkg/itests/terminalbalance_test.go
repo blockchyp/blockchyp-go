@@ -10,22 +10,20 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestBooleanPrompt(t *testing.T) {
+func TestTerminalBalance(t *testing.T) {
 
 	assert := assert.New(t)
 
 	client := newTestClient(t)
 
 	// setup request object
-	request := blockchyp.BooleanPromptRequest{}
+	request := blockchyp.BalanceRequest{}
 	request.Test = true
 	request.TerminalName = "Test Terminal"
-	request.Prompt = "Would you like to become a member?"
-	request.YesCaption = "Yes"
-	request.NoCaption = "No"
+	request.CardType = 3
 	logRequest(request)
 
-	response, err := client.BooleanPrompt(request)
+	response, err := client.Balance(request)
 
 	assert.NoError(err)
 
@@ -33,5 +31,5 @@ func TestBooleanPrompt(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
-	assert.True(response.Response)
+	assert.NotEmpty(response.RemainingBalance)
 }
