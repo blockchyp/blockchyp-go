@@ -35,108 +35,6 @@ var ErrUnknownTerminal = errors.New("unknown terminal")
 var ErrNoChange = errors.New("route unchanged")
 
 /*
-TerminalTermsAndConditionsRequest adds API credentials to auth requests for use in
-direct terminal transactions.
-*/
-type TerminalTermsAndConditionsRequest struct {
-	APICredentials
-	Request TermsAndConditionsRequest `json:"request"`
-}
-
-/*
-TerminalBalanceRequest adds API credentials to balance requests for use in
-direct terminal transactions.
-*/
-type TerminalBalanceRequest struct {
-	APICredentials
-	Request BalanceRequest `json:"request"`
-}
-
-/*
-TerminalAuthorizationRequest adds API credentials to auth requests for use in
-direct terminal transactions.
-*/
-type TerminalAuthorizationRequest struct {
-	APICredentials
-	Request AuthorizationRequest `json:"request"`
-}
-
-/*
-TerminalEnrollRequest adds API credentials to enroll requests for use in
-direct terminal transactions.
-*/
-type TerminalEnrollRequest struct {
-	APICredentials
-	Request EnrollRequest `json:"request"`
-}
-
-/*
-TerminalMessageRequest adds API credentials to auth requests for use in
-direct terminal message display requests.
-*/
-type TerminalMessageRequest struct {
-	APICredentials
-	Request MessageRequest `json:"request"`
-}
-
-/*
-TerminalClearTerminalRequest adds API credentials to a clear terminal request.
-*/
-type TerminalClearTerminalRequest struct {
-	APICredentials
-	Request ClearTerminalRequest `json:"request"`
-}
-
-/*
-TerminalBooleanPromptRequest adds API credentials to boolean prompt requests.
-*/
-type TerminalBooleanPromptRequest struct {
-	APICredentials
-	Request BooleanPromptRequest `json:"request"`
-}
-
-/*
-TerminalTextPromptRequest adds API credentials to boolean prompt requests.
-*/
-type TerminalTextPromptRequest struct {
-	APICredentials
-	Request TextPromptRequest `json:"request"`
-}
-
-/*
-TerminalRefundAuthorizationRequest adds API credentials to refund requests for use in
-free range refund transactions.
-*/
-type TerminalRefundAuthorizationRequest struct {
-	APICredentials
-	Request RefundRequest `json:"request"`
-}
-
-/*
-TerminalGiftActivateRequest adds API credentials to gift activation requests
-for use in direct terminal transactions.
-*/
-type TerminalGiftActivateRequest struct {
-	APICredentials
-	Request GiftActivateRequest `json:"request"`
-}
-
-/*
-TerminalPingRequest adds API credentials to a terminal ping request.
-*/
-type TerminalPingRequest struct {
-	APICredentials
-	Request PingRequest `json:"request"`
-}
-
-// TerminalTransactionDisplayRequest adds API credentials to a terminal line
-// item display request.
-type TerminalTransactionDisplayRequest struct {
-	APICredentials
-	Request TransactionDisplayRequest `json:"request"`
-}
-
-/*
 TerminalRoute models route information for a payment terminal.
 */
 type TerminalRoute struct {
@@ -377,7 +275,6 @@ func (client *Client) assembleTerminalURL(route TerminalRoute, path string) stri
 	} else {
 		buffer.WriteString(":8080")
 	}
-	buffer.WriteString("/api")
 	buffer.WriteString(path)
 	return buffer.String()
 

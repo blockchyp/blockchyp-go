@@ -97,7 +97,6 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.SigRequired, "sigRequired", true, "optional flag that indicates whether signatures are required, defaults to true")
 	flag.IntVar(&args.Timeout, "timeout", 90, "overrides default timeouts for terminal interaction")
 	flag.BoolVar(&args.CashBackEnabled, "cashback", false, "enables cash back transactions")
-	flag.BoolVar(&args.Enroll, "enroll", false, "enroll the payment in the token vault")
 
 	flag.Parse()
 
@@ -210,8 +209,6 @@ func processCommand(args blockchyp.CommandLineArguments) {
 	switch args.Type {
 	case "ping":
 		processPing(client, args)
-	case "enroll":
-		processEnroll(client, args)
 	case "charge", "preauth":
 		processAuth(client, args)
 	case "gift-activate":
@@ -234,8 +231,6 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processTextPrompt(client, args)
 	case "clear":
 		processClear(client, args)
-	case "balance":
-		processBalance(client, args)
 	case "display":
 		processDisplay(client, args)
 	case "tc":
@@ -259,27 +254,6 @@ func processCacheExpire(client *blockchyp.Client, args blockchyp.CommandLineArgu
 func processCache(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
 	fmt.Println("Cache Location:", client.RouteCache)
-
-}
-
-func processBalance(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
-	validateRequired(args.TerminalName, "terminal")
-
-	request := blockchyp.BalanceRequest{}
-	request.TerminalName = args.TerminalName
-	request.ManualEntry = args.ManualEntry
-	request.Test = args.Test
-
-	if args.EBT {
-		request.CardType = blockchyp.CardTypeEBT
-	}
-
-	ack, err := client.Balance(request)
-	if err != nil {
-		handleError(&args, err)
-	}
-
-	dumpResponse(&args, ack)
 
 }
 
@@ -379,12 +353,12 @@ func processDisplay(client *blockchyp.Client, args blockchyp.CommandLineArgument
 
 	request.Transaction.Items = lines
 
-	err := client.UpdateTransactionDisplay(request)
+	ack, err := client.UpdateTransactionDisplay(request)
 	if err != nil {
 		handleError(&args, err)
 	}
 
-	dumpResponse(&args, blockchyp.Acknowledgement{Success: true})
+	dumpResponse(&args, ack)
 
 }
 
@@ -399,7 +373,11 @@ func processMessage(client *blockchyp.Client, args blockchyp.CommandLineArgument
 
 	res, err := client.Message(req)
 	if err != nil {
-		handleError(&args, err)
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.Error) == 0 {
+			handleError(&args, err)
+		}
 	}
 	dumpResponse(&args, res)
 
@@ -418,7 +396,11 @@ func processBooleanPrompt(client *blockchyp.Client, args blockchyp.CommandLineAr
 
 	res, err := client.BooleanPrompt(req)
 	if err != nil {
-		handleError(&args, err)
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.Error) == 0 {
+			handleError(&args, err)
+		}
 	}
 	dumpResponse(&args, res)
 
@@ -435,7 +417,11 @@ func processTextPrompt(client *blockchyp.Client, args blockchyp.CommandLineArgum
 
 	res, err := client.TextPrompt(req)
 	if err != nil {
-		handleError(&args, err)
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.Error) == 0 {
+			handleError(&args, err)
+		}
 	}
 	dumpResponse(&args, res)
 
@@ -463,9 +449,12 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	res, err := client.Refund(req)
 
 	if err != nil {
-		handleError(&args, err)
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(&args, err)
+		}
 	}
-
 	if args.SigFile != "" && res.SigFile != "" {
 		content, err := hex.DecodeString(res.SigFile)
 		if err != nil {
@@ -491,7 +480,11 @@ func processReverse(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	res, err := client.Reverse(req)
 
 	if err != nil {
-		handleError(&args, err)
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(&args, err)
+		}
 	}
 	dumpResponse(&args, res)
 }
@@ -505,7 +498,11 @@ func processCloseBatch(client *blockchyp.Client, args blockchyp.CommandLineArgum
 	res, err := client.CloseBatch(req)
 
 	if err != nil {
-		handleError(&args, err)
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(&args, err)
+		}
 	}
 	dumpResponse(&args, res)
 }
@@ -520,7 +517,11 @@ func processVoid(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	res, err := client.Void(req)
 
 	if err != nil {
-		handleError(&args, err)
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(&args, err)
+		}
 	}
 	dumpResponse(&args, res)
 }
@@ -538,7 +539,11 @@ func processCapture(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	res, err := client.Capture(req)
 
 	if err != nil {
-		handleError(&args, err)
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(&args, err)
+		}
 	}
 	dumpResponse(&args, res)
 }
@@ -560,25 +565,6 @@ func processGiftActivate(client *blockchyp.Client, args blockchyp.CommandLineArg
 	dumpResponse(&args, res)
 }
 
-func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
-	if (args.TerminalName == "") && (args.Token == "") {
-		fatalError("-terminal or -token requred")
-	}
-	req := blockchyp.EnrollRequest{}
-	req.TerminalName = args.TerminalName
-	req.TransactionRef = args.TransactionRef
-	req.Test = args.Test
-	req.ManualEntry = args.ManualEntry
-
-	res, err := client.Enroll(req)
-
-	if err != nil {
-		handleError(&args, err)
-	}
-
-	dumpResponse(&args, res)
-}
-
 func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.Amount, "amount")
 	if (args.TerminalName == "") && (args.Token == "") {
@@ -594,7 +580,6 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	req.TaxAmount = args.TaxAmount
 	req.TipAmount = args.TipAmount
 	req.Test = args.Test
-	req.Enroll = args.Enroll
 	req.ManualEntry = args.ManualEntry
 	req.SigWidth = args.SigWidth
 	req.SigFormat = args.SigFormat
@@ -613,7 +598,11 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	}
 
 	if err != nil {
-		handleError(&args, err)
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(&args, err)
+		}
 	}
 	if args.SigFile != "" && res.SigFile != "" {
 		content, err := hex.DecodeString(res.SigFile)
@@ -634,7 +623,11 @@ func processPing(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	}
 	res, err := client.Ping(req)
 	if err != nil {
-		handleError(&args, err)
+		if res == nil {
+			handleError(&args, err)
+		} else if len(res.ResponseDescription) == 0 {
+			handleError(&args, err)
+		}
 	}
 	dumpResponse(&args, res)
 }
