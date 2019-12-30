@@ -1,4 +1,3 @@
-
 # BlockChyp Go SDK
 
 [![CircleCI](https://circleci.com/gh/blockchyp/blockchyp-go/tree/master.svg?style=shield)](https://circleci.com/gh/blockchyp/blockchyp-go/tree/master)
@@ -33,18 +32,15 @@ For Go developers, you can install BlockChyp in the usual way with `go get`.
 go get github.com/blockchyp/blockchyp-go
 ```
 
-
 ## Transaction Code Examples
 
-You don't want to read words.  You want examples.  Here's a quick rundown of the stuff you can do with the BlockChyp Go SDK and a few basic examples.
-
-
+You don't want to read words. You want examples. Here's a quick rundown of the
+stuff you can do with the BlockChyp Go SDK and a few basic examples.
 #### Charge
 
 Executes a standard direct preauth and capture.
 
-
-```
+```go
 package main
 
 import (
@@ -89,17 +85,14 @@ func main() {
 
     fmt.Println(response.AuthCode)
     fmt.Println(response.AuthorizedAmount)
-
 }
+
 ```
-
-
 #### Preauthorization
 
 Executes a preauthorization intended to be captured later.
 
-
-```
+```go
 package main
 
 import (
@@ -144,17 +137,14 @@ func main() {
 
     fmt.Println(response.AuthCode)
     fmt.Println(response.AuthorizedAmount)
-
 }
+
 ```
-
-
 #### Terminal Ping
 
 Tests connectivity with a payment terminal.
 
-
-```
+```go
 package main
 
 import (
@@ -196,15 +186,13 @@ func main() {
     }
 
 }
+
 ```
-
-
 #### Balance
 
 Checks the remaining balance on a payment method.
 
-
-```
+```go
 package main
 
 import (
@@ -231,7 +219,7 @@ func main() {
     request := blockchyp.BalanceRequest{}
     request.Test = true
     request.TerminalName = "Test Terminal"
-    request.CardType = 3
+    request.CardType = 2
 
     response, err := client.Balance(request)
 
@@ -248,15 +236,13 @@ func main() {
     }
 
 }
+
 ```
-
-
 #### Terminal Clear
 
 Clears the line item display and any in progress transaction.
 
-
-```
+```go
 package main
 
 import (
@@ -299,15 +285,13 @@ func main() {
     }
 
 }
+
 ```
-
-
 #### Terms & Conditions Capture
 
 Prompts the user to accept terms and conditions.
 
-
-```
+```go
 package main
 
 import (
@@ -334,17 +318,17 @@ func main() {
     request := blockchyp.TermsAndConditionsRequest{}
     request.Test = true
     request.TerminalName = "Test Terminal"
-    request.TCAlias = "hippa" // Alias for a T&C template configured in blockchyp
-    request.TCName = "HIPPA Disclosure" // Name of the contract or document if not using an alias
-    request.TCContent = "Full contract text" // Full text of the contract or disclosure if not using an alias
-    request.SigFormat = "png" // file format for the signature image, if desired can be PNG or JPG
-    request.SigWidth = 200 // width of the signature image in pixels
-    request.SigRequired = true // Whether or not a signature is required.  Defaults to true.
+    request.TCAlias = "hippa"                // Alias for a T&C template configured in blockchyp.
+    request.TCName = "HIPPA Disclosure"      // Name of the contract or document if not using an alias.
+    request.TCContent = "Full contract text" // Full text of the contract or disclosure if not using an alias.
+    request.SigFormat = "png"                // file format for the signature image, if desired can be PNG or JPG.
+    request.SigWidth = 200                   // width of the signature image in pixels.
+    request.SigRequired = true               // Whether or not a signature is required. Defaults to true.
 
-    response, err := client.TC(request)
+    response, err := client.TermsAndConditions(request)
 
     // run the transaction
-    response, err := client.TC(req)
+    response, err := client.TermsAndConditions(req)
 
     if err != nil {
         log.Fatal(err)
@@ -357,17 +341,16 @@ func main() {
 
     fmt.Println(response.Sig)
     fmt.Println(response.SigFile)
-
 }
+
 ```
-
-
 #### Update Transaction Display
 
-Appends items to an existing transaction display Subtotal, Tax, and Total are overwritten by the request. Items with the same description are combined into groups.
+Appends items to an existing transaction display Subtotal, Tax, and Total are
+overwritten by the request. Items with the same description are combined into
+groups.
 
-
-```
+```go
 package main
 
 import (
@@ -396,18 +379,18 @@ func main() {
     request.TerminalName = "Test Terminal"
     request.Transaction = &blockchyp.TransactionDisplayTransaction{
         Subtotal: "60.00",
-        Tax: "5.00",
-        Total: "65.00",
+        Tax:      "5.00",
+        Total:    "65.00",
         Items: []*blockchyp.TransactionDisplayItem{
             &blockchyp.TransactionDisplayItem{
                 Description: "Leki Trekking Poles",
-                Price: "35.00",
-                Quantity: 2,
-                Extended: "70.00",
+                Price:       "35.00",
+                Quantity:    2,
+                Extended:    "70.00",
                 Discounts: []*blockchyp.TransactionDisplayDiscount{
                     &blockchyp.TransactionDisplayDiscount{
                         Description: "memberDiscount",
-                        Amount: "10.00",
+                        Amount:      "10.00",
                     },
                 },
             },
@@ -429,15 +412,13 @@ func main() {
     }
 
 }
+
 ```
-
-
 #### New Transaction Display
 
 Displays a new transaction on the terminal.
 
-
-```
+```go
 package main
 
 import (
@@ -466,18 +447,18 @@ func main() {
     request.TerminalName = "Test Terminal"
     request.Transaction = &blockchyp.TransactionDisplayTransaction{
         Subtotal: "60.00",
-        Tax: "5.00",
-        Total: "65.00",
+        Tax:      "5.00",
+        Total:    "65.00",
         Items: []*blockchyp.TransactionDisplayItem{
             &blockchyp.TransactionDisplayItem{
                 Description: "Leki Trekking Poles",
-                Price: "35.00",
-                Quantity: 2,
-                Extended: "70.00",
+                Price:       "35.00",
+                Quantity:    2,
+                Extended:    "70.00",
                 Discounts: []*blockchyp.TransactionDisplayDiscount{
                     &blockchyp.TransactionDisplayDiscount{
                         Description: "memberDiscount",
-                        Amount: "10.00",
+                        Amount:      "10.00",
                     },
                 },
             },
@@ -499,15 +480,13 @@ func main() {
     }
 
 }
+
 ```
-
-
 #### Text Prompt
 
 Asks the consumer text based question.
 
-
-```
+```go
 package main
 
 import (
@@ -534,7 +513,7 @@ func main() {
     request := blockchyp.TextPromptRequest{}
     request.Test = true
     request.TerminalName = "Test Terminal"
-    request.PromptType = "email" //  Type of prompt.  Can be 'email', 'phone', 'customer-number', or 'rewards-number'
+    request.PromptType = "email" // Type of prompt. Can be 'email', 'phone', 'customer-number', or 'rewards-number'.
 
     response, err := client.TextPrompt(request)
 
@@ -551,17 +530,14 @@ func main() {
     }
 
     fmt.Println(response.Response)
-
 }
+
 ```
-
-
 #### Boolean Prompt
 
 Asks the consumer a yes/no question.
 
-
-```
+```go
 package main
 
 import (
@@ -607,17 +583,14 @@ func main() {
     }
 
     fmt.Println(response.Response)
-
 }
+
 ```
-
-
 #### Display Message
 
 Displays a short message on the terminal.
 
-
-```
+```go
 package main
 
 import (
@@ -661,15 +634,13 @@ func main() {
     }
 
 }
+
 ```
-
-
 #### Refund
 
 Executes a refund.
 
-
-```
+```go
 package main
 
 import (
@@ -695,7 +666,7 @@ func main() {
     // setup request object
     request := blockchyp.RefundRequest{}
     request.TerminalName = "Test Terminal"
-    request.TransactionID = "PREVIOUS_TRANSACTION_ID"
+    request.TransactionID = "<PREVIOUS TRANSACTION ID>"
     request.Amount = "5.00" // Optional amount for partial refunds.
 
     response, err := client.Refund(request)
@@ -713,15 +684,13 @@ func main() {
     }
 
 }
+
 ```
-
-
 #### Enroll
 
 Adds a new payment method to the token vault.
 
-
-```
+```go
 package main
 
 import (
@@ -764,17 +733,14 @@ func main() {
     }
 
     fmt.Println(response.Token)
-
 }
+
 ```
-
-
 #### Gift Card Activation
 
 Activates or recharges a gift card.
 
-
-```
+```go
 package main
 
 import (
@@ -820,19 +786,22 @@ func main() {
     fmt.Println(response.Amount)
     fmt.Println(response.CurrentBalance)
     fmt.Println(response.PublicKey)
-
 }
+
 ```
-
-
 #### Time Out Reversal
 
 Executes a manual time out reversal.
 
-We love time out reversals. Don't be afraid to use them whenever a request to a BlockChyp terminal times out. You have up to two minutes to reverse any transaction. The only caveat is that you must assign transactionRef values when you build the original request. Otherwise, we have no real way of knowing which transaction you're trying to reverse because we may not have assigned it an id yet. And if we did assign it an id, you wouldn't know what it is because your request to the terminal timed out before you got a response.
+We love time out reversals. Don't be afraid to use them whenever a request to a
+BlockChyp terminal times out. You have up to two minutes to reverse any
+transaction. The only caveat is that you must assign transactionRef values when
+you build the original request. Otherwise, we have no real way of knowing which
+transaction you're trying to reverse because we may not have assigned it an id
+yet. And if we did assign it an id, you wouldn't know what it is because your
+request to the terminal timed out before you got a response.
 
-
-```
+```go
 package main
 
 import (
@@ -858,7 +827,7 @@ func main() {
     // setup request object
     request := blockchyp.AuthorizationRequest{}
     request.TerminalName = "Test Terminal"
-    request.TransactionRef = "LAST TRANSACTION REF"
+    request.TransactionRef = "<LAST TRANSACTION REF>"
 
     response, err := client.Reverse(request)
 
@@ -875,15 +844,13 @@ func main() {
     }
 
 }
+
 ```
-
-
 #### Capture Preauthorization
 
 Captures a preauthorization.
 
-
-```
+```go
 package main
 
 import (
@@ -909,7 +876,7 @@ func main() {
     // setup request object
     request := blockchyp.CaptureRequest{}
     request.Test = true
-    request.TransactionID = "PREAUTH TRANSACTION ID"
+    request.TransactionID = "<PREAUTH TRANSACTION ID>"
 
     response, err := client.Capture(request)
 
@@ -926,15 +893,13 @@ func main() {
     }
 
 }
+
 ```
-
-
 #### Close Batch
 
 Closes the current credit card batch.
 
-
-```
+```go
 package main
 
 import (
@@ -977,17 +942,14 @@ func main() {
 
     fmt.Println(response.CapturedTotal)
     fmt.Println(response.OpenPreauths)
-
 }
+
 ```
-
-
 #### Void Transaction
 
 Discards a previous preauth transaction.
 
-
-```
+```go
 package main
 
 import (
@@ -1013,7 +975,7 @@ func main() {
     // setup request object
     request := blockchyp.VoidRequest{}
     request.Test = true
-    request.TransactionID = "PREVIOUS TRANSACTION ID"
+    request.TransactionID = "<PREVIOUS TRANSACTION ID>"
 
     response, err := client.Void(request)
 
@@ -1030,4 +992,13 @@ func main() {
     }
 
 }
+
 ```
+
+## License
+
+Copyright BlockChyp, Inc., 2019
+
+Distributed under the terms of the [MIT] license, blockchyp-go is free and open source software.
+
+[MIT]: https://github.com/blockchyp/blockchyp-go/blob/master/LICENSE

@@ -1,4 +1,9 @@
 // +build manual
+// Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
+// governed by a license that can be found in the LICENSE file.
+//
+// This file was generated automatically. Changes to this file will be lost
+// every time the code is regenerated.
 
 package itests
 
@@ -22,18 +27,18 @@ func TestUpdateTransactionDisplay(t *testing.T) {
 	request.TerminalName = "Test Terminal"
 	request.Transaction = &blockchyp.TransactionDisplayTransaction{
 		Subtotal: "35.00",
-		Tax: "5.00",
-		Total: "70.00",
+		Tax:      "5.00",
+		Total:    "70.00",
 		Items: []*blockchyp.TransactionDisplayItem{
 			&blockchyp.TransactionDisplayItem{
 				Description: "Leki Trekking Poles",
-				Price: "35.00",
-				Quantity: 2,
-				Extended: "70.00",
+				Price:       "35.00",
+				Quantity:    2,
+				Extended:    "70.00",
 				Discounts: []*blockchyp.TransactionDisplayDiscount{
 					&blockchyp.TransactionDisplayDiscount{
 						Description: "memberDiscount",
-						Amount: "10.00",
+						Amount:      "10.00",
 					},
 				},
 			},

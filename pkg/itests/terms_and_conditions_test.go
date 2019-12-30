@@ -1,4 +1,9 @@
 // +build manual
+// Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
+// governed by a license that can be found in the LICENSE file.
+//
+// This file was generated automatically. Changes to this file will be lost
+// every time the code is regenerated.
 
 package itests
 
@@ -10,7 +15,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestTermsAndConditionsTest(t *testing.T) {
+func TestTermsAndConditions(t *testing.T) {
 
 	assert := assert.New(t)
 
@@ -27,7 +32,7 @@ func TestTermsAndConditionsTest(t *testing.T) {
 	request.SigRequired = true
 	logRequest(request)
 
-	response, err := client.TC(request)
+	response, err := client.TermsAndConditions(request)
 
 	assert.NoError(err)
 

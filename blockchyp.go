@@ -1,3 +1,9 @@
+// Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
+// governed by a license that can be found in the LICENSE file.
+//
+// This file was generated automatically. Changes to this file will be lost
+// every time the code is regenerated.
+
 package blockchyp
 
 import (
@@ -307,8 +313,8 @@ func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, err
 
 }
 
-// TC prompts the user to accept terms and conditions.
-func (client *Client) TC(request TermsAndConditionsRequest) (*TermsAndConditionsResponse, error) {
+// TermsAndConditions prompts the user to accept terms and conditions.
+func (client *Client) TermsAndConditions(request TermsAndConditionsRequest) (*TermsAndConditionsResponse, error) {
 
 	var response TermsAndConditionsResponse
 	var err error
@@ -349,8 +355,8 @@ func (client *Client) TC(request TermsAndConditionsRequest) (*TermsAndConditions
 }
 
 // UpdateTransactionDisplay appends items to an existing transaction display
-// Subtotal, Tax, and Total are overwritten by the request. Items with the same
-// description are combined into groups.
+// Subtotal, Tax, and Total are overwritten by the request. Items with the
+// same description are combined into groups.
 func (client *Client) UpdateTransactionDisplay(request TransactionDisplayRequest) (*Acknowledgement, error) {
 
 	var response Acknowledgement
@@ -680,14 +686,14 @@ func (client *Client) GiftActivate(request GiftActivateRequest) (*GiftActivateRe
 
 // Reverse executes a manual time out reversal.
 //
-// We love time out reversals. Don't be afraid to use them whenever a request to
-// a BlockChyp terminal times out. You have up to two minutes to reverse any
-// transaction. The only caveat is that you must assign transactionRef values
-// when you build the original request. Otherwise, we have no real way of
-// knowing which transaction you're trying to reverse because we may not have
-// assigned it an id yet. And if we did assign it an id, you wouldn't know what
-// it is because your request to the terminal timed out before you got a
-// response.
+// We love time out reversals. Don't be afraid to use them whenever a request
+// to a BlockChyp terminal times out. You have up to two minutes to reverse
+// any transaction. The only caveat is that you must assign transactionRef
+// values when you build the original request. Otherwise, we have no real way
+// of knowing which transaction you're trying to reverse because we may not
+// have assigned it an id yet. And if we did assign it an id, you wouldn't
+// know what it is because your request to the terminal timed out before you
+// got a response.
 func (client *Client) Reverse(request AuthorizationRequest) (*AuthorizationResponse, error) {
 
 	var response AuthorizationResponse

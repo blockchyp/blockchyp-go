@@ -1,4 +1,9 @@
 // +build manual
+// Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
+// governed by a license that can be found in the LICENSE file.
+//
+// This file was generated automatically. Changes to this file will be lost
+// every time the code is regenerated.
 
 package itests
 
@@ -10,7 +15,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestTerminalCharge(t *testing.T) {
+func TestTerminalPreauth(t *testing.T) {
 
 	assert := assert.New(t)
 
@@ -19,11 +24,11 @@ func TestTerminalCharge(t *testing.T) {
 	// setup request object
 	request := blockchyp.AuthorizationRequest{}
 	request.TerminalName = "Test Terminal"
-	request.Amount = "25.15"
+	request.Amount = "15.15"
 	request.Test = true
 	logRequest(request)
 
-	response, err := client.Charge(request)
+	response, err := client.Preauth(request)
 
 	assert.NoError(err)
 
@@ -40,5 +45,5 @@ func TestTerminalCharge(t *testing.T) {
 	assert.NotEmpty(response.PaymentType)
 	assert.NotEmpty(response.MaskedPAN)
 	assert.NotEmpty(response.EntryMethod)
-	assert.Equal("25.15", response.AuthorizedAmount)
+	assert.Equal("15.15", response.AuthorizedAmount)
 }
