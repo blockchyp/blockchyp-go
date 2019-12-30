@@ -94,6 +94,19 @@ type ReceiptSuggestions struct {
 	CashBackAmount string `json:"cashBackAmount,omitempty"`
 }
 
+// Acknowledgement contains a basic api acknowledgement.
+type Acknowledgement struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+}
+
 // PingRequest contains information needed to test connectivity with a
 // terminal.
 type PingRequest struct {
