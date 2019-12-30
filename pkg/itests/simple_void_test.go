@@ -1,4 +1,4 @@
-// +build manual
+// +build integration
 // Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
 // governed by a license that can be found in the LICENSE file.
 //
@@ -8,7 +8,11 @@
 package itests
 
 import (
+	"fmt"
+	"os"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 
@@ -21,6 +25,21 @@ func TestSimpleVoid(t *testing.T) {
 
 	client := newTestClient(t)
 
+	testDelay := os.Getenv(TestDelay)
+	if testDelay != "" {
+		testDelayInt, err := strconv.Atoi(testDelay)
+		assert.NoError(err)
+		messageRequest := blockchyp.MessageRequest{
+			TerminalName: "Test Terminal",
+			Test:         true,
+			Message:      fmt.Sprintf("Running TestSimpleVoid in %v seconds...", testDelay),
+		}
+		messageResponse, err := client.Message(messageRequest)
+		assert.NoError(err)
+		assert.True(true, messageResponse.Success)
+		time.Sleep(time.Duration(testDelayInt) * time.Second)
+	}
+
 	// setup request object
 	request0 := blockchyp.AuthorizationRequest{}
 
@@ -30,7 +49,7 @@ func TestSimpleVoid(t *testing.T) {
 
 	request0.Test = true
 
-	request0.TransactionRef = lastTransactionRef
+	request0.TransactionRef = randomID()
 
 	logRequest(request0)
 

@@ -102,14 +102,13 @@ Executes a standard direct preauth and capture.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func chargeExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -128,9 +127,6 @@ func main() {
     request.Amount = "55.00"
 
     response, err := client.Charge(request)
-
-    // run the transaction
-    response, err := client.Charge(req)
 
     if err != nil {
         log.Fatal(err)
@@ -154,14 +150,13 @@ Executes a preauthorization intended to be captured later.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func preauthExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -180,9 +175,6 @@ func main() {
     request.Amount = "27.00"
 
     response, err := client.Preauth(request)
-
-    // run the transaction
-    response, err := client.Preauth(req)
 
     if err != nil {
         log.Fatal(err)
@@ -206,14 +198,13 @@ Tests connectivity with a payment terminal.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func pingExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -230,9 +221,6 @@ func main() {
     request.TerminalName = "Test Terminal"
 
     response, err := client.Ping(request)
-
-    // run the transaction
-    response, err := client.Ping(req)
 
     if err != nil {
         log.Fatal(err)
@@ -254,14 +242,13 @@ Checks the remaining balance on a payment method.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func balanceExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -280,9 +267,6 @@ func main() {
     request.CardType = 2
 
     response, err := client.Balance(request)
-
-    // run the transaction
-    response, err := client.Balance(req)
 
     if err != nil {
         log.Fatal(err)
@@ -304,14 +288,13 @@ Clears the line item display and any in progress transaction.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func clearExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -329,9 +312,6 @@ func main() {
     request.TerminalName = "Test Terminal"
 
     response, err := client.Clear(request)
-
-    // run the transaction
-    response, err := client.Clear(req)
 
     if err != nil {
         log.Fatal(err)
@@ -353,14 +333,13 @@ Prompts the user to accept terms and conditions.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func termsAndConditionsExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -384,9 +363,6 @@ func main() {
     request.SigRequired = true               // Whether or not a signature is required. Defaults to true.
 
     response, err := client.TermsAndConditions(request)
-
-    // run the transaction
-    response, err := client.TermsAndConditions(req)
 
     if err != nil {
         log.Fatal(err)
@@ -412,14 +388,13 @@ groups.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func updateTransactionDisplayExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -457,9 +432,6 @@ func main() {
 
     response, err := client.UpdateTransactionDisplay(request)
 
-    // run the transaction
-    response, err := client.UpdateTransactionDisplay(req)
-
     if err != nil {
         log.Fatal(err)
     }
@@ -480,14 +452,13 @@ Displays a new transaction on the terminal.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func newTransactionDisplayExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -525,9 +496,6 @@ func main() {
 
     response, err := client.NewTransactionDisplay(request)
 
-    // run the transaction
-    response, err := client.NewTransactionDisplay(req)
-
     if err != nil {
         log.Fatal(err)
     }
@@ -548,14 +516,13 @@ Asks the consumer text based question.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func textPromptExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -574,9 +541,6 @@ func main() {
     request.PromptType = "email" // Type of prompt. Can be 'email', 'phone', 'customer-number', or 'rewards-number'.
 
     response, err := client.TextPrompt(request)
-
-    // run the transaction
-    response, err := client.TextPrompt(req)
 
     if err != nil {
         log.Fatal(err)
@@ -599,14 +563,13 @@ Asks the consumer a yes/no question.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func booleanPromptExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -627,9 +590,6 @@ func main() {
     request.NoCaption = "No"
 
     response, err := client.BooleanPrompt(request)
-
-    // run the transaction
-    response, err := client.BooleanPrompt(req)
 
     if err != nil {
         log.Fatal(err)
@@ -652,14 +612,13 @@ Displays a short message on the terminal.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func messageExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -678,9 +637,6 @@ func main() {
     request.Message = "Thank you for your business."
 
     response, err := client.Message(request)
-
-    // run the transaction
-    response, err := client.Message(req)
 
     if err != nil {
         log.Fatal(err)
@@ -702,14 +658,13 @@ Executes a refund.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func refundExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -728,9 +683,6 @@ func main() {
     request.Amount = "5.00" // Optional amount for partial refunds.
 
     response, err := client.Refund(request)
-
-    // run the transaction
-    response, err := client.Refund(req)
 
     if err != nil {
         log.Fatal(err)
@@ -752,14 +704,13 @@ Adds a new payment method to the token vault.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func enrollExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -777,9 +728,6 @@ func main() {
     request.TerminalName = "Test Terminal"
 
     response, err := client.Enroll(request)
-
-    // run the transaction
-    response, err := client.Enroll(req)
 
     if err != nil {
         log.Fatal(err)
@@ -802,14 +750,13 @@ Activates or recharges a gift card.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func giftActivateExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -828,9 +775,6 @@ func main() {
     request.Amount = "50.00"
 
     response, err := client.GiftActivate(request)
-
-    // run the transaction
-    response, err := client.GiftActivate(req)
 
     if err != nil {
         log.Fatal(err)
@@ -863,14 +807,13 @@ request to the terminal timed out before you got a response.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func reverseExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -888,9 +831,6 @@ func main() {
     request.TransactionRef = "<LAST TRANSACTION REF>"
 
     response, err := client.Reverse(request)
-
-    // run the transaction
-    response, err := client.Reverse(req)
 
     if err != nil {
         log.Fatal(err)
@@ -912,14 +852,13 @@ Captures a preauthorization.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func captureExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -937,9 +876,6 @@ func main() {
     request.TransactionID = "<PREAUTH TRANSACTION ID>"
 
     response, err := client.Capture(request)
-
-    // run the transaction
-    response, err := client.Capture(req)
 
     if err != nil {
         log.Fatal(err)
@@ -961,14 +897,13 @@ Closes the current credit card batch.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func closeBatchExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -985,9 +920,6 @@ func main() {
     request.Test = true
 
     response, err := client.CloseBatch(request)
-
-    // run the transaction
-    response, err := client.CloseBatch(req)
 
     if err != nil {
         log.Fatal(err)
@@ -1011,14 +943,13 @@ Discards a previous preauth transaction.
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "log"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func main() {
+func voidExample() {
 
     // sample credentials
     creds := blockchyp.APICredentials{
@@ -1036,9 +967,6 @@ func main() {
     request.TransactionID = "<PREVIOUS TRANSACTION ID>"
 
     response, err := client.Void(request)
-
-    // run the transaction
-    response, err := client.Void(req)
 
     if err != nil {
         log.Fatal(err)

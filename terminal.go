@@ -275,6 +275,7 @@ func (client *Client) assembleTerminalURL(route TerminalRoute, path string) stri
 	} else {
 		buffer.WriteString(":8080")
 	}
+	buffer.WriteString("/api")
 	buffer.WriteString(path)
 	return buffer.String()
 

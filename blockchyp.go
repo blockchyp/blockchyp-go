@@ -332,7 +332,7 @@ func (client *Client) TermsAndConditions(request TermsAndConditionsRequest) (*Te
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/tc", "POST", request, &response, request.Test)
+			err = client.RelayRequest("/terminal-tc", "POST", request, &response, request.Test)
 		} else {
 			authRequest := TerminalTermsAndConditionsRequest{
 				APICredentials: route.TransientCredentials,
@@ -341,7 +341,7 @@ func (client *Client) TermsAndConditions(request TermsAndConditionsRequest) (*Te
 			err = client.terminalRequest(route, "/tc", "POST", authRequest, &response)
 		}
 	} else {
-		err = client.GatewayRequest("/tc", "POST", request, &response, request.Test)
+		err = client.GatewayRequest("/terminal-tc", "POST", request, &response, request.Test)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {

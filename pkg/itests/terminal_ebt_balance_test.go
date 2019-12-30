@@ -19,7 +19,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestTerminalCharge(t *testing.T) {
+func TestTerminalEBTBalance(t *testing.T) {
 
 	assert := assert.New(t)
 
@@ -32,7 +32,7 @@ func TestTerminalCharge(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestTerminalCharge in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestTerminalEBTBalance in %v seconds...", testDelay),
 		}
 		messageResponse, err := client.Message(messageRequest)
 		assert.NoError(err)
@@ -41,28 +41,19 @@ func TestTerminalCharge(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.AuthorizationRequest{}
-	request.TerminalName = "Test Terminal"
-	request.Amount = "25.15"
+	request := blockchyp.BalanceRequest{}
 	request.Test = true
+	request.TerminalName = "Test Terminal"
+	request.CardType = 2
 	logRequest(request)
 
-	response, err := client.Charge(request)
+	response, err := client.Balance(request)
 
 	assert.NoError(err)
 
 	logResponse(response)
 
 	// response assertions
-	assert.True(response.Approved)
-	assert.True(response.Test)
-	assert.Len(response.AuthCode, 6)
-	assert.NotEmpty(response.TransactionID)
-	assert.NotEmpty(response.Timestamp)
-	assert.NotEmpty(response.TickBlock)
-	assert.Equal("Approved", response.ResponseDescription)
-	assert.NotEmpty(response.PaymentType)
-	assert.NotEmpty(response.MaskedPAN)
-	assert.NotEmpty(response.EntryMethod)
-	assert.Equal("25.15", response.AuthorizedAmount)
+	assert.True(response.Success)
+	assert.NotEmpty(response.RemainingBalance)
 }

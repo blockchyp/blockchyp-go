@@ -19,7 +19,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestTerminalCharge(t *testing.T) {
+func TestTerminalKeyedCharge(t *testing.T) {
 
 	assert := assert.New(t)
 
@@ -32,7 +32,7 @@ func TestTerminalCharge(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestTerminalCharge in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestTerminalKeyedCharge in %v seconds...", testDelay),
 		}
 		messageResponse, err := client.Message(messageRequest)
 		assert.NoError(err)
@@ -43,7 +43,8 @@ func TestTerminalCharge(t *testing.T) {
 	// setup request object
 	request := blockchyp.AuthorizationRequest{}
 	request.TerminalName = "Test Terminal"
-	request.Amount = "25.15"
+	request.Amount = "11.11"
+	request.ManualEntry = true
 	request.Test = true
 	logRequest(request)
 
@@ -64,5 +65,5 @@ func TestTerminalCharge(t *testing.T) {
 	assert.NotEmpty(response.PaymentType)
 	assert.NotEmpty(response.MaskedPAN)
 	assert.NotEmpty(response.EntryMethod)
-	assert.Equal("25.15", response.AuthorizedAmount)
+	assert.Equal("11.11", response.AuthorizedAmount)
 }

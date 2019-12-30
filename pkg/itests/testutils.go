@@ -11,10 +11,14 @@ import (
 	"runtime"
 	"testing"
 
+	"github.com/gofrs/uuid"
 	"github.com/stretchr/testify/assert"
 
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
+
+// TestDelay is an environment variable constant for integration test delays
+const TestDelay = "BC_TEST_DELAY"
 
 const (
 	defaultConfigFile = "sdk-itest-config.json"
@@ -106,6 +110,16 @@ func newTestClient(t *testing.T) blockchyp.Client {
 	log.Printf("%+v\n", client)
 
 	return client
+
+}
+
+func randomID() string {
+
+	u2, err := uuid.NewV1()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return u2.String()
 
 }
 
