@@ -23,7 +23,7 @@ func textPromptExample() {
 	request := blockchyp.TextPromptRequest{}
 	request.Test = true
 	request.TerminalName = "Test Terminal"
-	request.PromptType = "email" // Type of prompt. Can be 'email', 'phone', 'customer-number', or 'rewards-number'.
+	request.PromptType = blockchyp.PromptTypeEmail // Type of prompt. Can be 'email', 'phone', 'customer-number', or 'rewards-number'.
 
 	response, err := client.TextPrompt(request)
 

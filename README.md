@@ -264,7 +264,7 @@ func balanceExample() {
     request := blockchyp.BalanceRequest{}
     request.Test = true
     request.TerminalName = "Test Terminal"
-    request.CardType = 2
+    request.CardType = blockchyp.CardTypeEBT
 
     response, err := client.Balance(request)
 
@@ -355,12 +355,12 @@ func termsAndConditionsExample() {
     request := blockchyp.TermsAndConditionsRequest{}
     request.Test = true
     request.TerminalName = "Test Terminal"
-    request.TCAlias = "hippa"                // Alias for a T&C template configured in blockchyp.
-    request.TCName = "HIPPA Disclosure"      // Name of the contract or document if not using an alias.
-    request.TCContent = "Full contract text" // Full text of the contract or disclosure if not using an alias.
-    request.SigFormat = "png"                // file format for the signature image, if desired can be PNG or JPG.
-    request.SigWidth = 200                   // width of the signature image in pixels.
-    request.SigRequired = true               // Whether or not a signature is required. Defaults to true.
+    request.TCAlias = "hippa"                        // Alias for a T&C template configured in blockchyp.
+    request.TCName = "HIPPA Disclosure"              // Name of the contract or document if not using an alias.
+    request.TCContent = "Full contract text"         // Full text of the contract or disclosure if not using an alias.
+    request.SigFormat = blockchyp.SignatureFormatPNG // file format for the signature image.
+    request.SigWidth = 200                           // width of the signature image in pixels.
+    request.SigRequired = true                       // Whether or not a signature is required. Defaults to true.
 
     response, err := client.TermsAndConditions(request)
 
@@ -538,7 +538,7 @@ func textPromptExample() {
     request := blockchyp.TextPromptRequest{}
     request.Test = true
     request.TerminalName = "Test Terminal"
-    request.PromptType = "email" // Type of prompt. Can be 'email', 'phone', 'customer-number', or 'rewards-number'.
+    request.PromptType = blockchyp.PromptTypeEmail // Type of prompt. Can be 'email', 'phone', 'customer-number', or 'rewards-number'.
 
     response, err := client.TextPrompt(request)
 

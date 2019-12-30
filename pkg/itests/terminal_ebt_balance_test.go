@@ -44,7 +44,7 @@ func TestTerminalEBTBalance(t *testing.T) {
 	request := blockchyp.BalanceRequest{}
 	request.Test = true
 	request.TerminalName = "Test Terminal"
-	request.CardType = 2
+	request.CardType = blockchyp.CardTypeEBT
 	logRequest(request)
 
 	response, err := client.Balance(request)

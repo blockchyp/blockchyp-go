@@ -23,7 +23,7 @@ func balanceExample() {
 	request := blockchyp.BalanceRequest{}
 	request.Test = true
 	request.TerminalName = "Test Terminal"
-	request.CardType = 2
+	request.CardType = blockchyp.CardTypeEBT
 
 	response, err := client.Balance(request)
 

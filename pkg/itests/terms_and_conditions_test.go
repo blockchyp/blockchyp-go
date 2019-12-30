@@ -46,7 +46,7 @@ func TestTermsAndConditions(t *testing.T) {
 	request.TerminalName = "Test Terminal"
 	request.TCName = "HIPPA Disclosure"
 	request.TCContent = "Full contract text"
-	request.SigFormat = "png"
+	request.SigFormat = blockchyp.SignatureFormatPNG
 	request.SigWidth = 200
 	request.SigRequired = true
 	logRequest(request)

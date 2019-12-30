@@ -28,6 +28,31 @@ const (
 	CardTypeBlockchainGift
 )
 
+// SignatureFormat is used to specify the output format for customer
+// signature images.
+type SignatureFormat string
+
+// SignatureFormats.
+const (
+	SignatureFormatNone = ""
+	SignatureFormatPNG  = "png"
+	SignatureFormatJPG  = "jpg"
+	SignatureFormatGIF  = "gif"
+)
+
+// PromptType is used to specify the type of text input data being requested
+// from a customer.
+type PromptType string
+
+// PromptTypes.
+const (
+	PromptTypeAmount         = "amount"
+	PromptTypeEmail          = "email"
+	PromptTypePhone          = "phone"
+	PromptTypeCustomerNumber = "customer-number"
+	PromptTypeRewardsNumber  = "rewards-number"
+)
+
 // ReceiptSuggestions contains EMV fields we recommend developers put on their
 // receipts.
 type ReceiptSuggestions struct {
@@ -256,7 +281,7 @@ type TextPromptRequest struct {
 	TerminalName string `json:"terminalName,omitempty"`
 
 	// PromptType is the prompt type (email, phone, etc).
-	PromptType string `json:"promptType"`
+	PromptType PromptType `json:"promptType"`
 }
 
 // TextPromptResponse contains the response to a text prompt request.
@@ -423,7 +448,7 @@ type AuthorizationRequest struct {
 	SigFile string `json:"sigFile,omitempty"`
 
 	// SigFormat specifies the image format to be used for returning signatures.
-	SigFormat string `json:"sigFormat,omitempty"`
+	SigFormat SignatureFormat `json:"sigFormat,omitempty"`
 
 	// SigWidth is the width that the signature image should be scaled to,
 	// preserving the aspect ratio. If not provided, the signature is returned in
@@ -719,7 +744,7 @@ type RefundRequest struct {
 	SigFile string `json:"sigFile,omitempty"`
 
 	// SigFormat specifies the image format to be used for returning signatures.
-	SigFormat string `json:"sigFormat,omitempty"`
+	SigFormat SignatureFormat `json:"sigFormat,omitempty"`
 
 	// SigWidth is the width that the signature image should be scaled to,
 	// preserving the aspect ratio. If not provided, the signature is returned in
@@ -1379,7 +1404,7 @@ type TermsAndConditionsRequest struct {
 	SigFile string `json:"sigFile,omitempty"`
 
 	// SigFormat specifies the image format to be used for returning signatures.
-	SigFormat string `json:"sigFormat,omitempty"`
+	SigFormat SignatureFormat `json:"sigFormat,omitempty"`
 
 	// SigWidth is the width that the signature image should be scaled to,
 	// preserving the aspect ratio. If not provided, the signature is returned in

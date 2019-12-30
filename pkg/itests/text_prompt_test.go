@@ -44,7 +44,7 @@ func TestTextPrompt(t *testing.T) {
 	request := blockchyp.TextPromptRequest{}
 	request.Test = true
 	request.TerminalName = "Test Terminal"
-	request.PromptType = "email"
+	request.PromptType = blockchyp.PromptTypeEmail
 	logRequest(request)
 
 	response, err := client.TextPrompt(request)
