@@ -32,6 +32,9 @@ func main() {
 
 	if response.Approved {
 		fmt.Println("Approved")
+		fmt.Println(response.AuthCode)
+		fmt.Println(response.AuthorizedAmount)
+		fmt.Println(response.ReceiptSuggestions.AID)
 	} else {
 		fmt.Println(response.ResponseDescription)
 	}
