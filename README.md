@@ -90,6 +90,20 @@ a transaction.  Of particular importance is the ReceiptSuggestions struct, which
 contains all the fields that are required or recommended for PCI or EMV compliance.
 
 
+## Getting a Developer Kit
+
+In order to test your integration with real terminals, you'll need a BlockChyp
+Developer Kit.  Our kits include a fully functioning payment terminal with
+test pin encryption keys.  Every kit includes a comprehensive set of test
+cards with test cards for every major card brand and entry method, including
+Contactless and Contact EMV and mag stripe cards.  Each kit also includes
+test gift cards for our blockchain gift card system.
+
+Access to BlockChyp's developer program is currently invite only, but you
+can request an invitation by contacting our engineering team at **nerds@blockchyp.com**.
+
+You can also view a number of long form demos and learn more about us on our [YouTube Channel](https://www.youtube.com/channel/UCE-iIVlJic_XArs_U65ZcJg).
+
 ## Transaction Code Examples
 
 You don't want to read words. You want examples. Here's a quick rundown of the
