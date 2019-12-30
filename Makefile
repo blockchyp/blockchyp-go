@@ -46,6 +46,12 @@ test:
 		| tee -i /dev/stderr \
 		| $(GOJUNITREPORT) -set-exit-code >$(REPORTDIR)/xUnit/test-report.xml
 
+# Runs integration tests
+.PHONY: integration
+integration:
+	$(MAKE) test BC_TEST_DELAY=5 BUILDTAGS="integration $(BUILDTAGS)"
+
+
 # Runs mod tidy to remove unused dependencies
 .PHONY: tidy
 tidy:
