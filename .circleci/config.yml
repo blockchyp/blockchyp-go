@@ -13,14 +13,12 @@ jobs:
             - mod-{{ checksum "go.sum" }}
 
       - run:
-          name: Lint
-          command: make lint
+          name: Build
+          command: make build
+
       - run:
           name: Test
           command: make test
-      - run:
-          name: Build
-          command: make dist
 
       - save_cache:
           key: mod-{{ checksum "go.sum" }}
@@ -35,23 +33,17 @@ jobs:
           paths:
             - dist
 
-  publish-github-release:
+  publish:
     docker:
       - image: cibuilds/github:0.12
+
     steps:
       - attach_workspace:
           at: build
+
       - run:
           name: Publish
-          command: |
-            VERSION=$CIRCLE_TAG
-            ghr \
-              -n "BlockChyp CLI ${VERSION#v}" \
-              -u ${CIRCLE_PROJECT_USERNAME} \
-              -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} \
-              -recreate \
-              ${VERSION} \
-              build/dist
+          command: make publish
 
 workflows:
   version: 2

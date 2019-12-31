@@ -1,3 +1,10 @@
+# Version config
+TAG := $(shell git tag --points-at HEAD | sort --version-sort | tail -n 1)
+LASTTAG := $(or $(shell git tag -l | sort -r -V | head -n 1),0.1.0)
+SNAPINFO := $(shell date +%Y%m%d%H%M%S)git$(shell git log -1 --pretty=%h)
+RELEASE := $(or $(BUILD_NUMBER), 1)
+VERSION := $(or $(TAG:v%=%),$(LASTTAG:v%=%))-$(or $(BUILD_NUMBER), 1)$(if $(TAG),,.$(SNAPINFO))
+
 # Build config
 MODSUPPORT := GO111MODULE=on # TODO: Remove this when on is default
 TESTFLAGS := -v -race
@@ -10,13 +17,11 @@ PKGS := $(shell go list ./... | grep -v /vendor/)
 LINUX_BUILDENV := GOOS=linux GOARCH=amd64
 WIN_BUILDENV := GOOS=windows GOARCH=386
 SOURCES := $(shell find . -name '*.go')
-HASH := $(shell git log -1 --pretty=%h)
-TAG := $(shell git tag --points-at HEAD | sort --version-sort | tail -n 1)
-TAR_ARCHIVE := blockchyp-cli-$(or $(TAG:v%=%), $(HASH)).tar.gz
-ZIP_ARCHIVE := blockchyp-cli-$(or $(TAG:v%=%), $(HASH)).zip
+TAR_ARCHIVE := blockchyp-cli-$(VERSION).tar.gz
+ZIP_ARCHIVE := blockchyp-cli-$(VERSION).zip
 ICON := assets/blockchyp.ico
 LDFLAGS = -s -w -extldflags '-static'
-LDFLAGS += -X github.com/blockchyp/blockchyp-go.Version=$(or $(TAG:v%=%), $(HASH))
+LDFLAGS += -X github.com/blockchyp/blockchyp-go.Version=$(VERSION)
 BUILDFLAGS = -v -trimpath -ldflags "$(LDFLAGS)"
 
 # Executables
@@ -32,11 +37,9 @@ TAR := tar
 .PHONY: all
 all: clean lint tidy dist
 
-# Runs go lint and revive linter
-.PHONY: lint
-lint:
-	$(GOLINT) -set_exit_status $(PKGS)
-	$(REVIVE) -config revive.toml  -formatter friendly $(PKGS)
+# Build compiles the packages
+.PHONY: build
+build: lint dist
 
 # Runs unit tests
 .PHONY: test
@@ -51,6 +54,22 @@ test:
 integration:
 	$(MAKE) test BC_TEST_DELAY=5 BUILDTAGS="integration $(BUILDTAGS)"
 
+# Publish is NOOP
+.PHONY: publish
+publish:
+	ghr \
+		-n "BlockChyp CLI ${CIRCLE_TAG#v}" \
+		-u ${CIRCLE_PROJECT_USERNAME} \
+		-r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} \
+		-recreate \
+		${CIRCLE_TAG} \
+		build/dist
+
+# Runs go lint and revive linter
+.PHONY: lint
+lint:
+	$(GOLINT) -set_exit_status $(PKGS)
+	$(REVIVE) -config revive.toml  -formatter friendly $(PKGS)
 
 # Runs mod tidy to remove unused dependencies
 .PHONY: tidy
