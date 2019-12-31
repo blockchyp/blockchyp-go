@@ -41,6 +41,25 @@ func TestSimpleBatchClose(t *testing.T) {
 	}
 
 	// setup request object
+	request0 := blockchyp.AuthorizationRequest{}
+
+	request0.PAN = "4111111111111111"
+
+	request0.Amount = "25.55"
+
+	request0.Test = true
+
+	request0.TransactionRef = randomID()
+
+	logRequest(request0)
+
+	response0, err := client.Charge(request0)
+
+	assert.NoError(err)
+
+	logResponse(response0)
+
+	// setup request object
 	request := blockchyp.CloseBatchRequest{}
 	request.Test = true
 	logRequest(request)

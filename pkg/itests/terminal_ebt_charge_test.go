@@ -45,7 +45,7 @@ func TestTerminalEBTCharge(t *testing.T) {
 	request.TerminalName = "Test Terminal"
 	request.Amount = "25.00"
 	request.Test = true
-	request.CardType = 2
+	request.CardType = blockchyp.CardTypeEBT
 	logRequest(request)
 
 	response, err := client.Charge(request)
