@@ -352,9 +352,6 @@ type AuthorizationRequest struct {
 	// Timeout is the request timeout in milliseconds.
 	Timeout int `json:"timeout"`
 
-	// TerminalName is the name of the target payment terminal.
-	TerminalName string `json:"terminalName,omitempty"`
-
 	// Token is the payment token to be used for this transaction. This should be
 	// used for recurring transactions.
 	Token string `json:"token,omitempty"`
@@ -409,6 +406,9 @@ type AuthorizationRequest struct {
 	// PaymentType designates brands of payment methods: Visa, Discover, etc.
 	PaymentType string `json:"paymentType,omitempty"`
 
+	// TransactionID is the ID of the previous transaction being referenced.
+	TransactionID string `json:"transactionId"`
+
 	// CurrencyCode indicates the transaction currency code.
 	CurrencyCode string `json:"currencyCode"`
 
@@ -418,6 +418,18 @@ type AuthorizationRequest struct {
 	// TaxExempt indicates that the request is tax exempt. Only required for tax
 	// exempt level 2 processing.
 	TaxExempt bool `json:"taxExempt"`
+
+	// SigFile is a location on the filesystem which a customer signature should
+	// be written to.
+	SigFile string `json:"sigFile,omitempty"`
+
+	// SigFormat specifies the image format to be used for returning signatures.
+	SigFormat SignatureFormat `json:"sigFormat,omitempty"`
+
+	// SigWidth is the width that the signature image should be scaled to,
+	// preserving the aspect ratio. If not provided, the signature is returned in
+	// the terminal's max resolution.
+	SigWidth int `json:"sigWidth,omitempty"`
 
 	// TipAmount is the tip amount.
 	TipAmount string `json:"tipAmount,omitempty"`
@@ -443,20 +455,8 @@ type AuthorizationRequest struct {
 	// to an EBT card.
 	EBTEligibleAmount string `json:"ebtEligibleAmount,omitempty"`
 
-	// SigFile is a location on the filesystem which a customer signature should
-	// be written to.
-	SigFile string `json:"sigFile,omitempty"`
-
-	// SigFormat specifies the image format to be used for returning signatures.
-	SigFormat SignatureFormat `json:"sigFormat,omitempty"`
-
-	// SigWidth is the width that the signature image should be scaled to,
-	// preserving the aspect ratio. If not provided, the signature is returned in
-	// the terminal's max resolution.
-	SigWidth int `json:"sigWidth,omitempty"`
-
-	// TransactionID is the ID of the previous transaction being referenced.
-	TransactionID string `json:"transactionId"`
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
 
 	// OnlineAuthCode is used to validate online gift card authorizations.
 	OnlineAuthCode string `json:"onlineAuthCode,omitempty"`
@@ -649,9 +649,6 @@ type RefundRequest struct {
 	// Timeout is the request timeout in milliseconds.
 	Timeout int `json:"timeout"`
 
-	// TerminalName is the name of the target payment terminal.
-	TerminalName string `json:"terminalName,omitempty"`
-
 	// Token is the payment token to be used for this transaction. This should be
 	// used for recurring transactions.
 	Token string `json:"token,omitempty"`
@@ -706,6 +703,9 @@ type RefundRequest struct {
 	// PaymentType designates brands of payment methods: Visa, Discover, etc.
 	PaymentType string `json:"paymentType,omitempty"`
 
+	// TransactionID is the ID of the previous transaction being referenced.
+	TransactionID string `json:"transactionId"`
+
 	// CurrencyCode indicates the transaction currency code.
 	CurrencyCode string `json:"currencyCode"`
 
@@ -715,6 +715,18 @@ type RefundRequest struct {
 	// TaxExempt indicates that the request is tax exempt. Only required for tax
 	// exempt level 2 processing.
 	TaxExempt bool `json:"taxExempt"`
+
+	// SigFile is a location on the filesystem which a customer signature should
+	// be written to.
+	SigFile string `json:"sigFile,omitempty"`
+
+	// SigFormat specifies the image format to be used for returning signatures.
+	SigFormat SignatureFormat `json:"sigFormat,omitempty"`
+
+	// SigWidth is the width that the signature image should be scaled to,
+	// preserving the aspect ratio. If not provided, the signature is returned in
+	// the terminal's max resolution.
+	SigWidth int `json:"sigWidth,omitempty"`
 
 	// TipAmount is the tip amount.
 	TipAmount string `json:"tipAmount,omitempty"`
@@ -740,20 +752,8 @@ type RefundRequest struct {
 	// to an EBT card.
 	EBTEligibleAmount string `json:"ebtEligibleAmount,omitempty"`
 
-	// SigFile is a location on the filesystem which a customer signature should
-	// be written to.
-	SigFile string `json:"sigFile,omitempty"`
-
-	// SigFormat specifies the image format to be used for returning signatures.
-	SigFormat SignatureFormat `json:"sigFormat,omitempty"`
-
-	// SigWidth is the width that the signature image should be scaled to,
-	// preserving the aspect ratio. If not provided, the signature is returned in
-	// the terminal's max resolution.
-	SigWidth int `json:"sigWidth,omitempty"`
-
-	// TransactionID is the ID of the previous transaction being referenced.
-	TransactionID string `json:"transactionId"`
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
 }
 
 // CaptureRequest contains the information needed to capture a preauth.
@@ -776,6 +776,9 @@ type CaptureRequest struct {
 	// Timeout is the request timeout in milliseconds.
 	Timeout int `json:"timeout"`
 
+	// TransactionID is the ID of the previous transaction being referenced.
+	TransactionID string `json:"transactionId"`
+
 	// CurrencyCode indicates the transaction currency code.
 	CurrencyCode string `json:"currencyCode"`
 
@@ -809,9 +812,6 @@ type CaptureRequest struct {
 	// EBTEligibleAmount is the amount of the transaction that should be charged
 	// to an EBT card.
 	EBTEligibleAmount string `json:"ebtEligibleAmount,omitempty"`
-
-	// TransactionID is the ID of the previous transaction being referenced.
-	TransactionID string `json:"transactionId"`
 }
 
 // CaptureResponse contains the response to a capture request.
@@ -825,6 +825,12 @@ type CaptureResponse struct {
 	// ResponseDescription contains a narrative description of the transaction
 	// result.
 	ResponseDescription string `json:"responseDescription"`
+
+	// Approved indicates that the transaction was approved.
+	Approved bool `json:"approved"`
+
+	// AuthCode is the auth code from the payment network.
+	AuthCode string `json:"authCode,omitempty"`
 
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
@@ -852,42 +858,6 @@ type CaptureResponse struct {
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
 	Sig string `json:"sig,omitempty"`
-
-	// Approved indicates that the transaction was approved.
-	Approved bool `json:"approved"`
-
-	// AuthCode is the auth code from the payment network.
-	AuthCode string `json:"authCode,omitempty"`
-
-	// SigFile contains the hex encoded signature data.
-	SigFile string `json:"sigFile"`
-
-	// Token is the payment token, if the payment was enrolled in the vault.
-	Token string `json:"token,omitempty"`
-
-	// EntryMethod is the entry method for the transaction (CHIP, MSR, KEYED,
-	// etc).
-	EntryMethod string `json:"entryMethod,omitempty"`
-
-	// PaymentType is the card brand (VISA, MC, AMEX, etc).
-	PaymentType string `json:"paymentType,omitempty"`
-
-	// MaskedPAN is the masked primary account number.
-	MaskedPAN string `json:"maskedPan,omitempty"`
-
-	// PublicKey is the BlockChyp public key if the user presented a BlockChyp
-	// payment card.
-	PublicKey string `json:"publicKey,omitempty"`
-
-	// ScopeAlert indicates that the transaction did something that would put the
-	// system in PCI scope.
-	ScopeAlert bool `json:"ScopeAlert,omitempty"`
-
-	// CardHolder is the cardholder name.
-	CardHolder string `json:"cardHolder,omitempty"`
-
-	// ReceiptSuggestions contains suggested receipt fields.
-	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
 	// PartialAuth indicates whether or not the transaction was approved for a
 	// partial amount.
@@ -925,6 +895,33 @@ type CaptureResponse struct {
 	// AuthorizedCashBackAmount is the amount of cash back authorized by the
 	// gateway. This amount will be the entire amount requested, or zero.
 	AuthorizedCashBackAmount string `json:"authorizedCashBackAmount"`
+
+	// Token is the payment token, if the payment was enrolled in the vault.
+	Token string `json:"token,omitempty"`
+
+	// EntryMethod is the entry method for the transaction (CHIP, MSR, KEYED,
+	// etc).
+	EntryMethod string `json:"entryMethod,omitempty"`
+
+	// PaymentType is the card brand (VISA, MC, AMEX, etc).
+	PaymentType string `json:"paymentType,omitempty"`
+
+	// MaskedPAN is the masked primary account number.
+	MaskedPAN string `json:"maskedPan,omitempty"`
+
+	// PublicKey is the BlockChyp public key if the user presented a BlockChyp
+	// payment card.
+	PublicKey string `json:"publicKey,omitempty"`
+
+	// ScopeAlert indicates that the transaction did something that would put the
+	// system in PCI scope.
+	ScopeAlert bool `json:"ScopeAlert,omitempty"`
+
+	// CardHolder is the cardholder name.
+	CardHolder string `json:"cardHolder,omitempty"`
+
+	// ReceiptSuggestions contains suggested receipt fields.
+	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 }
 
 // VoidRequest contains a void request.
@@ -963,6 +960,12 @@ type VoidResponse struct {
 	// result.
 	ResponseDescription string `json:"responseDescription"`
 
+	// Approved indicates that the transaction was approved.
+	Approved bool `json:"approved"`
+
+	// AuthCode is the auth code from the payment network.
+	AuthCode string `json:"authCode,omitempty"`
+
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
 
@@ -990,15 +993,6 @@ type VoidResponse struct {
 	// was signed by the terminal and detect man-in-the middle attacks.
 	Sig string `json:"sig,omitempty"`
 
-	// Approved indicates that the transaction was approved.
-	Approved bool `json:"approved"`
-
-	// AuthCode is the auth code from the payment network.
-	AuthCode string `json:"authCode,omitempty"`
-
-	// SigFile contains the hex encoded signature data.
-	SigFile string `json:"sigFile"`
-
 	// Token is the payment token, if the payment was enrolled in the vault.
 	Token string `json:"token,omitempty"`
 
@@ -1025,6 +1019,9 @@ type VoidResponse struct {
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
+
+	// SigFile contains the hex encoded signature data.
+	SigFile string `json:"sigFile,omitempty"`
 }
 
 // EnrollRequest contains the information needed to enroll a new payment
@@ -1047,9 +1044,6 @@ type EnrollRequest struct {
 
 	// Timeout is the request timeout in milliseconds.
 	Timeout int `json:"timeout"`
-
-	// TerminalName is the name of the target payment terminal.
-	TerminalName string `json:"terminalName,omitempty"`
 
 	// Token is the payment token to be used for this transaction. This should be
 	// used for recurring transactions.
@@ -1104,6 +1098,9 @@ type EnrollRequest struct {
 
 	// PaymentType designates brands of payment methods: Visa, Discover, etc.
 	PaymentType string `json:"paymentType,omitempty"`
+
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
 }
 
 // EnrollResponse contains the response to an enroll request.
@@ -1117,6 +1114,12 @@ type EnrollResponse struct {
 	// ResponseDescription contains a narrative description of the transaction
 	// result.
 	ResponseDescription string `json:"responseDescription"`
+
+	// Approved indicates that the transaction was approved.
+	Approved bool `json:"approved"`
+
+	// AuthCode is the auth code from the payment network.
+	AuthCode string `json:"authCode,omitempty"`
 
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
@@ -1172,14 +1175,8 @@ type EnrollResponse struct {
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
-	// Approved indicates that the transaction was approved.
-	Approved bool `json:"approved"`
-
-	// AuthCode is the auth code from the payment network.
-	AuthCode string `json:"authCode,omitempty"`
-
 	// SigFile contains the hex encoded signature data.
-	SigFile string `json:"sigFile"`
+	SigFile string `json:"sigFile,omitempty"`
 }
 
 // ClearTerminalRequest contains the information needed to enroll a new
@@ -1394,9 +1391,6 @@ type TermsAndConditionsRequest struct {
 	// Timeout is the request timeout in milliseconds.
 	Timeout int `json:"timeout"`
 
-	// TerminalName is the name of the target payment terminal.
-	TerminalName string `json:"terminalName,omitempty"`
-
 	// TransactionID is the ID of the previous transaction being referenced.
 	TransactionID string `json:"transactionId"`
 
@@ -1411,6 +1405,9 @@ type TermsAndConditionsRequest struct {
 	// preserving the aspect ratio. If not provided, the signature is returned in
 	// the terminal's max resolution.
 	SigWidth int `json:"sigWidth,omitempty"`
+
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
 
 	// TCAlias is an alias for a Terms and Conditions template configured in the
 	// BlockChyp dashboard.
@@ -1484,6 +1481,12 @@ type AuthorizationResponse struct {
 	// result.
 	ResponseDescription string `json:"responseDescription"`
 
+	// Approved indicates that the transaction was approved.
+	Approved bool `json:"approved"`
+
+	// AuthCode is the auth code from the payment network.
+	AuthCode string `json:"authCode,omitempty"`
+
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
 
@@ -1510,42 +1513,6 @@ type AuthorizationResponse struct {
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
 	Sig string `json:"sig,omitempty"`
-
-	// Approved indicates that the transaction was approved.
-	Approved bool `json:"approved"`
-
-	// AuthCode is the auth code from the payment network.
-	AuthCode string `json:"authCode,omitempty"`
-
-	// SigFile contains the hex encoded signature data.
-	SigFile string `json:"sigFile"`
-
-	// Token is the payment token, if the payment was enrolled in the vault.
-	Token string `json:"token,omitempty"`
-
-	// EntryMethod is the entry method for the transaction (CHIP, MSR, KEYED,
-	// etc).
-	EntryMethod string `json:"entryMethod,omitempty"`
-
-	// PaymentType is the card brand (VISA, MC, AMEX, etc).
-	PaymentType string `json:"paymentType,omitempty"`
-
-	// MaskedPAN is the masked primary account number.
-	MaskedPAN string `json:"maskedPan,omitempty"`
-
-	// PublicKey is the BlockChyp public key if the user presented a BlockChyp
-	// payment card.
-	PublicKey string `json:"publicKey,omitempty"`
-
-	// ScopeAlert indicates that the transaction did something that would put the
-	// system in PCI scope.
-	ScopeAlert bool `json:"ScopeAlert,omitempty"`
-
-	// CardHolder is the cardholder name.
-	CardHolder string `json:"cardHolder,omitempty"`
-
-	// ReceiptSuggestions contains suggested receipt fields.
-	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
 	// PartialAuth indicates whether or not the transaction was approved for a
 	// partial amount.
@@ -1583,6 +1550,36 @@ type AuthorizationResponse struct {
 	// AuthorizedCashBackAmount is the amount of cash back authorized by the
 	// gateway. This amount will be the entire amount requested, or zero.
 	AuthorizedCashBackAmount string `json:"authorizedCashBackAmount"`
+
+	// Token is the payment token, if the payment was enrolled in the vault.
+	Token string `json:"token,omitempty"`
+
+	// EntryMethod is the entry method for the transaction (CHIP, MSR, KEYED,
+	// etc).
+	EntryMethod string `json:"entryMethod,omitempty"`
+
+	// PaymentType is the card brand (VISA, MC, AMEX, etc).
+	PaymentType string `json:"paymentType,omitempty"`
+
+	// MaskedPAN is the masked primary account number.
+	MaskedPAN string `json:"maskedPan,omitempty"`
+
+	// PublicKey is the BlockChyp public key if the user presented a BlockChyp
+	// payment card.
+	PublicKey string `json:"publicKey,omitempty"`
+
+	// ScopeAlert indicates that the transaction did something that would put the
+	// system in PCI scope.
+	ScopeAlert bool `json:"ScopeAlert,omitempty"`
+
+	// CardHolder is the cardholder name.
+	CardHolder string `json:"cardHolder,omitempty"`
+
+	// ReceiptSuggestions contains suggested receipt fields.
+	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
+
+	// SigFile contains the hex encoded signature data.
+	SigFile string `json:"sigFile,omitempty"`
 
 	// WhiteListedCard contains card BIN ranges can be whitelisted so that they
 	// are read instead of being processed directly. This is useful for
