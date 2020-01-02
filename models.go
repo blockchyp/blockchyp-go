@@ -331,8 +331,8 @@ type WhiteListedCard struct {
 	PAN string `json:"pan"`
 }
 
-// AuthorizationRequest contains auth requests for charge, preauth, and
-// reverse transaction types.
+// AuthorizationRequest contains an authorization request for a charge,
+// preauth, or reverse transaction.
 type AuthorizationRequest struct {
 	// TransactionRef is the transaction reference string assigned to the
 	// transaction request. If no transaction ref was assiged on the request,
@@ -480,7 +480,8 @@ type AuthorizationRequest struct {
 	AltPrices map[string]string `json:"altPrices,omitempty"`
 }
 
-// BalanceRequest contains balance requests.
+// BalanceRequest contains a request for the remaining balance on a payment
+// type.
 type BalanceRequest struct {
 	// TransactionRef is the transaction reference string assigned to the
 	// transaction request. If no transaction ref was assiged on the request,
@@ -628,7 +629,7 @@ type BalanceResponse struct {
 	RemainingBalance string `json:"remainingBalance,omitempty"`
 }
 
-// RefundRequest contains refund requests.
+// RefundRequest contains a refund request.
 type RefundRequest struct {
 	// TransactionRef is the transaction reference string assigned to the
 	// transaction request. If no transaction ref was assiged on the request,
@@ -1372,8 +1373,8 @@ type CloseBatchResponse struct {
 	CardBrands map[string]string `json:"cardBrands"`
 }
 
-// TermsAndConditionsRequest contains the fields needed for custom T&C
-// prompts.
+// TermsAndConditionsRequest contains the fields needed for custom Terms and
+// Conditions prompts.
 type TermsAndConditionsRequest struct {
 	// TransactionRef is the transaction reference string assigned to the
 	// transaction request. If no transaction ref was assiged on the request,
@@ -1411,10 +1412,12 @@ type TermsAndConditionsRequest struct {
 	// the terminal's max resolution.
 	SigWidth int `json:"sigWidth,omitempty"`
 
-	// TCAlias is a reference to a T&C assembled in the dashboard.
+	// TCAlias is an alias for a Terms and Conditions template configured in the
+	// BlockChyp dashboard.
 	TCAlias string `json:"tcAlias"`
 
-	// TCName contains the name of the T&Cs the user is accepting.
+	// TCName contains the name of the Terms and Conditions the user is
+	// accepting.
 	TCName string `json:"tcName"`
 
 	// TCContent is the content of the terms and conditions that will be
@@ -1425,7 +1428,8 @@ type TermsAndConditionsRequest struct {
 	SigRequired bool `json:"sigRequired"`
 }
 
-// TermsAndConditionsResponse contains a T&C signature capture response.
+// TermsAndConditionsResponse contains a signature capture response for Terms
+// and Conditions.
 type TermsAndConditionsResponse struct {
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
@@ -1468,7 +1472,7 @@ type TermsAndConditionsResponse struct {
 	SigFile string `json:"sigFile,omitempty"`
 }
 
-// AuthorizationResponse contains the response to authorization requests.
+// AuthorizationResponse contains the response to an authorization request.
 type AuthorizationResponse struct {
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
@@ -1728,20 +1732,21 @@ type TerminalTextPromptRequest struct {
 	Request TextPromptRequest `json:"request"`
 }
 
-// TerminalAuthorizationRequest contains auth requests for charge, preauth,
-// and reverse transaction types.
+// TerminalAuthorizationRequest contains an authorization request for a
+// charge, preauth, or reverse transaction.
 type TerminalAuthorizationRequest struct {
 	APICredentials
 	Request AuthorizationRequest `json:"request"`
 }
 
-// TerminalBalanceRequest contains balance requests.
+// TerminalBalanceRequest contains a request for the remaining balance on a
+// payment type.
 type TerminalBalanceRequest struct {
 	APICredentials
 	Request BalanceRequest `json:"request"`
 }
 
-// TerminalRefundRequest contains refund requests.
+// TerminalRefundRequest contains a refund request.
 type TerminalRefundRequest struct {
 	APICredentials
 	Request RefundRequest `json:"request"`
@@ -1768,15 +1773,15 @@ type TerminalGiftActivateRequest struct {
 	Request GiftActivateRequest `json:"request"`
 }
 
-// TerminalTermsAndConditionsRequest contains the fields needed for custom T&C
-// prompts.
+// TerminalTermsAndConditionsRequest contains the fields needed for custom
+// Terms and Conditions prompts.
 type TerminalTermsAndConditionsRequest struct {
 	APICredentials
 	Request TermsAndConditionsRequest `json:"request"`
 }
 
-// TerminalTermsAndConditionsResponse contains a T&C signature capture
-// response.
+// TerminalTermsAndConditionsResponse contains a signature capture response
+// for Terms and Conditions.
 type TerminalTermsAndConditionsResponse struct {
 	APICredentials
 	Request TermsAndConditionsResponse `json:"request"`
