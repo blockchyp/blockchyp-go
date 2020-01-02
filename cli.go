@@ -15,8 +15,8 @@ type ConfigSettings struct {
 	APIKey          string `json:"apiKey"`
 	BearerToken     string `json:"bearerToken"`
 	SigningKey      string `json:"signingKey"`
-	GatewayHost     string `json:"gateway"`
-	TestGatewayHost string `json:"testGateway"`
+	GatewayHost     string `json:"gatewayHost"`
+	TestGatewayHost string `json:"testGatewayHost"`
 	Secure          bool   `json:"https"`
 	RouteCacheTTL   int    `json:"routeCacheTTL"`
 	GatewayTimeout  int    `json:"gatewayTimeout"`
