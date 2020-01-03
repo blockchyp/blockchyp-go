@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/user"
 	"path/filepath"
 	"reflect"
 	"runtime"
@@ -53,11 +52,7 @@ func loadTestConfiguration(t *testing.T) *TestConfiguration {
 	} else {
 		configHome = os.Getenv("XDG_CONFIG_HOME")
 		if configHome == "" {
-			user, err := user.Current()
-			if err != nil {
-				assert.NoError(err)
-			}
-			configHome = user.HomeDir + "/.config"
+			configHome = filepath.Join(os.Getenv("HOME"), ".config")
 		}
 	}
 
