@@ -6,7 +6,6 @@ RELEASE := $(or $(BUILD_NUMBER), 1)
 VERSION := $(or $(TAG:v%=%),$(LASTTAG:v%=%))-$(or $(BUILD_NUMBER), 1)$(if $(TAG),,.$(SNAPINFO))
 
 # Build config
-MODSUPPORT := GO111MODULE=on # TODO: Remove this when on is default
 TESTFLAGS := -v -race
 TESTENV :=
 BUILDDIR := build
@@ -25,13 +24,28 @@ LDFLAGS += -X github.com/blockchyp/blockchyp-go.Version=$(VERSION)
 BUILDFLAGS = -v -trimpath -ldflags "$(LDFLAGS)"
 
 # Executables
-GO := $(MODSUPPORT) go
-GOJUNITREPORT := $(GO) run github.com/jstemmer/go-junit-report
+DOCKER = docker
+GO = go
+GOJUNITREPORT = $(GO) run github.com/jstemmer/go-junit-report
 GOLINT := $(GO) run golang.org/x/lint/golint
 GOVERSIONINFO := $(GO) run github.com/josephspurrier/goversioninfo/cmd/goversioninfo
-REVIVE := $(MODSUPPORT) $(GO) run github.com/mgechev/revive
-ZIP := zip
+REVIVE := $(GO) run github.com/mgechev/revive
 TAR := tar
+ZIP := zip
+
+# Integration test config
+export BC_TEST_DELAY := 5
+IMAGE := golang:1.13-buster
+SCMROOT := $(shell git rev-parse --show-toplevel)
+PWD := $(shell pwd)
+CACHE := $(HOME)/.local/share/blockchyp/itest-cache
+CONFIGFILE := $(HOME)/.config/blockchyp/sdk-itest-config.json
+CACHEPATHS := $(dir $(CONFIGFILE)) $(HOME)/.cache $(HOME)/go
+ifeq ($(shell uname -s), Linux)
+HOSTIP = $(shell ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
+else
+HOSTIP = host.docker.internal
+endif
 
 # Default target
 .PHONY: all
@@ -52,7 +66,20 @@ test:
 # Runs integration tests
 .PHONY: integration
 integration:
-	$(MAKE) test BC_TEST_DELAY=5 BUILDTAGS="integration $(BUILDTAGS)"
+	$(if $(LOCALBUILD),, \
+		$(foreach path,$(CACHEPATHS),mkdir -p $(CACHE)/$(path) ; ) \
+		sed 's/localhost/$(HOSTIP)/' $(CONFIGFILE) >$(CACHE)/$(CONFIGFILE) ; \
+		$(DOCKER) run \
+		-u $(shell id -u):$(shell id -g) \
+		-v $(SCMROOT):$(SCMROOT):Z \
+		-v /etc/passwd:/etc/passwd:ro \
+		$(foreach path,$(CACHEPATHS),-v $(CACHE)/$(path):$(path):Z) \
+		-e BC_TEST_DELAY=$(BC_TEST_DELAY) \
+		-e HOME=$(HOME) \
+		-e GOPATH=$(HOME)/go \
+		-w $(PWD) \
+		--rm -it $(IMAGE)) \
+	$(GO) test $(TESTFLAGS) $(if $(TEST), -run=$(TEST),) -tags=integration $(PKGS)
 
 # Publish is NOOP
 .PHONY: publish
