@@ -489,6 +489,43 @@ public key.
 }
 ```
 
+
+### Balance Checks
+
+This transaction type is used to check the remaining balance for payment
+types for which a remaining balance is relevant, like gift cards and ebt.
+
+This first example shows the process for a gift card balance check:
+
+```
+./blockchyp -type=balance -terminal="Test Terminal"
+{
+  "success": true,
+  "responseDescription": "Approved",
+  "transactionId": "EJJL6PBOJUI6VIGYNSLM7WZLHE",
+  "transactionType": "balance",
+  "tickBlock": "009991a8ac7b6a4420760e1e14e1689c88be2a610a033d6908c1b04b5c00f9da",
+  "test": false,
+  "remainingBalance": "100.00"
+}
+```
+
+For EBT balance checks, append the `-ebt` argument to the command as shown below:
+
+```
+./blockchyp -type=balance -terminal="Test Terminal" -ebt
+{
+  "success": true,
+  "responseDescription": "Approved",
+  "transactionId": "EJJL6RROJUI6VIGYNSLM7WZLHE",
+  "transactionType": "balance",
+  "tickBlock": "009991a8ac7b6a4420760e1e14e1689c88be2a610a033d6908c1b04b5c00f9da",
+  "test": false,
+  "remainingBalance": "100.00"
+}
+```
+
+
 ### Close Batch
 
 This transaction will close and submit the current batch for settlement.
