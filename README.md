@@ -108,6 +108,7 @@ You can also view a number of long form demos and learn more about us on our [Yo
 
 You don't want to read words. You want examples. Here's a quick rundown of the
 stuff you can do with the BlockChyp Go SDK and a few basic examples.
+
 #### Charge
 
 Executes a standard direct preauth and capture.
@@ -156,6 +157,7 @@ func chargeExample() {
 }
 
 ```
+
 #### Preauthorization
 
 Executes a preauthorization intended to be captured later.
@@ -204,6 +206,7 @@ func preauthExample() {
 }
 
 ```
+
 #### Terminal Ping
 
 Tests connectivity with a payment terminal.
@@ -248,6 +251,7 @@ func pingExample() {
 }
 
 ```
+
 #### Balance
 
 Checks the remaining balance on a payment method.
@@ -294,6 +298,7 @@ func balanceExample() {
 }
 
 ```
+
 #### Terminal Clear
 
 Clears the line item display and any in progress transaction.
@@ -339,6 +344,7 @@ func clearExample() {
 }
 
 ```
+
 #### Terms & Conditions Capture
 
 Prompts the user to accept terms and conditions.
@@ -392,6 +398,7 @@ func termsAndConditionsExample() {
 }
 
 ```
+
 #### Update Transaction Display
 
 Appends items to an existing transaction display Subtotal, Tax, and Total are
@@ -458,6 +465,7 @@ func updateTransactionDisplayExample() {
 }
 
 ```
+
 #### New Transaction Display
 
 Displays a new transaction on the terminal.
@@ -522,6 +530,7 @@ func newTransactionDisplayExample() {
 }
 
 ```
+
 #### Text Prompt
 
 Asks the consumer text based question.
@@ -569,6 +578,7 @@ func textPromptExample() {
 }
 
 ```
+
 #### Boolean Prompt
 
 Asks the consumer a yes/no question.
@@ -618,6 +628,7 @@ func booleanPromptExample() {
 }
 
 ```
+
 #### Display Message
 
 Displays a short message on the terminal.
@@ -664,6 +675,7 @@ func messageExample() {
 }
 
 ```
+
 #### Refund
 
 Executes a refund.
@@ -710,6 +722,7 @@ func refundExample() {
 }
 
 ```
+
 #### Enroll
 
 Adds a new payment method to the token vault.
@@ -756,6 +769,7 @@ func enrollExample() {
 }
 
 ```
+
 #### Gift Card Activation
 
 Activates or recharges a gift card.
@@ -805,6 +819,7 @@ func giftActivateExample() {
 }
 
 ```
+
 #### Time Out Reversal
 
 Executes a manual time out reversal.
@@ -858,6 +873,7 @@ func reverseExample() {
 }
 
 ```
+
 #### Capture Preauthorization
 
 Captures a preauthorization.
@@ -903,6 +919,7 @@ func captureExample() {
 }
 
 ```
+
 #### Close Batch
 
 Closes the current credit card batch.
@@ -949,6 +966,7 @@ func closeBatchExample() {
 }
 
 ```
+
 #### Void Transaction
 
 Discards a previous preauth transaction.
@@ -994,6 +1012,7 @@ func voidExample() {
 }
 
 ```
+
 ## Running Integration Tests
 
 If you'd like to run the integration tests, create a new file on your system
