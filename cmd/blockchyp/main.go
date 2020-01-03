@@ -310,10 +310,10 @@ func processTermsAndConditions(client *blockchyp.Client, args blockchyp.CommandL
 	request.TransactionID = args.TransactionID
 	request.TransactionRef = args.TransactionRef
 	request.SigRequired = args.SigRequired
-	request.SigFormat = args.SigFormat
+	request.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
 	request.SigWidth = args.SigWidth
 
-	ack, err := client.TC(request)
+	ack, err := client.TermsAndConditions(request)
 	if err != nil {
 		handleError(&args, err)
 	}
@@ -429,7 +429,7 @@ func processTextPrompt(client *blockchyp.Client, args blockchyp.CommandLineArgum
 	validateRequired(args.TerminalName, "terminal")
 
 	req := blockchyp.TextPromptRequest{}
-	req.PromptType = args.PromptType
+	req.PromptType = blockchyp.PromptType(args.PromptType)
 	req.TerminalName = args.TerminalName
 	req.Test = args.Test
 
@@ -458,7 +458,7 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req.Test = args.Test
 	req.ManualEntry = args.ManualEntry
 	req.SigWidth = args.SigWidth
-	req.SigFormat = args.SigFormat
+	req.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
 
 	res, err := client.Refund(req)
 
@@ -597,7 +597,7 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	req.Enroll = args.Enroll
 	req.ManualEntry = args.ManualEntry
 	req.SigWidth = args.SigWidth
-	req.SigFormat = args.SigFormat
+	req.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
 	req.CashBackEnabled = args.CashBackEnabled
 	if args.EBT {
 		req.CardType = blockchyp.CardTypeEBT
