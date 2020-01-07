@@ -81,7 +81,11 @@ integration:
 		--rm -it $(IMAGE)) \
 	$(GO) test $(TESTFLAGS) $(if $(TEST), -run=$(TEST),) -tags=integration $(PKGS)
 
-# Publish is NOOP
+# Performs any tasks necessary before a release build
+.PHONY: stage
+stage:
+
+# Pushes build archives to github tag
 .PHONY: publish
 publish:
 	ghr \
