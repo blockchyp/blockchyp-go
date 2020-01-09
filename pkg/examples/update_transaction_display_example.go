@@ -51,7 +51,7 @@ func updateTransactionDisplayExample() {
 
 	//process the result
 	if response.Success {
-		fmt.Println("Succeded")
+		fmt.Println("Success")
 	}
 
 }
