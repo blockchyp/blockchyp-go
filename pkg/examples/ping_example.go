@@ -20,8 +20,9 @@ func pingExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.PingRequest{}
-	request.TerminalName = "Test Terminal"
+	request := blockchyp.PingRequest{
+		TerminalName: "Test Terminal",
+	}
 
 	response, err := client.Ping(request)
 

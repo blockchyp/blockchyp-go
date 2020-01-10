@@ -20,10 +20,11 @@ func giftActivateExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.GiftActivateRequest{}
-	request.Test = true
-	request.TerminalName = "Test Terminal"
-	request.Amount = "50.00"
+	request := blockchyp.GiftActivateRequest{
+		Test:         true,
+		TerminalName: "Test Terminal",
+		Amount:       "50.00",
+	}
 
 	response, err := client.GiftActivate(request)
 

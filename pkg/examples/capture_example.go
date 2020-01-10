@@ -20,9 +20,10 @@ func captureExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.CaptureRequest{}
-	request.Test = true
-	request.TransactionID = "<PREAUTH TRANSACTION ID>"
+	request := blockchyp.CaptureRequest{
+		Test:          true,
+		TransactionID: "<PREAUTH TRANSACTION ID>",
+	}
 
 	response, err := client.Capture(request)
 

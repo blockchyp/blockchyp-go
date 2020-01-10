@@ -20,10 +20,11 @@ func messageExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.MessageRequest{}
-	request.Test = true
-	request.TerminalName = "Test Terminal"
-	request.Message = "Thank you for your business."
+	request := blockchyp.MessageRequest{
+		Test:         true,
+		TerminalName: "Test Terminal",
+		Message:      "Thank you for your business.",
+	}
 
 	response, err := client.Message(request)
 

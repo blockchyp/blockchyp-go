@@ -150,7 +150,7 @@ type PingRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
@@ -214,7 +214,7 @@ type MessageRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
@@ -241,7 +241,7 @@ type BooleanPromptRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
@@ -274,7 +274,7 @@ type TextPromptRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
@@ -349,7 +349,7 @@ type AuthorizationRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// Token is the payment token to be used for this transaction. This should be
@@ -498,7 +498,7 @@ type BalanceRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// Token is the payment token to be used for this transaction. This should be
@@ -646,7 +646,7 @@ type RefundRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// Token is the payment token to be used for this transaction. This should be
@@ -773,7 +773,7 @@ type CaptureRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// TransactionID is the ID of the previous transaction being referenced.
@@ -941,7 +941,7 @@ type VoidRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// TransactionID is the ID of the previous transaction being referenced.
@@ -1042,7 +1042,7 @@ type EnrollRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// Token is the payment token to be used for this transaction. This should be
@@ -1197,7 +1197,7 @@ type ClearTerminalRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
@@ -1222,7 +1222,7 @@ type GiftActivateRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// CurrencyCode indicates the transaction currency code.
@@ -1312,7 +1312,7 @@ type CloseBatchRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 }
 
@@ -1388,7 +1388,7 @@ type TermsAndConditionsRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// TransactionID is the ID of the previous transaction being referenced.
@@ -1663,7 +1663,7 @@ type TransactionDisplayRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Timeout is the request timeout in milliseconds.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.

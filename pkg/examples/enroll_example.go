@@ -20,9 +20,10 @@ func enrollExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.EnrollRequest{}
-	request.Test = true
-	request.TerminalName = "Test Terminal"
+	request := blockchyp.EnrollRequest{
+		Test:         true,
+		TerminalName: "Test Terminal",
+	}
 
 	response, err := client.Enroll(request)
 

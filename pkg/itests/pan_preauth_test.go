@@ -20,7 +20,6 @@ import (
 )
 
 func TestPANPreauth(t *testing.T) {
-
 	assert := assert.New(t)
 
 	client := newTestClient(t)
@@ -28,23 +27,27 @@ func TestPANPreauth(t *testing.T) {
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
 		testDelayInt, err := strconv.Atoi(testDelay)
-		assert.NoError(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestPANPreauth in %v seconds...", testDelay),
 		}
-		messageResponse, err := client.Message(messageRequest)
-		assert.NoError(err)
-		assert.True(true, messageResponse.Success)
+		if _, err := client.Message(messageRequest); err != nil {
+			t.Fatal(err)
+		}
 		time.Sleep(time.Duration(testDelayInt) * time.Second)
 	}
 
 	// setup request object
-	request := blockchyp.AuthorizationRequest{}
-	request.PAN = "4111111111111111"
-	request.Amount = "25.55"
-	request.Test = true
+	request := blockchyp.AuthorizationRequest{
+		PAN:    "4111111111111111",
+		Amount: "25.55",
+		Test:   true,
+	}
+
 	logRequest(request)
 
 	response, err := client.Preauth(request)

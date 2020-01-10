@@ -20,10 +20,11 @@ func preauthExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.AuthorizationRequest{}
-	request.Test = true
-	request.TerminalName = "Test Terminal"
-	request.Amount = "27.00"
+	request := blockchyp.AuthorizationRequest{
+		Test:         true,
+		TerminalName: "Test Terminal",
+		Amount:       "27.00",
+	}
 
 	response, err := client.Preauth(request)
 

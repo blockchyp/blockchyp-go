@@ -20,12 +20,13 @@ func booleanPromptExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.BooleanPromptRequest{}
-	request.Test = true
-	request.TerminalName = "Test Terminal"
-	request.Prompt = "Would you like to become a member?"
-	request.YesCaption = "Yes"
-	request.NoCaption = "No"
+	request := blockchyp.BooleanPromptRequest{
+		Test:         true,
+		TerminalName: "Test Terminal",
+		Prompt:       "Would you like to become a member?",
+		YesCaption:   "Yes",
+		NoCaption:    "No",
+	}
 
 	response, err := client.BooleanPrompt(request)
 

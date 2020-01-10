@@ -20,8 +20,9 @@ func closeBatchExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.CloseBatchRequest{}
-	request.Test = true
+	request := blockchyp.CloseBatchRequest{
+		Test: true,
+	}
 
 	response, err := client.CloseBatch(request)
 

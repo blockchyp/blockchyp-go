@@ -20,7 +20,6 @@ import (
 )
 
 func TestTerminalKeyedCharge(t *testing.T) {
-
 	assert := assert.New(t)
 
 	client := newTestClient(t)
@@ -28,24 +27,28 @@ func TestTerminalKeyedCharge(t *testing.T) {
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
 		testDelayInt, err := strconv.Atoi(testDelay)
-		assert.NoError(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestTerminalKeyedCharge in %v seconds...", testDelay),
 		}
-		messageResponse, err := client.Message(messageRequest)
-		assert.NoError(err)
-		assert.True(true, messageResponse.Success)
+		if _, err := client.Message(messageRequest); err != nil {
+			t.Fatal(err)
+		}
 		time.Sleep(time.Duration(testDelayInt) * time.Second)
 	}
 
 	// setup request object
-	request := blockchyp.AuthorizationRequest{}
-	request.TerminalName = "Test Terminal"
-	request.Amount = "11.11"
-	request.ManualEntry = true
-	request.Test = true
+	request := blockchyp.AuthorizationRequest{
+		TerminalName: "Test Terminal",
+		Amount:       "11.11",
+		ManualEntry:  true,
+		Test:         true,
+	}
+
 	logRequest(request)
 
 	response, err := client.Charge(request)

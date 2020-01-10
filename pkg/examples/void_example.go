@@ -20,9 +20,10 @@ func voidExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.VoidRequest{}
-	request.Test = true
-	request.TransactionID = "<PREVIOUS TRANSACTION ID>"
+	request := blockchyp.VoidRequest{
+		Test:          true,
+		TransactionID: "<PREVIOUS TRANSACTION ID>",
+	}
 
 	response, err := client.Void(request)
 

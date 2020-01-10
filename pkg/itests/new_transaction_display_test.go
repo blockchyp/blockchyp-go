@@ -20,7 +20,6 @@ import (
 )
 
 func TestNewTransactionDisplay(t *testing.T) {
-
 	assert := assert.New(t)
 
 	client := newTestClient(t)
@@ -28,41 +27,45 @@ func TestNewTransactionDisplay(t *testing.T) {
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
 		testDelayInt, err := strconv.Atoi(testDelay)
-		assert.NoError(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestNewTransactionDisplay in %v seconds...", testDelay),
 		}
-		messageResponse, err := client.Message(messageRequest)
-		assert.NoError(err)
-		assert.True(true, messageResponse.Success)
+		if _, err := client.Message(messageRequest); err != nil {
+			t.Fatal(err)
+		}
 		time.Sleep(time.Duration(testDelayInt) * time.Second)
 	}
 
 	// setup request object
-	request := blockchyp.TransactionDisplayRequest{}
-	request.Test = true
-	request.TerminalName = "Test Terminal"
-	request.Transaction = &blockchyp.TransactionDisplayTransaction{
-		Subtotal: "35.00",
-		Tax:      "5.00",
-		Total:    "70.00",
-		Items: []*blockchyp.TransactionDisplayItem{
-			&blockchyp.TransactionDisplayItem{
-				Description: "Leki Trekking Poles",
-				Price:       "35.00",
-				Quantity:    2,
-				Extended:    "70.00",
-				Discounts: []*blockchyp.TransactionDisplayDiscount{
-					&blockchyp.TransactionDisplayDiscount{
-						Description: "memberDiscount",
-						Amount:      "10.00",
+	request := blockchyp.TransactionDisplayRequest{
+		Test:         true,
+		TerminalName: "Test Terminal",
+		Transaction: &blockchyp.TransactionDisplayTransaction{
+			Subtotal: "35.00",
+			Tax:      "5.00",
+			Total:    "70.00",
+			Items: []*blockchyp.TransactionDisplayItem{
+				&blockchyp.TransactionDisplayItem{
+					Description: "Leki Trekking Poles",
+					Price:       "35.00",
+					Quantity:    2,
+					Extended:    "70.00",
+					Discounts: []*blockchyp.TransactionDisplayDiscount{
+						&blockchyp.TransactionDisplayDiscount{
+							Description: "memberDiscount",
+							Amount:      "10.00",
+						},
 					},
 				},
 			},
 		},
 	}
+
 	logRequest(request)
 
 	response, err := client.NewTransactionDisplay(request)

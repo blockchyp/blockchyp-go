@@ -168,10 +168,11 @@ func chargeExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.AuthorizationRequest{}
-    request.Test = true
-    request.TerminalName = "Test Terminal"
-    request.Amount = "55.00"
+    request := blockchyp.AuthorizationRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+        Amount:       "55.00",
+    }
 
     response, err := client.Charge(request)
 
@@ -217,10 +218,11 @@ func preauthExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.AuthorizationRequest{}
-    request.Test = true
-    request.TerminalName = "Test Terminal"
-    request.Amount = "27.00"
+    request := blockchyp.AuthorizationRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+        Amount:       "27.00",
+    }
 
     response, err := client.Preauth(request)
 
@@ -266,8 +268,9 @@ func pingExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.PingRequest{}
-    request.TerminalName = "Test Terminal"
+    request := blockchyp.PingRequest{
+        TerminalName: "Test Terminal",
+    }
 
     response, err := client.Ping(request)
 
@@ -311,10 +314,11 @@ func balanceExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.BalanceRequest{}
-    request.Test = true
-    request.TerminalName = "Test Terminal"
-    request.CardType = blockchyp.CardTypeEBT
+    request := blockchyp.BalanceRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+        CardType:     blockchyp.CardTypeEBT,
+    }
 
     response, err := client.Balance(request)
 
@@ -358,9 +362,10 @@ func clearExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.ClearTerminalRequest{}
-    request.Test = true
-    request.TerminalName = "Test Terminal"
+    request := blockchyp.ClearTerminalRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+    }
 
     response, err := client.Clear(request)
 
@@ -404,15 +409,28 @@ func termsAndConditionsExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.TermsAndConditionsRequest{}
-    request.Test = true
-    request.TerminalName = "Test Terminal"
-    request.TCAlias = "hippa"                        // Alias for a Terms and Conditions template configured in the BlockChyp dashboard.
-    request.TCName = "HIPPA Disclosure"              // Name of the contract or document if not using an alias.
-    request.TCContent = "Full contract text"         // Full text of the contract or disclosure if not using an alias.
-    request.SigFormat = blockchyp.SignatureFormatPNG // file format for the signature image.
-    request.SigWidth = 200                           // width of the signature image in pixels.
-    request.SigRequired = true                       // Whether or not a signature is required. Defaults to true.
+    request := blockchyp.TermsAndConditionsRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+
+        // Alias for a Terms and Conditions template configured in the BlockChyp dashboard.
+        TCAlias: "hippa",
+
+        // Name of the contract or document if not using an alias.
+        TCName: "HIPPA Disclosure",
+
+        // Full text of the contract or disclosure if not using an alias.
+        TCContent: "Full contract text",
+
+        // file format for the signature image.
+        SigFormat: blockchyp.SignatureFormatPNG,
+
+        // width of the signature image in pixels.
+        SigWidth: 200,
+
+        // Whether or not a signature is required. Defaults to true.
+        SigRequired: true,
+    }
 
     response, err := client.TermsAndConditions(request)
 
@@ -460,23 +478,24 @@ func updateTransactionDisplayExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.TransactionDisplayRequest{}
-    request.Test = true
-    request.TerminalName = "Test Terminal"
-    request.Transaction = &blockchyp.TransactionDisplayTransaction{
-        Subtotal: "60.00",
-        Tax:      "5.00",
-        Total:    "65.00",
-        Items: []*blockchyp.TransactionDisplayItem{
-            &blockchyp.TransactionDisplayItem{
-                Description: "Leki Trekking Poles",
-                Price:       "35.00",
-                Quantity:    2,
-                Extended:    "70.00",
-                Discounts: []*blockchyp.TransactionDisplayDiscount{
-                    &blockchyp.TransactionDisplayDiscount{
-                        Description: "memberDiscount",
-                        Amount:      "10.00",
+    request := blockchyp.TransactionDisplayRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+        Transaction: &blockchyp.TransactionDisplayTransaction{
+            Subtotal: "60.00",
+            Tax:      "5.00",
+            Total:    "65.00",
+            Items: []*blockchyp.TransactionDisplayItem{
+                &blockchyp.TransactionDisplayItem{
+                    Description: "Leki Trekking Poles",
+                    Price:       "35.00",
+                    Quantity:    2,
+                    Extended:    "70.00",
+                    Discounts: []*blockchyp.TransactionDisplayDiscount{
+                        &blockchyp.TransactionDisplayDiscount{
+                            Description: "memberDiscount",
+                            Amount:      "10.00",
+                        },
                     },
                 },
             },
@@ -525,23 +544,24 @@ func newTransactionDisplayExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.TransactionDisplayRequest{}
-    request.Test = true
-    request.TerminalName = "Test Terminal"
-    request.Transaction = &blockchyp.TransactionDisplayTransaction{
-        Subtotal: "60.00",
-        Tax:      "5.00",
-        Total:    "65.00",
-        Items: []*blockchyp.TransactionDisplayItem{
-            &blockchyp.TransactionDisplayItem{
-                Description: "Leki Trekking Poles",
-                Price:       "35.00",
-                Quantity:    2,
-                Extended:    "70.00",
-                Discounts: []*blockchyp.TransactionDisplayDiscount{
-                    &blockchyp.TransactionDisplayDiscount{
-                        Description: "memberDiscount",
-                        Amount:      "10.00",
+    request := blockchyp.TransactionDisplayRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+        Transaction: &blockchyp.TransactionDisplayTransaction{
+            Subtotal: "60.00",
+            Tax:      "5.00",
+            Total:    "65.00",
+            Items: []*blockchyp.TransactionDisplayItem{
+                &blockchyp.TransactionDisplayItem{
+                    Description: "Leki Trekking Poles",
+                    Price:       "35.00",
+                    Quantity:    2,
+                    Extended:    "70.00",
+                    Discounts: []*blockchyp.TransactionDisplayDiscount{
+                        &blockchyp.TransactionDisplayDiscount{
+                            Description: "memberDiscount",
+                            Amount:      "10.00",
+                        },
                     },
                 },
             },
@@ -590,10 +610,13 @@ func textPromptExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.TextPromptRequest{}
-    request.Test = true
-    request.TerminalName = "Test Terminal"
-    request.PromptType = blockchyp.PromptTypeEmail // Type of prompt. Can be 'email', 'phone', 'customer-number', or 'rewards-number'.
+    request := blockchyp.TextPromptRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+
+        // Type of prompt. Can be 'email', 'phone', 'customer-number', or 'rewards-number'.
+        PromptType: blockchyp.PromptTypeEmail,
+    }
 
     response, err := client.TextPrompt(request)
 
@@ -638,12 +661,13 @@ func booleanPromptExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.BooleanPromptRequest{}
-    request.Test = true
-    request.TerminalName = "Test Terminal"
-    request.Prompt = "Would you like to become a member?"
-    request.YesCaption = "Yes"
-    request.NoCaption = "No"
+    request := blockchyp.BooleanPromptRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+        Prompt:       "Would you like to become a member?",
+        YesCaption:   "Yes",
+        NoCaption:    "No",
+    }
 
     response, err := client.BooleanPrompt(request)
 
@@ -688,10 +712,11 @@ func messageExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.MessageRequest{}
-    request.Test = true
-    request.TerminalName = "Test Terminal"
-    request.Message = "Thank you for your business."
+    request := blockchyp.MessageRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+        Message:      "Thank you for your business.",
+    }
 
     response, err := client.Message(request)
 
@@ -735,10 +760,13 @@ func refundExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.RefundRequest{}
-    request.TerminalName = "Test Terminal"
-    request.TransactionID = "<PREVIOUS TRANSACTION ID>"
-    request.Amount = "5.00" // Optional amount for partial refunds.
+    request := blockchyp.RefundRequest{
+        TerminalName:  "Test Terminal",
+        TransactionID: "<PREVIOUS TRANSACTION ID>",
+
+        // Optional amount for partial refunds.
+        Amount: "5.00",
+    }
 
     response, err := client.Refund(request)
 
@@ -782,9 +810,10 @@ func enrollExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.EnrollRequest{}
-    request.Test = true
-    request.TerminalName = "Test Terminal"
+    request := blockchyp.EnrollRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+    }
 
     response, err := client.Enroll(request)
 
@@ -829,10 +858,11 @@ func giftActivateExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.GiftActivateRequest{}
-    request.Test = true
-    request.TerminalName = "Test Terminal"
-    request.Amount = "50.00"
+    request := blockchyp.GiftActivateRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+        Amount:       "50.00",
+    }
 
     response, err := client.GiftActivate(request)
 
@@ -887,9 +917,10 @@ func reverseExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.AuthorizationRequest{}
-    request.TerminalName = "Test Terminal"
-    request.TransactionRef = "<LAST TRANSACTION REF>"
+    request := blockchyp.AuthorizationRequest{
+        TerminalName:   "Test Terminal",
+        TransactionRef: "<LAST TRANSACTION REF>",
+    }
 
     response, err := client.Reverse(request)
 
@@ -933,9 +964,10 @@ func captureExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.CaptureRequest{}
-    request.Test = true
-    request.TransactionID = "<PREAUTH TRANSACTION ID>"
+    request := blockchyp.CaptureRequest{
+        Test:          true,
+        TransactionID: "<PREAUTH TRANSACTION ID>",
+    }
 
     response, err := client.Capture(request)
 
@@ -979,8 +1011,9 @@ func closeBatchExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.CloseBatchRequest{}
-    request.Test = true
+    request := blockchyp.CloseBatchRequest{
+        Test: true,
+    }
 
     response, err := client.CloseBatch(request)
 
@@ -1026,9 +1059,10 @@ func voidExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.VoidRequest{}
-    request.Test = true
-    request.TransactionID = "<PREVIOUS TRANSACTION ID>"
+    request := blockchyp.VoidRequest{
+        Test:          true,
+        TransactionID: "<PREVIOUS TRANSACTION ID>",
+    }
 
     response, err := client.Void(request)
 

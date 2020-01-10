@@ -20,15 +20,28 @@ func termsAndConditionsExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.TermsAndConditionsRequest{}
-	request.Test = true
-	request.TerminalName = "Test Terminal"
-	request.TCAlias = "hippa"                        // Alias for a Terms and Conditions template configured in the BlockChyp dashboard.
-	request.TCName = "HIPPA Disclosure"              // Name of the contract or document if not using an alias.
-	request.TCContent = "Full contract text"         // Full text of the contract or disclosure if not using an alias.
-	request.SigFormat = blockchyp.SignatureFormatPNG // file format for the signature image.
-	request.SigWidth = 200                           // width of the signature image in pixels.
-	request.SigRequired = true                       // Whether or not a signature is required. Defaults to true.
+	request := blockchyp.TermsAndConditionsRequest{
+		Test:         true,
+		TerminalName: "Test Terminal",
+
+		// Alias for a Terms and Conditions template configured in the BlockChyp dashboard.
+		TCAlias: "hippa",
+
+		// Name of the contract or document if not using an alias.
+		TCName: "HIPPA Disclosure",
+
+		// Full text of the contract or disclosure if not using an alias.
+		TCContent: "Full contract text",
+
+		// file format for the signature image.
+		SigFormat: blockchyp.SignatureFormatPNG,
+
+		// width of the signature image in pixels.
+		SigWidth: 200,
+
+		// Whether or not a signature is required. Defaults to true.
+		SigRequired: true,
+	}
 
 	response, err := client.TermsAndConditions(request)
 

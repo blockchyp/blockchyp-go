@@ -20,7 +20,6 @@ import (
 )
 
 func TestSimpleMessage(t *testing.T) {
-
 	assert := assert.New(t)
 
 	client := newTestClient(t)
@@ -28,23 +27,27 @@ func TestSimpleMessage(t *testing.T) {
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
 		testDelayInt, err := strconv.Atoi(testDelay)
-		assert.NoError(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestSimpleMessage in %v seconds...", testDelay),
 		}
-		messageResponse, err := client.Message(messageRequest)
-		assert.NoError(err)
-		assert.True(true, messageResponse.Success)
+		if _, err := client.Message(messageRequest); err != nil {
+			t.Fatal(err)
+		}
 		time.Sleep(time.Duration(testDelayInt) * time.Second)
 	}
 
 	// setup request object
-	request := blockchyp.MessageRequest{}
-	request.Test = true
-	request.TerminalName = "Test Terminal"
-	request.Message = "Thank You For Your Business"
+	request := blockchyp.MessageRequest{
+		Test:         true,
+		TerminalName: "Test Terminal",
+		Message:      "Thank You For Your Business",
+	}
+
 	logRequest(request)
 
 	response, err := client.Message(request)

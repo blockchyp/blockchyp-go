@@ -20,10 +20,13 @@ func refundExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.RefundRequest{}
-	request.TerminalName = "Test Terminal"
-	request.TransactionID = "<PREVIOUS TRANSACTION ID>"
-	request.Amount = "5.00" // Optional amount for partial refunds.
+	request := blockchyp.RefundRequest{
+		TerminalName:  "Test Terminal",
+		TransactionID: "<PREVIOUS TRANSACTION ID>",
+
+		// Optional amount for partial refunds.
+		Amount: "5.00",
+	}
 
 	response, err := client.Refund(request)
 

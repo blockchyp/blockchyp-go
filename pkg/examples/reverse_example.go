@@ -20,9 +20,10 @@ func reverseExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.AuthorizationRequest{}
-	request.TerminalName = "Test Terminal"
-	request.TransactionRef = "<LAST TRANSACTION REF>"
+	request := blockchyp.AuthorizationRequest{
+		TerminalName:   "Test Terminal",
+		TransactionRef: "<LAST TRANSACTION REF>",
+	}
 
 	response, err := client.Reverse(request)
 

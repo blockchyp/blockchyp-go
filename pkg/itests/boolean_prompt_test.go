@@ -20,7 +20,6 @@ import (
 )
 
 func TestBooleanPrompt(t *testing.T) {
-
 	assert := assert.New(t)
 
 	client := newTestClient(t)
@@ -28,25 +27,29 @@ func TestBooleanPrompt(t *testing.T) {
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
 		testDelayInt, err := strconv.Atoi(testDelay)
-		assert.NoError(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestBooleanPrompt in %v seconds...", testDelay),
 		}
-		messageResponse, err := client.Message(messageRequest)
-		assert.NoError(err)
-		assert.True(true, messageResponse.Success)
+		if _, err := client.Message(messageRequest); err != nil {
+			t.Fatal(err)
+		}
 		time.Sleep(time.Duration(testDelayInt) * time.Second)
 	}
 
 	// setup request object
-	request := blockchyp.BooleanPromptRequest{}
-	request.Test = true
-	request.TerminalName = "Test Terminal"
-	request.Prompt = "Would you like to become a member?"
-	request.YesCaption = "Yes"
-	request.NoCaption = "No"
+	request := blockchyp.BooleanPromptRequest{
+		Test:         true,
+		TerminalName: "Test Terminal",
+		Prompt:       "Would you like to become a member?",
+		YesCaption:   "Yes",
+		NoCaption:    "No",
+	}
+
 	logRequest(request)
 
 	response, err := client.BooleanPrompt(request)

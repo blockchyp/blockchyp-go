@@ -2,6 +2,7 @@ package blockchyp
 
 import (
 	"bytes"
+	"context"
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/hex"
@@ -136,7 +137,7 @@ func (client *Client) requestRouteFromGateway(terminalName string) (*TerminalRou
 	path := "/terminal-route?terminal=" + url.QueryEscape(terminalName)
 
 	var res TerminalRouteResponse
-	if err := client.GatewayRequest(path, http.MethodGet, nil, &res, false); err != nil {
+	if err := client.GatewayRequest(path, http.MethodGet, nil, &res, false, nil); err != nil {
 		return nil, err
 	}
 
@@ -285,11 +286,11 @@ func (client *Client) assembleTerminalURL(route TerminalRoute, path string) stri
 terminalPost posts a request to the api gateway.
 */
 func (client *Client) terminalPost(route TerminalRoute, path string, requestEntity interface{}, responseEntity interface{}) error {
-	return client.terminalRequest(route, path, http.MethodPost, requestEntity, responseEntity)
+	return client.terminalRequest(route, path, http.MethodPost, requestEntity, responseEntity, nil)
 }
 
 // terminalRequest sends an HTTP request to a terminal.
-func (client *Client) terminalRequest(route TerminalRoute, path, method string, requestEntity, responseEntity interface{}) error {
+func (client *Client) terminalRequest(route TerminalRoute, path, method string, requestEntity, responseEntity, requestTimeout interface{}) error {
 	content, err := json.Marshal(requestEntity)
 	if err != nil {
 		return err
@@ -305,14 +306,18 @@ func (client *Client) terminalRequest(route TerminalRoute, path, method string, 
 		return err
 	}
 
-	res, err := client.terminalHTTPClient.Do(req)
+	timeout := getTimeout(requestTimeout, client.TerminalTimeout)
+	ctx, cancel := context.WithTimeout(req.Context(), timeout)
+	defer cancel()
+
+	res, err := client.terminalHTTPClient.Do(req.WithContext(ctx))
 	if err != nil {
 		// Try to resolve the route again.
 		// If the route has changed, retry the request.
 		rRoute, rErr := client.refreshRoute(route)
 		if rErr == nil {
 			client.routeCachePut(*rRoute)
-			return client.terminalRequest(*rRoute, path, method, requestEntity, responseEntity)
+			return client.terminalRequest(*rRoute, path, method, requestEntity, responseEntity, requestTimeout)
 		}
 
 		return err

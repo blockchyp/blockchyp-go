@@ -19,7 +19,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestTerminalPreauth(t *testing.T) {
+func TestTerminalTimeout(t *testing.T) {
 	assert := assert.New(t)
 
 	client := newTestClient(t)
@@ -33,7 +33,7 @@ func TestTerminalPreauth(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestTerminalPreauth in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestTerminalTimeout in %v seconds...", testDelay),
 		}
 		if _, err := client.Message(messageRequest); err != nil {
 			t.Fatal(err)
@@ -43,29 +43,21 @@ func TestTerminalPreauth(t *testing.T) {
 
 	// setup request object
 	request := blockchyp.AuthorizationRequest{
+		Timeout:      1,
 		TerminalName: "Test Terminal",
-		Amount:       "15.15",
+		Amount:       "25.15",
 		Test:         true,
 	}
 
 	logRequest(request)
 
-	response, err := client.Preauth(request)
-
-	assert.NoError(err)
+	response, err := client.Charge(request)
 
 	logResponse(response)
+	t.Logf("Response Error: %+v", err)
 
-	// response assertions
-	assert.True(response.Approved)
-	assert.True(response.Test)
-	assert.Len(response.AuthCode, 6)
-	assert.NotEmpty(response.TransactionID)
-	assert.NotEmpty(response.Timestamp)
-	assert.NotEmpty(response.TickBlock)
-	assert.Equal("Approved", response.ResponseDescription)
-	assert.NotEmpty(response.PaymentType)
-	assert.NotEmpty(response.MaskedPAN)
-	assert.NotEmpty(response.EntryMethod)
-	assert.Equal("15.15", response.AuthorizedAmount)
+	assert.Error(err)
+	assert.Equal(blockchyp.ResponseTimedOut, response.ResponseDescription)
+
+	return
 }

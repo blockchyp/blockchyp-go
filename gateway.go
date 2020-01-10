@@ -76,18 +76,7 @@ func consumeResponse(resp *http.Response, responseEntity interface{}) error {
 }
 
 // GatewayRequest sends a gateway request with the default timeout.
-func (client *Client) GatewayRequest(path, method string, request, response interface{}, testTx bool) error {
-	return client.GatewayRequestWithTimeout(path, method, request, response, testTx, DefaultGatewayTimeout)
-}
-
-// RelayRequest sends a gateway request with the cloud relay timeout.
-func (client *Client) RelayRequest(path, method string, request, response interface{}, testTx bool) error {
-	return client.GatewayRequestWithTimeout(path, method, request, response, testTx, DefaultTerminalTimeout)
-}
-
-// GatewayRequestWithTimeout sends an HTTP request to the gateway using a
-// context to set timeout per request.
-func (client *Client) GatewayRequestWithTimeout(path, method string, request, response interface{}, testTx bool, timeout time.Duration) error {
+func (client *Client) GatewayRequest(path, method string, request, response interface{}, testTx bool, requestTimeout interface{}) error {
 	content, err := json.Marshal(request)
 	if err != nil {
 		return err
@@ -102,6 +91,7 @@ func (client *Client) GatewayRequestWithTimeout(path, method string, request, re
 		return err
 	}
 
+	timeout := getTimeout(requestTimeout, client.GatewayTimeout)
 	ctx, cancel := context.WithTimeout(req.Context(), timeout)
 	defer cancel()
 
@@ -125,24 +115,26 @@ func (client *Client) GatewayRequestWithTimeout(path, method string, request, re
 	return consumeResponse(res, response)
 }
 
-/*
-GatewayPost posts a request to the api gateway.
-*/
-func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}, testTx bool) error {
-	return client.GatewayRequest(path, http.MethodPost, requestEntity, responseEntity, testTx)
+// RelayRequest sends a request to the gateway to be relayed to a terminal.
+func (client *Client) RelayRequest(path, method string, request, response interface{}, testTx bool, requestTimeout interface{}) error {
+	timeout := getTimeout(requestTimeout, client.TerminalTimeout)
+	return client.GatewayRequest(path, method, request, response, testTx, timeout)
 }
 
-/*
-GatewayGet retrieves a get request from the api gateway.
-*/
+// GatewayPost posts a request to the api gateway.
+func (client *Client) GatewayPost(path string, requestEntity interface{}, responseEntity interface{}, testTx bool) error {
+	return client.GatewayRequest(path, http.MethodPost, requestEntity, responseEntity, testTx, nil)
+}
+
+// GatewayGet retrieves a get request from the api gateway.
 func (client *Client) GatewayGet(path string, responseEntity interface{}) error {
-	return client.GatewayRequest(path, http.MethodGet, nil, responseEntity, false)
+	return client.GatewayRequest(path, http.MethodGet, nil, responseEntity, false, nil)
 }
 
 func (client *Client) highClockDiff() bool {
 
 	response := HeartbeatResponse{}
-	err := client.GatewayRequest("/heartbeat", http.MethodGet, nil, &response, false)
+	err := client.GatewayRequest("/heartbeat", http.MethodGet, nil, &response, false, nil)
 	if err != nil {
 		return false
 	}
@@ -157,9 +149,7 @@ func (client *Client) highClockDiff() bool {
 
 }
 
-/*
-PopulateHeaders takes header values and adds them to the given http request.
-*/
+// PopulateHeaders takes header values and adds them to the given http request.
 func populateHeaders(headers APIRequestHeaders, req *http.Request) {
 
 	req.Header.Add("Nonce", headers.Nonce)
@@ -179,10 +169,8 @@ func addAPIRequestHeaders(req *http.Request, creds APICredentials) error {
 
 }
 
-/*
-generateAPIRequestHeaders returns the standard API requests headers given a set of
-credentials.
-*/
+// generateAPIRequestHeaders returns the standard API requests headers given a set of
+// credentials.
 func generateAPIRequestHeaders(creds APICredentials) (APIRequestHeaders, error) {
 
 	headers := APIRequestHeaders{
@@ -203,9 +191,7 @@ func generateAPIRequestHeaders(creds APICredentials) (APIRequestHeaders, error) 
 
 }
 
-/*
-ComputeHmac computes an hmac for the the given headers and secret key.
-*/
+// ComputeHmac computes an hmac for the the given headers and secret key.
 func computeHmac(headers APIRequestHeaders, signingKey string) (string, error) {
 
 	buf := bytes.Buffer{}

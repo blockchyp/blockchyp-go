@@ -20,9 +20,10 @@ func clearExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.ClearTerminalRequest{}
-	request.Test = true
-	request.TerminalName = "Test Terminal"
+	request := blockchyp.ClearTerminalRequest{
+		Test:         true,
+		TerminalName: "Test Terminal",
+	}
 
 	response, err := client.Clear(request)
 

@@ -20,23 +20,24 @@ func newTransactionDisplayExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.TransactionDisplayRequest{}
-	request.Test = true
-	request.TerminalName = "Test Terminal"
-	request.Transaction = &blockchyp.TransactionDisplayTransaction{
-		Subtotal: "60.00",
-		Tax:      "5.00",
-		Total:    "65.00",
-		Items: []*blockchyp.TransactionDisplayItem{
-			&blockchyp.TransactionDisplayItem{
-				Description: "Leki Trekking Poles",
-				Price:       "35.00",
-				Quantity:    2,
-				Extended:    "70.00",
-				Discounts: []*blockchyp.TransactionDisplayDiscount{
-					&blockchyp.TransactionDisplayDiscount{
-						Description: "memberDiscount",
-						Amount:      "10.00",
+	request := blockchyp.TransactionDisplayRequest{
+		Test:         true,
+		TerminalName: "Test Terminal",
+		Transaction: &blockchyp.TransactionDisplayTransaction{
+			Subtotal: "60.00",
+			Tax:      "5.00",
+			Total:    "65.00",
+			Items: []*blockchyp.TransactionDisplayItem{
+				&blockchyp.TransactionDisplayItem{
+					Description: "Leki Trekking Poles",
+					Price:       "35.00",
+					Quantity:    2,
+					Extended:    "70.00",
+					Discounts: []*blockchyp.TransactionDisplayDiscount{
+						&blockchyp.TransactionDisplayDiscount{
+							Description: "memberDiscount",
+							Amount:      "10.00",
+						},
 					},
 				},
 			},
