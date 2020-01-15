@@ -662,6 +662,45 @@ func (client *Client) GiftActivate(request GiftActivateRequest) (*GiftActivateRe
 	return &response, err
 }
 
+// TerminalStatus returns the current status of a terminal.
+func (client *Client) TerminalStatus(request TerminalStatusRequest) (*TerminalStatusResponse, error) {
+	var response TerminalStatusResponse
+	var err error
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/terminal-status", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalTerminalStatusRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/terminal-status", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/terminal-status", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // Reverse executes a manual time out reversal.
 //
 // We love time out reversals. Don't be afraid to use them whenever a request

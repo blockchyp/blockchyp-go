@@ -1703,6 +1703,56 @@ type HeartbeatResponse struct {
 	MerchantPublicKey string `json:"merchantPk"`
 }
 
+// TerminalStatusRequest contains a request for the status of a terminal.
+type TerminalStatusRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
+}
+
+// TerminalStatusResponse contains the current status of a terminal.
+type TerminalStatusResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Idle indicates that the terminal is idle.
+	Idle bool `json:"idle"`
+
+	// Status contains the operation that the terminal is performing.
+	Status string `json:"status"`
+
+	// TransactionRef contains the transaction reference for an ongoing
+	// transaction, if one was specified at request time.
+	TransactionRef string `json:"transactionRef"`
+
+	// Since is the timestamp of the last status change.
+	Since time.Time `json:"since"`
+}
+
 // TerminalPingRequest contains information needed to test connectivity with a
 // terminal.
 type TerminalPingRequest struct {
@@ -1789,4 +1839,11 @@ type TerminalTermsAndConditionsResponse struct {
 type TerminalTransactionDisplayRequest struct {
 	APICredentials
 	Request TransactionDisplayRequest `json:"request"`
+}
+
+// TerminalTerminalStatusRequest contains a request for the status of a
+// terminal.
+type TerminalTerminalStatusRequest struct {
+	APICredentials
+	Request TerminalStatusRequest `json:"request"`
 }
