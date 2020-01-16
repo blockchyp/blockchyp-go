@@ -8,7 +8,6 @@ import (
 )
 
 func terminalStatusExample() {
-
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -35,6 +34,5 @@ func terminalStatusExample() {
 		fmt.Println("Success")
 	}
 
-	fmt.Println(response.Idle)
-	fmt.Println(response.Status)
+	fmt.Printf("Response: %+v\n", response)
 }

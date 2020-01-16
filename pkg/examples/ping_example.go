@@ -8,7 +8,6 @@ import (
 )
 
 func pingExample() {
-
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -35,4 +34,5 @@ func pingExample() {
 		fmt.Println("Success")
 	}
 
+	fmt.Printf("Response: %+v\n", response)
 }

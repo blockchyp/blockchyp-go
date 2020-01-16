@@ -8,7 +8,6 @@ import (
 )
 
 func termsAndConditionsExample() {
-
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -54,6 +53,5 @@ func termsAndConditionsExample() {
 		fmt.Println("Success")
 	}
 
-	fmt.Println(response.Sig)
-	fmt.Println(response.SigFile)
+	fmt.Printf("Response: %+v\n", response)
 }

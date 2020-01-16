@@ -8,7 +8,6 @@ import (
 )
 
 func giftActivateExample() {
-
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -37,7 +36,5 @@ func giftActivateExample() {
 		fmt.Println("Approved")
 	}
 
-	fmt.Println(response.Amount)
-	fmt.Println(response.CurrentBalance)
-	fmt.Println(response.PublicKey)
+	fmt.Printf("Response: %+v\n", response)
 }

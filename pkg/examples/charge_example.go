@@ -8,7 +8,6 @@ import (
 )
 
 func chargeExample() {
-
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -37,6 +36,5 @@ func chargeExample() {
 		fmt.Println("Approved")
 	}
 
-	fmt.Println(response.AuthCode)
-	fmt.Println(response.AuthorizedAmount)
+	fmt.Printf("Response: %+v\n", response)
 }

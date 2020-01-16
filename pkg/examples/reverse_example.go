@@ -8,7 +8,6 @@ import (
 )
 
 func reverseExample() {
-
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -36,4 +35,5 @@ func reverseExample() {
 		fmt.Println("Approved")
 	}
 
+	fmt.Printf("Response: %+v\n", response)
 }

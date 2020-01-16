@@ -156,7 +156,6 @@ import (
 )
 
 func chargeExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -185,8 +184,7 @@ func chargeExample() {
         fmt.Println("Approved")
     }
 
-    fmt.Println(response.AuthCode)
-    fmt.Println(response.AuthorizedAmount)
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -206,7 +204,6 @@ import (
 )
 
 func preauthExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -235,8 +232,7 @@ func preauthExample() {
         fmt.Println("Approved")
     }
 
-    fmt.Println(response.AuthCode)
-    fmt.Println(response.AuthorizedAmount)
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -256,7 +252,6 @@ import (
 )
 
 func pingExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -283,6 +278,7 @@ func pingExample() {
         fmt.Println("Success")
     }
 
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -302,7 +298,6 @@ import (
 )
 
 func balanceExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -331,6 +326,7 @@ func balanceExample() {
         fmt.Println("Success")
     }
 
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -350,7 +346,6 @@ import (
 )
 
 func clearExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -378,6 +373,7 @@ func clearExample() {
         fmt.Println("Success")
     }
 
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -397,7 +393,6 @@ import (
 )
 
 func termsAndConditionsExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -443,8 +438,7 @@ func termsAndConditionsExample() {
         fmt.Println("Success")
     }
 
-    fmt.Println(response.Sig)
-    fmt.Println(response.SigFile)
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -466,7 +460,6 @@ import (
 )
 
 func updateTransactionDisplayExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -513,6 +506,7 @@ func updateTransactionDisplayExample() {
         fmt.Println("Success")
     }
 
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -532,7 +526,6 @@ import (
 )
 
 func newTransactionDisplayExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -579,6 +572,7 @@ func newTransactionDisplayExample() {
         fmt.Println("Success")
     }
 
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -598,7 +592,6 @@ import (
 )
 
 func textPromptExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -629,7 +622,7 @@ func textPromptExample() {
         fmt.Println("Success")
     }
 
-    fmt.Println(response.Response)
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -649,7 +642,6 @@ import (
 )
 
 func booleanPromptExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -680,7 +672,7 @@ func booleanPromptExample() {
         fmt.Println("Success")
     }
 
-    fmt.Println(response.Response)
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -700,7 +692,6 @@ import (
 )
 
 func messageExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -729,6 +720,7 @@ func messageExample() {
         fmt.Println("Success")
     }
 
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -748,7 +740,6 @@ import (
 )
 
 func refundExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -779,6 +770,7 @@ func refundExample() {
         fmt.Println("Approved")
     }
 
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -798,7 +790,6 @@ import (
 )
 
 func enrollExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -826,7 +817,7 @@ func enrollExample() {
         fmt.Println("Approved")
     }
 
-    fmt.Println(response.Token)
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -846,7 +837,6 @@ import (
 )
 
 func giftActivateExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -875,9 +865,7 @@ func giftActivateExample() {
         fmt.Println("Approved")
     }
 
-    fmt.Println(response.Amount)
-    fmt.Println(response.CurrentBalance)
-    fmt.Println(response.PublicKey)
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -905,7 +893,6 @@ import (
 )
 
 func reverseExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -933,6 +920,7 @@ func reverseExample() {
         fmt.Println("Approved")
     }
 
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -952,7 +940,6 @@ import (
 )
 
 func captureExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -980,6 +967,7 @@ func captureExample() {
         fmt.Println("Approved")
     }
 
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -999,7 +987,6 @@ import (
 )
 
 func closeBatchExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -1026,8 +1013,7 @@ func closeBatchExample() {
         fmt.Println("Success")
     }
 
-    fmt.Println(response.CapturedTotal)
-    fmt.Println(response.OpenPreauths)
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -1047,7 +1033,6 @@ import (
 )
 
 func voidExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -1075,6 +1060,7 @@ func voidExample() {
         fmt.Println("Approved")
     }
 
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```
@@ -1094,7 +1080,6 @@ import (
 )
 
 func terminalStatusExample() {
-
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -1121,8 +1106,7 @@ func terminalStatusExample() {
         fmt.Println("Success")
     }
 
-    fmt.Println(response.Idle)
-    fmt.Println(response.Status)
+    fmt.Printf("Response: %+v\n", response)
 }
 
 ```

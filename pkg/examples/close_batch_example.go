@@ -8,7 +8,6 @@ import (
 )
 
 func closeBatchExample() {
-
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -35,6 +34,5 @@ func closeBatchExample() {
 		fmt.Println("Success")
 	}
 
-	fmt.Println(response.CapturedTotal)
-	fmt.Println(response.OpenPreauths)
+	fmt.Printf("Response: %+v\n", response)
 }

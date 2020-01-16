@@ -8,7 +8,6 @@ import (
 )
 
 func booleanPromptExample() {
-
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -39,5 +38,5 @@ func booleanPromptExample() {
 		fmt.Println("Success")
 	}
 
-	fmt.Println(response.Response)
+	fmt.Printf("Response: %+v\n", response)
 }

@@ -8,7 +8,6 @@ import (
 )
 
 func enrollExample() {
-
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -36,5 +35,5 @@ func enrollExample() {
 		fmt.Println("Approved")
 	}
 
-	fmt.Println(response.Token)
+	fmt.Printf("Response: %+v\n", response)
 }

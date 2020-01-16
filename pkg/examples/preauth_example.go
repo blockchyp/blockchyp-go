@@ -8,7 +8,6 @@ import (
 )
 
 func preauthExample() {
-
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -37,6 +36,5 @@ func preauthExample() {
 		fmt.Println("Approved")
 	}
 
-	fmt.Println(response.AuthCode)
-	fmt.Println(response.AuthorizedAmount)
+	fmt.Printf("Response: %+v\n", response)
 }

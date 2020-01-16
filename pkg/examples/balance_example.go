@@ -8,7 +8,6 @@ import (
 )
 
 func balanceExample() {
-
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -37,4 +36,5 @@ func balanceExample() {
 		fmt.Println("Success")
 	}
 
+	fmt.Printf("Response: %+v\n", response)
 }

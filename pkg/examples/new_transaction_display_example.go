@@ -8,7 +8,6 @@ import (
 )
 
 func newTransactionDisplayExample() {
-
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -55,4 +54,5 @@ func newTransactionDisplayExample() {
 		fmt.Println("Success")
 	}
 
+	fmt.Printf("Response: %+v\n", response)
 }
