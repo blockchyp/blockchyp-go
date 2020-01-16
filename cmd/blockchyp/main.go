@@ -244,6 +244,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processCache(client, args)
 	case "cache-expire":
 		processCacheExpire(client, args)
+	case "terminal-status":
+		processTerminalStatus(client, args)
 	default:
 		fatalErrorf("%s is unknown transaction type", args.Type)
 	}
@@ -260,6 +262,18 @@ func processCache(client *blockchyp.Client, args blockchyp.CommandLineArguments)
 
 	fmt.Println("Cache Location:", client.RouteCache)
 
+}
+
+func processTerminalStatus(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.TerminalName, "terminal")
+
+	response, err := client.TerminalStatus(blockchyp.TerminalStatusRequest{
+		TerminalName: args.TerminalName,
+	})
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, response)
 }
 
 func processBalance(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
