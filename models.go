@@ -7,6 +7,7 @@
 package blockchyp
 
 import (
+	"reflect"
 	"time"
 )
 
@@ -1846,4 +1847,390 @@ type TerminalTransactionDisplayRequest struct {
 type TerminalTerminalStatusRequest struct {
 	APICredentials
 	Request TerminalStatusRequest `json:"request"`
+}
+
+// AbstractAcknowledgement contains fields which should be returned with
+// standard requests.
+type AbstractAcknowledgement struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool
+
+	// Error is the error, if an error occurred.
+	Error string
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string
+}
+
+// From creates an instance of AbstractAcknowledgement with values
+// from a generic type.
+func (r AbstractAcknowledgement) From(raw interface{}) (result AbstractAcknowledgement, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// TerminalReference contains a reference to a terminal name.
+type TerminalReference struct {
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string
+}
+
+// From creates an instance of TerminalReference with values
+// from a generic type.
+func (r TerminalReference) From(raw interface{}) (result TerminalReference, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// SignatureResponse contains customer signature data.
+type SignatureResponse struct {
+	// SigFile contains the hex encoded signature data.
+	SigFile string
+}
+
+// From creates an instance of SignatureResponse with values
+// from a generic type.
+func (r SignatureResponse) From(raw interface{}) (result SignatureResponse, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// SignatureRequest contains a request for customer signature data.
+type SignatureRequest struct {
+	// SigFile is a location on the filesystem which a customer signature should
+	// be written to.
+	SigFile string
+
+	// SigFormat specifies the image format to be used for returning signatures.
+	SigFormat SignatureFormat
+
+	// SigWidth is the width that the signature image should be scaled to,
+	// preserving the aspect ratio. If not provided, the signature is returned in
+	// the terminal's max resolution.
+	SigWidth int
+}
+
+// From creates an instance of SignatureRequest with values
+// from a generic type.
+func (r SignatureRequest) From(raw interface{}) (result SignatureRequest, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// ApprovalResponse contains response fields for an approved transaction.
+type ApprovalResponse struct {
+	// Approved indicates that the transaction was approved.
+	Approved bool
+
+	// AuthCode is the auth code from the payment network.
+	AuthCode string
+}
+
+// From creates an instance of ApprovalResponse with values
+// from a generic type.
+func (r ApprovalResponse) From(raw interface{}) (result ApprovalResponse, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// CoreRequest contains core request fields for a transaction.
+type CoreRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool
+
+	// Timeout is the request timeout in seconds.
+	Timeout int
+}
+
+// From creates an instance of CoreRequest with values
+// from a generic type.
+func (r CoreRequest) From(raw interface{}) (result CoreRequest, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// PaymentMethodResponse contains response details about a payment method.
+type PaymentMethodResponse struct {
+	// Token is the payment token, if the payment was enrolled in the vault.
+	Token string
+
+	// EntryMethod is the entry method for the transaction (CHIP, MSR, KEYED,
+	// etc).
+	EntryMethod string
+
+	// PaymentType is the card brand (VISA, MC, AMEX, etc).
+	PaymentType string
+
+	// MaskedPAN is the masked primary account number.
+	MaskedPAN string
+
+	// PublicKey is the BlockChyp public key if the user presented a BlockChyp
+	// payment card.
+	PublicKey string
+
+	// ScopeAlert indicates that the transaction did something that would put the
+	// system in PCI scope.
+	ScopeAlert bool
+
+	// CardHolder is the cardholder name.
+	CardHolder string
+
+	// ReceiptSuggestions contains suggested receipt fields.
+	ReceiptSuggestions ReceiptSuggestions
+}
+
+// From creates an instance of PaymentMethodResponse with values
+// from a generic type.
+func (r PaymentMethodResponse) From(raw interface{}) (result PaymentMethodResponse, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// PaymentAmounts contains response details about tender amounts.
+type PaymentAmounts struct {
+	// PartialAuth indicates whether or not the transaction was approved for a
+	// partial amount.
+	PartialAuth bool
+
+	// AltCurrency indicates whether or not an alternate currency was used.
+	AltCurrency bool
+
+	// FSAAuth indicates whether or not a request was settled on an FSA card.
+	FSAAuth bool
+
+	// CurrencyCode is the currency code used for the transaction.
+	CurrencyCode string
+
+	// RequestedAmount is the requested amount.
+	RequestedAmount string
+
+	// AuthorizedAmount is the authorized amount. May not match the requested
+	// amount in the event of a partial auth.
+	AuthorizedAmount string
+
+	// RemainingBalance is the remaining balance on the payment method.
+	RemainingBalance string
+
+	// TipAmount is the tip amount.
+	TipAmount string
+
+	// TaxAmount is the tax amount.
+	TaxAmount string
+
+	// RequestedCashBackAmount is the cash back amount the customer requested
+	// during the transaction.
+	RequestedCashBackAmount string
+
+	// AuthorizedCashBackAmount is the amount of cash back authorized by the
+	// gateway. This amount will be the entire amount requested, or zero.
+	AuthorizedCashBackAmount string
+}
+
+// From creates an instance of PaymentAmounts with values
+// from a generic type.
+func (r PaymentAmounts) From(raw interface{}) (result PaymentAmounts, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// PaymentMethod contains request details about a payment method.
+type PaymentMethod struct {
+	// Token is the payment token to be used for this transaction. This should be
+	// used for recurring transactions.
+	Token string
+
+	// Track1 contains track 1 magnetic stripe data.
+	Track1 string
+
+	// Track2 contains track 2 magnetic stripe data.
+	Track2 string
+
+	// PAN contains the primary account number. We recommend using the terminal
+	// or e-commerce tokenization libraries instead of passing account numbers in
+	// directly, as this would put your application in PCI scope.
+	PAN string
+
+	// RoutingNumber is the ACH routing number for ACH transactions.
+	RoutingNumber string
+
+	// CardholderName is the cardholder name. Only required if the request
+	// includes a primary account number or track data.
+	CardholderName string
+
+	// ExpMonth is the card expiration month for use with PAN based transactions.
+	ExpMonth string
+
+	// ExpYear is the card expiration year for use with PAN based transactions.
+	ExpYear string
+
+	// CVV is the card CVV for use with PAN based transactions.
+	CVV string
+
+	// Address is the cardholder address for use with address verification.
+	Address string
+
+	// PostalCode is the cardholder postal code for use with address
+	// verification.
+	PostalCode string
+
+	// ManualEntry specifies that the payment entry method is a manual keyed
+	// transaction. If this is true, no other payment method will be accepted.
+	ManualEntry bool
+
+	// KSN is the key serial number used for DUKPT encryption.
+	KSN string
+
+	// PINBlock is the encrypted pin block.
+	PINBlock string
+
+	// CardType designates categories of cards: credit, debit, EBT.
+	CardType CardType
+
+	// PaymentType designates brands of payment methods: Visa, Discover, etc.
+	PaymentType string
+}
+
+// From creates an instance of PaymentMethod with values
+// from a generic type.
+func (r PaymentMethod) From(raw interface{}) (result PaymentMethod, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// RequestAmount contains request details about tender amounts.
+type RequestAmount struct {
+	// CurrencyCode indicates the transaction currency code.
+	CurrencyCode string
+
+	// Amount is the requested amount.
+	Amount string
+
+	// TaxExempt indicates that the request is tax exempt. Only required for tax
+	// exempt level 2 processing.
+	TaxExempt bool
+}
+
+// From creates an instance of RequestAmount with values
+// from a generic type.
+func (r RequestAmount) From(raw interface{}) (result RequestAmount, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// Subtotals contains request subtotals.
+type Subtotals struct {
+	// TipAmount is the tip amount.
+	TipAmount string
+
+	// TaxAmount is the tax amount.
+	TaxAmount string
+
+	// CashBackAmount is the amount of cash back requested.
+	CashBackAmount string
+
+	// FSAEligibleAmount is the amount of the transaction that should be charged
+	// to an FSA card. This amount may be less than the transaction total, in
+	// which case only this amount will be charged if an FSA card is presented.
+	// If the FSA amount is paid on an FSA card, then the FSA amount authorized
+	// will be indicated on the response.
+	FSAEligibleAmount string
+
+	// HSAEligibleAmount is the amount of the transaction that should be charged
+	// to an HSA card.
+	HSAEligibleAmount string
+
+	// EBTEligibleAmount is the amount of the transaction that should be charged
+	// to an EBT card.
+	EBTEligibleAmount string
+}
+
+// From creates an instance of Subtotals with values
+// from a generic type.
+func (r Subtotals) From(raw interface{}) (result Subtotals, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// PreviousTransaction contains a reference to a previous transaction.
+type PreviousTransaction struct {
+	// TransactionID is the ID of the previous transaction being referenced.
+	TransactionID string
+}
+
+// From creates an instance of PreviousTransaction with values
+// from a generic type.
+func (r PreviousTransaction) From(raw interface{}) (result PreviousTransaction, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// CoreResponse contains core response fields for a transaction.
+type CoreResponse struct {
+	// TransactionID is the ID assigned to the transaction.
+	TransactionID string
+
+	// BatchID is the ID assigned to the batch.
+	BatchID string
+
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string
+
+	// TransactionType is the type of transaction.
+	TransactionType string
+
+	// Timestamp is the timestamp of the transaction.
+	Timestamp string
+
+	// TickBlock is the hash of the last tick block.
+	TickBlock string
+
+	// Test indicates that the transaction was processed on the test gateway.
+	Test bool
+
+	// Sig is the ECC signature of the response. Can be used to ensure that it
+	// was signed by the terminal and detect man-in-the middle attacks.
+	Sig string
+}
+
+// From creates an instance of CoreResponse with values
+// from a generic type.
+func (r CoreResponse) From(raw interface{}) (result CoreResponse, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+func copyTo(from, to interface{}) (ok bool) {
+	fromV := reflect.ValueOf(from)
+	if fromV.Kind() == reflect.Ptr {
+		fromV = fromV.Elem()
+	}
+
+	toV := reflect.ValueOf(to).Elem()
+
+	for i := 0; i < toV.NumField(); i++ {
+		val := fromV.FieldByName(toV.Type().Field(i).Name)
+		if !val.IsValid() {
+			continue
+		}
+
+		ok = true
+		toV.Field(i).Set(val)
+	}
+
+	return
 }

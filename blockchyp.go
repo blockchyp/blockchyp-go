@@ -8,11 +8,16 @@ package blockchyp
 
 import (
 	"crypto/tls"
+	"encoding/hex"
 	"errors"
+	"fmt"
+	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -119,6 +124,10 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 	var response AuthorizationResponse
 	var err error
 
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
 	if request.TerminalName != "" {
 		var route TerminalRoute
 		route, err = client.resolveTerminalRoute(request.TerminalName)
@@ -150,6 +159,10 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -157,6 +170,10 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationResponse, error) {
 	var response AuthorizationResponse
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -189,6 +206,10 @@ func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationRespo
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -196,6 +217,10 @@ func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationRespo
 func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 	var response PingResponse
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -228,6 +253,10 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -235,6 +264,10 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 func (client *Client) Balance(request BalanceRequest) (*BalanceResponse, error) {
 	var response BalanceResponse
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -267,6 +300,10 @@ func (client *Client) Balance(request BalanceRequest) (*BalanceResponse, error) 
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -274,6 +311,10 @@ func (client *Client) Balance(request BalanceRequest) (*BalanceResponse, error) 
 func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, error) {
 	var response Acknowledgement
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -306,6 +347,10 @@ func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, err
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -313,6 +358,10 @@ func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, err
 func (client *Client) TermsAndConditions(request TermsAndConditionsRequest) (*TermsAndConditionsResponse, error) {
 	var response TermsAndConditionsResponse
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -345,6 +394,10 @@ func (client *Client) TermsAndConditions(request TermsAndConditionsRequest) (*Te
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -354,6 +407,10 @@ func (client *Client) TermsAndConditions(request TermsAndConditionsRequest) (*Te
 func (client *Client) UpdateTransactionDisplay(request TransactionDisplayRequest) (*Acknowledgement, error) {
 	var response Acknowledgement
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -386,6 +443,10 @@ func (client *Client) UpdateTransactionDisplay(request TransactionDisplayRequest
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -393,6 +454,10 @@ func (client *Client) UpdateTransactionDisplay(request TransactionDisplayRequest
 func (client *Client) NewTransactionDisplay(request TransactionDisplayRequest) (*Acknowledgement, error) {
 	var response Acknowledgement
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -425,6 +490,10 @@ func (client *Client) NewTransactionDisplay(request TransactionDisplayRequest) (
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -432,6 +501,10 @@ func (client *Client) NewTransactionDisplay(request TransactionDisplayRequest) (
 func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse, error) {
 	var response TextPromptResponse
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -464,6 +537,10 @@ func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -471,6 +548,10 @@ func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse
 func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromptResponse, error) {
 	var response BooleanPromptResponse
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -503,6 +584,10 @@ func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromp
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -510,6 +595,10 @@ func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromp
 func (client *Client) Message(request MessageRequest) (*Acknowledgement, error) {
 	var response Acknowledgement
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -542,6 +631,10 @@ func (client *Client) Message(request MessageRequest) (*Acknowledgement, error) 
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -549,6 +642,10 @@ func (client *Client) Message(request MessageRequest) (*Acknowledgement, error) 
 func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, error) {
 	var response AuthorizationResponse
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -581,6 +678,10 @@ func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, err
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -588,6 +689,10 @@ func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, err
 func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 	var response EnrollResponse
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -620,6 +725,10 @@ func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -627,6 +736,10 @@ func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 func (client *Client) GiftActivate(request GiftActivateRequest) (*GiftActivateResponse, error) {
 	var response GiftActivateResponse
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -659,6 +772,10 @@ func (client *Client) GiftActivate(request GiftActivateRequest) (*GiftActivateRe
 		response.ResponseDescription = err.Error()
 	}
 
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
 	return &response, err
 }
 
@@ -666,6 +783,10 @@ func (client *Client) GiftActivate(request GiftActivateRequest) (*GiftActivateRe
 func (client *Client) TerminalStatus(request TerminalStatusRequest) (*TerminalStatusResponse, error) {
 	var response TerminalStatusResponse
 	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
 
 	if request.TerminalName != "" {
 		var route TerminalRoute
@@ -696,6 +817,10 @@ func (client *Client) TerminalStatus(request TerminalStatusRequest) (*TerminalSt
 		response.ResponseDescription = ResponseTimedOut
 	} else if err != nil {
 		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
 	}
 
 	return &response, err
@@ -786,4 +911,49 @@ func getTimeout(requestTimeout interface{}, defaultTimeout time.Duration) time.D
 		return defaultTimeout
 	}
 	return requestTimeoutDuration
+}
+
+func populateSignatureOptions(request interface{}) error {
+	sigOpts, ok := (SignatureRequest{}).From(request)
+	if !ok {
+		return nil
+	}
+
+	if sigOpts.SigFile != "" && sigOpts.SigFormat == "" {
+		x := strings.Split(sigOpts.SigFile, ".")
+		sigOpts.SigFormat = SignatureFormat(strings.ToLower(x[len(x)-1]))
+	}
+
+	switch sigOpts.SigFormat {
+	case SignatureFormatNone, SignatureFormatPNG, SignatureFormatJPG, SignatureFormatGIF:
+	default:
+		return fmt.Errorf("invalid signature format: %s", sigOpts.SigFormat)
+	}
+
+	copyTo(sigOpts, request)
+
+	return nil
+}
+
+func handleSignature(request, response interface{}) error {
+	requestOpts, ok := (SignatureRequest{}).From(request)
+	if !ok {
+		return nil
+	}
+
+	responseOpts, ok := (SignatureResponse{}).From(response)
+	if !ok {
+		return nil
+	}
+
+	if requestOpts.SigFile == "" || responseOpts.SigFile == "" {
+		return nil
+	}
+
+	content, err := hex.DecodeString(responseOpts.SigFile)
+	if err != nil {
+		return err
+	}
+
+	return ioutil.WriteFile(requestOpts.SigFile, content, 0600)
 }

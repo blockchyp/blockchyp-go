@@ -1,14 +1,12 @@
 package main
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -116,26 +114,6 @@ func validateArgs(args *blockchyp.CommandLineArguments) {
 	if args.Type == "" {
 		fatalError("-type is required")
 	}
-
-	if args.SigFile != "" {
-		if args.SigFormat == "" {
-			args.SigFormat = strings.ToLower(strings.TrimPrefix(filepath.Ext(args.SigFile), "."))
-		}
-
-		if !validSigFormat(args.SigFormat) {
-			fatalErrorf("Invalid signature format: %s", args.SigFormat)
-		}
-	}
-}
-
-func validSigFormat(format string) bool {
-	for _, valid := range validSignatureFormats {
-		if format == valid {
-			return true
-		}
-	}
-
-	return false
 }
 
 func resolveCredentials(args blockchyp.CommandLineArguments) (*blockchyp.APICredentials, error) {
@@ -324,8 +302,9 @@ func processTermsAndConditions(client *blockchyp.Client, args blockchyp.CommandL
 	request.TransactionID = args.TransactionID
 	request.TransactionRef = args.TransactionRef
 	request.SigRequired = args.SigRequired
-	request.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
 	request.SigWidth = args.SigWidth
+	request.SigFile = args.SigFile
+	request.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
 
 	ack, err := client.TermsAndConditions(request)
 	if err != nil {
@@ -472,6 +451,7 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req.Test = args.Test
 	req.ManualEntry = args.ManualEntry
 	req.SigWidth = args.SigWidth
+	req.SigFile = args.SigFile
 	req.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
 
 	res, err := client.Refund(req)
@@ -480,15 +460,6 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 		handleError(&args, err)
 	}
 
-	if args.SigFile != "" && res.SigFile != "" {
-		content, err := hex.DecodeString(res.SigFile)
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			ioutil.WriteFile(args.SigFile, content, 0644)
-			res.SigFile = ""
-		}
-	}
 	dumpResponse(&args, res)
 }
 
@@ -611,6 +582,7 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	req.Enroll = args.Enroll
 	req.ManualEntry = args.ManualEntry
 	req.SigWidth = args.SigWidth
+	req.SigFile = args.SigFile
 	req.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
 	req.CashBackEnabled = args.CashBackEnabled
 	if args.EBT {
@@ -628,15 +600,6 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 
 	if err != nil {
 		handleError(&args, err)
-	}
-	if args.SigFile != "" && res.SigFile != "" {
-		content, err := hex.DecodeString(res.SigFile)
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			ioutil.WriteFile(args.SigFile, content, 0644)
-			res.SigFile = ""
-		}
 	}
 	dumpResponse(&args, res)
 }
