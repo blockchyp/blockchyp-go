@@ -145,6 +145,7 @@ stuff you can do with the BlockChyp Go SDK and a few basic examples.
 
 Executes a standard direct preauth and capture.
 
+
 ```go
 package main
 
@@ -192,6 +193,7 @@ func chargeExample() {
 #### Preauthorization
 
 Executes a preauthorization intended to be captured later.
+
 
 ```go
 package main
@@ -241,6 +243,7 @@ func preauthExample() {
 
 Tests connectivity with a payment terminal.
 
+
 ```go
 package main
 
@@ -286,6 +289,7 @@ func pingExample() {
 #### Balance
 
 Checks the remaining balance on a payment method.
+
 
 ```go
 package main
@@ -335,6 +339,7 @@ func balanceExample() {
 
 Clears the line item display and any in progress transaction.
 
+
 ```go
 package main
 
@@ -381,6 +386,7 @@ func clearExample() {
 #### Terms & Conditions Capture
 
 Prompts the user to accept terms and conditions.
+
 
 ```go
 package main
@@ -445,9 +451,10 @@ func termsAndConditionsExample() {
 
 #### Update Transaction Display
 
-Appends items to an existing transaction display Subtotal, Tax, and Total are
+Appends items to an existing transaction display.  Subtotal, Tax, and Total are
 overwritten by the request. Items with the same description are combined into
 groups.
+
 
 ```go
 package main
@@ -515,6 +522,7 @@ func updateTransactionDisplayExample() {
 
 Displays a new transaction on the terminal.
 
+
 ```go
 package main
 
@@ -579,7 +587,8 @@ func newTransactionDisplayExample() {
 
 #### Text Prompt
 
-Asks the consumer text based question.
+Asks the consumer a text based question.
+
 
 ```go
 package main
@@ -631,6 +640,7 @@ func textPromptExample() {
 
 Asks the consumer a yes/no question.
 
+
 ```go
 package main
 
@@ -681,6 +691,7 @@ func booleanPromptExample() {
 
 Displays a short message on the terminal.
 
+
 ```go
 package main
 
@@ -728,6 +739,7 @@ func messageExample() {
 #### Refund
 
 Executes a refund.
+
 
 ```go
 package main
@@ -779,6 +791,7 @@ func refundExample() {
 
 Adds a new payment method to the token vault.
 
+
 ```go
 package main
 
@@ -825,6 +838,7 @@ func enrollExample() {
 #### Gift Card Activation
 
 Activates or recharges a gift card.
+
 
 ```go
 package main
@@ -882,6 +896,7 @@ transaction you're trying to reverse because we may not have assigned it an id
 yet. And if we did assign it an id, you wouldn't know what it is because your
 request to the terminal timed out before you got a response.
 
+
 ```go
 package main
 
@@ -928,6 +943,7 @@ func reverseExample() {
 #### Capture Preauthorization
 
 Captures a preauthorization.
+
 
 ```go
 package main
@@ -976,6 +992,7 @@ func captureExample() {
 
 Closes the current credit card batch.
 
+
 ```go
 package main
 
@@ -1021,6 +1038,7 @@ func closeBatchExample() {
 #### Void Transaction
 
 Discards a previous preauth transaction.
+
 
 ```go
 package main
@@ -1068,6 +1086,7 @@ func voidExample() {
 #### Terminal Status
 
 Returns the current status of a terminal.
+
 
 ```go
 package main

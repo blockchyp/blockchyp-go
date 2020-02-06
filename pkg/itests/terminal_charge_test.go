@@ -57,6 +57,7 @@ func TestTerminalCharge(t *testing.T) {
 	logResponse(response)
 
 	// response assertions
+	assert.True(response.Success)
 	assert.True(response.Approved)
 	assert.True(response.Test)
 	assert.Len(response.AuthCode, 6)

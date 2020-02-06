@@ -401,7 +401,7 @@ func (client *Client) TermsAndConditions(request TermsAndConditionsRequest) (*Te
 	return &response, err
 }
 
-// UpdateTransactionDisplay appends items to an existing transaction display
+// UpdateTransactionDisplay appends items to an existing transaction display.
 // Subtotal, Tax, and Total are overwritten by the request. Items with the
 // same description are combined into groups.
 func (client *Client) UpdateTransactionDisplay(request TransactionDisplayRequest) (*Acknowledgement, error) {
@@ -497,7 +497,7 @@ func (client *Client) NewTransactionDisplay(request TransactionDisplayRequest) (
 	return &response, err
 }
 
-// TextPrompt asks the consumer text based question.
+// TextPrompt asks the consumer a text based question.
 func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse, error) {
 	var response TextPromptResponse
 	var err error

@@ -179,7 +179,7 @@ explicitly specify a file location via the `-f` argument.
 | `-displaySubtotal`    | Subtotal for all line items on the display. | `-displaySubtotal="239.98"`           |
 | `-displayTax`    | Tax to be displayed on the terminal | `-displayTax="11.02"`           |
 | `-displayTotal`    | Grand total for the line item display | `-displayTotal="250.00"`           |
-| `-prompt`    | Text to be display on a boolean prompt screen. | `-prompt="Would you like to supersize that?"`           |
+| `-prompt`    | Text to be displayed on a boolean prompt screen. | `-prompt="Would you like to supersize that?"`           |
 | `-promptType`    | Type of prompt for text-prompts. Could be 'email', 'phone', 'customer-number', or 'rewards-number' | `-prompt="email"`           |
 | `-yesCaption`    | Overrides the label for the 'Yes' button on boolean-prompt screens. | `-yesCaption="Definitely"`           |
 | `-noCaption`    | Overrides the label for the 'No' button on boolean-prompt screens. | `-noCaption="I Think Not"`           |
@@ -355,7 +355,7 @@ do not reference a previous transaction, which we call free range refunds.
 We strongly recommend that refunds always reference a previous transaction, but
 we know we don't live in an ideal world.
 
-The example below shows how to refund the entire amound of a previous transaction
+The example below shows how to refund the entire amount of a previous transaction
 without needing to lookup or pass in the amount.
 
 ```
@@ -597,7 +597,7 @@ The example below shows a typical manual transaction.
 
 ### Line Item Display
 
-This command add items to the line item display.
+This command adds items to the line item display.
 
 If you run a charge or preauth transaction immediately after populating the line item display, the line item data will be used for Level 3 processing and the display data will be cleared after the transaction.
 
