@@ -43,7 +43,14 @@ jobs:
 
       - run:
           name: Publish
-          command: make publish
+          command: |
+            ghr \
+              -n "BlockChyp CLI ${CIRCLE_TAG#v}" \
+              -u ${CIRCLE_PROJECT_USERNAME} \
+              -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} \
+              -recreate \
+              ${CIRCLE_TAG} \
+              build/dist
 
 workflows:
   version: 2
