@@ -71,5 +71,6 @@ func TestSimpleCapture(t *testing.T) {
 	logResponse(response)
 
 	// response assertions
+	assert.True(response.Success)
 	assert.True(response.Approved)
 }

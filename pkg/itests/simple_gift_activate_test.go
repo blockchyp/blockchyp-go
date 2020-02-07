@@ -57,6 +57,7 @@ func TestSimpleGiftActivate(t *testing.T) {
 	logResponse(response)
 
 	// response assertions
+	assert.True(response.Success)
 	assert.True(response.Approved)
 	assert.NotEmpty(response.PublicKey)
 }
