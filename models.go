@@ -133,6 +133,58 @@ type Acknowledgement struct {
 	ResponseDescription string `json:"responseDescription"`
 }
 
+// CaptureSignatureRequest contains a request for customer signature data.
+type CaptureSignatureRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// SigFile is a location on the filesystem which a customer signature should
+	// be written to.
+	SigFile string `json:"sigFile,omitempty"`
+
+	// SigFormat specifies the image format to be used for returning signatures.
+	SigFormat SignatureFormat `json:"sigFormat,omitempty"`
+
+	// SigWidth is the width that the signature image should be scaled to,
+	// preserving the aspect ratio. If not provided, the signature is returned in
+	// the terminal's max resolution.
+	SigWidth int `json:"sigWidth,omitempty"`
+
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
+}
+
+// CaptureSignatureResponse contains customer signature data.
+type CaptureSignatureResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// SigFile contains the hex encoded signature data.
+	SigFile string `json:"sigFile,omitempty"`
+}
+
 // PingRequest contains information needed to test connectivity with a
 // terminal.
 type PingRequest struct {
@@ -1752,6 +1804,13 @@ type TerminalStatusResponse struct {
 
 	// Since is the timestamp of the last status change.
 	Since time.Time `json:"since"`
+}
+
+// TerminalCaptureSignatureRequest contains a request for customer signature
+// data.
+type TerminalCaptureSignatureRequest struct {
+	APICredentials
+	Request CaptureSignatureRequest `json:"request"`
 }
 
 // TerminalPingRequest contains information needed to test connectivity with a

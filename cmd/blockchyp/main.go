@@ -224,6 +224,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processCacheExpire(client, args)
 	case "terminal-status":
 		processTerminalStatus(client, args)
+	case "capture-signature":
+		processCaptureSignature(client, args)
 	default:
 		fatalErrorf("%s is unknown transaction type", args.Type)
 	}
@@ -247,6 +249,24 @@ func processTerminalStatus(client *blockchyp.Client, args blockchyp.CommandLineA
 
 	response, err := client.TerminalStatus(blockchyp.TerminalStatusRequest{
 		TerminalName: args.TerminalName,
+	})
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, response)
+}
+
+func processCaptureSignature(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.TerminalName, "terminal")
+	if args.SigFile == "" && args.SigFormat == blockchyp.SignatureFormatNone {
+		fatalErrorf("-%s or -%s are required", "sigFile", "sigFormat")
+	}
+
+	response, err := client.CaptureSignature(blockchyp.CaptureSignatureRequest{
+		TerminalName: args.TerminalName,
+		SigFile:      args.SigFile,
+		SigFormat:    blockchyp.SignatureFormat(args.SigFormat),
+		SigWidth:     args.SigWidth,
 	})
 	if err != nil {
 		handleError(&args, err)

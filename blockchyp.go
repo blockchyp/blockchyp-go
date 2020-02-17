@@ -826,6 +826,53 @@ func (client *Client) TerminalStatus(request TerminalStatusRequest) (*TerminalSt
 	return &response, err
 }
 
+// CaptureSignature captures and returns a signature.
+func (client *Client) CaptureSignature(request CaptureSignatureRequest) (*CaptureSignatureResponse, error) {
+	var response CaptureSignatureResponse
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/capture-signature", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalCaptureSignatureRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/capture-signature", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/capture-signature", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
 // Reverse executes a manual time out reversal.
 //
 // We love time out reversals. Don't be afraid to use them whenever a request
