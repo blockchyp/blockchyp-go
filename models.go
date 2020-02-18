@@ -179,6 +179,11 @@ type CaptureSignatureRequest struct {
 	// the terminal's max resolution.
 	SigWidth int `json:"sigWidth,omitempty"`
 
+	// DisableSignature specifies whether or not signature prompt should be
+	// skipped on the terminal. The terminal will indicate whether or not a
+	// signature is required by the card in the receipt suggestions response.
+	DisableSignature bool `json:"disableSignature,omitempty"`
+
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 }
@@ -498,6 +503,11 @@ type AuthorizationRequest struct {
 	// the terminal's max resolution.
 	SigWidth int `json:"sigWidth,omitempty"`
 
+	// DisableSignature specifies whether or not signature prompt should be
+	// skipped on the terminal. The terminal will indicate whether or not a
+	// signature is required by the card in the receipt suggestions response.
+	DisableSignature bool `json:"disableSignature,omitempty"`
+
 	// TipAmount is the tip amount.
 	TipAmount string `json:"tipAmount,omitempty"`
 
@@ -798,6 +808,11 @@ type RefundRequest struct {
 	// preserving the aspect ratio. If not provided, the signature is returned in
 	// the terminal's max resolution.
 	SigWidth int `json:"sigWidth,omitempty"`
+
+	// DisableSignature specifies whether or not signature prompt should be
+	// skipped on the terminal. The terminal will indicate whether or not a
+	// signature is required by the card in the receipt suggestions response.
+	DisableSignature bool `json:"disableSignature,omitempty"`
 
 	// TipAmount is the tip amount.
 	TipAmount string `json:"tipAmount,omitempty"`
@@ -1489,6 +1504,11 @@ type TermsAndConditionsRequest struct {
 	// the terminal's max resolution.
 	SigWidth int `json:"sigWidth,omitempty"`
 
+	// DisableSignature specifies whether or not signature prompt should be
+	// skipped on the terminal. The terminal will indicate whether or not a
+	// signature is required by the card in the receipt suggestions response.
+	DisableSignature bool `json:"disableSignature,omitempty"`
+
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
@@ -2002,6 +2022,11 @@ type SignatureRequest struct {
 	// preserving the aspect ratio. If not provided, the signature is returned in
 	// the terminal's max resolution.
 	SigWidth int
+
+	// DisableSignature specifies whether or not signature prompt should be
+	// skipped on the terminal. The terminal will indicate whether or not a
+	// signature is required by the card in the receipt suggestions response.
+	DisableSignature bool
 }
 
 // From creates an instance of SignatureRequest with values

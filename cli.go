@@ -75,6 +75,7 @@ type CommandLineArguments struct {
 	SigRequired                 bool   `arg:"sigRequired"`
 	CashBackEnabled             bool   `arg:"cashback"`
 	Enroll                      bool   `arg:"enroll"`
+	DisableSignature            bool   `arg:"disableSignature"`
 }
 
 var defaultSettings = &ConfigSettings{

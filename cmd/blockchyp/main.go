@@ -96,6 +96,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.IntVar(&args.Timeout, "timeout", 90, "overrides default timeouts for terminal interaction")
 	flag.BoolVar(&args.CashBackEnabled, "cashback", false, "enables cash back transactions")
 	flag.BoolVar(&args.Enroll, "enroll", false, "enroll the payment in the token vault")
+	flag.BoolVar(&args.DisableSignature, "disableSignature", false, "prevent terminal from prompting for signatures")
 
 	flag.Parse()
 
@@ -325,6 +326,7 @@ func processTermsAndConditions(client *blockchyp.Client, args blockchyp.CommandL
 	request.SigWidth = args.SigWidth
 	request.SigFile = args.SigFile
 	request.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
+	request.DisableSignature = args.DisableSignature
 
 	ack, err := client.TermsAndConditions(request)
 	if err != nil {
@@ -473,6 +475,7 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req.SigWidth = args.SigWidth
 	req.SigFile = args.SigFile
 	req.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
+	req.DisableSignature = args.DisableSignature
 
 	res, err := client.Refund(req)
 
@@ -604,6 +607,7 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	req.SigWidth = args.SigWidth
 	req.SigFile = args.SigFile
 	req.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
+	req.DisableSignature = args.DisableSignature
 	req.CashBackEnabled = args.CashBackEnabled
 	if args.EBT {
 		req.CardType = blockchyp.CardTypeEBT
