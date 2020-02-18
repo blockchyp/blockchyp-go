@@ -54,6 +54,20 @@ const (
 	PromptTypeRewardsNumber  = "rewards-number"
 )
 
+// AVSResponse indicates the result of address verification.
+type AVSResponse string
+
+// AVSResponse types.
+const (
+	AVSResponseNotApplicable             AVSResponse = ""
+	AVSResponseNotSupported                          = "not_supported"
+	AVSResponseRetry                                 = "retry"
+	AVSResponseNoMatch                               = "no_match"
+	AVSResponseAddressMatch                          = "address_match"
+	AVSResponsePostalCodeMatch                       = "zip_match"
+	AVSResponseAddressAndPostalCodeMatch             = "match"
+)
+
 // ReceiptSuggestions contains EMV fields we recommend developers put on their
 // receipts.
 type ReceiptSuggestions struct {
@@ -675,6 +689,10 @@ type BalanceResponse struct {
 	// CardHolder is the cardholder name.
 	CardHolder string `json:"cardHolder,omitempty"`
 
+	// AVSResponse contains address verification results if address information
+	// was submitted.
+	AVSResponse AVSResponse `json:"avsResponse"`
+
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
@@ -973,6 +991,10 @@ type CaptureResponse struct {
 	// CardHolder is the cardholder name.
 	CardHolder string `json:"cardHolder,omitempty"`
 
+	// AVSResponse contains address verification results if address information
+	// was submitted.
+	AVSResponse AVSResponse `json:"avsResponse"`
+
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 }
@@ -1069,6 +1091,10 @@ type VoidResponse struct {
 
 	// CardHolder is the cardholder name.
 	CardHolder string `json:"cardHolder,omitempty"`
+
+	// AVSResponse contains address verification results if address information
+	// was submitted.
+	AVSResponse AVSResponse `json:"avsResponse"`
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
@@ -1224,6 +1250,10 @@ type EnrollResponse struct {
 
 	// CardHolder is the cardholder name.
 	CardHolder string `json:"cardHolder,omitempty"`
+
+	// AVSResponse contains address verification results if address information
+	// was submitted.
+	AVSResponse AVSResponse `json:"avsResponse"`
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
@@ -1627,6 +1657,10 @@ type AuthorizationResponse struct {
 
 	// CardHolder is the cardholder name.
 	CardHolder string `json:"cardHolder,omitempty"`
+
+	// AVSResponse contains address verification results if address information
+	// was submitted.
+	AVSResponse AVSResponse `json:"avsResponse"`
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
@@ -2046,6 +2080,10 @@ type PaymentMethodResponse struct {
 
 	// CardHolder is the cardholder name.
 	CardHolder string
+
+	// AVSResponse contains address verification results if address information
+	// was submitted.
+	AVSResponse AVSResponse
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions
