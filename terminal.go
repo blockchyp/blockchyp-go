@@ -324,9 +324,6 @@ func (client *Client) terminalRequest(route TerminalRoute, path, method string, 
 	}
 
 	defer res.Body.Close()
-	if res.StatusCode != http.StatusOK {
-		return errors.New(res.Status)
-	}
 
 	return consumeResponse(res, responseEntity)
 }

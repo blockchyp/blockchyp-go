@@ -66,6 +66,15 @@ func consumeResponse(resp *http.Response, responseEntity interface{}) error {
 		return err
 	}
 
+	if resp.StatusCode != http.StatusOK {
+		var ack Acknowledgement
+		err := json.Unmarshal(b, &ack)
+		if err != nil || ack.Error == "" {
+			return errors.New(resp.Status)
+		}
+		return errors.New(ack.Error)
+	}
+
 	err = json.Unmarshal(b, responseEntity)
 
 	if err != nil {
@@ -106,10 +115,6 @@ func (client *Client) GatewayRequest(path, method string, request, response inte
 		if client.highClockDiff() {
 			return errors.New("high clock drift, reset time on client")
 		}
-	}
-
-	if res.StatusCode != http.StatusOK {
-		return errors.New(res.Status)
 	}
 
 	return consumeResponse(res, response)
