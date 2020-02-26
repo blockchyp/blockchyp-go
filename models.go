@@ -52,6 +52,8 @@ const (
 	PromptTypePhone          = "phone"
 	PromptTypeCustomerNumber = "customer-number"
 	PromptTypeRewardsNumber  = "rewards-number"
+	PromptTypeFirstName      = "first-name"
+	PromptTypeLastName       = "last-name"
 )
 
 // AVSResponse indicates the result of address verification.
