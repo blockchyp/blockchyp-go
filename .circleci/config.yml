@@ -60,7 +60,7 @@ workflows:
           filters:
             tags:
               only: /^v\d+\.\d+\.\d+$/
-      - publish-github-release:
+      - publish:
           requires:
             - build
           filters:
