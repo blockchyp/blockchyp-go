@@ -159,7 +159,7 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -206,7 +206,7 @@ func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationRespo
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -253,7 +253,7 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -300,7 +300,7 @@ func (client *Client) Balance(request BalanceRequest) (*BalanceResponse, error) 
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -347,7 +347,7 @@ func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, err
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -394,7 +394,7 @@ func (client *Client) TermsAndConditions(request TermsAndConditionsRequest) (*Te
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -443,7 +443,7 @@ func (client *Client) UpdateTransactionDisplay(request TransactionDisplayRequest
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -490,7 +490,7 @@ func (client *Client) NewTransactionDisplay(request TransactionDisplayRequest) (
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -537,7 +537,7 @@ func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -584,7 +584,7 @@ func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromp
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -631,7 +631,7 @@ func (client *Client) Message(request MessageRequest) (*Acknowledgement, error) 
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -678,7 +678,7 @@ func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, err
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -725,7 +725,7 @@ func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -772,7 +772,7 @@ func (client *Client) GiftActivate(request GiftActivateRequest) (*GiftActivateRe
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -819,7 +819,7 @@ func (client *Client) TerminalStatus(request TerminalStatusRequest) (*TerminalSt
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -866,7 +866,7 @@ func (client *Client) CaptureSignature(request CaptureSignatureRequest) (*Captur
 		response.ResponseDescription = err.Error()
 	}
 
-	if err := handleSignature(request, response); err != nil {
+	if err := handleSignature(request, &response); err != nil {
 		log.Printf("Failed to write signature: %+v", err)
 	}
 
@@ -996,6 +996,8 @@ func handleSignature(request, response interface{}) error {
 	if requestOpts.SigFile == "" || responseOpts.SigFile == "" {
 		return nil
 	}
+
+	clearField(response, "SigFile")
 
 	content, err := hex.DecodeString(responseOpts.SigFile)
 	if err != nil {

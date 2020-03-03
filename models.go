@@ -2358,3 +2358,15 @@ func copyTo(from, to interface{}) (ok bool) {
 
 	return
 }
+
+func clearField(ptr interface{}, field string) {
+	v := reflect.ValueOf(ptr)
+	if v.Kind() != reflect.Ptr {
+		panic("must pass by pointer")
+	}
+	v = v.Elem()
+
+	if f := v.FieldByName(field); f.IsValid() {
+		f.Set(reflect.Zero(f.Type()))
+	}
+}
