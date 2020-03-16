@@ -463,6 +463,7 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req.TransactionID = args.TransactionID
 	req.Amount = args.Amount
 	req.TerminalName = args.TerminalName
+	req.Token = args.Token
 
 	if args.EBT {
 		req.CardType = blockchyp.CardTypeEBT
