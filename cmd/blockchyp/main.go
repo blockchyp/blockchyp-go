@@ -97,7 +97,20 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.CashBackEnabled, "cashback", false, "enables cash back transactions")
 	flag.BoolVar(&args.Enroll, "enroll", false, "enroll the payment in the token vault")
 	flag.BoolVar(&args.DisableSignature, "disableSignature", false, "prevent terminal from prompting for signatures")
-
+	flag.StringVar(&args.CustomerID, "customerId", "", "customer id for existing customer record")
+	flag.StringVar(&args.CustomerRef, "customerRef", "", "customer reference")
+	flag.StringVar(&args.FirstName, "firstName", "", "customer first name")
+	flag.StringVar(&args.LastName, "lastName", "", "customer last name")
+	flag.StringVar(&args.CompanyName, "companyName", "", "customer company name")
+	flag.StringVar(&args.EMailAddress, "email", "", "customer email address")
+	flag.StringVar(&args.SMSNumber, "sms", "", "customer sms or mobile number")
+	flag.StringVar(&args.PAN, "pan", "", "primary account number for direct process (use not recommended)")
+	flag.StringVar(&args.ExpiryMonth, "expMonth", "", "expiration month for pan, if provided")
+	flag.StringVar(&args.ExpiryYear, "expYear", "", "expiration year for pan, if provided")
+	flag.StringVar(&args.Subject, "subject", "", "subject for email links if auto sending")
+	flag.BoolVar(&args.AutoSend, "autoSend", false, "if true, BlockChyp will send email payment links for you")
+	flag.StringVar(&args.OrderRef, "orderRef", "", "your system's order or invoice number")
+	flag.StringVar(&args.Query, "query", "", "search string")
 	flag.Parse()
 
 	if args.Version {
@@ -227,10 +240,101 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processTerminalStatus(client, args)
 	case "capture-signature":
 		processCaptureSignature(client, args)
+	case "send-link":
+		processSendLink(client, args)
+	case "get-customer":
+		getCustomer(client, args)
+	case "search-customer":
+		searchCustomer(client, args)
+	case "update-customer":
+		updateCustomer(client, args)
 	default:
 		fatalErrorf("%s is unknown transaction type", args.Type)
 	}
 
+}
+
+func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	validateRequired(args.OrderRef, "orderRef")
+	validateRequired(args.Amount, "amount")
+
+	if !hasCustomerFields(args) {
+
+	}
+
+	request := blockchyp.PaymentLinkRequest{
+		TransactionRef: args.TransactionRef,
+		Description:    args.Description,
+		Subject:        args.Subject,
+		Amount:         args.Amount,
+		OrderRef:       args.OrderRef,
+		Test:           args.Test,
+		Timeout:        args.Timeout,
+		TaxExempt:      args.TaxExempt,
+		Transaction:    assembleDisplayTransaction(args),
+		Customer:       *populateCustomer(args),
+		AutoSend:       args.AutoSend,
+	}
+
+	ack, err := client.SendPaymentLink(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
+}
+
+func getCustomer(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	if args.CustomerID == "" && args.CustomerRef == "" {
+		fatalError("-customerId or -customerRef are required")
+	}
+
+	res, err := client.Customer(blockchyp.CustomerRequest{
+		CustomerID:  args.CustomerID,
+		CustomerRef: args.CustomerRef,
+		Timeout:     args.Timeout,
+	})
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, res)
+}
+
+func searchCustomer(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.Query, "query")
+
+	res, err := client.CustomerSearch(blockchyp.CustomerSearchRequest{
+		Query:   args.Query,
+		Timeout: args.Timeout,
+	})
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, res)
+}
+
+func updateCustomer(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	res, err := client.UpdateCustomer(blockchyp.UpdateCustomerRequest{
+		Customer: blockchyp.Customer{
+			ID:           args.CustomerID,
+			CustomerRef:  args.CustomerRef,
+			FirstName:    args.FirstName,
+			LastName:     args.LastName,
+			CompanyName:  args.CompanyName,
+			EmailAddress: args.EMailAddress,
+			SmsNumber:    args.SMSNumber,
+		},
+		Timeout: args.Timeout,
+	})
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, res)
 }
 
 func processCacheExpire(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
@@ -337,15 +441,13 @@ func processTermsAndConditions(client *blockchyp.Client, args blockchyp.CommandL
 
 }
 
-func processDisplay(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
-	validateRequired(args.TerminalName, "terminal")
+func assembleDisplayTransaction(args blockchyp.CommandLineArguments) *blockchyp.TransactionDisplayTransaction {
 
-	request := blockchyp.TransactionDisplayRequest{}
-	request.TerminalName = args.TerminalName
-	request.Transaction = &blockchyp.TransactionDisplayTransaction{}
-	request.Transaction.Subtotal = args.DisplaySubtotal
-	request.Transaction.Tax = args.DisplayTax
-	request.Transaction.Total = args.DisplayTotal
+	tx := &blockchyp.TransactionDisplayTransaction{
+		Subtotal: args.DisplaySubtotal,
+		Tax:      args.DisplayTax,
+		Total:    args.DisplayTotal,
+	}
 
 	ids := strings.Split(args.LineItemID, "|")
 	descs := strings.Split(args.LineItemDescription, "|")
@@ -357,6 +459,10 @@ func processDisplay(client *blockchyp.Client, args blockchyp.CommandLineArgument
 
 	lines := make([]*blockchyp.TransactionDisplayItem, 0)
 	for idx, desc := range descs {
+		if desc == "" {
+			continue
+		}
+
 		line := &blockchyp.TransactionDisplayItem{}
 		line.Description = desc
 
@@ -392,7 +498,18 @@ func processDisplay(client *blockchyp.Client, args blockchyp.CommandLineArgument
 		lines = append(lines, line)
 	}
 
-	request.Transaction.Items = lines
+	tx.Items = lines
+
+	return tx
+
+}
+
+func processDisplay(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.TerminalName, "terminal")
+
+	request := blockchyp.TransactionDisplayRequest{}
+	request.TerminalName = args.TerminalName
+	request.Transaction = assembleDisplayTransaction(args)
 
 	ack, err := client.UpdateTransactionDisplay(request)
 	if err != nil {
@@ -463,6 +580,7 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req.TransactionID = args.TransactionID
 	req.Amount = args.Amount
 	req.TerminalName = args.TerminalName
+	req.Token = args.Token
 
 	if args.EBT {
 		req.CardType = blockchyp.CardTypeEBT
@@ -568,8 +686,44 @@ func processGiftActivate(client *blockchyp.Client, args blockchyp.CommandLineArg
 	dumpResponse(&args, res)
 }
 
+func hasCustomerFields(args blockchyp.CommandLineArguments) bool {
+
+	if args.CustomerID != "" {
+		return true
+	} else if args.CustomerRef != "" {
+		return true
+	} else if args.FirstName != "" {
+		return true
+	} else if args.LastName != "" {
+		return true
+	} else if args.CompanyName != "" {
+		return true
+	} else if args.EMailAddress != "" {
+		return true
+	} else if args.SMSNumber != "" {
+		return true
+	}
+
+	return false
+
+}
+
+func populateCustomer(args blockchyp.CommandLineArguments) *blockchyp.Customer {
+
+	return &blockchyp.Customer{
+		ID:           args.CustomerID,
+		CustomerRef:  args.CustomerRef,
+		FirstName:    args.FirstName,
+		LastName:     args.LastName,
+		CompanyName:  args.CompanyName,
+		EmailAddress: args.EMailAddress,
+		SmsNumber:    args.SMSNumber,
+	}
+
+}
+
 func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
-	if (args.TerminalName == "") && (args.Token == "") {
+	if (args.TerminalName == "") && (args.Token == "") && (args.PAN == "") {
 		fatalError("-terminal or -token requred")
 	}
 	req := blockchyp.EnrollRequest{}
@@ -577,6 +731,12 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req.TransactionRef = args.TransactionRef
 	req.Test = args.Test
 	req.ManualEntry = args.ManualEntry
+	req.PAN = args.PAN
+	req.ExpMonth = args.ExpiryMonth
+	req.ExpYear = args.ExpiryYear
+	if hasCustomerFields(args) {
+		req.Customer = populateCustomer(args)
+	}
 
 	res, err := client.Enroll(req)
 
@@ -589,13 +749,16 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 
 func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.Amount, "amount")
-	if (args.TerminalName == "") && (args.Token == "") {
+	if (args.TerminalName == "") && (args.Token == "") && (args.PAN == "") {
 		fatalError("-terminal or -token requred")
 	}
 	req := blockchyp.AuthorizationRequest{}
 	req.TerminalName = args.TerminalName
 	req.TransactionRef = args.TransactionRef
 	req.Token = args.Token
+	req.PAN = args.PAN
+	req.ExpMonth = args.ExpiryMonth
+	req.ExpYear = args.ExpiryYear
 	req.Description = args.Description
 	req.Amount = args.Amount
 	req.PromptForTip = args.PromptForTip
@@ -611,6 +774,9 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	req.CashBackEnabled = args.CashBackEnabled
 	if args.EBT {
 		req.CardType = blockchyp.CardTypeEBT
+	}
+	if hasCustomerFields(args) {
+		req.Customer = populateCustomer(args)
 	}
 
 	res := &blockchyp.AuthorizationResponse{}

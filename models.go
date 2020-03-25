@@ -358,6 +358,160 @@ type TextPromptRequest struct {
 	PromptType PromptType `json:"promptType"`
 }
 
+// CustomerRequest models a customer data request.
+type CustomerRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// CustomerID BlockChyp assigned customer id.
+	CustomerID string `json:"customerId"`
+
+	// CustomerRef optional customer ref that can be used for the client's
+	// system's customer id.
+	CustomerRef string `json:"customerRef"`
+}
+
+// CustomerResponse models a customer data response.
+type CustomerResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Customer the customer record.
+	Customer *Customer `json:"customer"`
+}
+
+// CustomerSearchRequest models a customer data search request.
+type CustomerSearchRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Query search query for customer searches.
+	Query string `json:"query"`
+}
+
+// UpdateCustomerRequest models a customer data search request.
+type UpdateCustomerRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Customer models a customer update request.
+	Customer Customer `json:"customer"`
+}
+
+// CustomerSearchResponse models customer search results.
+type CustomerSearchResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Customers the customer results matching the search query.
+	Customers []Customer `json:"customers"`
+}
+
+// Customer models a customer record.
+type Customer struct {
+	// ID BlockChyp assigned customer id.
+	ID string `json:"id"`
+
+	// CustomerRef optional customer ref that can be used for the client's
+	// system's customer id.
+	CustomerRef string `json:"customerRef"`
+
+	// FirstName customer's first name.
+	FirstName string `json:"firstName"`
+
+	// LastName customer's last name.
+	LastName string `json:"lastName"`
+
+	// CompanyName customer's company name.
+	CompanyName string `json:"companyName"`
+
+	// EmailAddress customer's email address.
+	EmailAddress string `json:"emailAddress"`
+
+	// SmsNumber customer's SMS or mobile number.
+	SmsNumber string `json:"smsNumber"`
+
+	// PaymentMethods model saved payment methods associated with a customer.
+	PaymentMethods []CustomerToken `json:"paymentMethods"`
+}
+
+// CustomerToken models a customer token.
+type CustomerToken struct {
+	// Token BlockChyp assigned customer id.
+	Token string `json:"token"`
+
+	// MaskedPAN masked primary account number.
+	MaskedPAN string `json:"maskedPan"`
+
+	// ExpiryMonth expiration month.
+	ExpiryMonth string `json:"expiryMonth"`
+
+	// ExpiryYear expiration month.
+	ExpiryYear string `json:"expiryYear"`
+
+	// PaymentType payment type.
+	PaymentType string `json:"paymentType"`
+}
+
 // TextPromptResponse contains the response to a text prompt request.
 type TextPromptResponse struct {
 	// Success indicates whether or not the request succeeded.
@@ -557,6 +711,9 @@ type AuthorizationRequest struct {
 
 	// AltPrices is a map of alternate currencies and the price in each currency.
 	AltPrices map[string]string `json:"altPrices,omitempty"`
+
+	// Customer contains suggested receipt fields.
+	Customer *Customer `json:"customer"`
 }
 
 // BalanceRequest contains a request for the remaining balance on a payment
@@ -707,6 +864,9 @@ type BalanceResponse struct {
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
+
+	// Customer contains customer data, if any.
+	Customer *Customer `json:"customer"`
 
 	// RemainingBalance remaining balance on the payment method.
 	RemainingBalance string `json:"remainingBalance,omitempty"`
@@ -1014,6 +1174,9 @@ type CaptureResponse struct {
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
+
+	// Customer contains customer data, if any.
+	Customer *Customer `json:"customer"`
 }
 
 // VoidRequest contains a void request.
@@ -1116,6 +1279,9 @@ type VoidResponse struct {
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
+	// Customer contains customer data, if any.
+	Customer *Customer `json:"customer"`
+
 	// SigFile contains the hex encoded signature data.
 	SigFile string `json:"sigFile,omitempty"`
 }
@@ -1197,6 +1363,9 @@ type EnrollRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// Customer customer with which the new token should be associated.
+	Customer *Customer `json:"customer"`
 }
 
 // EnrollResponse contains the response to an enroll request.
@@ -1274,6 +1443,9 @@ type EnrollResponse struct {
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
+
+	// Customer contains customer data, if any.
+	Customer *Customer `json:"customer"`
 
 	// SigFile contains the hex encoded signature data.
 	SigFile string `json:"sigFile,omitempty"`
@@ -1687,6 +1859,9 @@ type AuthorizationResponse struct {
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
+	// Customer contains customer data, if any.
+	Customer *Customer `json:"customer"`
+
 	// SigFile contains the hex encoded signature data.
 	SigFile string `json:"sigFile,omitempty"`
 
@@ -1694,6 +1869,155 @@ type AuthorizationResponse struct {
 	// are read instead of being processed directly. This is useful for
 	// integration with legacy gift card systems.
 	WhiteListedCard *WhiteListedCard `json:"whiteListedCard"`
+
+	// StoreAndForward indicates that the transaction was flagged for store and
+	// forward due to network problems.
+	StoreAndForward bool `json:"storeAndForward"`
+}
+
+// TransactionStatusRequest models the request for updated information about a
+// transaction.
+type TransactionStatusRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// TransactionID is the BlockChyp assigned transaction id.
+	TransactionID string `json:"transactionId,omitempty"`
+}
+
+// TransactionStatus models the status of a transaction.
+type TransactionStatus struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Approved indicates that the transaction was approved.
+	Approved bool `json:"approved"`
+
+	// AuthCode is the auth code from the payment network.
+	AuthCode string `json:"authCode,omitempty"`
+
+	// TransactionID is the ID assigned to the transaction.
+	TransactionID string `json:"transactionId"`
+
+	// BatchID is the ID assigned to the batch.
+	BatchID string `json:"batchId,omitempty"`
+
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// TransactionType is the type of transaction.
+	TransactionType string `json:"transactionType"`
+
+	// Timestamp is the timestamp of the transaction.
+	Timestamp string `json:"timestamp"`
+
+	// TickBlock is the hash of the last tick block.
+	TickBlock string `json:"tickBlock"`
+
+	// Test indicates that the transaction was processed on the test gateway.
+	Test bool `json:"test"`
+
+	// Sig is the ECC signature of the response. Can be used to ensure that it
+	// was signed by the terminal and detect man-in-the middle attacks.
+	Sig string `json:"sig,omitempty"`
+
+	// PartialAuth indicates whether or not the transaction was approved for a
+	// partial amount.
+	PartialAuth bool `json:"partialAuth"`
+
+	// AltCurrency indicates whether or not an alternate currency was used.
+	AltCurrency bool `json:"altCurrency"`
+
+	// FSAAuth indicates whether or not a request was settled on an FSA card.
+	FSAAuth bool `json:"fsaAuth"`
+
+	// CurrencyCode is the currency code used for the transaction.
+	CurrencyCode string `json:"currencyCode"`
+
+	// RequestedAmount is the requested amount.
+	RequestedAmount string `json:"requestedAmount"`
+
+	// AuthorizedAmount is the authorized amount. May not match the requested
+	// amount in the event of a partial auth.
+	AuthorizedAmount string `json:"authorizedAmount"`
+
+	// RemainingBalance is the remaining balance on the payment method.
+	RemainingBalance string `json:"remainingBalance"`
+
+	// TipAmount is the tip amount.
+	TipAmount string `json:"tipAmount"`
+
+	// TaxAmount is the tax amount.
+	TaxAmount string `json:"taxAmount"`
+
+	// RequestedCashBackAmount is the cash back amount the customer requested
+	// during the transaction.
+	RequestedCashBackAmount string `json:"requestedCashBackAmount"`
+
+	// AuthorizedCashBackAmount is the amount of cash back authorized by the
+	// gateway. This amount will be the entire amount requested, or zero.
+	AuthorizedCashBackAmount string `json:"authorizedCashBackAmount"`
+
+	// Token is the payment token, if the payment was enrolled in the vault.
+	Token string `json:"token,omitempty"`
+
+	// EntryMethod is the entry method for the transaction (CHIP, MSR, KEYED,
+	// etc).
+	EntryMethod string `json:"entryMethod,omitempty"`
+
+	// PaymentType is the card brand (VISA, MC, AMEX, etc).
+	PaymentType string `json:"paymentType,omitempty"`
+
+	// MaskedPAN is the masked primary account number.
+	MaskedPAN string `json:"maskedPan,omitempty"`
+
+	// PublicKey is the BlockChyp public key if the user presented a BlockChyp
+	// payment card.
+	PublicKey string `json:"publicKey,omitempty"`
+
+	// ScopeAlert indicates that the transaction did something that would put the
+	// system in PCI scope.
+	ScopeAlert bool `json:"ScopeAlert,omitempty"`
+
+	// CardHolder is the cardholder name.
+	CardHolder string `json:"cardHolder,omitempty"`
+
+	// AVSResponse contains address verification results if address information
+	// was submitted.
+	AVSResponse AVSResponse `json:"avsResponse"`
+
+	// ReceiptSuggestions contains suggested receipt fields.
+	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
+
+	// Customer contains customer data, if any.
+	Customer *Customer `json:"customer"`
+
+	// SigFile contains the hex encoded signature data.
+	SigFile string `json:"sigFile,omitempty"`
 
 	// StoreAndForward indicates that the transaction was flagged for store and
 	// forward due to network problems.
@@ -1860,6 +2184,78 @@ type TerminalStatusResponse struct {
 
 	// Since is the timestamp of the last status change.
 	Since time.Time `json:"since"`
+}
+
+// PaymentLinkRequest creates a payment link.
+type PaymentLinkRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// CurrencyCode indicates the transaction currency code.
+	CurrencyCode string `json:"currencyCode"`
+
+	// Amount is the requested amount.
+	Amount string `json:"amount"`
+
+	// TaxExempt indicates that the request is tax exempt. Only required for tax
+	// exempt level 2 processing.
+	TaxExempt bool `json:"taxExempt"`
+
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
+
+	// AutoSend automatically send the link via an email.
+	AutoSend bool `json:"autoSend"`
+
+	// Description description explaining the transaction for display to the
+	// user.
+	Description string `json:"description"`
+
+	// Subject subject of the payment email.
+	Subject string `json:"subject"`
+
+	// Transaction transaction details for display on the payment email.
+	Transaction *TransactionDisplayTransaction `json:"transaction"`
+
+	// Customer contains customer information.
+	Customer Customer `json:"customer"`
+}
+
+// PaymentLinkResponse creates a payment link.
+type PaymentLinkResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// LinkCode the payment link code.
+	LinkCode string `json:"linkCode"`
+
+	// URL the url for the payment link.
+	URL string `json:"url"`
+
+	// CustomerID the customer id created or used for the payment.
+	CustomerID string `json:"customerId"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature
@@ -2114,6 +2510,9 @@ type PaymentMethodResponse struct {
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions
+
+	// Customer contains customer data, if any.
+	Customer *Customer
 }
 
 // From creates an instance of PaymentMethodResponse with values

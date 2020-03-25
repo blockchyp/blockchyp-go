@@ -942,6 +942,81 @@ func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
 	return &response, err
 }
 
+// UpdateCustomer updates or creates a customer record.
+func (client *Client) UpdateCustomer(request UpdateCustomerRequest) (*CustomerResponse, error) {
+	var response CustomerResponse
+
+	err := client.GatewayRequest("/update-customer", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// Customer retrieves a customer by id.
+func (client *Client) Customer(request CustomerRequest) (*CustomerResponse, error) {
+	var response CustomerResponse
+
+	err := client.GatewayRequest("/customer", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// CustomerSearch searches the customer database.
+func (client *Client) CustomerSearch(request CustomerSearchRequest) (*CustomerSearchResponse, error) {
+	var response CustomerSearchResponse
+
+	err := client.GatewayRequest("/customer-search", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TransactionStatus retrieves the current status of a transaction.
+func (client *Client) TransactionStatus(request TransactionStatusRequest) (*AuthorizationResponse, error) {
+	var response AuthorizationResponse
+
+	err := client.GatewayRequest("/tx-status", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// SendPaymentLink creates and send a payment link to a customer.
+func (client *Client) SendPaymentLink(request PaymentLinkRequest) (*PaymentLinkResponse, error) {
+	var response PaymentLinkResponse
+
+	err := client.GatewayRequest("/send-payment-link", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 func getTimeout(requestTimeout interface{}, defaultTimeout time.Duration) time.Duration {
 	var requestTimeoutDuration time.Duration
 	switch v := requestTimeout.(type) {
