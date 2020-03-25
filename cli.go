@@ -76,6 +76,20 @@ type CommandLineArguments struct {
 	CashBackEnabled             bool   `arg:"cashback"`
 	Enroll                      bool   `arg:"enroll"`
 	DisableSignature            bool   `arg:"disableSignature"`
+	CustomerID                  string `arg:"customerId"`
+	CustomerRef                 string `arg:"customerRef"`
+	FirstName                   string `arg:"firstName"`
+	LastName                    string `arg:"lastName"`
+	CompanyName                 string `arg:"companyName"`
+	EMailAddress                string `arg:"email"`
+	SMSNumber                   string `arg:"sms"`
+	PAN                         string `arg:"pan"`
+	ExpiryMonth                 string `arg:"expMonth"`
+	ExpiryYear                  string `arg:"expYear"`
+	Subject                     string `args:"subject"`
+	AutoSend                    bool   `args:"autoSend"`
+	OrderRef                    string `args:"orderRef"`
+	Query                       string `arg:"query"`
 }
 
 var defaultSettings = &ConfigSettings{

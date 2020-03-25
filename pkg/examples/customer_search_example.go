@@ -7,7 +7,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func captureSignatureExample() {
+func customerSearchExample() {
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -19,17 +19,11 @@ func captureSignatureExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.CaptureSignatureRequest{
-		TerminalName: "Test Terminal",
-
-		// file format for the signature image.
-		SigFormat: blockchyp.SignatureFormatPNG,
-
-		// width of the signature image in pixels.
-		SigWidth: 200,
+	request := blockchyp.CustomerSearchRequest{
+		Query: "(123) 123-1234",
 	}
 
-	response, err := client.CaptureSignature(request)
+	response, err := client.CustomerSearch(request)
 
 	if err != nil {
 		log.Fatal(err)
