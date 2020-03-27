@@ -2234,6 +2234,10 @@ type PaymentLinkRequest struct {
 
 	// Customer contains customer information.
 	Customer Customer `json:"customer"`
+
+	// CallbackURL optional callback url to which transaction responses for this
+	// link will be posted.
+	CallbackURL string `json:"callbackUrl"`
 }
 
 // PaymentLinkResponse creates a payment link.
