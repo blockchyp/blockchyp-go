@@ -248,9 +248,32 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		searchCustomer(client, args)
 	case "update-customer":
 		updateCustomer(client, args)
+	case "tx-status":
+		processTransactionStatus(client, args)
 	default:
 		fatalErrorf("%s is unknown transaction type", args.Type)
 	}
+
+}
+
+func processTransactionStatus(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	if args.TransactionID == "" && args.TransactionRef == "" {
+		fatalErrorf("-tx or -txRef are required")
+	}
+
+	request := blockchyp.TransactionStatusRequest{
+		TransactionID:  args.TransactionID,
+		TransactionRef: args.TransactionRef,
+		Test:           args.Test,
+	}
+
+	ack, err := client.TransactionStatus(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
 
 }
 
@@ -260,7 +283,7 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 	validateRequired(args.Amount, "amount")
 
 	if !hasCustomerFields(args) {
-
+		fatalErrorf("customer fields (-customerId, -email, etc ) are required")
 	}
 
 	request := blockchyp.PaymentLinkRequest{
