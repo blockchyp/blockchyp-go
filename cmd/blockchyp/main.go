@@ -111,6 +111,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.AutoSend, "autoSend", false, "if true, BlockChyp will send email payment links for you")
 	flag.StringVar(&args.OrderRef, "orderRef", "", "your system's order or invoice number")
 	flag.StringVar(&args.Query, "query", "", "search string")
+	flag.StringVar(&args.CallbackURL, "callbackUrl", "", "optional callback url to which a response is posted for payment links")
 	flag.Parse()
 
 	if args.Version {
@@ -298,6 +299,7 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 		Transaction:    assembleDisplayTransaction(args),
 		Customer:       *populateCustomer(args),
 		AutoSend:       args.AutoSend,
+		CallbackURL:    args.CallbackURL,
 	}
 
 	ack, err := client.SendPaymentLink(request)
