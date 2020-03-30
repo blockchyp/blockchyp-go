@@ -19,7 +19,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestSimpleVoid(t *testing.T) {
+func TestSearchCustomer(t *testing.T) {
 	assert := assert.New(t)
 
 	client := newTestClient(t)
@@ -33,7 +33,7 @@ func TestSimpleVoid(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestSimpleVoid in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestSearchCustomer in %v seconds...", testDelay),
 		}
 		if _, err := client.Message(messageRequest); err != nil {
 			t.Fatal(err)
@@ -42,30 +42,32 @@ func TestSimpleVoid(t *testing.T) {
 	}
 
 	// setup request object
-	setupRequest := blockchyp.AuthorizationRequest{
-		PAN:            "4111111111111111",
-		Amount:         "25.55",
-		Test:           true,
-		TransactionRef: randomID(),
+	setupRequest := blockchyp.UpdateCustomerRequest{
+		Customer: blockchyp.Customer{
+			FirstName:    "Test",
+			LastName:     "Customer",
+			CompanyName:  "Test Company",
+			EmailAddress: "support@blockchyp.com",
+			SmsNumber:    "(123) 123-1234",
+		},
 	}
 
 	logRequest(setupRequest)
 
-	setupResponse, err := client.Charge(setupRequest)
+	setupResponse, err := client.UpdateCustomer(setupRequest)
 
 	assert.NoError(err)
 
 	logResponse(setupResponse)
 
 	// setup request object
-	request := blockchyp.VoidRequest{
-		TransactionID: setupResponse.TransactionID,
-		Test:          true,
+	request := blockchyp.CustomerSearchRequest{
+		Query: "123123",
 	}
 
 	logRequest(request)
 
-	response, err := client.Void(request)
+	response, err := client.CustomerSearch(request)
 
 	assert.NoError(err)
 
@@ -73,5 +75,4 @@ func TestSimpleVoid(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
-	assert.True(response.Approved)
 }

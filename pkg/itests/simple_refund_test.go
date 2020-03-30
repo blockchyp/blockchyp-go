@@ -42,24 +42,24 @@ func TestSimpleRefund(t *testing.T) {
 	}
 
 	// setup request object
-	request0 := blockchyp.AuthorizationRequest{
+	setupRequest := blockchyp.AuthorizationRequest{
 		PAN:            "4111111111111111",
 		Amount:         "25.55",
 		Test:           true,
 		TransactionRef: randomID(),
 	}
 
-	logRequest(request0)
+	logRequest(setupRequest)
 
-	response0, err := client.Charge(request0)
+	setupResponse, err := client.Charge(setupRequest)
 
 	assert.NoError(err)
 
-	logResponse(response0)
+	logResponse(setupResponse)
 
 	// setup request object
 	request := blockchyp.RefundRequest{
-		TransactionID: lastTransactionID,
+		TransactionID: setupResponse.TransactionID,
 		Test:          true,
 	}
 

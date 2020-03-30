@@ -19,7 +19,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestSimpleVoid(t *testing.T) {
+func TestSendPaymentLink(t *testing.T) {
 	assert := assert.New(t)
 
 	client := newTestClient(t)
@@ -33,7 +33,7 @@ func TestSimpleVoid(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestSimpleVoid in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestSendPaymentLink in %v seconds...", testDelay),
 		}
 		if _, err := client.Message(messageRequest); err != nil {
 			t.Fatal(err)
@@ -42,30 +42,36 @@ func TestSimpleVoid(t *testing.T) {
 	}
 
 	// setup request object
-	setupRequest := blockchyp.AuthorizationRequest{
-		PAN:            "4111111111111111",
-		Amount:         "25.55",
-		Test:           true,
-		TransactionRef: randomID(),
-	}
-
-	logRequest(setupRequest)
-
-	setupResponse, err := client.Charge(setupRequest)
-
-	assert.NoError(err)
-
-	logResponse(setupResponse)
-
-	// setup request object
-	request := blockchyp.VoidRequest{
-		TransactionID: setupResponse.TransactionID,
-		Test:          true,
+	request := blockchyp.PaymentLinkRequest{
+		Amount:      "199.99",
+		Description: "Widget",
+		Subject:     "Widget invoice",
+		Transaction: &blockchyp.TransactionDisplayTransaction{
+			Subtotal: "195.00",
+			Tax:      "4.99",
+			Total:    "199.99",
+			Items: []*blockchyp.TransactionDisplayItem{
+				&blockchyp.TransactionDisplayItem{
+					Description: "Widget",
+					Price:       "195.00",
+					Quantity:    1,
+				},
+			},
+		},
+		AutoSend: true,
+		Customer: blockchyp.Customer{
+			CustomerRef:  "Customer reference string",
+			FirstName:    "FirstName",
+			LastName:     "LastName",
+			CompanyName:  "Company Name",
+			EmailAddress: "support@blockchyp.com",
+			SmsNumber:    "(123) 123-1231",
+		},
 	}
 
 	logRequest(request)
 
-	response, err := client.Void(request)
+	response, err := client.SendPaymentLink(request)
 
 	assert.NoError(err)
 
@@ -73,5 +79,5 @@ func TestSimpleVoid(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
-	assert.True(response.Approved)
+	assert.NotEmpty(response.URL)
 }
