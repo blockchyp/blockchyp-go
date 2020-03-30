@@ -90,6 +90,7 @@ type CommandLineArguments struct {
 	AutoSend                    bool   `args:"autoSend"`
 	OrderRef                    string `args:"orderRef"`
 	Query                       string `arg:"query"`
+	CallbackURL                 string `arg:"callbackUrl"`
 }
 
 var defaultSettings = &ConfigSettings{
