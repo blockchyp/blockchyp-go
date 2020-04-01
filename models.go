@@ -2238,6 +2238,18 @@ type PaymentLinkRequest struct {
 	// CallbackURL optional callback url to which transaction responses for this
 	// link will be posted.
 	CallbackURL string `json:"callbackUrl"`
+
+	// TCAlias is an alias for a Terms and Conditions template configured in the
+	// BlockChyp dashboard.
+	TCAlias string `json:"tcAlias"`
+
+	// TCName contains the name of the Terms and Conditions the user is
+	// accepting.
+	TCName string `json:"tcName"`
+
+	// TCContent is the content of the terms and conditions that will be
+	// presented to the user.
+	TCContent string `json:"tcContent"`
 }
 
 // PaymentLinkResponse creates a payment link.

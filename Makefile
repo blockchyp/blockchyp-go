@@ -19,9 +19,9 @@ SOURCES := $(shell find . -name '*.go')
 TAR_ARCHIVE := blockchyp-cli-$(VERSION).tar.gz
 ZIP_ARCHIVE := blockchyp-cli-$(VERSION).zip
 ICON := assets/blockchyp.ico
-LDFLAGS = -s -w -extldflags '-static'
-LDFLAGS += -X github.com/blockchyp/blockchyp-go.Version=$(VERSION)
-BUILDFLAGS = -v -trimpath -ldflags "$(LDFLAGS)"
+LDFLAGS := -s -w -extldflags '-static' \
+	-X github.com/blockchyp/blockchyp-go.Version=$(VERSION)
+BUILDFLAGS := -v -trimpath -ldflags "$(LDFLAGS)"
 
 # Executables
 DOCKER = docker
@@ -117,6 +117,7 @@ cli-linux:
 cli-windows:
 	$(GOVERSIONINFO) -icon=$(ICON)
 	GOOS=windows GOARCH=386 $(MAKE) $(BUILDDIR)/blockchyp/windows/386/blockchyp.exe
+	GOOS=windows GOARCH=386 $(MAKE) $(BUILDDIR)/blockchyp/windows/386/blockchyp-headless.exe LDFLAGS="$(LDFLAGS) -H=windowsgui"
 	rm *.syso
 
 # Builds distribution archives
