@@ -1,3 +1,5 @@
+// +build regression
+
 package regression
 
 import (
