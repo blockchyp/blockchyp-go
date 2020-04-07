@@ -252,7 +252,7 @@ func processCommand(args blockchyp.CommandLineArguments) {
 	case "tx-status":
 		processTransactionStatus(client, args)
 	default:
-		fatalErrorf("%s is unknown transaction type", args.Type)
+		fatalErrorf("unknown transaction type: %s", args.Type)
 	}
 
 }
