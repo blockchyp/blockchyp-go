@@ -23,15 +23,15 @@ func TestToken(t *testing.T) {
 				},
 				{
 					"-type", "charge", "-test",
-					"-amount", "41.11", "-token",
+					"-amount", amount(0), "-token",
 				},
 				{
 					"-type", "preauth", "-test",
-					"-amount", "41.12", "-token",
+					"-amount", amount(1), "-token",
 				},
 				{
 					"-type", "refund", "-test",
-					"-amount", "41.09", "-token",
+					"-amount", amount(0), "-token",
 				},
 			},
 			assert: []interface{}{
@@ -48,8 +48,8 @@ func TestToken(t *testing.T) {
 					Test:             true,
 					TransactionType:  "charge",
 					EntryMethod:      "TOKEN",
-					RequestedAmount:  "41.11",
-					AuthorizedAmount: "41.11",
+					RequestedAmount:  amount(0),
+					AuthorizedAmount: amount(0),
 				},
 				blockchyp.AuthorizationResponse{
 					Success:          true,
@@ -57,8 +57,8 @@ func TestToken(t *testing.T) {
 					Test:             true,
 					TransactionType:  "preauth",
 					EntryMethod:      "TOKEN",
-					RequestedAmount:  "41.12",
-					AuthorizedAmount: "41.12",
+					RequestedAmount:  amount(1),
+					AuthorizedAmount: amount(1),
 				},
 				blockchyp.AuthorizationResponse{
 					Success:          true,
@@ -66,8 +66,8 @@ func TestToken(t *testing.T) {
 					Test:             true,
 					TransactionType:  "refund",
 					EntryMethod:      "TOKEN",
-					RequestedAmount:  "41.09",
-					AuthorizedAmount: "41.09",
+					RequestedAmount:  amount(0),
+					AuthorizedAmount: amount(0),
 				},
 			},
 		},
@@ -76,19 +76,19 @@ func TestToken(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "25.90", "-enroll",
+					"-amount", amount(0), "-enroll",
 				},
 				{
 					"-type", "charge", "-test",
-					"-amount", "25.91", "-token",
+					"-amount", amount(1), "-token",
 				},
 				{
 					"-type", "preauth", "-test",
-					"-amount", "25.92", "-token",
+					"-amount", amount(2), "-token",
 				},
 				{
 					"-type", "refund", "-test",
-					"-amount", "25.00", "-token",
+					"-amount", partialAuthAuthorizedAmount, "-token",
 				},
 			},
 			assert: []interface{}{
@@ -105,8 +105,8 @@ func TestToken(t *testing.T) {
 					Test:             true,
 					TransactionType:  "charge",
 					EntryMethod:      "TOKEN",
-					RequestedAmount:  "25.91",
-					AuthorizedAmount: "25.91",
+					RequestedAmount:  amount(1),
+					AuthorizedAmount: amount(1),
 				},
 				blockchyp.AuthorizationResponse{
 					Success:          true,
@@ -114,8 +114,8 @@ func TestToken(t *testing.T) {
 					Test:             true,
 					TransactionType:  "preauth",
 					EntryMethod:      "TOKEN",
-					RequestedAmount:  "25.92",
-					AuthorizedAmount: "25.92",
+					RequestedAmount:  amount(2),
+					AuthorizedAmount: amount(2),
 				},
 				blockchyp.AuthorizationResponse{
 					Success:          true,
@@ -123,8 +123,8 @@ func TestToken(t *testing.T) {
 					Test:             true,
 					TransactionType:  "refund",
 					EntryMethod:      "TOKEN",
-					RequestedAmount:  "25.00",
-					AuthorizedAmount: "25.00",
+					RequestedAmount:  partialAuthAuthorizedAmount,
+					AuthorizedAmount: partialAuthAuthorizedAmount,
 				},
 			},
 		},
@@ -133,19 +133,19 @@ func TestToken(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "preauth", "-terminal", "Test Terminal", "-test",
-					"-amount", "26.90", "-enroll",
+					"-amount", amount(0), "-enroll",
 				},
 				{
 					"-type", "charge", "-test",
-					"-amount", "26.91", "-token",
+					"-amount", amount(1), "-token",
 				},
 				{
 					"-type", "preauth", "-test",
-					"-amount", "26.92", "-token",
+					"-amount", amount(2), "-token",
 				},
 				{
 					"-type", "refund", "-test",
-					"-amount", "26.00", "-token",
+					"-amount", amount(0), "-token",
 				},
 			},
 			assert: []interface{}{
@@ -162,8 +162,8 @@ func TestToken(t *testing.T) {
 					Test:             true,
 					TransactionType:  "charge",
 					EntryMethod:      "TOKEN",
-					RequestedAmount:  "26.91",
-					AuthorizedAmount: "26.91",
+					RequestedAmount:  amount(1),
+					AuthorizedAmount: amount(1),
 				},
 				blockchyp.AuthorizationResponse{
 					Success:          true,
@@ -171,8 +171,8 @@ func TestToken(t *testing.T) {
 					Test:             true,
 					TransactionType:  "preauth",
 					EntryMethod:      "TOKEN",
-					RequestedAmount:  "26.92",
-					AuthorizedAmount: "26.92",
+					RequestedAmount:  amount(2),
+					AuthorizedAmount: amount(2),
 				},
 				blockchyp.AuthorizationResponse{
 					Success:          true,
@@ -180,17 +180,17 @@ func TestToken(t *testing.T) {
 					Test:             true,
 					TransactionType:  "refund",
 					EntryMethod:      "TOKEN",
-					RequestedAmount:  "26.00",
-					AuthorizedAmount: "26.00",
+					RequestedAmount:  amount(0),
+					AuthorizedAmount: amount(0),
 				},
 			},
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, test.instructions, true)
 
 			for i := range test.args {

@@ -79,10 +79,10 @@ func TestStatus(t *testing.T) {
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, "", false)
 
 			var wg sync.WaitGroup

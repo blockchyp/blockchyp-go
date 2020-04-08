@@ -20,7 +20,7 @@ func TestBatch(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "99.00",
+					"-amount", amount(0),
 				},
 				{
 					"-type", "close-batch", "-test",
@@ -35,12 +35,12 @@ func TestBatch(t *testing.T) {
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "charge",
-					AuthorizedAmount: "99.00",
+					AuthorizedAmount: amount(0),
 				},
 				blockchyp.CloseBatchResponse{
 					Success:       true,
 					Test:          true,
-					CapturedTotal: "99.00",
+					CapturedTotal: amount(0),
 					OpenPreauths:  "0.00",
 				},
 				blockchyp.CloseBatchResponse{
@@ -51,15 +51,17 @@ func TestBatch(t *testing.T) {
 			},
 		},
 		"PreauthRollover": {
-			instructions: "Insert an EMV test card when prompted.",
+			instructions: `Insert an EMV test card when prompted.
+
+Leave it in the terminal until the test completes.`,
 			args: [][]string{
 				{
 					"-type", "preauth", "-terminal", "Test Terminal", "-test",
-					"-amount", "99.01",
+					"-amount", amount(0),
 				},
 				{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "99.02",
+					"-amount", amount(1),
 				},
 				{
 					"-type", "close-batch", "-test",
@@ -71,20 +73,20 @@ func TestBatch(t *testing.T) {
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "preauth",
-					AuthorizedAmount: "99.01",
+					AuthorizedAmount: amount(0),
 				},
 				blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "charge",
-					AuthorizedAmount: "99.02",
+					AuthorizedAmount: amount(1),
 				},
 				blockchyp.CloseBatchResponse{
 					Success:       true,
 					Test:          true,
-					CapturedTotal: "99.02",
-					OpenPreauths:  "99.01",
+					CapturedTotal: amount(1),
+					OpenPreauths:  amount(0),
 				},
 			},
 		},
@@ -105,10 +107,10 @@ func TestBatch(t *testing.T) {
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, test.instructions, true)
 
 			// Close the batch and ignore the result to make sure we're

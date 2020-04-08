@@ -12,13 +12,13 @@ func TestEBT(t *testing.T) {
 	tests := map[string]struct {
 		instructions string
 		args         []string
-		assert       blockchyp.AuthorizationResponse
+		assert       interface{}
 	}{
 		"Charge": {
 			instructions: "Swipe an EBT test card when prompted. Enter PIN '1234'.",
 			args: []string{
 				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "25.00",
+				"-test", "-amount", partialAuthAuthorizedAmount,
 				"-ebt",
 			},
 			assert: blockchyp.AuthorizationResponse{
@@ -26,24 +26,23 @@ func TestEBT(t *testing.T) {
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "charge",
-				RequestedAmount:  "25.00",
-				AuthorizedAmount: "25.00",
+				RequestedAmount:  partialAuthAuthorizedAmount,
+				AuthorizedAmount: partialAuthAuthorizedAmount,
 				PaymentType:      "EBT",
 				ReceiptSuggestions: blockchyp.ReceiptSuggestions{
 					PINVerified: true,
 				},
 			},
 		},
-		"Balance": {
+		"MSRBalance": {
 			instructions: "Swipe an EBT test card when prompted. Enter PIN '1234'.",
 			args: []string{
 				"-type", "balance", "-terminal", "Test Terminal",
 				"-test",
 				"-ebt",
 			},
-			assert: blockchyp.AuthorizationResponse{
+			assert: blockchyp.BalanceResponse{
 				Success:          true,
-				Approved:         true,
 				Test:             true,
 				TransactionType:  "balance",
 				RemainingBalance: "100.00",
@@ -60,9 +59,8 @@ func TestEBT(t *testing.T) {
 				"-test",
 				"-ebt", "-manual",
 			},
-			assert: blockchyp.AuthorizationResponse{
+			assert: blockchyp.BalanceResponse{
 				Success:          true,
-				Approved:         true,
 				Test:             true,
 				TransactionType:  "balance",
 				RemainingBalance: "100.00",
@@ -74,10 +72,10 @@ func TestEBT(t *testing.T) {
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, test.instructions, true)
 
 			cli.run(test.args, test.assert)

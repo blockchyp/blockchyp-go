@@ -15,9 +15,9 @@ func TestTip(t *testing.T) {
 		assert       blockchyp.AuthorizationResponse
 	}{
 		"Percentage": {
-			instructions: `Select 15% when prompted for a tip.
+			instructions: `Insert an EMV test card when prompted.
 
-Insert a valid test card when prompted.`,
+Select 15% when prompted for a tip.`,
 			args: []string{
 				"-type", "charge", "-terminal", "Test Terminal",
 				"-test", "-amount", "59.00",
@@ -34,9 +34,9 @@ Insert a valid test card when prompted.`,
 			},
 		},
 		"Custom": {
-			instructions: `Select 'Custom Amount' and enter '1.00' when prompted for a tip.
+			instructions: `Insert an EMV test card when prompted.
 
-Insert a valid test card when prompted.`,
+Select 'Custom Amount' and enter '1.00' when prompted for a tip.`,
 			args: []string{
 				"-type", "charge", "-terminal", "Test Terminal",
 				"-test", "-amount", "59.00",
@@ -54,10 +54,10 @@ Insert a valid test card when prompted.`,
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, test.instructions, true)
 
 			cli.run(test.args, test.assert)

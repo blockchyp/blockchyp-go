@@ -19,16 +19,23 @@ func TestFailureModes(t *testing.T) {
 		args       []interface{}
 		assert     []interface{}
 		validation validation
+
+		// localMode causes tests to be skipped when running in cloud relay
+		// mode.
+		localMode bool
 	}{
 		"GatewayDown": {
+			localMode: true,
 			args: []interface{}{
 				[]string{
 					"-type", "ping", "-terminal", "Test Terminal", "-test",
 				},
-				"Stop the cloud stack or change the host in blockchyp.json and firmware.yml to an invalid value.",
+				`Stop the cloud stack or change the host in blockchyp.json and firmware.yml to an invalid value.
+
+When prompted, insert a valid test card.`,
 				[]string{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "41.00",
+					"-amount", amount(0),
 				},
 				"Restart the cloud stack.",
 			},
@@ -42,8 +49,8 @@ func TestFailureModes(t *testing.T) {
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "charge",
-					RequestedAmount:  "41.00",
-					AuthorizedAmount: "41.00",
+					RequestedAmount:  amount(0),
+					AuthorizedAmount: amount(0),
 					PaymentType:      notEmpty,
 					MaskedPAN:        notEmpty,
 					StoreAndForward:  true,
@@ -55,6 +62,7 @@ func TestFailureModes(t *testing.T) {
 			},
 		},
 		"ExpiredCache": {
+			localMode: true,
 			args: []interface{}{
 				[]string{
 					"-type", "ping", "-terminal", "Test Terminal", "-test",
@@ -62,10 +70,12 @@ func TestFailureModes(t *testing.T) {
 				[]string{
 					"-type", "cache-expire",
 				},
-				"Stop the cloud stack or change the host in blockchyp.json and firmware.yml to an invalid value.",
+				`Stop the cloud stack or change the host in blockchyp.json and firmware.yml to an invalid value.
+
+When prompted, insert a valid test card.`,
 				[]string{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "41.00",
+					"-amount", amount(0),
 				},
 				"Restart the cloud stack.",
 			},
@@ -74,13 +84,14 @@ func TestFailureModes(t *testing.T) {
 					Success: true,
 				},
 				nil,
+				nil,
 				blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "charge",
-					RequestedAmount:  "42.00",
-					AuthorizedAmount: "42.00",
+					RequestedAmount:  amount(0),
+					AuthorizedAmount: amount(0),
 					PaymentType:      notEmpty,
 					MaskedPAN:        notEmpty,
 					StoreAndForward:  true,
@@ -97,9 +108,10 @@ func TestFailureModes(t *testing.T) {
 					"-type", "ping", "-terminal", "Test Terminal", "-test",
 				},
 				scrambleIPs,
+				"Insert an EMV test card when prompted.",
 				[]string{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "42.00",
+					"-amount", amount(0),
 				},
 			},
 			assert: []interface{}{
@@ -107,21 +119,24 @@ func TestFailureModes(t *testing.T) {
 					Success: true,
 				},
 				nil,
+				nil,
 				blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
-					RequestedAmount:  "42.00",
-					AuthorizedAmount: "42.00",
+					RequestedAmount:  amount(0),
+					AuthorizedAmount: amount(0),
 				},
 			},
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+			if test.localMode {
+				cli.skipCloudRelay()
+			}
 
 			for i := range test.args {
 				switch v := test.args[i].(type) {

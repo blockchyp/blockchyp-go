@@ -57,10 +57,10 @@ func TestPing(t *testing.T) {
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, test.instructions, false)
 
 			cli.run(test.args, test.assert)

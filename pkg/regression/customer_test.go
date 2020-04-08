@@ -62,17 +62,17 @@ func TestCustomer(t *testing.T) {
 				},
 				{
 					"-type", "send-link",
-					"-displaySubtotal", "120.05",
-					"-displayTax", "5.00",
-					"-displayTotal", "125.05",
+					"-displaySubtotal", randomAmount(),
+					"-displayTax", randomAmount(),
+					"-displayTotal", randomAmount(),
 					"-lineItemDescription", randomStr(),
 					"-lineItemQty", "1",
-					"-lineItemPrice", "135.05",
+					"-lineItemPrice", randomAmount(),
 					"-lineItemDiscountDescription", randomStr(),
-					"-lineItemDiscountAmount", "10.00",
-					"-lineItemExtended", "120.05",
+					"-lineItemDiscountAmount", randomAmount(),
+					"-lineItemExtended", randomAmount(),
 					"-desc", "Thank you for your order. Your order will be ready in 20 minutes",
-					"-amount", "125.05",
+					"-amount", randomAmount(),
 					"-orderRef", "12345",
 					"-txRef", "12334",
 					"-customerId",
@@ -121,10 +121,10 @@ func TestCustomer(t *testing.T) {
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, test.instructions, true)
 
 			for i := range test.args {

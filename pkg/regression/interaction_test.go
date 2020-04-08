@@ -216,10 +216,10 @@ When prompted for a card, use the test card you whitelisted.`,
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, test.instructions, true)
 
 			for i := range test.args {

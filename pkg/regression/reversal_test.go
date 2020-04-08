@@ -23,7 +23,7 @@ func TestReverse(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "12.00",
+					"-amount", amount(0),
 					"-txRef",
 				},
 				{
@@ -49,7 +49,7 @@ func TestReverse(t *testing.T) {
 					TransactionType: "reverse",
 				},
 				blockchyp.AuthorizationResponse{
-					Success:             true,
+					Success:             false,
 					Approved:            false,
 					Test:                true,
 					TransactionType:     "reverse",
@@ -62,7 +62,7 @@ func TestReverse(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "preauth", "-terminal", "Test Terminal", "-test",
-					"-amount", "12.01",
+					"-amount", amount(0),
 					"-txRef",
 				},
 				{
@@ -90,7 +90,7 @@ func TestReverse(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "preauth", "-terminal", "Test Terminal", "-test",
-					"-amount", "12.02",
+					"-amount", amount(0),
 					"-txRef",
 				},
 				{
@@ -129,7 +129,7 @@ func TestReverse(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "12.03",
+					"-amount", amount(0),
 					"-txRef",
 				},
 				{
@@ -145,7 +145,7 @@ func TestReverse(t *testing.T) {
 					TransactionType: "charge",
 				},
 				blockchyp.AuthorizationResponse{
-					Success:             true,
+					Success:             false,
 					Approved:            false,
 					Test:                true,
 					TransactionType:     "reverse",
@@ -155,10 +155,10 @@ func TestReverse(t *testing.T) {
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, test.instructions, true)
 
 			var txID string

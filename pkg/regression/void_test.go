@@ -20,7 +20,7 @@ func TestVoid(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "62.00",
+					"-amount", amount(0),
 				},
 				{
 					"-type", "void", "-test",
@@ -47,7 +47,7 @@ func TestVoid(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "preauth", "-terminal", "Test Terminal", "-test",
-					"-amount", "63.00",
+					"-amount", amount(0),
 				},
 				{
 					"-type", "void", "-test",
@@ -128,7 +128,7 @@ func TestVoid(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "103.00",
+					"-amount", amount(0),
 				},
 				{
 					"-type", "void", "-test",
@@ -163,10 +163,10 @@ func TestVoid(t *testing.T) {
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, test.instructions, true)
 
 			for i := range test.args {

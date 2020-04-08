@@ -15,13 +15,17 @@ func TestRefund(t *testing.T) {
 		assert       []interface{}
 		txID         string
 		validation   validation
+
+		// localMode causes tests to be skipped when running in cloud relay
+		// mode.
+		localMode bool
 	}{
 		"Charge": {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "14.00",
+					"-amount", amount(0),
 				},
 				{
 					"-type", "refund", "-test",
@@ -34,14 +38,14 @@ func TestRefund(t *testing.T) {
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "charge",
-					AuthorizedAmount: "14.00",
+					AuthorizedAmount: amount(0),
 				},
 				blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "refund",
-					AuthorizedAmount: "14.00",
+					AuthorizedAmount: amount(0),
 				},
 			},
 		},
@@ -50,7 +54,7 @@ func TestRefund(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "14.01",
+					"-amount", amountRange(0, 5.01, 9.99),
 				},
 				{
 					"-type", "refund", "-test",
@@ -69,7 +73,7 @@ func TestRefund(t *testing.T) {
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "charge",
-					AuthorizedAmount: "14.01",
+					AuthorizedAmount: amount(0),
 				},
 				blockchyp.AuthorizationResponse{
 					Success:          true,
@@ -84,7 +88,7 @@ func TestRefund(t *testing.T) {
 					Test:                true,
 					TransactionType:     "refund",
 					AuthorizedAmount:    "0.00",
-					ResponseDescription: "Refund would exceed the original transaction amount.",
+					ResponseDescription: "Refund would exceed the original transaction amount",
 				},
 			},
 		},
@@ -93,11 +97,11 @@ func TestRefund(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "14.02",
+					"-amount", amountRange(0, 5, 10),
 				},
 				{
 					"-type", "refund", "-test",
-					"-amount", "15.00",
+					"-amount", amountRange(1, 10.01, 20),
 					"-tx",
 				},
 			},
@@ -107,7 +111,7 @@ func TestRefund(t *testing.T) {
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "charge",
-					AuthorizedAmount: "14.02",
+					AuthorizedAmount: amount(0),
 				},
 				blockchyp.AuthorizationResponse{
 					Success:             true,
@@ -115,11 +119,12 @@ func TestRefund(t *testing.T) {
 					Test:                true,
 					TransactionType:     "refund",
 					AuthorizedAmount:    "0.00",
-					ResponseDescription: "Refund would exceed the original transaction amount.",
+					ResponseDescription: "Refund would exceed the original transaction amount",
 				},
 			},
 		},
 		"SF": {
+			localMode:    true,
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
@@ -158,15 +163,15 @@ func TestRefund(t *testing.T) {
 		"EMVFreeRange": {
 			instructions: `Insert an EMV test card when prompted.
 
-Insert the same card when prompted again.`,
+Leave the card in the terminal until the test completes.`,
 			args: [][]string{
 				{
 					"-type", "refund", "-terminal", "Test Terminal", "-test",
-					"-amount", "50.00",
+					"-amount", amount(0),
 				},
 				{
 					"-type", "refund", "-terminal", "Test Terminal", "-test",
-					"-amount", "50.00",
+					"-amount", amount(0),
 				},
 			},
 			assert: []interface{}{
@@ -175,7 +180,8 @@ Insert the same card when prompted again.`,
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "refund",
-					AuthorizedAmount: "50.00",
+					RequestedAmount:  amount(0),
+					AuthorizedAmount: amount(0),
 					EntryMethod:      "CHIP",
 				},
 				blockchyp.AuthorizationResponse{
@@ -183,6 +189,7 @@ Insert the same card when prompted again.`,
 					Approved:            false,
 					Test:                true,
 					TransactionType:     "refund",
+					RequestedAmount:     amount(0),
 					AuthorizedAmount:    "0.00",
 					EntryMethod:         "CHIP",
 					ResponseDescription: "Duplicate Transaction",
@@ -190,11 +197,11 @@ Insert the same card when prompted again.`,
 			},
 		},
 		"SignatureInResponse": {
-			instructions: "Insert a signature CVM test card when prompted",
+			instructions: "Insert a signature CVM test card when prompted.",
 			args: [][]string{
 				{
 					"-type", "refund", "-terminal", "Test Terminal",
-					"-test", "-amount", "55.00",
+					"-test", "-amount", partialAuthTriggerAmount,
 					"-sigFormat", blockchyp.SignatureFormatJPG,
 					"-sigWidth", "50",
 				},
@@ -209,12 +216,12 @@ Insert the same card when prompted again.`,
 			},
 		},
 		"SignatureInFile": {
-			instructions: "Insert a signature CVM test card when prompted",
+			instructions: "Insert a signature CVM test card when prompted.",
 			args: [][]string{
 				{
 					"-type", "refund", "-terminal", "Test Terminal",
-					"-test", "-amount", "55.01",
-					"-sigWidth", "100", "-sigFile", "/tmp/sig.jpg",
+					"-test", "-amount", amount(0),
+					"-sigWidth", "400", "-sigFile", "/tmp/blockchyp-regression-test/sig.jpg",
 				},
 			},
 			assert: []interface{}{
@@ -225,7 +232,7 @@ Insert the same card when prompted again.`,
 				},
 			},
 			validation: validation{
-				prompt: "Does '/tmp/sig.jpg' contain the signature you entered on the terminal?",
+				prompt: "Does the signature appear valid in the browser?",
 				expect: true,
 			},
 		},
@@ -236,7 +243,7 @@ When prompted for a signature, hit 'Done' without signing.`,
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal",
-					"-test", "-amount", "55.02",
+					"-test", "-amount", amount(0),
 				},
 			},
 			assert: []interface{}{
@@ -255,15 +262,14 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal",
-					"-test", "-amount", "55.03",
+					"-test", "-amount", amount(0),
 				},
 			},
 			assert: []interface{}{
 				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "context canceled",
+					Success:  true,
+					Approved: false,
+					Test:     true,
 				},
 			},
 		},
@@ -272,7 +278,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal",
-					"-test", "-amount", "55.04",
+					"-test", "-amount", amount(0),
 					"-disableSignature",
 				},
 			},
@@ -292,7 +298,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", "Test Terminal",
-					"-test", "-amount", "55.05",
+					"-test", "-amount", amount(0),
 				},
 			},
 			assert: []interface{}{
@@ -309,7 +315,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			args: [][]string{
 				{
 					"-type", "refund", "-terminal", "Test Terminal", "-test",
-					"-amount", "55.06",
+					"-amount", amount(0),
 				},
 			},
 			assert: []interface{}{
@@ -319,16 +325,16 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 					Test:             true,
 					TransactionType:  "refund",
 					EntryMethod:      "SWIPE",
-					AuthorizedAmount: "55.06",
+					AuthorizedAmount: amount(0),
 				},
 			},
 		},
 		"ManualFreeRange": {
-			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '1234' when prompted",
+			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '1234' when prompted.",
 			args: [][]string{
 				{
 					"-type", "refund", "-terminal", "Test Terminal", "-test",
-					"-amount", "55.07", "-manual",
+					"-amount", amount(0), "-manual",
 				},
 			},
 			assert: []interface{}{
@@ -338,7 +344,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 					Test:             true,
 					TransactionType:  "refund",
 					EntryMethod:      "KEYED",
-					AuthorizedAmount: "55.07",
+					AuthorizedAmount: amount(0),
 				},
 			},
 		},
@@ -347,7 +353,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			args: [][]string{
 				{
 					"-type", "refund", "-terminal", "Test Terminal", "-test",
-					"-amount", "55.07",
+					"-amount", amount(0),
 				},
 			},
 			assert: []interface{}{
@@ -357,17 +363,20 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 					Test:             true,
 					TransactionType:  "refund",
 					EntryMethod:      "SWIPE",
-					RequestedAmount:  "55.07",
+					RequestedAmount:  amount(0),
 					AuthorizedAmount: "0.00",
 				},
 			},
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+			if test.localMode {
+				cli.skipCloudRelay()
+			}
+
 			setup(t, test.instructions, true)
 
 			for i := range test.args {
