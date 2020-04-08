@@ -81,6 +81,23 @@ integration:
 		--rm -it $(IMAGE)) \
 	$(GO) test $(TESTFLAGS) $(if $(TEST), -run=$(TEST),) -tags=integration $(PKGS)
 
+# Runs regrssion tests
+.PHONY: regrssion
+regression:
+	$(if $(LOCALBUILD),, \
+		$(foreach path,$(CACHEPATHS),mkdir -p $(CACHE)/$(path) ; ) \
+		sed 's/localhost/$(HOSTIP)/' $(HOME)/.config/blockchyp/blockchyp.json >$(CACHE)/$(HOME)/.config/blockchyp/blockchyp.json ; \
+		$(DOCKER) run \
+		-u $(shell id -u):$(shell id -g) \
+		-v $(SCMROOT):$(SCMROOT):Z \
+		-v /etc/passwd:/etc/passwd:ro \
+		$(foreach path,$(CACHEPATHS),-v $(CACHE)/$(path):$(path):Z) \
+		-e HOME=$(HOME) \
+		-e GOPATH=$(HOME)/go \
+		-w $(PWD) \
+		--rm -it $(IMAGE)) \
+	$(GO) test -timeout=0 $(TESTFLAGS) $(if $(TEST), -run=$(TEST),) -tags=regression github.com/blockchyp/blockchyp-go/pkg/regression
+
 # Performs any tasks necessary before a release build
 .PHONY: stage
 stage:

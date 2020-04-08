@@ -40,49 +40,49 @@ terminal, activate it, and generate a set of API keys.
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"log"
+    "encoding/json"
+    "fmt"
+    "log"
 
-	blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
 func main() {
 
-	creds := blockchyp.APICredentials{
-		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-		BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-		SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-	}
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
 
-	client := blockchyp.NewClient(creds)
+    client := blockchyp.NewClient(creds)
 
-	req := blockchyp.AuthorizationRequest{}
-  req.Test = true
-	req.TerminalName = "Test Terminal"
-	req.Amount = "55.00"
+    req := blockchyp.AuthorizationRequest{
+        Test: true,
+        TerminalName: "Test Terminal",
+        Amount: "55.00",
+    }
 
-	response, err := client.Charge(req)
+    response, err := client.Charge(req)
 
-	if err != nil {
-		log.Fatal(err)
-	}
+    if err != nil {
+        log.Fatal(err)
+    }
 
-	if response.Approved {
-		fmt.Println("Approved")
-    fmt.Println(response.AuthCode)
-    fmt.Println(response.AuthorizedAmount)
-    fmt.Println(response.ReceiptSuggestions.AID)
-	} else {
-		fmt.Println(response.ResponseDescription)
-	}
+    if response.Approved {
+        fmt.Println("Approved")
+        fmt.Println(response.AuthCode)
+        fmt.Println(response.AuthorizedAmount)
+        fmt.Println(response.ReceiptSuggestions.AID)
+    } else {
+        fmt.Println(response.ResponseDescription)
+    }
 
-	b, err := json.Marshal(response)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Print(string(b))
-
+    b, err := json.Marshal(response)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Print(string(b))
 }
 ```
 
@@ -1473,6 +1473,29 @@ To run the integration test suite via `make`, type the following command:
 
 `make integration`
 
+## Running Regression Tests
+
+The regression package contains interactive tests that can be run to test the
+entire stack from end to end.
+
+### Setup
+
+Create a default test merchant on the SIM plugin.
+
+Change these settings:
+
+* Enable partial auth
+* Enable PINs
+
+Create a blockchyp.json file with credentials for the test merchant.
+
+### Running
+
+To execute the tests, run:
+
+`make regression`
+
+Follow the prompts.
 
 ## Contributions
 

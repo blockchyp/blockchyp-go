@@ -134,6 +134,14 @@ type ReceiptSuggestions struct {
 
 	// CashBackAmount is the amount of cash back that was approved.
 	CashBackAmount string `json:"cashBackAmount,omitempty"`
+
+	// Surcharge is the amount added to the transaction to cover eligible credit
+	// card fees.
+	Surcharge string `json:"surcharge,omitempty"`
+
+	// CashDiscount is the discount applied to the transaction for payment
+	// methods ineligible for surcharges.
+	CashDiscount string `json:"cashDiscount,omitempty"`
 }
 
 // Acknowledgement contains a basic api acknowledgement.
@@ -647,6 +655,14 @@ type AuthorizationRequest struct {
 	// exempt level 2 processing.
 	TaxExempt bool `json:"taxExempt"`
 
+	// Surcharge is a flag to add a surcharge to the transaction to cover credit
+	// card fees, if permitted.
+	Surcharge bool `json:"surcharge"`
+
+	// CashDiscount is a flag that applies a discount to negate the surcharge for
+	// debit transactions or other surcharge ineligible payment methods.
+	CashDiscount bool `json:"cashDiscount"`
+
 	// SigFile is a location on the filesystem which a customer signature should
 	// be written to.
 	SigFile string `json:"sigFile,omitempty"`
@@ -959,6 +975,14 @@ type RefundRequest struct {
 	// exempt level 2 processing.
 	TaxExempt bool `json:"taxExempt"`
 
+	// Surcharge is a flag to add a surcharge to the transaction to cover credit
+	// card fees, if permitted.
+	Surcharge bool `json:"surcharge"`
+
+	// CashDiscount is a flag that applies a discount to negate the surcharge for
+	// debit transactions or other surcharge ineligible payment methods.
+	CashDiscount bool `json:"cashDiscount"`
+
 	// SigFile is a location on the filesystem which a customer signature should
 	// be written to.
 	SigFile string `json:"sigFile,omitempty"`
@@ -1036,6 +1060,14 @@ type CaptureRequest struct {
 	// TaxExempt indicates that the request is tax exempt. Only required for tax
 	// exempt level 2 processing.
 	TaxExempt bool `json:"taxExempt"`
+
+	// Surcharge is a flag to add a surcharge to the transaction to cover credit
+	// card fees, if permitted.
+	Surcharge bool `json:"surcharge"`
+
+	// CashDiscount is a flag that applies a discount to negate the surcharge for
+	// debit transactions or other surcharge ineligible payment methods.
+	CashDiscount bool `json:"cashDiscount"`
 
 	// TipAmount is the tip amount.
 	TipAmount string `json:"tipAmount,omitempty"`
@@ -1506,6 +1538,14 @@ type GiftActivateRequest struct {
 	// TaxExempt indicates that the request is tax exempt. Only required for tax
 	// exempt level 2 processing.
 	TaxExempt bool `json:"taxExempt"`
+
+	// Surcharge is a flag to add a surcharge to the transaction to cover credit
+	// card fees, if permitted.
+	Surcharge bool `json:"surcharge"`
+
+	// CashDiscount is a flag that applies a discount to negate the surcharge for
+	// debit transactions or other surcharge ineligible payment methods.
+	CashDiscount bool `json:"cashDiscount"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -2216,6 +2256,14 @@ type PaymentLinkRequest struct {
 	// exempt level 2 processing.
 	TaxExempt bool `json:"taxExempt"`
 
+	// Surcharge is a flag to add a surcharge to the transaction to cover credit
+	// card fees, if permitted.
+	Surcharge bool `json:"surcharge"`
+
+	// CashDiscount is a flag that applies a discount to negate the surcharge for
+	// debit transactions or other surcharge ineligible payment methods.
+	CashDiscount bool `json:"cashDiscount"`
+
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
@@ -2660,6 +2708,14 @@ type RequestAmount struct {
 	// TaxExempt indicates that the request is tax exempt. Only required for tax
 	// exempt level 2 processing.
 	TaxExempt bool
+
+	// Surcharge is a flag to add a surcharge to the transaction to cover credit
+	// card fees, if permitted.
+	Surcharge bool
+
+	// CashDiscount is a flag that applies a discount to negate the surcharge for
+	// debit transactions or other surcharge ineligible payment methods.
+	CashDiscount bool
 }
 
 // From creates an instance of RequestAmount with values

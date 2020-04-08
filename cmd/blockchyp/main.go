@@ -112,6 +112,8 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.OrderRef, "orderRef", "", "your system's order or invoice number")
 	flag.StringVar(&args.Query, "query", "", "search string")
 	flag.StringVar(&args.CallbackURL, "callbackUrl", "", "optional callback url to which a response is posted for payment links")
+	flag.BoolVar(&args.Surcharge, "surcharge", false, "adds fee surcharges to transactions, if eligible.")
+	flag.BoolVar(&args.CashDiscount, "cashDiscount", false, "adds a cash discount to transactions, if eligible")
 	flag.Parse()
 
 	if args.Version {
@@ -252,7 +254,7 @@ func processCommand(args blockchyp.CommandLineArguments) {
 	case "tx-status":
 		processTransactionStatus(client, args)
 	default:
-		fatalErrorf("%s is unknown transaction type", args.Type)
+		fatalErrorf("unknown transaction type: %s", args.Type)
 	}
 
 }
@@ -800,6 +802,8 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	req.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
 	req.DisableSignature = args.DisableSignature
 	req.CashBackEnabled = args.CashBackEnabled
+	req.Surcharge = args.Surcharge
+	req.CashDiscount = args.CashDiscount
 	if args.EBT {
 		req.CardType = blockchyp.CardTypeEBT
 	}
