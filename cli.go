@@ -91,6 +91,8 @@ type CommandLineArguments struct {
 	OrderRef                    string `args:"orderRef"`
 	Query                       string `arg:"query"`
 	CallbackURL                 string `arg:"callbackUrl"`
+	Surcharge                   bool   `arg:"surcharge"`
+	CashDiscount                bool   `arg:"cashDiscount"`
 }
 
 var defaultSettings = &ConfigSettings{
