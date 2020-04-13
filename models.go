@@ -2384,7 +2384,12 @@ type CashDiscountResponse struct {
 	// exempt level 2 processing.
 	TaxExempt bool `json:"taxExempt"`
 
-	// CashDiscount is the cash discount, if necessary.
+	// Surcharge is the normal surcharge for a transaction. Will only be returned
+	// if an offsetting cash discount is also returned.
+	Surcharge string `json:"surcharge"`
+
+	// CashDiscount is the cash discount. Will not be returned in surcharge only
+	// mode.
 	CashDiscount string `json:"cashDiscount"`
 }
 

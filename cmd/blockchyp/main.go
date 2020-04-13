@@ -253,6 +253,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		updateCustomer(client, args)
 	case "tx-status":
 		processTransactionStatus(client, args)
+	case "cash-discount":
+		processCashDiscount(client, args)
 	default:
 		fatalErrorf("unknown transaction type: %s", args.Type)
 	}
@@ -427,6 +429,25 @@ func processBalance(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	}
 
 	dumpResponse(&args, ack)
+
+}
+
+func processCashDiscount(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.Amount, "amount")
+
+	request := blockchyp.CashDiscountRequest{}
+	request.Amount = args.Amount
+	request.CurrencyCode = args.CurrencyCode
+	request.Test = args.Test
+	request.Surcharge = args.Surcharge
+	request.CashDiscount = args.CashDiscount
+
+	response, err := client.CashDiscount(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, response)
 
 }
 
