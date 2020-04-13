@@ -1604,6 +1604,9 @@ type GiftActivateResponse struct {
 
 	// PublicKey is the public key of the activated card.
 	PublicKey string `json:"publicKey"`
+
+	// MaskedPAN is the masked card identifier.
+	MaskedPAN string `json:"maskedPan,omitempty"`
 }
 
 // CloseBatchRequest contains the information needed to manually close a

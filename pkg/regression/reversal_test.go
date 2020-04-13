@@ -49,7 +49,7 @@ func TestReverse(t *testing.T) {
 					TransactionType: "reverse",
 				},
 				blockchyp.AuthorizationResponse{
-					Success:             false,
+					Success:             true,
 					Approved:            false,
 					Test:                true,
 					TransactionType:     "reverse",

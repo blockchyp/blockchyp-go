@@ -201,7 +201,7 @@ Leave the card in the terminal until the test completes.`,
 			args: [][]string{
 				{
 					"-type", "refund", "-terminal", "Test Terminal",
-					"-test", "-amount", partialAuthTriggerAmount,
+					"-test", "-amount", amount(0),
 					"-sigFormat", blockchyp.SignatureFormatJPG,
 					"-sigWidth", "50",
 				},
@@ -267,7 +267,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 			assert: []interface{}{
 				blockchyp.AuthorizationResponse{
-					Success:  true,
+					Success:  false,
 					Approved: false,
 					Test:     true,
 				},
@@ -303,7 +303,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 			assert: []interface{}{
 				blockchyp.AuthorizationResponse{
-					Success:             true,
+					Success:             false,
 					Approved:            false,
 					Test:                true,
 					ResponseDescription: "user canceled",

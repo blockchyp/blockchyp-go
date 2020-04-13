@@ -5,7 +5,6 @@ package regression
 import (
 	"encoding/json"
 	"io"
-	"net"
 	"os"
 	"path/filepath"
 	"testing"
@@ -35,7 +34,7 @@ func TestFailureModes(t *testing.T) {
 When prompted, insert a valid test card.`,
 				[]string{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", amount(0),
+					"-amount", amountRange(0, 1, 40),
 				},
 				"Restart the cloud stack.",
 			},
@@ -75,7 +74,7 @@ When prompted, insert a valid test card.`,
 When prompted, insert a valid test card.`,
 				[]string{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", amount(0),
+					"-amount", amountRange(0, 1, 40),
 				},
 				"Restart the cloud stack.",
 			},
@@ -108,7 +107,9 @@ When prompted, insert a valid test card.`,
 					"-type", "ping", "-terminal", "Test Terminal", "-test",
 				},
 				scrambleIPs,
-				"Insert an EMV test card when prompted.",
+				`Insert an EMV test card when prompted.
+
+It may take a minute or two for the route to be renegotiated.`,
 				[]string{
 					"-type", "charge", "-terminal", "Test Terminal", "-test",
 					"-amount", amount(0),
@@ -170,9 +171,7 @@ func scrambleIPs(t *testing.T) {
 	}
 
 	for k, v := range cache.Routes {
-		ip := net.ParseIP(v.Route.IPAddress)
-		ip[len(ip)-1] = 0x0
-		v.Route.IPAddress = ip.String()
+		v.Route.IPAddress = "127.0.0.0"
 		cache.Routes[k] = v
 	}
 

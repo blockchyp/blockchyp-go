@@ -60,7 +60,7 @@ func TestPreauth(t *testing.T) {
 				"-tx",
 			},
 			reCaptureAssert: blockchyp.CaptureResponse{
-				Success:             true,
+				Success:             false,
 				Approved:            false,
 				Test:                true,
 				TransactionType:     "capture",
@@ -123,7 +123,7 @@ When prompted for a signature, hit 'Done' without signing.`,
 				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
-				Success:             true,
+				Success:             false,
 				Approved:            false,
 				Test:                true,
 				ResponseDescription: "user canceled",
@@ -138,7 +138,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
-				Success:  true,
+				Success:  false,
 				Approved: false,
 				Test:     true,
 			},
