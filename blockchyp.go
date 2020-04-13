@@ -987,6 +987,21 @@ func (client *Client) CustomerSearch(request CustomerSearchRequest) (*CustomerSe
 	return &response, err
 }
 
+// CashDiscount calculates the discount for actual cash transactions.
+func (client *Client) CashDiscount(request CashDiscountRequest) (*CashDiscountResponse, error) {
+	var response CashDiscountResponse
+
+	err := client.GatewayRequest("/cash-discount", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // TransactionStatus retrieves the current status of a transaction.
 func (client *Client) TransactionStatus(request TransactionStatusRequest) (*AuthorizationResponse, error) {
 	var response AuthorizationResponse
