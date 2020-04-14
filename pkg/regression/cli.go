@@ -146,8 +146,12 @@ func (c cli) exec(args []string, v interface{}) {
 
 	cmd.Run()
 
-	c.t.Log(string(stdout.String()))
-	c.t.Log(string(stderr.String()))
+	if s := stdout.String(); s != "" {
+		c.t.Log(s)
+	}
+	if s := stderr.String(); s != "" {
+		c.t.Log(s)
+	}
 
 	if v == nil {
 		return
