@@ -33,7 +33,7 @@ func TestPreauth(t *testing.T) {
 		"EMVApproved": {
 			instructions: "Insert an EMV test card when prompted.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
@@ -70,7 +70,7 @@ func TestPreauth(t *testing.T) {
 		"SignatureInResponse": {
 			instructions: "Insert a signature CVM test card when prompted.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", amount(0),
 				"-sigFormat", blockchyp.SignatureFormatPNG,
 				"-sigWidth", "50",
@@ -86,7 +86,7 @@ func TestPreauth(t *testing.T) {
 		"SignatureInFile": {
 			instructions: "Insert a signature CVM test card when prompted",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", amount(0),
 				"-sigWidth", "400", "-sigFile", "/tmp/blockchyp-regression-test/sig.png",
 			},
@@ -106,7 +106,7 @@ func TestPreauth(t *testing.T) {
 
 When prompted for a signature, hit 'Done' without signing.`,
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
@@ -119,7 +119,7 @@ When prompted for a signature, hit 'Done' without signing.`,
 		"UserCanceled": {
 			instructions: "Hit the red 'X' button when prompted for a card.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
@@ -134,7 +134,7 @@ When prompted for a signature, hit 'Done' without signing.`,
 
 Let the transaction time out when prompted for a signature. It should take 90 seconds.`,
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
@@ -146,7 +146,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 		"ManualApproval": {
 			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '1234' when prompted",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", amount(0),
 				"-manual",
 			},
@@ -175,7 +175,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 		"EMVDecline": {
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", declineTriggerAmount,
 			},
 			authAssert: blockchyp.AuthorizationResponse{
@@ -200,7 +200,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 		"EMVTimeout": {
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", timeOutTriggerAmount,
 			},
 			authAssert: blockchyp.AuthorizationResponse{
@@ -216,7 +216,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 		"EMVPartialAuth": {
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", partialAuthTriggerAmount,
 			},
 			authAssert: blockchyp.AuthorizationResponse{
@@ -232,7 +232,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 		"EMVError": {
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", errorTriggerAmount,
 			},
 			authAssert: blockchyp.AuthorizationResponse{
@@ -248,7 +248,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 		"EMVNoResponse": {
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", noResponseTriggerAmount,
 			},
 			authAssert: blockchyp.AuthorizationResponse{
@@ -264,7 +264,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 		"TipAdjust": {
 			instructions: "Insert an EMV test card when prompted.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
@@ -306,7 +306,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 		"VoidCapture": {
 			instructions: "Insert an EMV test card when prompted.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
@@ -341,7 +341,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 		"ClosedBatchCapture": {
 			instructions: "Insert an EMV test card when prompted.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
+				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{

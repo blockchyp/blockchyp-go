@@ -20,6 +20,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const terminalName = "Test Terminal"
 const notEmpty = "NOT EMPTY"
 
 type cli struct {
@@ -171,7 +172,7 @@ func (c cli) substituteAmounts(args []string) {
 
 func (c cli) skipCloudRelay() {
 	// Make sure the cache has actually been generated first.
-	c.exec([]string{"-type", "ping", "-terminal", "Test Terminal", "-test"}, nil)
+	c.exec([]string{"-type", "ping", "-terminal", terminalName, "-test"}, nil)
 
 	path := filepath.Join(os.TempDir(), ".blockchyp_routes")
 
@@ -187,7 +188,7 @@ func (c cli) skipCloudRelay() {
 	}
 
 	for k, v := range cache.Routes {
-		if strings.HasSuffix(k, "Test Terminal") && v.Route.CloudRelayEnabled {
+		if strings.HasSuffix(k, terminalName) && v.Route.CloudRelayEnabled {
 			c.t.Skip("skipping local mode test in cloud relay mode")
 			return
 		}

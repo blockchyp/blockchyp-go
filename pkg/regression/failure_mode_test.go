@@ -28,13 +28,13 @@ func TestFailureModes(t *testing.T) {
 			localMode: true,
 			args: []interface{}{
 				[]string{
-					"-type", "ping", "-terminal", "Test Terminal", "-test",
+					"-type", "ping", "-terminal", terminalName, "-test",
 				},
 				`Stop the cloud stack or change the host in blockchyp.json and firmware.yml to an invalid value.
 
 When prompted, insert a valid test card.`,
 				[]string{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amountRange(0, 1, 40),
 				},
 				"Restart the cloud stack.",
@@ -65,7 +65,7 @@ When prompted, insert a valid test card.`,
 			localMode: true,
 			args: []interface{}{
 				[]string{
-					"-type", "ping", "-terminal", "Test Terminal", "-test",
+					"-type", "ping", "-terminal", terminalName, "-test",
 				},
 				[]string{
 					"-type", "cache-expire",
@@ -74,7 +74,7 @@ When prompted, insert a valid test card.`,
 
 When prompted, insert a valid test card.`,
 				[]string{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amountRange(0, 1, 40),
 				},
 				"Restart the cloud stack.",
@@ -105,12 +105,12 @@ When prompted, insert a valid test card.`,
 		"IPChange": {
 			args: []interface{}{
 				[]string{
-					"-type", "ping", "-terminal", "Test Terminal", "-test",
+					"-type", "ping", "-terminal", terminalName, "-test",
 				},
 				scrambleIPs,
 				time.NewTimer(10 * time.Second),
 				[]string{
-					"-type", "ping", "-terminal", "Test Terminal", "-test",
+					"-type", "ping", "-terminal", terminalName, "-test",
 				},
 			},
 			assert: []interface{}{

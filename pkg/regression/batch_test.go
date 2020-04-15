@@ -19,7 +19,7 @@ func TestBatch(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
 				{
@@ -56,11 +56,11 @@ func TestBatch(t *testing.T) {
 Leave it in the terminal until the test completes.`,
 			args: [][]string{
 				{
-					"-type", "preauth", "-terminal", "Test Terminal", "-test",
+					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(1),
 				},
 				{

@@ -19,7 +19,7 @@ func TestToken(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "enroll", "-terminal", "Test Terminal", "-test",
+					"-type", "enroll", "-terminal", terminalName, "-test",
 				},
 				{
 					"-type", "charge", "-test",
@@ -107,7 +107,7 @@ func TestToken(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0), "-enroll",
 				},
 				{
@@ -199,7 +199,7 @@ func TestToken(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "preauth", "-terminal", "Test Terminal", "-test",
+					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(0), "-enroll",
 				},
 				{
@@ -291,7 +291,7 @@ func TestToken(t *testing.T) {
 			instructions: "Swipe an MSR test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "enroll", "-terminal", "Test Terminal", "-test",
+					"-type", "enroll", "-terminal", terminalName, "-test",
 				},
 				{
 					"-type", "charge", "-test",
@@ -380,7 +380,7 @@ func TestToken(t *testing.T) {
 			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '1234' when prompted",
 			args: [][]string{
 				{
-					"-type", "enroll", "-terminal", "Test Terminal", "-test",
+					"-type", "enroll", "-terminal", terminalName, "-test",
 					"-manual",
 				},
 				{

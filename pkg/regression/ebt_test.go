@@ -17,7 +17,7 @@ func TestEBT(t *testing.T) {
 		"Charge": {
 			instructions: "Swipe an EBT test card when prompted. Enter PIN '1234'.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
+				"-type", "charge", "-terminal", terminalName,
 				"-test", "-amount", partialAuthAuthorizedAmount,
 				"-ebt",
 			},
@@ -37,7 +37,7 @@ func TestEBT(t *testing.T) {
 		"MSRBalance": {
 			instructions: "Swipe an EBT test card when prompted. Enter PIN '1234'.",
 			args: []string{
-				"-type", "balance", "-terminal", "Test Terminal",
+				"-type", "balance", "-terminal", terminalName,
 				"-test",
 				"-ebt",
 			},
@@ -55,7 +55,7 @@ func TestEBT(t *testing.T) {
 		"ManualBalance": {
 			instructions: "Key in the number '4111 1111 1111 1111' when prompted. Enter PIN '1234'.",
 			args: []string{
-				"-type", "balance", "-terminal", "Test Terminal",
+				"-type", "balance", "-terminal", terminalName,
 				"-test",
 				"-ebt", "-manual",
 			},

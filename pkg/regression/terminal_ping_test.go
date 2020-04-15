@@ -16,7 +16,7 @@ func TestPing(t *testing.T) {
 	}{
 		"Success": {
 			args: []string{
-				"-type", "ping", "-terminal", "Test Terminal",
+				"-type", "ping", "-terminal", terminalName,
 			},
 			assert: blockchyp.Acknowledgement{
 				Success: true,
@@ -33,7 +33,7 @@ func TestPing(t *testing.T) {
 		},
 		"BadCreds": {
 			args: []string{
-				"-type", "ping", "-terminal", "Test Terminal",
+				"-type", "ping", "-terminal", terminalName,
 				"-apiKey", "RIKLAPSMSMG2YII27N2NPAMCS5",
 				"-bearerToken", "RIKLAPSMSMG2YII27N2NPAMCS5",
 				"-signingKey", "4b556bc4e73ffc86fc5f8bfbba1598e7a8cd91f44fd7072d070c92fae7f48cd9",
@@ -45,7 +45,7 @@ func TestPing(t *testing.T) {
 		},
 		"BadSigningKey": {
 			args: []string{
-				"-type", "ping", "-terminal", "Test Terminal",
+				"-type", "ping", "-terminal", terminalName,
 				"-apiKey", "RIKLAPSMSMG2YII27N2NPAMCS5",
 				"-bearerToken", "RIKLAPSMSMG2YII27N2NPAMCS5",
 				"-signingKey", "4b556bc4e73ffc86fc5f8bfbba1598e7a8cd91f44fd7072d070c92fae7f48cd",

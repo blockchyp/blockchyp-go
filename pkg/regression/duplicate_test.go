@@ -15,7 +15,7 @@ func TestDuplicate(t *testing.T) {
 Leave it in the terminal until the test completes.`, true)
 
 	args := []string{
-		"-type", "charge", "-terminal", "Test Terminal",
+		"-type", "charge", "-terminal", terminalName,
 		"-test",
 		"-amount", randomAmount(),
 	}

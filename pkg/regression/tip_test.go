@@ -19,7 +19,7 @@ func TestTip(t *testing.T) {
 
 Select 15% when prompted for a tip.`,
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
+				"-type", "charge", "-terminal", terminalName,
 				"-test", "-amount", "59.00",
 				"-promptForTip",
 			},
@@ -38,7 +38,7 @@ Select 15% when prompted for a tip.`,
 
 Select 'Custom Amount' and enter '1.00' when prompted for a tip.`,
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
+				"-type", "charge", "-terminal", terminalName,
 				"-test", "-amount", "59.00",
 				"-promptForTip",
 			},

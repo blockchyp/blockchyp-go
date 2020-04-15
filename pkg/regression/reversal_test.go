@@ -22,7 +22,7 @@ func TestReverse(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 					"-txRef",
 				},
@@ -61,7 +61,7 @@ func TestReverse(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "preauth", "-terminal", "Test Terminal", "-test",
+					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 					"-txRef",
 				},
@@ -89,7 +89,7 @@ func TestReverse(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "preauth", "-terminal", "Test Terminal", "-test",
+					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 					"-txRef",
 				},
@@ -128,7 +128,7 @@ func TestReverse(t *testing.T) {
 			wait:         125 * time.Second,
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 					"-txRef",
 				},

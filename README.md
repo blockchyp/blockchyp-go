@@ -1533,6 +1533,9 @@ Change these settings:
 
 * Enable partial auth
 * Enable PINs
+* Enable cash back
+* Enable JCB and Union Pay
+* Whitelist the BIN range for a chosen MSR test card
 
 Create a blockchyp.json file with credentials for the test merchant.
 

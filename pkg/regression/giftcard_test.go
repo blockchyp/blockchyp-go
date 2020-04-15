@@ -18,7 +18,7 @@ func TestGiftCard(t *testing.T) {
 		"Inactive": {
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "100.00",
 				},
 			},
@@ -44,15 +44,15 @@ func TestGiftCard(t *testing.T) {
 			txRef: randomStr(),
 			args: [][]string{
 				{
-					"-type", "gift-activate", "-terminal", "Test Terminal", "-test",
+					"-type", "gift-activate", "-terminal", terminalName, "-test",
 					"-amount", "100.00",
 				},
 				{
-					"-type", "gift-activate", "-terminal", "Test Terminal", "-test",
+					"-type", "gift-activate", "-terminal", terminalName, "-test",
 					"-amount", "50.00",
 				},
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "100.00",
 				},
 				{
@@ -64,7 +64,7 @@ func TestGiftCard(t *testing.T) {
 					"-tx",
 				},
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "500.00",
 				},
 				{
@@ -72,7 +72,7 @@ func TestGiftCard(t *testing.T) {
 					"-tx",
 				},
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "10.00",
 					"-txRef",
 				},
@@ -81,11 +81,11 @@ func TestGiftCard(t *testing.T) {
 					"-txRef",
 				},
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "500.00",
 				},
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "500.00",
 				},
 			},

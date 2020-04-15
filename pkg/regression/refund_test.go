@@ -24,7 +24,7 @@ func TestRefund(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
 				{
@@ -53,7 +53,7 @@ func TestRefund(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amountRange(0, 5.01, 9.99),
 				},
 				{
@@ -96,7 +96,7 @@ func TestRefund(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amountRange(0, 5, 10),
 				},
 				{
@@ -128,7 +128,7 @@ func TestRefund(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "refund", "-terminal", "Test Terminal", "-test",
+					"-type", "refund", "-terminal", terminalName, "-test",
 					"-amount", "7.77",
 				},
 			},
@@ -166,11 +166,11 @@ func TestRefund(t *testing.T) {
 Leave the card in the terminal until the test completes.`,
 			args: [][]string{
 				{
-					"-type", "refund", "-terminal", "Test Terminal", "-test",
+					"-type", "refund", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
 				{
-					"-type", "refund", "-terminal", "Test Terminal", "-test",
+					"-type", "refund", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
 			},
@@ -200,7 +200,7 @@ Leave the card in the terminal until the test completes.`,
 			instructions: "Insert a signature CVM test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "refund", "-terminal", "Test Terminal",
+					"-type", "refund", "-terminal", terminalName,
 					"-test", "-amount", amount(0),
 					"-sigFormat", blockchyp.SignatureFormatJPG,
 					"-sigWidth", "50",
@@ -219,7 +219,7 @@ Leave the card in the terminal until the test completes.`,
 			instructions: "Insert a signature CVM test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "refund", "-terminal", "Test Terminal",
+					"-type", "refund", "-terminal", terminalName,
 					"-test", "-amount", amount(0),
 					"-sigWidth", "400", "-sigFile", "/tmp/blockchyp-regression-test/sig.jpg",
 				},
@@ -242,7 +242,7 @@ Leave the card in the terminal until the test completes.`,
 When prompted for a signature, hit 'Done' without signing.`,
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal",
+					"-type", "charge", "-terminal", terminalName,
 					"-test", "-amount", amount(0),
 				},
 			},
@@ -261,7 +261,7 @@ When prompted for a signature, hit 'Done' without signing.`,
 Let the transaction time out when prompted for a signature. It should take 90 seconds.`,
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal",
+					"-type", "charge", "-terminal", terminalName,
 					"-test", "-amount", amount(0),
 				},
 			},
@@ -277,7 +277,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			instructions: "Insert a signature CVM test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal",
+					"-type", "charge", "-terminal", terminalName,
 					"-test", "-amount", amount(0),
 					"-disableSignature",
 				},
@@ -297,7 +297,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			instructions: "Hit the red 'X' button when prompted for a card.",
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal",
+					"-type", "charge", "-terminal", terminalName,
 					"-test", "-amount", amount(0),
 				},
 			},
@@ -314,7 +314,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			instructions: "Swipe an MSR test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "refund", "-terminal", "Test Terminal", "-test",
+					"-type", "refund", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
 			},
@@ -333,7 +333,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '1234' when prompted.",
 			args: [][]string{
 				{
-					"-type", "refund", "-terminal", "Test Terminal", "-test",
+					"-type", "refund", "-terminal", terminalName, "-test",
 					"-amount", amount(0), "-manual",
 				},
 			},
@@ -352,7 +352,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			instructions: "Swipe the 'Decline' MSR test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "refund", "-terminal", "Test Terminal", "-test",
+					"-type", "refund", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
 			},
