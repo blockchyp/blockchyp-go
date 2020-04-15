@@ -71,6 +71,8 @@ type Client struct {
 
 // NewClient returns a default Client configured with the given credentials.
 func NewClient(creds APICredentials) Client {
+	userAgent := BuildUserAgent()
+
 	return Client{
 		Credentials: creds,
 		GatewayHost: DefaultGatewayHost,
@@ -83,20 +85,29 @@ func NewClient(creds APICredentials) Client {
 		routeCacheTTL: DefaultRouteCacheTTL,
 		gatewayHTTPClient: &http.Client{
 			Transport: AddUserAgent(
-				&http.Transport{},
-				BuildUserAgent(),
+				&http.Transport{
+					Dial: (&net.Dialer{
+						Timeout: 5 * time.Second,
+					}).Dial,
+					TLSHandshakeTimeout: 5 * time.Second,
+				},
+				userAgent,
 			),
 		}, // Timeout is set per request
 		terminalHTTPClient: &http.Client{
 			Timeout: DefaultTerminalTimeout,
 			Transport: AddUserAgent(
 				&http.Transport{
+					Dial: (&net.Dialer{
+						Timeout: 5 * time.Second,
+					}).Dial,
+					TLSHandshakeTimeout: 5 * time.Second,
 					TLSClientConfig: &tls.Config{
 						RootCAs:    terminalCertPool(),
 						ServerName: terminalCN,
 					},
 				},
-				BuildUserAgent(),
+				userAgent,
 			),
 		},
 	}

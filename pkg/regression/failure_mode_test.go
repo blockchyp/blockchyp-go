@@ -5,6 +5,7 @@ package regression
 import (
 	"encoding/json"
 	"io"
+	"net"
 	"os"
 	"path/filepath"
 	"testing"
@@ -107,12 +108,9 @@ When prompted, insert a valid test card.`,
 					"-type", "ping", "-terminal", "Test Terminal", "-test",
 				},
 				scrambleIPs,
-				`Insert an EMV test card when prompted.
-
-It may take a minute or two for the route to be renegotiated.`,
+				time.NewTimer(10 * time.Second),
 				[]string{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", amount(0),
+					"-type", "ping", "-terminal", "Test Terminal", "-test",
 				},
 			},
 			assert: []interface{}{
@@ -121,12 +119,8 @@ It may take a minute or two for the route to be renegotiated.`,
 				},
 				nil,
 				nil,
-				blockchyp.AuthorizationResponse{
-					Success:          true,
-					Approved:         true,
-					Test:             true,
-					RequestedAmount:  amount(0),
-					AuthorizedAmount: amount(0),
+				blockchyp.Acknowledgement{
+					Success: true,
 				},
 			},
 		},
@@ -145,7 +139,11 @@ It may take a minute or two for the route to be renegotiated.`,
 					setup(t, v, true)
 				case func(*testing.T):
 					v(t)
-					time.Sleep(10 * time.Second)
+				case *time.Timer:
+					go func() {
+						<-v.C
+						panic("timed out while renegotiating route")
+					}()
 				case []string:
 					cli.run(v, test.assert[i])
 				}
@@ -171,7 +169,9 @@ func scrambleIPs(t *testing.T) {
 	}
 
 	for k, v := range cache.Routes {
-		v.Route.IPAddress = "127.0.0.0"
+		ip := net.ParseIP(v.Route.IPAddress)
+		ip[len(ip)-1] = 0x0
+		v.Route.IPAddress = ip.String()
 		cache.Routes[k] = v
 	}
 
