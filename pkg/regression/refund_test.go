@@ -54,7 +54,7 @@ func TestRefund(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", terminalName, "-test",
-					"-amount", amountRange(0, 5.01, 9.99),
+					"-amount", amountRange(0, 501, 999),
 				},
 				{
 					"-type", "refund", "-test",
@@ -97,11 +97,11 @@ func TestRefund(t *testing.T) {
 			args: [][]string{
 				{
 					"-type", "charge", "-terminal", terminalName, "-test",
-					"-amount", amountRange(0, 5, 10),
+					"-amount", amountRange(0, 500, 1000),
 				},
 				{
 					"-type", "refund", "-test",
-					"-amount", amountRange(1, 10.01, 20),
+					"-amount", amountRange(1, 1001, 2000),
 					"-tx",
 				},
 			},

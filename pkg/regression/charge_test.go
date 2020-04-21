@@ -56,7 +56,7 @@ func TestCharge(t *testing.T) {
 			instructions: "Tap a contactless EMV test card when prompted.",
 			args: []string{
 				"-type", "charge", "-terminal", terminalName,
-				"-test", "-amount", amountRange(0, 1, 10),
+				"-test", "-amount", amountRange(0, 100, 1000),
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:          true,

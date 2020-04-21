@@ -3,7 +3,6 @@
 package regression
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -178,8 +177,7 @@ func TestReverse(t *testing.T) {
 				}
 
 				if test.wait > 0 && i == 0 {
-					fmt.Println("\n" + yellow + "Wait " + test.wait.String() + " for the test to complete." + noColor)
-					time.Sleep(test.wait)
+					wait(test.wait)
 				}
 			}
 		})

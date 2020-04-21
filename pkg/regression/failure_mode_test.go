@@ -35,7 +35,7 @@ func TestFailureModes(t *testing.T) {
 When prompted, insert a valid test card.`,
 				[]string{
 					"-type", "charge", "-terminal", terminalName, "-test",
-					"-amount", amountRange(0, 1, 40),
+					"-amount", amountRange(0, 100, 4000),
 				},
 				"Restart the cloud stack.",
 			},
@@ -75,7 +75,7 @@ When prompted, insert a valid test card.`,
 When prompted, insert a valid test card.`,
 				[]string{
 					"-type", "charge", "-terminal", terminalName, "-test",
-					"-amount", amountRange(0, 1, 40),
+					"-amount", amountRange(0, 100, 4000),
 				},
 				"Restart the cloud stack.",
 			},

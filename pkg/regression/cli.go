@@ -12,9 +12,11 @@ import (
 	"os/exec"
 	"path/filepath"
 	"reflect"
+	"strconv"
 	"strings"
 	"sync"
 	"testing"
+	"time"
 
 	"github.com/blockchyp/blockchyp-go"
 	"github.com/stretchr/testify/assert"
@@ -22,6 +24,9 @@ import (
 
 const terminalName = "Test Terminal"
 const notEmpty = "NOT EMPTY"
+
+const defaultFlatRateFee = 0.035
+const defaultPerTransactionFee = 50
 
 type cli struct {
 	path string
@@ -195,25 +200,55 @@ func (c cli) skipCloudRelay() {
 	}
 }
 
+type style int
+
+func (s style) String() string {
+	return strconv.Itoa(int(s))
+}
+
 const (
-	red     = "\x1b[31m"
-	green   = "\x1b[32m"
-	yellow  = "\x1b[33m"
-	blue    = "\x1b[34m"
-	magenta = "\x1b[35m"
-	cyan    = "\x1b[36m"
-	noColor = "\x1b[0m"
+	noColor style = iota + 30
+	red
+	green
+	yellow
+	blue
+	magenta
+	cyan
 )
+
+const (
+	normal style = iota
+	bold
+	underline
+	blink
+)
+
+func format(styles ...style) string {
+	result := "\x1b["
+
+	if len(styles) == 0 {
+		return result + "0m"
+	}
+
+	for i, s := range styles {
+		result += s.String()
+		if i+1 < len(styles) {
+			result += ";"
+		}
+	}
+
+	return result + "m"
+}
 
 func setup(t *testing.T, instructions string, pause bool) {
 	if instructions == "" {
 		return
 	}
 
-	fmt.Println("\nSteps: " + magenta + instructions + noColor + "\n")
+	fmt.Println("\nSteps: " + format(magenta) + instructions + format() + "\n")
 
 	if pause {
-		fmt.Println(green + "Press 'Enter' to continue" + noColor)
+		fmt.Println(format(green) + "Press 'Enter' to continue" + format())
 
 		f, err := os.Open("/dev/tty")
 		if err != nil {
@@ -229,7 +264,7 @@ func validate(t *testing.T, v validation) {
 		return
 	}
 
-	fmt.Printf("\n%s%s y/N:%s ", "\x1b[33m", v.prompt, "\x1b[0m")
+	fmt.Printf("\n%s%s y/N:%s ", format(yellow), v.prompt, format())
 
 	f, err := os.Open("/dev/tty")
 	if err != nil {
@@ -238,6 +273,14 @@ func validate(t *testing.T, v validation) {
 	res, _ := bufio.NewReader(f).ReadBytes('\n')
 
 	assert.Equal(t, v.expect, strings.HasPrefix(strings.ToLower(string(res)), "y"))
+}
+
+func wait(duration time.Duration) {
+	for i := duration; i > 0; i -= time.Second {
+		fmt.Printf("\x1b[2K\r" + format(yellow) + "Wait " + i.String() + format())
+		time.Sleep(1 * time.Second)
+	}
+	fmt.Printf("\n")
 }
 
 type validation struct {

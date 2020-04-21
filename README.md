@@ -1536,6 +1536,9 @@ Change these settings:
 * Enable cash back
 * Enable JCB and Union Pay
 * Whitelist the BIN range for a chosen MSR test card
+* Add a pricing policy:
+  * Flat rate: 350 basis points
+  * Transaction fee: $0.50
 
 Create a blockchyp.json file with credentials for the test merchant.
 
