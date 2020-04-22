@@ -31,7 +31,6 @@ func TestGiftCard(t *testing.T) {
 					MaskedPAN:           notEmpty,
 					PublicKey:           notEmpty,
 					ReceiptSuggestions: blockchyp.ReceiptSuggestions{
-						MerchantName:     notEmpty,
 						MaskedPAN:        notEmpty,
 						AuthorizedAmount: "0.00",
 						TransactionType:  "charge",

@@ -108,7 +108,7 @@ When prompted, insert a valid test card.`,
 					"-type", "ping", "-terminal", terminalName, "-test",
 				},
 				scrambleIPs,
-				time.NewTimer(10 * time.Second),
+				10 * time.Second,
 				[]string{
 					"-type", "ping", "-terminal", terminalName, "-test",
 				},
@@ -133,20 +133,29 @@ When prompted, insert a valid test card.`,
 				cli.skipCloudRelay()
 			}
 
+			failures := make(chan string, 0)
+
 			for i := range test.args {
 				switch v := test.args[i].(type) {
 				case string:
 					setup(t, v, true)
 				case func(*testing.T):
 					v(t)
-				case *time.Timer:
+				case time.Duration:
+					timer := time.NewTimer(v)
 					go func() {
-						<-v.C
-						panic("timed out while renegotiating route")
+						<-timer.C
+						failures <- "timed out while renegotiating route"
 					}()
 				case []string:
 					cli.run(v, test.assert[i])
 				}
+			}
+
+			select {
+			case failure := <-failures:
+				t.Error(failure)
+			default:
 			}
 
 			validate(t, test.validation)
