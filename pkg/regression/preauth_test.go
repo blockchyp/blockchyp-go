@@ -29,6 +29,9 @@ func TestPreauth(t *testing.T) {
 
 		txID       string
 		validation validation
+
+		// simOnly causes tests to be skipped when running in acquirer mode.
+		simOnly bool
 	}{
 		"EMVApproved": {
 			instructions: "Insert an EMV test card when prompted.",
@@ -68,6 +71,7 @@ func TestPreauth(t *testing.T) {
 			},
 		},
 		"SignatureInResponse": {
+			simOnly:      true,
 			instructions: "Insert a signature CVM test card when prompted.",
 			authArgs: []string{
 				"-type", "preauth", "-terminal", terminalName,
@@ -84,6 +88,7 @@ func TestPreauth(t *testing.T) {
 			},
 		},
 		"SignatureInFile": {
+			simOnly:      true,
 			instructions: "Insert a signature CVM test card when prompted",
 			authArgs: []string{
 				"-type", "preauth", "-terminal", terminalName,
@@ -102,6 +107,7 @@ func TestPreauth(t *testing.T) {
 			},
 		},
 		"SignatureRefused": {
+			simOnly: true,
 			instructions: `Insert a signature CVM test card when prompted.
 
 When prompted for a signature, hit 'Done' without signing.`,
@@ -117,6 +123,7 @@ When prompted for a signature, hit 'Done' without signing.`,
 			},
 		},
 		"UserCanceled": {
+			simOnly:      true,
 			instructions: "Hit the red 'X' button when prompted for a card.",
 			authArgs: []string{
 				"-type", "preauth", "-terminal", terminalName,
@@ -130,6 +137,7 @@ When prompted for a signature, hit 'Done' without signing.`,
 			},
 		},
 		"SignatureTimeout": {
+			simOnly: true,
 			instructions: `Insert a signature CVM test card when prompted.
 
 Let the transaction time out when prompted for a signature. It should take 90 seconds.`,
@@ -144,7 +152,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"ManualApproval": {
-			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '1234' when prompted",
+			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '123' when prompted",
 			authArgs: []string{
 				"-type", "preauth", "-terminal", terminalName,
 				"-test", "-amount", amount(0),
@@ -173,6 +181,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"EMVDecline": {
+			simOnly:      true,
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
 				"-type", "preauth", "-terminal", terminalName,
@@ -198,6 +207,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"EMVTimeout": {
+			simOnly:      true,
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
 				"-type", "preauth", "-terminal", terminalName,
@@ -214,6 +224,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"EMVPartialAuth": {
+			simOnly:      true,
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
 				"-type", "preauth", "-terminal", terminalName,
@@ -230,6 +241,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"EMVError": {
+			simOnly:      true,
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
 				"-type", "preauth", "-terminal", terminalName,
@@ -246,6 +258,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"EMVNoResponse": {
+			simOnly:      true,
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
 				"-type", "preauth", "-terminal", terminalName,
@@ -277,7 +290,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 			captureArgs: []string{
 				"-type", "capture", "-test",
-				"-tip", amount(1), "-amount", amount(2),
+				"-tip", "1.00", "-amount", add(amount(0), 100),
 				"-tx",
 			},
 			captureAssert: blockchyp.CaptureResponse{
@@ -285,8 +298,8 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "capture",
-				AuthorizedAmount: amount(2),
-				TipAmount:        amount(1),
+				AuthorizedAmount: add(amount(0), 100),
+				TipAmount:        "1.00",
 			},
 		},
 		"OrphanCapture": {
@@ -377,6 +390,10 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			if test.simOnly && acquirerMode {
+				t.Skip("skipped for acquirer test run")
+			}
+
 			cli := newCLI(t)
 
 			setup(t, test.instructions, true)

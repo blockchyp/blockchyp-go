@@ -377,7 +377,7 @@ func TestToken(t *testing.T) {
 			},
 		},
 		"DirectManual": {
-			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '1234' when prompted",
+			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '123' when prompted",
 			args: [][]string{
 				{
 					"-type", "enroll", "-terminal", terminalName, "-test",

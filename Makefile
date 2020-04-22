@@ -8,6 +8,7 @@ VERSION := $(or $(TAG:v%=%),$(LASTTAG:v%=%))-$(or $(BUILD_NUMBER), 1)$(if $(TAG)
 # Build config
 TESTFLAGS := -v -race -count=1
 TESTENV :=
+MODE :=
 BUILDDIR := build
 DISTDIR := $(BUILDDIR)/dist
 CMDDIR := cmd
@@ -97,6 +98,7 @@ regression:
 		$(foreach path,$(CACHEPATHS),-v $(CACHE)/$(path):$(path):Z) \
 		-e HOME=$(HOME) \
 		-e GOPATH=$(HOME)/go \
+		-e MODE=$(MODE) \
 		-w $(PWD) \
 		--rm -it $(IMAGE)) \
 	$(GO) test -timeout=0 $(TESTFLAGS) $(if $(TEST), -run=$(TEST),) -tags=regression github.com/blockchyp/blockchyp-go/pkg/regression

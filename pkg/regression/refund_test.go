@@ -16,9 +16,12 @@ func TestRefund(t *testing.T) {
 		txID         string
 		validation   validation
 
-		// localMode causes tests to be skipped when running in cloud relay
+		// localOnly causes tests to be skipped when running in cloud relay
 		// mode.
-		localMode bool
+		localOnly bool
+
+		// simOnly causes tests to be skipped when running in acquirer mode.
+		simOnly bool
 	}{
 		"Charge": {
 			instructions: "Insert an EMV test card when prompted.",
@@ -124,7 +127,8 @@ func TestRefund(t *testing.T) {
 			},
 		},
 		"SF": {
-			localMode:    true,
+			simOnly:      true,
+			localOnly:    true,
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
@@ -197,6 +201,7 @@ Leave the card in the terminal until the test completes.`,
 			},
 		},
 		"SignatureInResponse": {
+			simOnly:      true,
 			instructions: "Insert a signature CVM test card when prompted.",
 			args: [][]string{
 				{
@@ -216,6 +221,7 @@ Leave the card in the terminal until the test completes.`,
 			},
 		},
 		"SignatureInFile": {
+			simOnly:      true,
 			instructions: "Insert a signature CVM test card when prompted.",
 			args: [][]string{
 				{
@@ -237,6 +243,7 @@ Leave the card in the terminal until the test completes.`,
 			},
 		},
 		"SignatureRefused": {
+			simOnly: true,
 			instructions: `Insert a signature CVM test card when prompted.
 
 When prompted for a signature, hit 'Done' without signing.`,
@@ -256,6 +263,7 @@ When prompted for a signature, hit 'Done' without signing.`,
 			},
 		},
 		"SignatureTimeout": {
+			simOnly: true,
 			instructions: `Insert a signature CVM test card when prompted.
 
 Let the transaction time out when prompted for a signature. It should take 90 seconds.`,
@@ -294,6 +302,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"UserCanceled": {
+			simOnly:      true,
 			instructions: "Hit the red 'X' button when prompted for a card.",
 			args: [][]string{
 				{
@@ -330,7 +339,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"ManualFreeRange": {
-			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '1234' when prompted.",
+			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '123' when prompted.",
 			args: [][]string{
 				{
 					"-type", "refund", "-terminal", terminalName, "-test",
@@ -349,6 +358,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"DeclineFreeRange": {
+			simOnly:      true,
 			instructions: "Swipe the 'Decline' MSR test card when prompted.",
 			args: [][]string{
 				{
@@ -372,8 +382,12 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			if test.simOnly && acquirerMode {
+				t.Skip("skipped for acquirer test run")
+			}
+
 			cli := newCLI(t)
-			if test.localMode {
+			if test.localOnly {
 				cli.skipCloudRelay()
 			}
 

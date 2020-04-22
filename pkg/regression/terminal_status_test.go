@@ -11,6 +11,10 @@ import (
 )
 
 func TestStatus(t *testing.T) {
+	if acquirerMode {
+		t.Skip("skipped for acquirer test run")
+	}
+
 	tests := map[string]struct {
 		args   [][]string
 		assert []interface{}

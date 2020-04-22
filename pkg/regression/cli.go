@@ -6,7 +6,6 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"os"
 	"os/exec"
@@ -14,7 +13,6 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	"sync"
 	"testing"
 	"time"
 
@@ -33,18 +31,28 @@ type cli struct {
 	t    *testing.T
 }
 
-var path string
-var argsOnce sync.Once
+var cliExecutable string
+var acquirerMode bool
+
+func init() {
+	if env := os.Getenv("CLI"); env != "" {
+		cliExecutable = env
+	} else {
+		cliExecutable = "go run ../../cmd/blockchyp"
+	}
+
+	if env := os.Getenv("MODE"); env != "" {
+		switch env {
+		case "acquirer":
+			acquirerMode = true
+		}
+	}
+}
 
 func newCLI(t *testing.T) cli {
-	argsOnce.Do(func() {
-		flag.StringVar(&path, "cli", "go run ../../cmd/blockchyp", "CLI executable to invoke")
-		flag.Parse()
-	})
-
 	return cli{
 		t:    t,
-		path: path,
+		path: cliExecutable,
 	}
 }
 

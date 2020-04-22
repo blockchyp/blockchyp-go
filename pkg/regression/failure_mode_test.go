@@ -15,17 +15,21 @@ import (
 )
 
 func TestFailureModes(t *testing.T) {
+	if acquirerMode {
+		t.Skip("skipped for acquirer test run")
+	}
+
 	tests := map[string]struct {
 		args       []interface{}
 		assert     []interface{}
 		validation validation
 
-		// localMode causes tests to be skipped when running in cloud relay
+		// localOnly causes tests to be skipped when running in cloud relay
 		// mode.
-		localMode bool
+		localOnly bool
 	}{
 		"GatewayDown": {
-			localMode: true,
+			localOnly: true,
 			args: []interface{}{
 				[]string{
 					"-type", "ping", "-terminal", terminalName, "-test",
@@ -62,7 +66,7 @@ When prompted, insert a valid test card.`,
 			},
 		},
 		"ExpiredCache": {
-			localMode: true,
+			localOnly: true,
 			args: []interface{}{
 				[]string{
 					"-type", "ping", "-terminal", terminalName, "-test",
@@ -129,7 +133,7 @@ When prompted, insert a valid test card.`,
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			cli := newCLI(t)
-			if test.localMode {
+			if test.localOnly {
 				cli.skipCloudRelay()
 			}
 

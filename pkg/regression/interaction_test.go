@@ -9,6 +9,10 @@ import (
 )
 
 func TestInteraction(t *testing.T) {
+	if acquirerMode {
+		t.Skip("skipped for acquirer test run")
+	}
+
 	tests := map[string]struct {
 		instructions string
 		wait         bool

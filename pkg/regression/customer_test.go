@@ -9,6 +9,10 @@ import (
 )
 
 func TestCustomer(t *testing.T) {
+	if acquirerMode {
+		t.Skip("skipped for acquirer test run")
+	}
+
 	initialState := blockchyp.Customer{
 		FirstName:    randomStr(),
 		LastName:     randomStr(),
