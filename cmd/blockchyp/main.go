@@ -70,6 +70,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.Version, "version", false, "print version and exit")
 	flag.StringVar(&args.Message, "message", "", "short message to be displayed on the terminal")
 	flag.BoolVar(&args.EBT, "ebt", false, "EBT transaction")
+	flag.BoolVar(&args.Debit, "debit", false, "process card as a debit card")
 	flag.StringVar(&args.RouteCache, "routeCache", "", "specifies local file location for route cache")
 	flag.StringVar(&args.OutputFile, "out", "", "directs output to a file instead of stdout")
 	flag.StringVar(&args.SigFormat, "sigFormat", "", "format for signature file (jpeg, png, gif)")
@@ -419,7 +420,9 @@ func processBalance(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	request.ManualEntry = args.ManualEntry
 	request.Test = args.Test
 
-	if args.EBT {
+	if args.Debit {
+		request.CardType = blockchyp.CardTypeDebit
+	} else if args.EBT {
 		request.CardType = blockchyp.CardTypeEBT
 	}
 
@@ -633,7 +636,9 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req.TerminalName = args.TerminalName
 	req.Token = args.Token
 
-	if args.EBT {
+	if args.Debit {
+		req.CardType = blockchyp.CardTypeDebit
+	} else if args.EBT {
 		req.CardType = blockchyp.CardTypeEBT
 		// EBT free range refunds are not permitted.
 		req.TerminalName = args.TerminalName
@@ -661,7 +666,10 @@ func processReverse(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	req.TransactionRef = args.TransactionRef
 	req.Test = args.Test
 	req.ManualEntry = args.ManualEntry
-	if args.EBT {
+
+	if args.Debit {
+		req.CardType = blockchyp.CardTypeDebit
+	} else if args.EBT {
 		req.CardType = blockchyp.CardTypeEBT
 	}
 
@@ -825,7 +833,10 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	req.CashBackEnabled = args.CashBackEnabled
 	req.Surcharge = args.Surcharge
 	req.CashDiscount = args.CashDiscount
-	if args.EBT {
+
+	if args.Debit {
+		req.CardType = blockchyp.CardTypeDebit
+	} else if args.EBT {
 		req.CardType = blockchyp.CardTypeEBT
 	}
 	if hasCustomerFields(args) {

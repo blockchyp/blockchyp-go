@@ -68,6 +68,7 @@ type CommandLineArguments struct {
 	YesCaption                  string `arg:"yesCaption"`
 	NoCaption                   string `arg:"noCaption"`
 	EBT                         bool   `arg:"ebt"`
+	Debit                       bool   `arg:"debit"`
 	TCAlias                     string `arg:"tcAlias"`
 	TCName                      string `arg:"tcName"`
 	TCContent                   string `arg:"tcContent"`
