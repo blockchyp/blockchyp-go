@@ -32,7 +32,7 @@ func enrollExample() {
 
 	//process the result
 	if response.Approved {
-		fmt.Println("Approved")
+		fmt.Println("approved")
 	}
 
 	fmt.Printf("Response: %+v\n", response)

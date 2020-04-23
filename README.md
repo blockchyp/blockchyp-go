@@ -182,7 +182,7 @@ func chargeExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -231,7 +231,7 @@ func preauthExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -779,7 +779,7 @@ func refundExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -827,7 +827,7 @@ func enrollExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -876,7 +876,7 @@ func giftActivateExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -932,7 +932,7 @@ func reverseExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -980,7 +980,7 @@ func captureExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -1075,7 +1075,7 @@ func voidExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
