@@ -15,20 +15,31 @@ import (
 )
 
 func TestFailureModes(t *testing.T) {
+	if acquirerMode {
+		t.Skip("skipped for acquirer test run")
+	}
+
 	tests := map[string]struct {
 		args       []interface{}
 		assert     []interface{}
 		validation validation
+
+		// localOnly causes tests to be skipped when running in cloud relay
+		// mode.
+		localOnly bool
 	}{
 		"GatewayDown": {
+			localOnly: true,
 			args: []interface{}{
 				[]string{
-					"-type", "ping", "-terminal", "Test Terminal", "-test",
+					"-type", "ping", "-terminal", terminalName, "-test",
 				},
-				"Stop the cloud stack or change the host in blockchyp.json and firmware.yml to an invalid value.",
+				`Stop the cloud stack or change the host in blockchyp.json and firmware.yml to an invalid value.
+
+When prompted, insert a valid test card.`,
 				[]string{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "41.00",
+					"-type", "charge", "-terminal", terminalName, "-test",
+					"-amount", amountRange(0, 100, 4000),
 				},
 				"Restart the cloud stack.",
 			},
@@ -42,8 +53,8 @@ func TestFailureModes(t *testing.T) {
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "charge",
-					RequestedAmount:  "41.00",
-					AuthorizedAmount: "41.00",
+					RequestedAmount:  amount(0),
+					AuthorizedAmount: amount(0),
 					PaymentType:      notEmpty,
 					MaskedPAN:        notEmpty,
 					StoreAndForward:  true,
@@ -55,17 +66,20 @@ func TestFailureModes(t *testing.T) {
 			},
 		},
 		"ExpiredCache": {
+			localOnly: true,
 			args: []interface{}{
 				[]string{
-					"-type", "ping", "-terminal", "Test Terminal", "-test",
+					"-type", "ping", "-terminal", terminalName, "-test",
 				},
 				[]string{
 					"-type", "cache-expire",
 				},
-				"Stop the cloud stack or change the host in blockchyp.json and firmware.yml to an invalid value.",
+				`Stop the cloud stack or change the host in blockchyp.json and firmware.yml to an invalid value.
+
+When prompted, insert a valid test card.`,
 				[]string{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "41.00",
+					"-type", "charge", "-terminal", terminalName, "-test",
+					"-amount", amountRange(0, 100, 4000),
 				},
 				"Restart the cloud stack.",
 			},
@@ -74,13 +88,14 @@ func TestFailureModes(t *testing.T) {
 					Success: true,
 				},
 				nil,
+				nil,
 				blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "charge",
-					RequestedAmount:  "42.00",
-					AuthorizedAmount: "42.00",
+					RequestedAmount:  amount(0),
+					AuthorizedAmount: amount(0),
 					PaymentType:      notEmpty,
 					MaskedPAN:        notEmpty,
 					StoreAndForward:  true,
@@ -94,12 +109,12 @@ func TestFailureModes(t *testing.T) {
 		"IPChange": {
 			args: []interface{}{
 				[]string{
-					"-type", "ping", "-terminal", "Test Terminal", "-test",
+					"-type", "ping", "-terminal", terminalName, "-test",
 				},
 				scrambleIPs,
+				10 * time.Second,
 				[]string{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "42.00",
+					"-type", "ping", "-terminal", terminalName, "-test",
 				},
 			},
 			assert: []interface{}{
@@ -107,21 +122,22 @@ func TestFailureModes(t *testing.T) {
 					Success: true,
 				},
 				nil,
-				blockchyp.AuthorizationResponse{
-					Success:          true,
-					Approved:         true,
-					Test:             true,
-					RequestedAmount:  "42.00",
-					AuthorizedAmount: "42.00",
+				nil,
+				blockchyp.Acknowledgement{
+					Success: true,
 				},
 			},
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+			if test.localOnly {
+				cli.skipCloudRelay()
+			}
+
+			failures := make(chan string, 0)
 
 			for i := range test.args {
 				switch v := test.args[i].(type) {
@@ -129,10 +145,21 @@ func TestFailureModes(t *testing.T) {
 					setup(t, v, true)
 				case func(*testing.T):
 					v(t)
-					time.Sleep(10 * time.Second)
+				case time.Duration:
+					timer := time.NewTimer(v)
+					go func() {
+						<-timer.C
+						failures <- "timed out while renegotiating route"
+					}()
 				case []string:
 					cli.run(v, test.assert[i])
 				}
+			}
+
+			select {
+			case failure := <-failures:
+				t.Error(failure)
+			default:
 			}
 
 			validate(t, test.validation)

@@ -19,8 +19,8 @@ func TestVoid(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "62.00",
+					"-type", "charge", "-terminal", terminalName, "-test",
+					"-amount", amount(0),
 				},
 				{
 					"-type", "void", "-test",
@@ -46,8 +46,8 @@ func TestVoid(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "preauth", "-terminal", "Test Terminal", "-test",
-					"-amount", "63.00",
+					"-type", "preauth", "-terminal", terminalName, "-test",
+					"-amount", amount(0),
 				},
 				{
 					"-type", "void", "-test",
@@ -73,7 +73,7 @@ func TestVoid(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "preauth", "-terminal", "Test Terminal", "-test",
+					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", "63.00",
 				},
 				{
@@ -127,8 +127,8 @@ func TestVoid(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "103.00",
+					"-type", "charge", "-terminal", terminalName, "-test",
+					"-amount", amount(0),
 				},
 				{
 					"-type", "void", "-test",
@@ -163,10 +163,10 @@ func TestVoid(t *testing.T) {
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, test.instructions, true)
 
 			for i := range test.args {

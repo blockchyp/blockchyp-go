@@ -1604,6 +1604,9 @@ type GiftActivateResponse struct {
 
 	// PublicKey is the public key of the activated card.
 	PublicKey string `json:"publicKey"`
+
+	// MaskedPAN is the masked card identifier.
+	MaskedPAN string `json:"maskedPan,omitempty"`
 }
 
 // CloseBatchRequest contains the information needed to manually close a
@@ -2320,6 +2323,77 @@ type PaymentLinkResponse struct {
 
 	// CustomerID the customer id created or used for the payment.
 	CustomerID string `json:"customerId"`
+}
+
+// CashDiscountRequest computes the cash discount for a cash discount if
+// enabled.
+type CashDiscountRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// CurrencyCode indicates the transaction currency code.
+	CurrencyCode string `json:"currencyCode"`
+
+	// Amount is the requested amount.
+	Amount string `json:"amount"`
+
+	// TaxExempt indicates that the request is tax exempt. Only required for tax
+	// exempt level 2 processing.
+	TaxExempt bool `json:"taxExempt"`
+
+	// Surcharge is a flag to add a surcharge to the transaction to cover credit
+	// card fees, if permitted.
+	Surcharge bool `json:"surcharge"`
+
+	// CashDiscount is a flag that applies a discount to negate the surcharge for
+	// debit transactions or other surcharge ineligible payment methods.
+	CashDiscount bool `json:"cashDiscount"`
+}
+
+// CashDiscountResponse models the results of a cash discount calculation.
+type CashDiscountResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// CurrencyCode indicates the transaction currency code.
+	CurrencyCode string `json:"currencyCode"`
+
+	// Amount is the new calculated total amount.
+	Amount string `json:"amount"`
+
+	// TaxExempt indicates that the request is tax exempt. Only required for tax
+	// exempt level 2 processing.
+	TaxExempt bool `json:"taxExempt"`
+
+	// Surcharge is the normal surcharge for a transaction. Will only be returned
+	// if an offsetting cash discount is also returned.
+	Surcharge string `json:"surcharge"`
+
+	// CashDiscount is the cash discount. Will not be returned in surcharge only
+	// mode.
+	CashDiscount string `json:"cashDiscount"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature

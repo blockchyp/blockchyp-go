@@ -71,6 +71,8 @@ type Client struct {
 
 // NewClient returns a default Client configured with the given credentials.
 func NewClient(creds APICredentials) Client {
+	userAgent := BuildUserAgent()
+
 	return Client{
 		Credentials: creds,
 		GatewayHost: DefaultGatewayHost,
@@ -83,20 +85,29 @@ func NewClient(creds APICredentials) Client {
 		routeCacheTTL: DefaultRouteCacheTTL,
 		gatewayHTTPClient: &http.Client{
 			Transport: AddUserAgent(
-				&http.Transport{},
-				BuildUserAgent(),
+				&http.Transport{
+					Dial: (&net.Dialer{
+						Timeout: 5 * time.Second,
+					}).Dial,
+					TLSHandshakeTimeout: 5 * time.Second,
+				},
+				userAgent,
 			),
 		}, // Timeout is set per request
 		terminalHTTPClient: &http.Client{
 			Timeout: DefaultTerminalTimeout,
 			Transport: AddUserAgent(
 				&http.Transport{
+					Dial: (&net.Dialer{
+						Timeout: 5 * time.Second,
+					}).Dial,
+					TLSHandshakeTimeout: 5 * time.Second,
 					TLSClientConfig: &tls.Config{
 						RootCAs:    terminalCertPool(),
 						ServerName: terminalCN,
 					},
 				},
-				BuildUserAgent(),
+				userAgent,
 			),
 		},
 	}
@@ -977,6 +988,21 @@ func (client *Client) CustomerSearch(request CustomerSearchRequest) (*CustomerSe
 	var response CustomerSearchResponse
 
 	err := client.GatewayRequest("/customer-search", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// CashDiscount calculates the discount for actual cash transactions.
+func (client *Client) CashDiscount(request CashDiscountRequest) (*CashDiscountResponse, error) {
+	var response CashDiscountResponse
+
+	err := client.GatewayRequest("/cash-discount", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut

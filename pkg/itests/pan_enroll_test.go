@@ -63,7 +63,7 @@ func TestPANEnroll(t *testing.T) {
 	assert.NotEmpty(response.TransactionID)
 	assert.NotEmpty(response.Timestamp)
 	assert.NotEmpty(response.TickBlock)
-	assert.Equal("Approved", response.ResponseDescription)
+	assert.Equal("approved", response.ResponseDescription)
 	assert.NotEmpty(response.PaymentType)
 	assert.NotEmpty(response.MaskedPAN)
 	assert.NotEmpty(response.EntryMethod)

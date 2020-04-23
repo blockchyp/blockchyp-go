@@ -182,7 +182,7 @@ func chargeExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -231,7 +231,7 @@ func preauthExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -779,7 +779,7 @@ func refundExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -827,7 +827,7 @@ func enrollExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -876,7 +876,7 @@ func giftActivateExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -932,7 +932,7 @@ func reverseExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -980,7 +980,7 @@ func captureExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -1075,7 +1075,7 @@ func voidExample() {
 
     //process the result
     if response.Approved {
-        fmt.Println("Approved")
+        fmt.Println("approved")
     }
 
     fmt.Printf("Response: %+v\n", response)
@@ -1332,6 +1332,53 @@ func customerSearchExample() {
 
 ```
 
+#### Cash Discount
+
+Calculates the discount for actual cash transactions.
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func cashDiscountExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.CashDiscountRequest{
+        Amount: "100.00",
+    }
+
+    response, err := client.CashDiscount(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
 #### Transaction Status
 
 Retrieves the current status of a transaction.
@@ -1486,6 +1533,12 @@ Change these settings:
 
 * Enable partial auth
 * Enable PINs
+* Enable cash back
+* Enable JCB and Union Pay
+* Whitelist the BIN range for a chosen MSR test card
+* Add a pricing policy:
+  * Flat rate: 350 basis points
+  * Transaction fee: $0.50
 
 Create a blockchyp.json file with credentials for the test merchant.
 

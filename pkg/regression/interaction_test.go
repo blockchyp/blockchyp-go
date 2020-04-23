@@ -9,6 +9,10 @@ import (
 )
 
 func TestInteraction(t *testing.T) {
+	if acquirerMode {
+		t.Skip("skipped for acquirer test run")
+	}
+
 	tests := map[string]struct {
 		instructions string
 		wait         bool
@@ -19,7 +23,7 @@ func TestInteraction(t *testing.T) {
 		"Message": {
 			args: [][]string{
 				{
-					"-type", "message", "-terminal", "Test Terminal", "-test",
+					"-type", "message", "-terminal", terminalName, "-test",
 					"-message", "Your father was a hamster.",
 				},
 			},
@@ -39,7 +43,7 @@ func TestInteraction(t *testing.T) {
 			instructions: "When prompted, select 'Machines'. You can never be too careful.",
 			args: [][]string{
 				{
-					"-type", "boolean-prompt", "-terminal", "Test Terminal", "-test",
+					"-type", "boolean-prompt", "-terminal", terminalName, "-test",
 					"-prompt", "Which side will you take in the machine uprising?",
 					"-yesCaption", "Machines",
 					"-noCaption", "Humans",
@@ -56,7 +60,7 @@ func TestInteraction(t *testing.T) {
 			instructions: "When prompted, enter any text and hit 'Next' or the green 'O' button.",
 			args: [][]string{
 				{
-					"-type", "text-prompt", "-terminal", "Test Terminal", "-test",
+					"-type", "text-prompt", "-terminal", terminalName, "-test",
 					"-promptType", "email",
 				},
 			},
@@ -71,7 +75,7 @@ func TestInteraction(t *testing.T) {
 			instructions: "When prompted, enter any number and hit the green 'O' button.",
 			args: [][]string{
 				{
-					"-type", "text-prompt", "-terminal", "Test Terminal", "-test",
+					"-type", "text-prompt", "-terminal", terminalName, "-test",
 					"-promptType", "phone",
 				},
 			},
@@ -86,7 +90,7 @@ func TestInteraction(t *testing.T) {
 			instructions: "When prompted, enter any number and hit the green 'O' button.",
 			args: [][]string{
 				{
-					"-type", "text-prompt", "-terminal", "Test Terminal", "-test",
+					"-type", "text-prompt", "-terminal", terminalName, "-test",
 					"-promptType", "customer-number",
 				},
 			},
@@ -101,7 +105,7 @@ func TestInteraction(t *testing.T) {
 			instructions: "When prompted, enter any number and hit the green 'O' button.",
 			args: [][]string{
 				{
-					"-type", "text-prompt", "-terminal", "Test Terminal", "-test",
+					"-type", "text-prompt", "-terminal", terminalName, "-test",
 					"-promptType", "rewards-number",
 				},
 			},
@@ -116,7 +120,7 @@ func TestInteraction(t *testing.T) {
 			instructions: "When prompted, enter any text and hit 'Next' or the green 'O' button.",
 			args: [][]string{
 				{
-					"-type", "text-prompt", "-terminal", "Test Terminal", "-test",
+					"-type", "text-prompt", "-terminal", terminalName, "-test",
 					"-promptType", "first-name",
 				},
 			},
@@ -131,7 +135,7 @@ func TestInteraction(t *testing.T) {
 			instructions: "When prompted, enter any text and hit 'Next' or the green 'O' button.",
 			args: [][]string{
 				{
-					"-type", "text-prompt", "-terminal", "Test Terminal", "-test",
+					"-type", "text-prompt", "-terminal", terminalName, "-test",
 					"-promptType", "last-name",
 				},
 			},
@@ -146,7 +150,7 @@ func TestInteraction(t *testing.T) {
 			instructions: "When prompted, sign and hit 'Done'.",
 			args: [][]string{
 				{
-					"-type", "capture-signature", "-terminal", "Test Terminal", "-test",
+					"-type", "capture-signature", "-terminal", terminalName, "-test",
 					"-sigFormat", blockchyp.SignatureFormatJPG,
 					"-sigWidth", "50",
 				},
@@ -161,7 +165,7 @@ func TestInteraction(t *testing.T) {
 		"LineItemDisplay": {
 			args: [][]string{
 				{
-					"-type", "display", "-terminal", "Test Terminal", "-test",
+					"-type", "display", "-terminal", terminalName, "-test",
 					"-displaySubtotal", "120.05",
 					"-displayTax", "5.00",
 					"-displayTotal", "125.05",
@@ -173,7 +177,7 @@ func TestInteraction(t *testing.T) {
 					"-lineItemExtended", "120.05",
 				},
 				{
-					"-type", "clear", "-terminal", "Test Terminal", "-test",
+					"-type", "clear", "-terminal", terminalName, "-test",
 				},
 			},
 			assert: []interface{}{
@@ -201,7 +205,7 @@ func TestInteraction(t *testing.T) {
 When prompted for a card, use the test card you whitelisted.`,
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "1.23",
 				},
 			},
@@ -216,10 +220,10 @@ When prompted for a card, use the test card you whitelisted.`,
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, test.instructions, true)
 
 			for i := range test.args {

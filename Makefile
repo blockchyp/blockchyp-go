@@ -6,8 +6,9 @@ RELEASE := $(or $(BUILD_NUMBER), 1)
 VERSION := $(or $(TAG:v%=%),$(LASTTAG:v%=%))-$(or $(BUILD_NUMBER), 1)$(if $(TAG),,.$(SNAPINFO))
 
 # Build config
-TESTFLAGS := -v -race
+TESTFLAGS := -v -race -count=1
 TESTENV :=
+MODE :=
 BUILDDIR := build
 DISTDIR := $(BUILDDIR)/dist
 CMDDIR := cmd
@@ -84,6 +85,8 @@ integration:
 # Runs regrssion tests
 .PHONY: regrssion
 regression:
+	mkdir -p /tmp/blockchyp-regression-test
+	$(GO) run github.com/blockchyp/blockchyp-go/pkg/regression/watcher $$PPID /tmp/blockchyp-regression-test &
 	$(if $(LOCALBUILD),, \
 		$(foreach path,$(CACHEPATHS),mkdir -p $(CACHE)/$(path) ; ) \
 		sed 's/localhost/$(HOSTIP)/' $(HOME)/.config/blockchyp/blockchyp.json >$(CACHE)/$(HOME)/.config/blockchyp/blockchyp.json ; \
@@ -91,9 +94,11 @@ regression:
 		-u $(shell id -u):$(shell id -g) \
 		-v $(SCMROOT):$(SCMROOT):Z \
 		-v /etc/passwd:/etc/passwd:ro \
+		-v /tmp/blockchyp-regression-test:/tmp/blockchyp-regression-test \
 		$(foreach path,$(CACHEPATHS),-v $(CACHE)/$(path):$(path):Z) \
 		-e HOME=$(HOME) \
 		-e GOPATH=$(HOME)/go \
+		-e MODE=$(MODE) \
 		-w $(PWD) \
 		--rm -it $(IMAGE)) \
 	$(GO) test -timeout=0 $(TESTFLAGS) $(if $(TEST), -run=$(TEST),) -tags=regression github.com/blockchyp/blockchyp-go/pkg/regression

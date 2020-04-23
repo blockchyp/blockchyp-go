@@ -10,14 +10,14 @@ import (
 
 func TestDuplicate(t *testing.T) {
 	cli := newCLI(t)
-	setup(t, `Insert a valid test card when prompted.
+	setup(t, `Insert an EMV test card when prompted.
 
-Insert the same test card when prompted again.`, true)
+Leave it in the terminal until the test completes.`, true)
 
 	args := []string{
-		"-type", "charge", "-terminal", "Test Terminal",
+		"-type", "charge", "-terminal", terminalName,
 		"-test",
-		"-amount", "51.00",
+		"-amount", randomAmount(),
 	}
 
 	expect0 := blockchyp.AuthorizationResponse{

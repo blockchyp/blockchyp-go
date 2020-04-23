@@ -14,20 +14,27 @@ func TestCharge(t *testing.T) {
 		args         []string
 		assert       blockchyp.AuthorizationResponse
 		validation   validation
+
+		// localOnly causes tests to be skipped when running in cloud relay
+		// mode.
+		localOnly bool
+
+		// simOnly causes tests to be skipped when running in acquirer mode.
+		simOnly bool
 	}{
 		"ContactEMVNoCVMApproved": {
-			instructions: "Insert a No-CVM EMV test card when prompted",
+			instructions: "Insert a No-CVM EMV test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "59.00",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:          true,
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "charge",
-				RequestedAmount:  "59.00",
-				AuthorizedAmount: "59.00",
+				RequestedAmount:  amount(0),
+				AuthorizedAmount: amount(0),
 				EntryMethod:      "CHIP",
 				PaymentType:      notEmpty,
 				MaskedPAN:        notEmpty,
@@ -42,25 +49,25 @@ func TestCharge(t *testing.T) {
 					ApplicationLabel: notEmpty,
 					RequestSignature: false,
 					MaskedPAN:        notEmpty,
-					AuthorizedAmount: "59.00",
+					AuthorizedAmount: amount(0),
 					TransactionType:  "charge",
 					EntryMethod:      "CHIP",
 				},
 			},
 		},
 		"ContactlessEMVApproved": {
-			instructions: "Tap a valid contactless EMV test card when prompted",
+			instructions: "Tap a contactless EMV test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "69.00",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amountRange(0, 100, 1000),
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:          true,
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "charge",
-				RequestedAmount:  "69.00",
-				AuthorizedAmount: "69.00",
+				RequestedAmount:  amount(0),
+				AuthorizedAmount: amount(0),
 				EntryMethod:      "CONTACTLESS EMV",
 				PaymentType:      notEmpty,
 				MaskedPAN:        notEmpty,
@@ -74,17 +81,17 @@ func TestCharge(t *testing.T) {
 					ApplicationLabel: notEmpty,
 					RequestSignature: false,
 					MaskedPAN:        notEmpty,
-					AuthorizedAmount: "69.00",
+					AuthorizedAmount: amount(0),
 					TransactionType:  "charge",
 					EntryMethod:      "CONTACTLESS EMV",
 				},
 			},
 		},
 		"MSRVisa": {
-			instructions: "Swipe a Visa MSR test card when prompted",
+			instructions: "Swipe a Visa MSR test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "45.77",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:     true,
@@ -97,10 +104,10 @@ func TestCharge(t *testing.T) {
 			},
 		},
 		"MSRMasterCard": {
-			instructions: "Swipe a MasterCard MSR test card when prompted",
+			instructions: "Swipe a MasterCard MSR test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "45.77",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:     true,
@@ -113,10 +120,10 @@ func TestCharge(t *testing.T) {
 			},
 		},
 		"MSRDiscover": {
-			instructions: "Swipe a Discover MSR test card when prompted",
+			instructions: "Swipe a Discover MSR test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "45.77",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:     true,
@@ -129,10 +136,10 @@ func TestCharge(t *testing.T) {
 			},
 		},
 		"MSRAmex": {
-			instructions: "Swipe an Amex MSR test card when prompted",
+			instructions: "Swipe an Amex MSR test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "45.77",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:     true,
@@ -145,10 +152,10 @@ func TestCharge(t *testing.T) {
 			},
 		},
 		"MSRDiners": {
-			instructions: "Swipe a Diner's Club MSR test card when prompted",
+			instructions: "Swipe a Diner's Club MSR test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "45.77",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:     true,
@@ -161,10 +168,10 @@ func TestCharge(t *testing.T) {
 			},
 		},
 		"MSRJCB": {
-			instructions: "Swipe a JCB MSR test card when prompted",
+			instructions: "Swipe a JCB MSR test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "45.77",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:     true,
@@ -177,10 +184,10 @@ func TestCharge(t *testing.T) {
 			},
 		},
 		"MSRUnionPay": {
-			instructions: "Swipe a UnionPay MSR test card when prompted",
+			instructions: "Swipe a UnionPay MSR test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "45.77",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:     true,
@@ -193,10 +200,11 @@ func TestCharge(t *testing.T) {
 			},
 		},
 		"SignatureInResponse": {
-			instructions: "Insert a signature CVM test card when prompted",
+			simOnly:      true,
+			instructions: "Insert a signature CVM test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "58.00",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 				"-sigFormat", blockchyp.SignatureFormatJPG,
 				"-sigWidth", "50",
 			},
@@ -208,11 +216,12 @@ func TestCharge(t *testing.T) {
 			},
 		},
 		"SignatureInFile": {
-			instructions: "Insert a signature CVM test card when prompted",
+			simOnly:      true,
+			instructions: "Insert a signature CVM test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "58.00",
-				"-sigWidth", "100", "-sigFile", "/tmp/sig.jpg",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
+				"-sigWidth", "400", "-sigFile", "/tmp/blockchyp-regression-test/sig.jpg",
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:  true,
@@ -220,17 +229,18 @@ func TestCharge(t *testing.T) {
 				Test:     true,
 			},
 			validation: validation{
-				prompt: "Does '/tmp/sig.jpg' contain the signature you entered on the terminal?",
+				prompt: "Does the signature appear valid in the browser?",
 				expect: true,
 			},
 		},
 		"SignatureRefused": {
+			simOnly: true,
 			instructions: `Insert a signature CVM test card when prompted.
 
 When prompted for a signature, hit 'Done' without signing.`,
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "57.00",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:             false,
@@ -240,25 +250,25 @@ When prompted for a signature, hit 'Done' without signing.`,
 			},
 		},
 		"SignatureTimeout": {
+			simOnly: true,
 			instructions: `Insert a signature CVM test card when prompted.
 
 Let the transaction time out when prompted for a signature. It should take 90 seconds.`,
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "55.01",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			assert: blockchyp.AuthorizationResponse{
-				Success:             false,
-				Approved:            false,
-				Test:                true,
-				ResponseDescription: "context canceled",
+				Success:  false,
+				Approved: false,
+				Test:     true,
 			},
 		},
 		"SignatureDisabled": {
 			instructions: "Insert a signature CVM test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "61.00",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 				"-disableSignature",
 			},
 			assert: blockchyp.AuthorizationResponse{
@@ -271,10 +281,11 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"UserCanceled": {
+			simOnly:      true,
 			instructions: "Hit the red 'X' button when prompted for a card.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "56.00",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:             false,
@@ -284,10 +295,10 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"ManualApproval": {
-			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '1234' when prompted",
+			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '123' when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "54.00",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 				"-manual",
 			},
 			assert: blockchyp.AuthorizationResponse{
@@ -295,17 +306,18 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "charge",
-				RequestedAmount:  "54.00",
-				AuthorizedAmount: "54.00",
+				RequestedAmount:  amount(0),
+				AuthorizedAmount: amount(0),
 				EntryMethod:      "KEYED",
 				MaskedPAN:        "************1111",
 			},
 		},
 		"ManualDecline": {
-			instructions: "Enter PAN '4111 1111 1111 1129' and CVV2 '1234' when prompted",
+			simOnly:      true,
+			instructions: "Enter PAN '4111 1111 1111 1129' and CVV2 '123' when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "59.00",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 				"-manual",
 			},
 			assert: blockchyp.AuthorizationResponse{
@@ -313,32 +325,34 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Approved:         false,
 				Test:             true,
 				TransactionType:  "charge",
-				RequestedAmount:  "59.00",
+				RequestedAmount:  amount(0),
 				AuthorizedAmount: "0.00",
 				EntryMethod:      "KEYED",
 				MaskedPAN:        "************1129",
 			},
 		},
 		"EMVDecline": {
-			instructions: "Insert any EMV test card.",
+			simOnly:      true,
+			instructions: "Insert an EMV test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "201.00",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", declineTriggerAmount,
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:          true,
 				Approved:         false,
 				Test:             true,
 				TransactionType:  "charge",
-				RequestedAmount:  "201.00",
+				RequestedAmount:  declineTriggerAmount,
 				AuthorizedAmount: "0.00",
 			},
 		},
 		"EMVTimeout": {
-			instructions: "Insert any EMV test card.",
+			simOnly:      true,
+			instructions: "Insert an EMV test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "68.00",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", timeOutTriggerAmount,
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:             false,
@@ -346,15 +360,16 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Test:                true,
 				ResponseDescription: "Transaction was reversed because there was a problem during authorization",
 				TransactionType:     "charge",
-				RequestedAmount:     "68.00",
+				RequestedAmount:     timeOutTriggerAmount,
 				AuthorizedAmount:    "0.00",
 			},
 		},
 		"EMVPartialAuth": {
-			instructions: "Insert any EMV test card.",
+			simOnly:      true,
+			instructions: "Insert an EMV test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "55.00",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", partialAuthTriggerAmount,
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:          true,
@@ -362,15 +377,16 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Test:             true,
 				PartialAuth:      true,
 				TransactionType:  "charge",
-				RequestedAmount:  "55.00",
-				AuthorizedAmount: "25.00",
+				RequestedAmount:  partialAuthTriggerAmount,
+				AuthorizedAmount: partialAuthAuthorizedAmount,
 			},
 		},
 		"EMVError": {
-			instructions: "Insert any EMV test card.",
+			simOnly:      true,
+			instructions: "Insert an EMV test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "0.11",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", errorTriggerAmount,
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:             false,
@@ -378,15 +394,16 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Test:                true,
 				TransactionType:     "charge",
 				ResponseDescription: notEmpty,
-				RequestedAmount:     "0.11",
+				RequestedAmount:     errorTriggerAmount,
 				AuthorizedAmount:    "0.00",
 			},
 		},
 		"EMVNoResponse": {
-			instructions: "Insert any EMV test card.",
+			simOnly:      true,
+			instructions: "Insert an EMV test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
-				"-test", "-amount", "72.00",
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", noResponseTriggerAmount,
 			},
 			assert: blockchyp.AuthorizationResponse{
 				Success:             false,
@@ -394,14 +411,16 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Test:                true,
 				TransactionType:     "charge",
 				ResponseDescription: "Transaction was reversed because there was a problem during authorization",
-				RequestedAmount:     "72.00",
+				RequestedAmount:     noResponseTriggerAmount,
 				AuthorizedAmount:    "0.00",
 			},
 		},
 		"SFUnderLimit": {
-			instructions: "Tap a contactless EMV test card.",
+			simOnly:      true,
+			localOnly:    true,
+			instructions: "Tap a contactless EMV test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
+				"-type", "charge", "-terminal", terminalName,
 				"-test", "-amount", "7.77",
 			},
 			assert: blockchyp.AuthorizationResponse{
@@ -416,9 +435,11 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"SFOverLimit": {
-			instructions: "Tap a contactless EMV test card.",
+			simOnly:      true,
+			localOnly:    true,
+			instructions: "Tap a contactless EMV test card when prompted.",
 			args: []string{
-				"-type", "charge", "-terminal", "Test Terminal",
+				"-type", "charge", "-terminal", terminalName,
 				"-test", "-amount", "77.77",
 			},
 			assert: blockchyp.AuthorizationResponse{
@@ -430,12 +451,127 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				AuthorizedAmount: "0.00",
 			},
 		},
-	}
+		"EMVCashBack": {
+			instructions: `Insert an EMV debit card when prompted.
 
-	cli := newCLI(t)
+Select $1 when prompted for cash back.`,
+			args: []string{
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
+				"-cashback",
+			},
+			assert: blockchyp.AuthorizationResponse{
+				Success:                  true,
+				Approved:                 true,
+				Test:                     true,
+				TransactionType:          "charge",
+				RequestedAmount:          amount(0),
+				RequestedCashBackAmount:  "1.00",
+				AuthorizedAmount:         add(amount(0), 100),
+				AuthorizedCashBackAmount: "1.00",
+				EntryMethod:              "CHIP",
+				PaymentType:              notEmpty,
+				MaskedPAN:                notEmpty,
+				CardHolder:               notEmpty,
+				ReceiptSuggestions: blockchyp.ReceiptSuggestions{
+					AID:              notEmpty,
+					ARQC:             notEmpty,
+					IAD:              notEmpty,
+					TVR:              notEmpty,
+					TSI:              notEmpty,
+					MerchantName:     notEmpty,
+					ApplicationLabel: notEmpty,
+					RequestSignature: false,
+					MaskedPAN:        notEmpty,
+					AuthorizedAmount: add(amount(0), 100),
+					CashBackAmount:   "1.00",
+					PINVerified:      true,
+					TransactionType:  "charge",
+					EntryMethod:      "CHIP",
+				},
+			},
+		},
+		"MSRCashBackSupported": {
+			instructions: `Swipe the Visa MSR test card when prompted. Enter PIN '1234'.
+
+Select $10 when prompted for cash back.`,
+			args: []string{
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
+				"-debit", "-cashback",
+			},
+			assert: blockchyp.AuthorizationResponse{
+				Success:                  true,
+				Approved:                 true,
+				Test:                     true,
+				TransactionType:          "charge",
+				RequestedAmount:          amount(0),
+				RequestedCashBackAmount:  "10.00",
+				AuthorizedAmount:         add(amount(0), 1000),
+				AuthorizedCashBackAmount: "10.00",
+				EntryMethod:              "SWIPE",
+				PaymentType:              notEmpty,
+				MaskedPAN:                notEmpty,
+				CardHolder:               notEmpty,
+				ReceiptSuggestions: blockchyp.ReceiptSuggestions{
+					MerchantName:     notEmpty,
+					RequestSignature: false,
+					MaskedPAN:        notEmpty,
+					AuthorizedAmount: add(amount(0), 1000),
+					CashBackAmount:   "10.00",
+					PINVerified:      true,
+					TransactionType:  "charge",
+					EntryMethod:      "SWIPE",
+				},
+			},
+		},
+		"MSRCashBackNotSupported": {
+			instructions: "Swipe the AMEX MSR test card when prompted. Enter PIN '1234'.",
+			args: []string{
+				"-type", "charge", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
+				"-debit", "-cashback",
+			},
+			assert: blockchyp.AuthorizationResponse{
+				Success:          true,
+				Approved:         true,
+				Test:             true,
+				TransactionType:  "charge",
+				RequestedAmount:  amount(0),
+				AuthorizedAmount: amount(0),
+				EntryMethod:      "SWIPE",
+				PaymentType:      notEmpty,
+				MaskedPAN:        notEmpty,
+				CardHolder:       notEmpty,
+				ReceiptSuggestions: blockchyp.ReceiptSuggestions{
+					MerchantName:     notEmpty,
+					RequestSignature: false,
+					MaskedPAN:        notEmpty,
+					AuthorizedAmount: amount(0),
+					PINVerified:      true,
+					TransactionType:  "charge",
+					EntryMethod:      "SWIPE",
+				},
+			},
+			validation: validation{
+				prompt: "Did the PIN entry screen show cash back options?",
+				expect: false,
+			},
+		},
+	}
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			if test.simOnly && acquirerMode {
+				t.Skip("skipped for acquirer test run")
+			}
+
+			cli := newCLI(t)
+
+			if test.localOnly {
+				cli.skipCloudRelay()
+			}
+
 			setup(t, test.instructions, true)
 
 			cli.run(test.args, test.assert)
