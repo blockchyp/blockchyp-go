@@ -20,7 +20,6 @@ func reverseExample() {
 
 	// setup request object
 	request := blockchyp.AuthorizationRequest{
-		TerminalName:   "Test Terminal",
 		TransactionRef: "<LAST TRANSACTION REF>",
 	}
 

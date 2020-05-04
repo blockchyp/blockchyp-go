@@ -20,7 +20,9 @@ func cashDiscountExample() {
 
 	// setup request object
 	request := blockchyp.CashDiscountRequest{
-		Amount: "100.00",
+		Amount:       "100.00",
+		CashDiscount: true,
+		Surcharge:    true,
 	}
 
 	response, err := client.CashDiscount(request)
