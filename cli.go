@@ -94,6 +94,8 @@ type CommandLineArguments struct {
 	CallbackURL                 string `arg:"callbackUrl"`
 	Surcharge                   bool   `arg:"surcharge"`
 	CashDiscount                bool   `arg:"cashDiscount"`
+	PostalCode                  string `arg:"postalCode"`
+	Address                     string `arg:"address"`
 }
 
 var defaultSettings = &ConfigSettings{

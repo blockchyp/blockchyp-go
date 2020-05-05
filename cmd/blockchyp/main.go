@@ -115,6 +115,8 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.CallbackURL, "callbackUrl", "", "optional callback url to which a response is posted for payment links")
 	flag.BoolVar(&args.Surcharge, "surcharge", false, "adds fee surcharges to transactions, if eligible.")
 	flag.BoolVar(&args.CashDiscount, "cashDiscount", false, "adds a cash discount to transactions, if eligible")
+	flag.StringVar(&args.PostalCode, "postalCode", "", "postal code to use for address verification")
+	flag.StringVar(&args.Address, "address", "", "street address to use for address verification")
 	flag.Parse()
 
 	if args.Version {
@@ -635,6 +637,8 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req.Amount = args.Amount
 	req.TerminalName = args.TerminalName
 	req.Token = args.Token
+	req.PostalCode = args.PostalCode
+	req.Address = args.Address
 
 	if args.Debit {
 		req.CardType = blockchyp.CardTypeDebit
@@ -793,6 +797,8 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req.PAN = args.PAN
 	req.ExpMonth = args.ExpiryMonth
 	req.ExpYear = args.ExpiryYear
+	req.PostalCode = args.PostalCode
+	req.Address = args.Address
 	if hasCustomerFields(args) {
 		req.Customer = populateCustomer(args)
 	}
@@ -833,6 +839,8 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	req.CashBackEnabled = args.CashBackEnabled
 	req.Surcharge = args.Surcharge
 	req.CashDiscount = args.CashDiscount
+	req.PostalCode = args.PostalCode
+	req.Address = args.Address
 
 	if args.Debit {
 		req.CardType = blockchyp.CardTypeDebit
