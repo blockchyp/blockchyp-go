@@ -117,6 +117,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.CashDiscount, "cashDiscount", false, "adds a cash discount to transactions, if eligible")
 	flag.StringVar(&args.PostalCode, "postalCode", "", "postal code to use for address verification")
 	flag.StringVar(&args.Address, "address", "", "street address to use for address verification")
+	flag.BoolVar(&args.Cashier, "cashier", false, "indicates that a payment link should be displayed in cashier facing mode")
 	flag.Parse()
 
 	if args.Version {

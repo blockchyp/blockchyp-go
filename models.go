@@ -2273,6 +2273,9 @@ type PaymentLinkRequest struct {
 	// AutoSend automatically send the link via an email.
 	AutoSend bool `json:"autoSend"`
 
+	// Cashier flags the payment link as cashier facing.
+	Cashier bool `json:"cashier"`
+
 	// Description description explaining the transaction for display to the
 	// user.
 	Description string `json:"description"`

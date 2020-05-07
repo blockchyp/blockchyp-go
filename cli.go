@@ -96,6 +96,7 @@ type CommandLineArguments struct {
 	CashDiscount                bool   `arg:"cashDiscount"`
 	PostalCode                  string `arg:"postalCode"`
 	Address                     string `arg:"address"`
+	Cashier                     bool   `arg:"cashier"`
 }
 
 var defaultSettings = &ConfigSettings{
