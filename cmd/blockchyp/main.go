@@ -291,7 +291,7 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 	validateRequired(args.OrderRef, "orderRef")
 	validateRequired(args.Amount, "amount")
 
-	if !hasCustomerFields(args) {
+	if !args.Cashier && !hasCustomerFields(args) {
 		fatalErrorf("customer fields (-customerId, -email, etc ) are required")
 	}
 
@@ -311,6 +311,7 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 		TCAlias:        args.TCAlias,
 		TCName:         args.TCName,
 		TCContent:      args.TCContent,
+		Cashier:        args.Cashier,
 	}
 
 	ack, err := client.SendPaymentLink(request)
