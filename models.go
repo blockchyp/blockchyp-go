@@ -2401,8 +2401,23 @@ type CashDiscountResponse struct {
 
 // TransactionHistoryRequest models a batch history request.
 type TransactionHistoryRequest struct {
-	// Test inidicates that the request is for a test merchant account
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
 
 	// BatchID optional batch id.
 	BatchID string `json:"batchId"`
@@ -2447,8 +2462,23 @@ type TransactionHistoryResponse struct {
 
 // BatchHistoryRequest models a batch history request.
 type BatchHistoryRequest struct {
-	// Test inidates that the request is for a test merchant account
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
 
 	// StartDate optional start date filter for batch history.
 	StartDate time.Time `json:"startDate"`
