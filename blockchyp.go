@@ -71,6 +71,8 @@ type Client struct {
 
 // NewClient returns a default Client configured with the given credentials.
 func NewClient(creds APICredentials) Client {
+	userAgent := BuildUserAgent()
+
 	return Client{
 		Credentials: creds,
 		GatewayHost: DefaultGatewayHost,
@@ -83,20 +85,29 @@ func NewClient(creds APICredentials) Client {
 		routeCacheTTL: DefaultRouteCacheTTL,
 		gatewayHTTPClient: &http.Client{
 			Transport: AddUserAgent(
-				&http.Transport{},
-				BuildUserAgent(),
+				&http.Transport{
+					Dial: (&net.Dialer{
+						Timeout: 5 * time.Second,
+					}).Dial,
+					TLSHandshakeTimeout: 5 * time.Second,
+				},
+				userAgent,
 			),
 		}, // Timeout is set per request
 		terminalHTTPClient: &http.Client{
 			Timeout: DefaultTerminalTimeout,
 			Transport: AddUserAgent(
 				&http.Transport{
+					Dial: (&net.Dialer{
+						Timeout: 5 * time.Second,
+					}).Dial,
+					TLSHandshakeTimeout: 5 * time.Second,
 					TLSClientConfig: &tls.Config{
 						RootCAs:    terminalCertPool(),
 						ServerName: terminalCN,
 					},
 				},
-				BuildUserAgent(),
+				userAgent,
 			),
 		},
 	}
@@ -117,6 +128,53 @@ func (client *Client) ExpireRouteCache() {
 			client.updateOfflineCache(&route)
 		}
 	}
+}
+
+// Ping tests connectivity with a payment terminal.
+func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
+	var response PingResponse
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/terminal-test", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalPingRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/test", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/terminal-test", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
 }
 
 // Charge executes a standard direct preauth and capture.
@@ -198,431 +256,6 @@ func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationRespo
 		}
 	} else {
 		err = client.GatewayRequest("/preauth", "POST", request, &response, request.Test, request.Timeout)
-	}
-
-	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	if err := handleSignature(request, &response); err != nil {
-		log.Printf("Failed to write signature: %+v", err)
-	}
-
-	return &response, err
-}
-
-// Ping tests connectivity with a payment terminal.
-func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
-	var response PingResponse
-	var err error
-
-	if err := populateSignatureOptions(&request); err != nil {
-		return nil, err
-	}
-
-	if request.TerminalName != "" {
-		var route TerminalRoute
-		route, err = client.resolveTerminalRoute(request.TerminalName)
-		if err != nil {
-			if errors.Is(err, ErrUnknownTerminal) {
-				response.ResponseDescription = ResponseUnknownTerminal
-				return &response, err
-			}
-
-			return nil, err
-		}
-
-		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/terminal-test", "POST", request, &response, request.Test, request.Timeout)
-		} else {
-			authRequest := TerminalPingRequest{
-				APICredentials: route.TransientCredentials,
-				Request:        request,
-			}
-			err = client.terminalRequest(route, "/test", "POST", authRequest, &response, request.Timeout)
-		}
-	} else {
-		err = client.GatewayRequest("/terminal-test", "POST", request, &response, request.Test, request.Timeout)
-	}
-
-	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	if err := handleSignature(request, &response); err != nil {
-		log.Printf("Failed to write signature: %+v", err)
-	}
-
-	return &response, err
-}
-
-// Balance checks the remaining balance on a payment method.
-func (client *Client) Balance(request BalanceRequest) (*BalanceResponse, error) {
-	var response BalanceResponse
-	var err error
-
-	if err := populateSignatureOptions(&request); err != nil {
-		return nil, err
-	}
-
-	if request.TerminalName != "" {
-		var route TerminalRoute
-		route, err = client.resolveTerminalRoute(request.TerminalName)
-		if err != nil {
-			if errors.Is(err, ErrUnknownTerminal) {
-				response.ResponseDescription = ResponseUnknownTerminal
-				return &response, err
-			}
-
-			return nil, err
-		}
-
-		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/balance", "POST", request, &response, request.Test, request.Timeout)
-		} else {
-			authRequest := TerminalBalanceRequest{
-				APICredentials: route.TransientCredentials,
-				Request:        request,
-			}
-			err = client.terminalRequest(route, "/balance", "POST", authRequest, &response, request.Timeout)
-		}
-	} else {
-		err = client.GatewayRequest("/balance", "POST", request, &response, request.Test, request.Timeout)
-	}
-
-	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	if err := handleSignature(request, &response); err != nil {
-		log.Printf("Failed to write signature: %+v", err)
-	}
-
-	return &response, err
-}
-
-// Clear clears the line item display and any in progress transaction.
-func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, error) {
-	var response Acknowledgement
-	var err error
-
-	if err := populateSignatureOptions(&request); err != nil {
-		return nil, err
-	}
-
-	if request.TerminalName != "" {
-		var route TerminalRoute
-		route, err = client.resolveTerminalRoute(request.TerminalName)
-		if err != nil {
-			if errors.Is(err, ErrUnknownTerminal) {
-				response.ResponseDescription = ResponseUnknownTerminal
-				return &response, err
-			}
-
-			return nil, err
-		}
-
-		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/terminal-clear", "POST", request, &response, request.Test, request.Timeout)
-		} else {
-			authRequest := TerminalClearTerminalRequest{
-				APICredentials: route.TransientCredentials,
-				Request:        request,
-			}
-			err = client.terminalRequest(route, "/clear", "POST", authRequest, &response, request.Timeout)
-		}
-	} else {
-		err = client.GatewayRequest("/terminal-clear", "POST", request, &response, request.Test, request.Timeout)
-	}
-
-	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	if err := handleSignature(request, &response); err != nil {
-		log.Printf("Failed to write signature: %+v", err)
-	}
-
-	return &response, err
-}
-
-// TermsAndConditions prompts the user to accept terms and conditions.
-func (client *Client) TermsAndConditions(request TermsAndConditionsRequest) (*TermsAndConditionsResponse, error) {
-	var response TermsAndConditionsResponse
-	var err error
-
-	if err := populateSignatureOptions(&request); err != nil {
-		return nil, err
-	}
-
-	if request.TerminalName != "" {
-		var route TerminalRoute
-		route, err = client.resolveTerminalRoute(request.TerminalName)
-		if err != nil {
-			if errors.Is(err, ErrUnknownTerminal) {
-				response.ResponseDescription = ResponseUnknownTerminal
-				return &response, err
-			}
-
-			return nil, err
-		}
-
-		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/terminal-tc", "POST", request, &response, request.Test, request.Timeout)
-		} else {
-			authRequest := TerminalTermsAndConditionsRequest{
-				APICredentials: route.TransientCredentials,
-				Request:        request,
-			}
-			err = client.terminalRequest(route, "/tc", "POST", authRequest, &response, request.Timeout)
-		}
-	} else {
-		err = client.GatewayRequest("/terminal-tc", "POST", request, &response, request.Test, request.Timeout)
-	}
-
-	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	if err := handleSignature(request, &response); err != nil {
-		log.Printf("Failed to write signature: %+v", err)
-	}
-
-	return &response, err
-}
-
-// UpdateTransactionDisplay appends items to an existing transaction display.
-// Subtotal, Tax, and Total are overwritten by the request. Items with the
-// same description are combined into groups.
-func (client *Client) UpdateTransactionDisplay(request TransactionDisplayRequest) (*Acknowledgement, error) {
-	var response Acknowledgement
-	var err error
-
-	if err := populateSignatureOptions(&request); err != nil {
-		return nil, err
-	}
-
-	if request.TerminalName != "" {
-		var route TerminalRoute
-		route, err = client.resolveTerminalRoute(request.TerminalName)
-		if err != nil {
-			if errors.Is(err, ErrUnknownTerminal) {
-				response.ResponseDescription = ResponseUnknownTerminal
-				return &response, err
-			}
-
-			return nil, err
-		}
-
-		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/terminal-txdisplay", "PUT", request, &response, request.Test, request.Timeout)
-		} else {
-			authRequest := TerminalTransactionDisplayRequest{
-				APICredentials: route.TransientCredentials,
-				Request:        request,
-			}
-			err = client.terminalRequest(route, "/txdisplay", "PUT", authRequest, &response, request.Timeout)
-		}
-	} else {
-		err = client.GatewayRequest("/terminal-txdisplay", "PUT", request, &response, request.Test, request.Timeout)
-	}
-
-	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	if err := handleSignature(request, &response); err != nil {
-		log.Printf("Failed to write signature: %+v", err)
-	}
-
-	return &response, err
-}
-
-// NewTransactionDisplay displays a new transaction on the terminal.
-func (client *Client) NewTransactionDisplay(request TransactionDisplayRequest) (*Acknowledgement, error) {
-	var response Acknowledgement
-	var err error
-
-	if err := populateSignatureOptions(&request); err != nil {
-		return nil, err
-	}
-
-	if request.TerminalName != "" {
-		var route TerminalRoute
-		route, err = client.resolveTerminalRoute(request.TerminalName)
-		if err != nil {
-			if errors.Is(err, ErrUnknownTerminal) {
-				response.ResponseDescription = ResponseUnknownTerminal
-				return &response, err
-			}
-
-			return nil, err
-		}
-
-		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/terminal-txdisplay", "POST", request, &response, request.Test, request.Timeout)
-		} else {
-			authRequest := TerminalTransactionDisplayRequest{
-				APICredentials: route.TransientCredentials,
-				Request:        request,
-			}
-			err = client.terminalRequest(route, "/txdisplay", "POST", authRequest, &response, request.Timeout)
-		}
-	} else {
-		err = client.GatewayRequest("/terminal-txdisplay", "POST", request, &response, request.Test, request.Timeout)
-	}
-
-	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	if err := handleSignature(request, &response); err != nil {
-		log.Printf("Failed to write signature: %+v", err)
-	}
-
-	return &response, err
-}
-
-// TextPrompt asks the consumer a text based question.
-func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse, error) {
-	var response TextPromptResponse
-	var err error
-
-	if err := populateSignatureOptions(&request); err != nil {
-		return nil, err
-	}
-
-	if request.TerminalName != "" {
-		var route TerminalRoute
-		route, err = client.resolveTerminalRoute(request.TerminalName)
-		if err != nil {
-			if errors.Is(err, ErrUnknownTerminal) {
-				response.ResponseDescription = ResponseUnknownTerminal
-				return &response, err
-			}
-
-			return nil, err
-		}
-
-		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/text-prompt", "POST", request, &response, request.Test, request.Timeout)
-		} else {
-			authRequest := TerminalTextPromptRequest{
-				APICredentials: route.TransientCredentials,
-				Request:        request,
-			}
-			err = client.terminalRequest(route, "/text-prompt", "POST", authRequest, &response, request.Timeout)
-		}
-	} else {
-		err = client.GatewayRequest("/text-prompt", "POST", request, &response, request.Test, request.Timeout)
-	}
-
-	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	if err := handleSignature(request, &response); err != nil {
-		log.Printf("Failed to write signature: %+v", err)
-	}
-
-	return &response, err
-}
-
-// BooleanPrompt asks the consumer a yes/no question.
-func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromptResponse, error) {
-	var response BooleanPromptResponse
-	var err error
-
-	if err := populateSignatureOptions(&request); err != nil {
-		return nil, err
-	}
-
-	if request.TerminalName != "" {
-		var route TerminalRoute
-		route, err = client.resolveTerminalRoute(request.TerminalName)
-		if err != nil {
-			if errors.Is(err, ErrUnknownTerminal) {
-				response.ResponseDescription = ResponseUnknownTerminal
-				return &response, err
-			}
-
-			return nil, err
-		}
-
-		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/boolean-prompt", "POST", request, &response, request.Test, request.Timeout)
-		} else {
-			authRequest := TerminalBooleanPromptRequest{
-				APICredentials: route.TransientCredentials,
-				Request:        request,
-			}
-			err = client.terminalRequest(route, "/boolean-prompt", "POST", authRequest, &response, request.Timeout)
-		}
-	} else {
-		err = client.GatewayRequest("/boolean-prompt", "POST", request, &response, request.Test, request.Timeout)
-	}
-
-	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	if err := handleSignature(request, &response); err != nil {
-		log.Printf("Failed to write signature: %+v", err)
-	}
-
-	return &response, err
-}
-
-// Message displays a short message on the terminal.
-func (client *Client) Message(request MessageRequest) (*Acknowledgement, error) {
-	var response Acknowledgement
-	var err error
-
-	if err := populateSignatureOptions(&request); err != nil {
-		return nil, err
-	}
-
-	if request.TerminalName != "" {
-		var route TerminalRoute
-		route, err = client.resolveTerminalRoute(request.TerminalName)
-		if err != nil {
-			if errors.Is(err, ErrUnknownTerminal) {
-				response.ResponseDescription = ResponseUnknownTerminal
-				return &response, err
-			}
-
-			return nil, err
-		}
-
-		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/message", "POST", request, &response, request.Test, request.Timeout)
-		} else {
-			authRequest := TerminalMessageRequest{
-				APICredentials: route.TransientCredentials,
-				Request:        request,
-			}
-			err = client.terminalRequest(route, "/message", "POST", authRequest, &response, request.Timeout)
-		}
-	} else {
-		err = client.GatewayRequest("/message", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -779,6 +412,100 @@ func (client *Client) GiftActivate(request GiftActivateRequest) (*GiftActivateRe
 	return &response, err
 }
 
+// Balance checks the remaining balance on a payment method.
+func (client *Client) Balance(request BalanceRequest) (*BalanceResponse, error) {
+	var response BalanceResponse
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/balance", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalBalanceRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/balance", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/balance", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
+// Clear clears the line item display and any in progress transaction.
+func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/terminal-clear", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalClearTerminalRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/clear", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/terminal-clear", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
 // TerminalStatus returns the current status of a terminal.
 func (client *Client) TerminalStatus(request TerminalStatusRequest) (*TerminalStatusResponse, error) {
 	var response TerminalStatusResponse
@@ -811,6 +538,53 @@ func (client *Client) TerminalStatus(request TerminalStatusRequest) (*TerminalSt
 		}
 	} else {
 		err = client.GatewayRequest("/terminal-status", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
+// TermsAndConditions prompts the user to accept terms and conditions.
+func (client *Client) TermsAndConditions(request TermsAndConditionsRequest) (*TermsAndConditionsResponse, error) {
+	var response TermsAndConditionsResponse
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/terminal-tc", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalTermsAndConditionsRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/tc", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/terminal-tc", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -873,6 +647,273 @@ func (client *Client) CaptureSignature(request CaptureSignatureRequest) (*Captur
 	return &response, err
 }
 
+// NewTransactionDisplay displays a new transaction on the terminal.
+func (client *Client) NewTransactionDisplay(request TransactionDisplayRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/terminal-txdisplay", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalTransactionDisplayRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/txdisplay", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/terminal-txdisplay", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
+// UpdateTransactionDisplay appends items to an existing transaction display.
+// Subtotal, Tax, and Total are overwritten by the request. Items with the
+// same description are combined into groups.
+func (client *Client) UpdateTransactionDisplay(request TransactionDisplayRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/terminal-txdisplay", "PUT", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalTransactionDisplayRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/txdisplay", "PUT", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/terminal-txdisplay", "PUT", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
+// Message displays a short message on the terminal.
+func (client *Client) Message(request MessageRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/message", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalMessageRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/message", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/message", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
+// BooleanPrompt asks the consumer a yes/no question.
+func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromptResponse, error) {
+	var response BooleanPromptResponse
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/boolean-prompt", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalBooleanPromptRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/boolean-prompt", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/boolean-prompt", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
+// TextPrompt asks the consumer a text based question.
+func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse, error) {
+	var response TextPromptResponse
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/text-prompt", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalTextPromptRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/text-prompt", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/text-prompt", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
+// Capture captures a preauthorization.
+func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) {
+	var response CaptureResponse
+
+	err := client.GatewayRequest("/capture", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// Void discards a previous preauth transaction.
+func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
+	var response VoidResponse
+
+	err := client.GatewayRequest("/void", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // Reverse executes a manual time out reversal.
 //
 // We love time out reversals. Don't be afraid to use them whenever a request
@@ -887,21 +928,6 @@ func (client *Client) Reverse(request AuthorizationRequest) (*AuthorizationRespo
 	var response AuthorizationResponse
 
 	err := client.GatewayRequest("/reverse", "POST", request, &response, request.Test, request.Timeout)
-
-	if err, ok := err.(net.Error); ok && err.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	return &response, err
-}
-
-// Capture captures a preauthorization.
-func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) {
-	var response CaptureResponse
-
-	err := client.GatewayRequest("/capture", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -927,11 +953,26 @@ func (client *Client) CloseBatch(request CloseBatchRequest) (*CloseBatchResponse
 	return &response, err
 }
 
-// Void discards a previous preauth transaction.
-func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
-	var response VoidResponse
+// SendPaymentLink creates and send a payment link to a customer.
+func (client *Client) SendPaymentLink(request PaymentLinkRequest) (*PaymentLinkResponse, error) {
+	var response PaymentLinkResponse
 
-	err := client.GatewayRequest("/void", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/send-payment-link", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TransactionStatus retrieves the current status of a transaction.
+func (client *Client) TransactionStatus(request TransactionStatusRequest) (*AuthorizationResponse, error) {
+	var response AuthorizationResponse
+
+	err := client.GatewayRequest("/tx-status", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -987,11 +1028,11 @@ func (client *Client) CustomerSearch(request CustomerSearchRequest) (*CustomerSe
 	return &response, err
 }
 
-// TransactionStatus retrieves the current status of a transaction.
-func (client *Client) TransactionStatus(request TransactionStatusRequest) (*AuthorizationResponse, error) {
-	var response AuthorizationResponse
+// CashDiscount calculates the discount for actual cash transactions.
+func (client *Client) CashDiscount(request CashDiscountRequest) (*CashDiscountResponse, error) {
+	var response CashDiscountResponse
 
-	err := client.GatewayRequest("/tx-status", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/cash-discount", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -1002,11 +1043,26 @@ func (client *Client) TransactionStatus(request TransactionStatusRequest) (*Auth
 	return &response, err
 }
 
-// SendPaymentLink creates and send a payment link to a customer.
-func (client *Client) SendPaymentLink(request PaymentLinkRequest) (*PaymentLinkResponse, error) {
-	var response PaymentLinkResponse
+// BatchHistory returns the batch history for a merchant.
+func (client *Client) BatchHistory(request BatchHistoryRequest) (*BatchHistoryResponse, error) {
+	var response BatchHistoryResponse
 
-	err := client.GatewayRequest("/send-payment-link", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/batch-history", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TransactionDiscount returns the transaction history for a merchant.
+func (client *Client) TransactionDiscount(request TransactionHistoryRequest) (*TransactionHistoryResponse, error) {
+	var response TransactionHistoryResponse
+
+	err := client.GatewayRequest("/tx-history", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut

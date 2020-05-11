@@ -6,32 +6,54 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
+	"time"
 
+	"github.com/blockchyp/blockchyp-go"
 	"github.com/stretchr/testify/assert"
 )
 
+const terminalName = "Test Terminal"
 const notEmpty = "NOT EMPTY"
+
+const defaultFlatRateFee = 0.035
+const defaultPerTransactionFee = 50
 
 type cli struct {
 	path string
 	t    *testing.T
 }
 
-func newCLI(t *testing.T) cli {
-	c := cli{
-		t: t,
-	}
-	flag.StringVar(&c.path, "cli", "go run ../../cmd/blockchyp", "CLI executable to invoke")
-	flag.Parse()
+var cliExecutable string
+var acquirerMode bool
 
-	return c
+func init() {
+	if env := os.Getenv("CLI"); env != "" {
+		cliExecutable = env
+	} else {
+		cliExecutable = "go run ../../cmd/blockchyp"
+	}
+
+	if env := os.Getenv("MODE"); env != "" {
+		switch env {
+		case "acquirer":
+			acquirerMode = true
+		}
+	}
+}
+
+func newCLI(t *testing.T) cli {
+	return cli{
+		t:    t,
+		path: cliExecutable,
+	}
 }
 
 func (c cli) run(args []string, expect interface{}) interface{} {
@@ -50,14 +72,19 @@ func (c cli) run(args []string, expect interface{}) interface{} {
 }
 
 func cmp(t *testing.T, expect, result interface{}) {
-	expectVal := reflect.ValueOf(expect)
-	if expectVal.Kind() == reflect.Ptr {
-		expectVal = expectVal.Elem()
-	}
-
 	resultVal := reflect.ValueOf(result)
 	if resultVal.Kind() == reflect.Ptr {
 		resultVal = resultVal.Elem()
+	}
+
+	// The expected value needs to be a pointer so we can swap in the
+	// calculated amounts.
+	expectVal := reflect.ValueOf(expect)
+	if expectVal.Kind() == reflect.Ptr {
+		expectVal = expectVal.Elem()
+	} else {
+		expectVal = reflect.New(expectVal.Type()).Elem()
+		expectVal.Set(reflect.ValueOf(expect))
 	}
 
 	for i := 0; i < expectVal.NumField(); i++ {
@@ -72,11 +99,15 @@ func cmp(t *testing.T, expect, result interface{}) {
 			if expectVal.Field(i).IsZero() {
 				continue
 			}
-			if s := expectVal.Field(i).Interface().(string); s == notEmpty {
+			s := expectVal.Field(i).Interface().(string)
+			if s == notEmpty {
 				assert.NotEmpty(t, resultVal.Field(i).Interface(),
 					fmt.Sprintf("%s should not be empty", expectVal.Type().Field(i).Name),
 				)
 				continue
+			}
+			if strings.HasPrefix(s, replacementPrefix) {
+				expectVal.Field(i).SetString(getAmount(t.Name(), s))
 			}
 		case reflect.Struct:
 			cmp(t, expectVal.Field(i).Interface(), resultVal.Field(i).Interface())
@@ -115,6 +146,8 @@ func cmp(t *testing.T, expect, result interface{}) {
 }
 
 func (c cli) exec(args []string, v interface{}) {
+	c.substituteAmounts(args)
+
 	c.t.Logf("+ %s %s", c.path, strings.Join(args, " "))
 
 	bin := strings.Split(c.path, " ")
@@ -127,8 +160,12 @@ func (c cli) exec(args []string, v interface{}) {
 
 	cmd.Run()
 
-	c.t.Log(string(stdout.String()))
-	c.t.Log(string(stderr.String()))
+	if s := stdout.String(); s != "" {
+		c.t.Log(s)
+	}
+	if s := stderr.String(); s != "" {
+		c.t.Log(s)
+	}
 
 	if v == nil {
 		return
@@ -138,25 +175,88 @@ func (c cli) exec(args []string, v interface{}) {
 	}
 }
 
+func (c cli) substituteAmounts(args []string) {
+	for i := range args {
+		if strings.HasPrefix(args[i], replacementPrefix) {
+			args[i] = getAmount(c.t.Name(), args[i])
+		}
+	}
+}
+
+func (c cli) skipCloudRelay() {
+	// Make sure the cache has actually been generated first.
+	c.exec([]string{"-type", "ping", "-terminal", terminalName, "-test"}, nil)
+
+	path := filepath.Join(os.TempDir(), ".blockchyp_routes")
+
+	f, err := os.Open(path)
+	if err != nil {
+		c.t.Fatal(err)
+	}
+	defer f.Close()
+
+	var cache blockchyp.RouteCache
+	if err := json.NewDecoder(f).Decode(&cache); err != nil {
+		c.t.Fatal(err)
+	}
+
+	for k, v := range cache.Routes {
+		if strings.HasSuffix(k, terminalName) && v.Route.CloudRelayEnabled {
+			c.t.Skip("skipping local mode test in cloud relay mode")
+			return
+		}
+	}
+}
+
+type style int
+
+func (s style) String() string {
+	return strconv.Itoa(int(s))
+}
+
 const (
-	red     = "\x1b[31m"
-	green   = "\x1b[32m"
-	yellow  = "\x1b[33m"
-	blue    = "\x1b[34m"
-	magenta = "\x1b[35m"
-	cyan    = "\x1b[36m"
-	noColor = "\x1b[0m"
+	noColor style = iota + 30
+	red
+	green
+	yellow
+	blue
+	magenta
+	cyan
 )
+
+const (
+	normal style = iota
+	bold
+	underline
+	blink
+)
+
+func format(styles ...style) string {
+	result := "\x1b["
+
+	if len(styles) == 0 {
+		return result + "0m"
+	}
+
+	for i, s := range styles {
+		result += s.String()
+		if i+1 < len(styles) {
+			result += ";"
+		}
+	}
+
+	return result + "m"
+}
 
 func setup(t *testing.T, instructions string, pause bool) {
 	if instructions == "" {
 		return
 	}
 
-	fmt.Println("\nSteps: " + magenta + instructions + noColor + "\n")
+	fmt.Println("\nSteps: " + format(magenta) + instructions + format() + "\n")
 
 	if pause {
-		fmt.Println(green + "Press 'Enter' to continue" + noColor)
+		fmt.Println(format(green) + "Press 'Enter' to continue" + format())
 
 		f, err := os.Open("/dev/tty")
 		if err != nil {
@@ -172,7 +272,7 @@ func validate(t *testing.T, v validation) {
 		return
 	}
 
-	fmt.Printf("\n%s%s y/N:%s ", "\x1b[33m", v.prompt, "\x1b[0m")
+	fmt.Printf("\n%s%s y/N:%s ", format(yellow), v.prompt, format())
 
 	f, err := os.Open("/dev/tty")
 	if err != nil {
@@ -181,6 +281,14 @@ func validate(t *testing.T, v validation) {
 	res, _ := bufio.NewReader(f).ReadBytes('\n')
 
 	assert.Equal(t, v.expect, strings.HasPrefix(strings.ToLower(string(res)), "y"))
+}
+
+func wait(duration time.Duration) {
+	for i := duration; i > 0; i -= time.Second {
+		fmt.Printf("\x1b[2K\r" + format(yellow) + "Wait " + i.String() + format())
+		time.Sleep(1 * time.Second)
+	}
+	fmt.Printf("\n")
 }
 
 type validation struct {

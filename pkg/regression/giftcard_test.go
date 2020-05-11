@@ -9,6 +9,10 @@ import (
 )
 
 func TestGiftCard(t *testing.T) {
+	if acquirerMode {
+		t.Skip("skipped for acquirer test run")
+	}
+
 	tests := map[string]struct {
 		args   [][]string
 		assert []interface{}
@@ -18,7 +22,7 @@ func TestGiftCard(t *testing.T) {
 		"Inactive": {
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "100.00",
 				},
 			},
@@ -28,6 +32,14 @@ func TestGiftCard(t *testing.T) {
 					Approved:            false,
 					Test:                true,
 					ResponseDescription: "Unknown Card",
+					MaskedPAN:           notEmpty,
+					PublicKey:           notEmpty,
+					ReceiptSuggestions: blockchyp.ReceiptSuggestions{
+						MaskedPAN:        notEmpty,
+						AuthorizedAmount: "0.00",
+						TransactionType:  "charge",
+						EntryMethod:      "SWIPE",
+					},
 				},
 			},
 		},
@@ -35,15 +47,15 @@ func TestGiftCard(t *testing.T) {
 			txRef: randomStr(),
 			args: [][]string{
 				{
-					"-type", "gift-activate", "-terminal", "Test Terminal", "-test",
+					"-type", "gift-activate", "-terminal", terminalName, "-test",
 					"-amount", "100.00",
 				},
 				{
-					"-type", "gift-activate", "-terminal", "Test Terminal", "-test",
+					"-type", "gift-activate", "-terminal", terminalName, "-test",
 					"-amount", "50.00",
 				},
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "100.00",
 				},
 				{
@@ -55,7 +67,7 @@ func TestGiftCard(t *testing.T) {
 					"-tx",
 				},
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "500.00",
 				},
 				{
@@ -63,7 +75,7 @@ func TestGiftCard(t *testing.T) {
 					"-tx",
 				},
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "10.00",
 					"-txRef",
 				},
@@ -72,11 +84,11 @@ func TestGiftCard(t *testing.T) {
 					"-txRef",
 				},
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "500.00",
 				},
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
+					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", "500.00",
 				},
 			},
@@ -86,12 +98,20 @@ func TestGiftCard(t *testing.T) {
 					Approved:       true,
 					Test:           true,
 					CurrentBalance: "100.00",
+					MaskedPAN:      notEmpty,
+					PublicKey:      notEmpty,
+					CurrencyCode:   notEmpty,
+					TickBlock:      notEmpty,
 				},
 				blockchyp.GiftActivateResponse{
 					Success:        true,
 					Approved:       true,
 					Test:           true,
 					CurrentBalance: "150.00",
+					MaskedPAN:      notEmpty,
+					PublicKey:      notEmpty,
+					CurrencyCode:   notEmpty,
+					TickBlock:      notEmpty,
 				},
 				blockchyp.AuthorizationResponse{
 					Success:          true,
@@ -101,12 +121,33 @@ func TestGiftCard(t *testing.T) {
 					RequestedAmount:  "100.00",
 					AuthorizedAmount: "100.00",
 					RemainingBalance: "50.00",
+					MaskedPAN:        notEmpty,
+					PublicKey:        notEmpty,
+					CurrencyCode:     notEmpty,
+					TickBlock:        notEmpty,
+					ReceiptSuggestions: blockchyp.ReceiptSuggestions{
+						MerchantName:     notEmpty,
+						MaskedPAN:        notEmpty,
+						AuthorizedAmount: "100.00",
+						TransactionType:  "charge",
+						EntryMethod:      "SWIPE",
+					},
 				},
 				blockchyp.AuthorizationResponse{
-					Success:     true,
-					Approved:    true,
-					Test:        true,
-					PaymentType: "BC_GIFT",
+					Success:      true,
+					Approved:     true,
+					Test:         true,
+					PaymentType:  "BC_GIFT",
+					MaskedPAN:    notEmpty,
+					PublicKey:    notEmpty,
+					CurrencyCode: notEmpty,
+					TickBlock:    notEmpty,
+					ReceiptSuggestions: blockchyp.ReceiptSuggestions{
+						MerchantName:    notEmpty,
+						MaskedPAN:       notEmpty,
+						TransactionType: "refund",
+						EntryMethod:     "SWIPE",
+					},
 				},
 				// Second refund for the same transaction fails
 				blockchyp.AuthorizationResponse{
@@ -123,23 +164,50 @@ func TestGiftCard(t *testing.T) {
 					AuthorizedAmount: "150.00",
 					RemainingBalance: "0.00",
 					PartialAuth:      true,
+					MaskedPAN:        notEmpty,
+					PublicKey:        notEmpty,
+					CurrencyCode:     notEmpty,
+					TickBlock:        notEmpty,
+					ReceiptSuggestions: blockchyp.ReceiptSuggestions{
+						MerchantName:    notEmpty,
+						MaskedPAN:       notEmpty,
+						TransactionType: "charge",
+						EntryMethod:     "SWIPE",
+					},
 				},
 				blockchyp.VoidResponse{
-					Success:  true,
-					Approved: true,
-					Test:     true,
+					Success:         true,
+					Approved:        true,
+					Test:            true,
+					TickBlock:       notEmpty,
+					TransactionType: "void",
+					PaymentType:     "BC_GIFT",
+					EntryMethod:     "SWIPE",
 				},
 				blockchyp.AuthorizationResponse{
-					Success:     true,
-					Approved:    true,
-					Test:        true,
-					PaymentType: "BC_GIFT",
+					Success:      true,
+					Approved:     true,
+					Test:         true,
+					PaymentType:  "BC_GIFT",
+					MaskedPAN:    notEmpty,
+					PublicKey:    notEmpty,
+					CurrencyCode: notEmpty,
+					TickBlock:    notEmpty,
+					ReceiptSuggestions: blockchyp.ReceiptSuggestions{
+						MerchantName:    notEmpty,
+						MaskedPAN:       notEmpty,
+						TransactionType: "charge",
+						EntryMethod:     "SWIPE",
+					},
 				},
 				blockchyp.AuthorizationResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
 					TransactionType: "reverse",
+					MaskedPAN:       notEmpty,
+					PublicKey:       notEmpty,
+					TickBlock:       notEmpty,
 				},
 				blockchyp.AuthorizationResponse{
 					Success:          true,
@@ -150,6 +218,16 @@ func TestGiftCard(t *testing.T) {
 					AuthorizedAmount: "150.00",
 					RemainingBalance: "0.00",
 					PartialAuth:      true,
+					MaskedPAN:        notEmpty,
+					PublicKey:        notEmpty,
+					CurrencyCode:     notEmpty,
+					TickBlock:        notEmpty,
+					ReceiptSuggestions: blockchyp.ReceiptSuggestions{
+						MerchantName:    notEmpty,
+						MaskedPAN:       notEmpty,
+						TransactionType: "charge",
+						EntryMethod:     "SWIPE",
+					},
 				},
 				blockchyp.AuthorizationResponse{
 					Success:          true,
@@ -159,15 +237,25 @@ func TestGiftCard(t *testing.T) {
 					RequestedAmount:  "500.00",
 					AuthorizedAmount: "0.00",
 					RemainingBalance: "0.00",
+					MaskedPAN:        notEmpty,
+					PublicKey:        notEmpty,
+					CurrencyCode:     notEmpty,
+					TickBlock:        notEmpty,
+					ReceiptSuggestions: blockchyp.ReceiptSuggestions{
+						MerchantName:    notEmpty,
+						MaskedPAN:       notEmpty,
+						TransactionType: "charge",
+						EntryMethod:     "SWIPE",
+					},
 				},
 			},
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, "Select an unused gift card and swipe it when prompted.", true)
 
 			for i := range test.args {

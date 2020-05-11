@@ -70,6 +70,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.Version, "version", false, "print version and exit")
 	flag.StringVar(&args.Message, "message", "", "short message to be displayed on the terminal")
 	flag.BoolVar(&args.EBT, "ebt", false, "EBT transaction")
+	flag.BoolVar(&args.Debit, "debit", false, "process card as a debit card")
 	flag.StringVar(&args.RouteCache, "routeCache", "", "specifies local file location for route cache")
 	flag.StringVar(&args.OutputFile, "out", "", "directs output to a file instead of stdout")
 	flag.StringVar(&args.SigFormat, "sigFormat", "", "format for signature file (jpeg, png, gif)")
@@ -114,6 +115,9 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.CallbackURL, "callbackUrl", "", "optional callback url to which a response is posted for payment links")
 	flag.BoolVar(&args.Surcharge, "surcharge", false, "adds fee surcharges to transactions, if eligible.")
 	flag.BoolVar(&args.CashDiscount, "cashDiscount", false, "adds a cash discount to transactions, if eligible")
+	flag.StringVar(&args.PostalCode, "postalCode", "", "postal code to use for address verification")
+	flag.StringVar(&args.Address, "address", "", "street address to use for address verification")
+	flag.BoolVar(&args.Cashier, "cashier", false, "indicates that a payment link should be displayed in cashier facing mode")
 	flag.Parse()
 
 	if args.Version {
@@ -253,6 +257,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		updateCustomer(client, args)
 	case "tx-status":
 		processTransactionStatus(client, args)
+	case "cash-discount":
+		processCashDiscount(client, args)
 	default:
 		fatalErrorf("unknown transaction type: %s", args.Type)
 	}
@@ -285,7 +291,7 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 	validateRequired(args.OrderRef, "orderRef")
 	validateRequired(args.Amount, "amount")
 
-	if !hasCustomerFields(args) {
+	if !args.Cashier && !hasCustomerFields(args) {
 		fatalErrorf("customer fields (-customerId, -email, etc ) are required")
 	}
 
@@ -305,6 +311,7 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 		TCAlias:        args.TCAlias,
 		TCName:         args.TCName,
 		TCContent:      args.TCContent,
+		Cashier:        args.Cashier,
 	}
 
 	ack, err := client.SendPaymentLink(request)
@@ -417,7 +424,9 @@ func processBalance(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	request.ManualEntry = args.ManualEntry
 	request.Test = args.Test
 
-	if args.EBT {
+	if args.Debit {
+		request.CardType = blockchyp.CardTypeDebit
+	} else if args.EBT {
 		request.CardType = blockchyp.CardTypeEBT
 	}
 
@@ -427,6 +436,25 @@ func processBalance(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	}
 
 	dumpResponse(&args, ack)
+
+}
+
+func processCashDiscount(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.Amount, "amount")
+
+	request := blockchyp.CashDiscountRequest{}
+	request.Amount = args.Amount
+	request.CurrencyCode = args.CurrencyCode
+	request.Test = args.Test
+	request.Surcharge = args.Surcharge
+	request.CashDiscount = args.CashDiscount
+
+	response, err := client.CashDiscount(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, response)
 
 }
 
@@ -611,8 +639,12 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req.Amount = args.Amount
 	req.TerminalName = args.TerminalName
 	req.Token = args.Token
+	req.PostalCode = args.PostalCode
+	req.Address = args.Address
 
-	if args.EBT {
+	if args.Debit {
+		req.CardType = blockchyp.CardTypeDebit
+	} else if args.EBT {
 		req.CardType = blockchyp.CardTypeEBT
 		// EBT free range refunds are not permitted.
 		req.TerminalName = args.TerminalName
@@ -640,7 +672,10 @@ func processReverse(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	req.TransactionRef = args.TransactionRef
 	req.Test = args.Test
 	req.ManualEntry = args.ManualEntry
-	if args.EBT {
+
+	if args.Debit {
+		req.CardType = blockchyp.CardTypeDebit
+	} else if args.EBT {
 		req.CardType = blockchyp.CardTypeEBT
 	}
 
@@ -764,6 +799,8 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req.PAN = args.PAN
 	req.ExpMonth = args.ExpiryMonth
 	req.ExpYear = args.ExpiryYear
+	req.PostalCode = args.PostalCode
+	req.Address = args.Address
 	if hasCustomerFields(args) {
 		req.Customer = populateCustomer(args)
 	}
@@ -804,7 +841,12 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	req.CashBackEnabled = args.CashBackEnabled
 	req.Surcharge = args.Surcharge
 	req.CashDiscount = args.CashDiscount
-	if args.EBT {
+	req.PostalCode = args.PostalCode
+	req.Address = args.Address
+
+	if args.Debit {
+		req.CardType = blockchyp.CardTypeDebit
+	} else if args.EBT {
 		req.CardType = blockchyp.CardTypeEBT
 	}
 	if hasCustomerFields(args) {

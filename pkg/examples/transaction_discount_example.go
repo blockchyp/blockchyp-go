@@ -7,7 +7,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func giftActivateExample() {
+func transactionDiscountExample() {
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -19,21 +19,17 @@ func giftActivateExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.GiftActivateRequest{
-		Test:         true,
-		TerminalName: "Test Terminal",
-		Amount:       "50.00",
-	}
+	request := blockchyp.TransactionHistoryRequest{}
 
-	response, err := client.GiftActivate(request)
+	response, err := client.TransactionDiscount(request)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	//process the result
-	if response.Approved {
-		fmt.Println("approved")
+	if response.Success {
+		fmt.Println("Success")
 	}
 
 	fmt.Printf("Response: %+v\n", response)

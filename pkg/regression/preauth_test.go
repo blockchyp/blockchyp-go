@@ -29,20 +29,23 @@ func TestPreauth(t *testing.T) {
 
 		txID       string
 		validation validation
+
+		// simOnly causes tests to be skipped when running in acquirer mode.
+		simOnly bool
 	}{
 		"EMVApproved": {
 			instructions: "Insert an EMV test card when prompted.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "79.00",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
 				Success:          true,
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "preauth",
-				RequestedAmount:  "79.00",
-				AuthorizedAmount: "79.00",
+				RequestedAmount:  amount(0),
+				AuthorizedAmount: amount(0),
 			},
 			captureArgs: []string{
 				"-type", "capture", "-test",
@@ -53,14 +56,14 @@ func TestPreauth(t *testing.T) {
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "capture",
-				AuthorizedAmount: "79.00",
+				AuthorizedAmount: amount(0),
 			},
 			reCaptureArgs: []string{
 				"-type", "capture", "-test",
 				"-tx",
 			},
 			reCaptureAssert: blockchyp.CaptureResponse{
-				Success:             true,
+				Success:             false,
 				Approved:            false,
 				Test:                true,
 				TransactionType:     "capture",
@@ -68,10 +71,11 @@ func TestPreauth(t *testing.T) {
 			},
 		},
 		"SignatureInResponse": {
+			simOnly:      true,
 			instructions: "Insert a signature CVM test card when prompted.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "79.01",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 				"-sigFormat", blockchyp.SignatureFormatPNG,
 				"-sigWidth", "50",
 			},
@@ -84,11 +88,12 @@ func TestPreauth(t *testing.T) {
 			},
 		},
 		"SignatureInFile": {
+			simOnly:      true,
 			instructions: "Insert a signature CVM test card when prompted",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "58.00",
-				"-sigWidth", "100", "-sigFile", "/tmp/sig.png",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
+				"-sigWidth", "400", "-sigFile", "/tmp/blockchyp-regression-test/sig.png",
 			},
 			authAssert: blockchyp.AuthorizationResponse{
 				Success:         true,
@@ -97,17 +102,18 @@ func TestPreauth(t *testing.T) {
 				TransactionType: "preauth",
 			},
 			validation: validation{
-				prompt: "Does '/tmp/sig.png' contain the signature you entered on the terminal?",
+				prompt: "Does the signature appear valid in the browser?",
 				expect: true,
 			},
 		},
 		"SignatureRefused": {
+			simOnly: true,
 			instructions: `Insert a signature CVM test card when prompted.
 
 When prompted for a signature, hit 'Done' without signing.`,
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "79.02",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
 				Success:             false,
@@ -117,38 +123,39 @@ When prompted for a signature, hit 'Done' without signing.`,
 			},
 		},
 		"UserCanceled": {
+			simOnly:      true,
 			instructions: "Hit the red 'X' button when prompted for a card.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "56.00",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
-				Success:             true,
+				Success:             false,
 				Approved:            false,
 				Test:                true,
 				ResponseDescription: "user canceled",
 			},
 		},
 		"SignatureTimeout": {
+			simOnly: true,
 			instructions: `Insert a signature CVM test card when prompted.
 
 Let the transaction time out when prompted for a signature. It should take 90 seconds.`,
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "80.00",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
-				Success:             true,
-				Approved:            false,
-				Test:                true,
-				ResponseDescription: "context canceled",
+				Success:  false,
+				Approved: false,
+				Test:     true,
 			},
 		},
 		"ManualApproval": {
-			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '1234' when prompted",
+			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '123' when prompted",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "80.01",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 				"-manual",
 			},
 			authAssert: blockchyp.AuthorizationResponse{
@@ -156,8 +163,8 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "preauth",
-				RequestedAmount:  "80.01",
-				AuthorizedAmount: "80.01",
+				RequestedAmount:  amount(0),
+				AuthorizedAmount: amount(0),
 				EntryMethod:      "KEYED",
 				MaskedPAN:        "************1111",
 			},
@@ -170,21 +177,22 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "capture",
-				AuthorizedAmount: "80.01",
+				AuthorizedAmount: amount(0),
 			},
 		},
 		"EMVDecline": {
+			simOnly:      true,
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "201.00",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", declineTriggerAmount,
 			},
 			authAssert: blockchyp.AuthorizationResponse{
 				Success:          true,
 				Approved:         false,
 				Test:             true,
 				TransactionType:  "preauth",
-				RequestedAmount:  "201.00",
+				RequestedAmount:  declineTriggerAmount,
 				AuthorizedAmount: "0.00",
 			},
 			captureArgs: []string{
@@ -199,10 +207,11 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 			},
 		},
 		"EMVTimeout": {
+			simOnly:      true,
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "68.00",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", timeOutTriggerAmount,
 			},
 			authAssert: blockchyp.AuthorizationResponse{
 				Success:             false,
@@ -210,15 +219,16 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Test:                true,
 				ResponseDescription: "Transaction was reversed because there was a problem during authorization",
 				TransactionType:     "preauth",
-				RequestedAmount:     "68.00",
+				RequestedAmount:     timeOutTriggerAmount,
 				AuthorizedAmount:    "0.00",
 			},
 		},
 		"EMVPartialAuth": {
+			simOnly:      true,
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "55.00",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", partialAuthTriggerAmount,
 			},
 			authAssert: blockchyp.AuthorizationResponse{
 				Success:          true,
@@ -226,15 +236,16 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Test:             true,
 				PartialAuth:      true,
 				TransactionType:  "preauth",
-				RequestedAmount:  "55.00",
-				AuthorizedAmount: "25.00",
+				RequestedAmount:  partialAuthTriggerAmount,
+				AuthorizedAmount: partialAuthAuthorizedAmount,
 			},
 		},
 		"EMVError": {
+			simOnly:      true,
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "0.11",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", errorTriggerAmount,
 			},
 			authAssert: blockchyp.AuthorizationResponse{
 				Success:             false,
@@ -242,15 +253,16 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Test:                true,
 				TransactionType:     "preauth",
 				ResponseDescription: notEmpty,
-				RequestedAmount:     "0.11",
+				RequestedAmount:     errorTriggerAmount,
 				AuthorizedAmount:    "0.00",
 			},
 		},
 		"EMVNoResponse": {
+			simOnly:      true,
 			instructions: "Insert any EMV test card.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "72.00",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", noResponseTriggerAmount,
 			},
 			authAssert: blockchyp.AuthorizationResponse{
 				Success:             false,
@@ -258,27 +270,27 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Test:                true,
 				TransactionType:     "preauth",
 				ResponseDescription: "Transaction was reversed because there was a problem during authorization",
-				RequestedAmount:     "72.00",
+				RequestedAmount:     noResponseTriggerAmount,
 				AuthorizedAmount:    "0.00",
 			},
 		},
 		"TipAdjust": {
 			instructions: "Insert an EMV test card when prompted.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "61.00",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
 				Success:          true,
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "preauth",
-				RequestedAmount:  "61.00",
-				AuthorizedAmount: "61.00",
+				RequestedAmount:  amount(0),
+				AuthorizedAmount: amount(0),
 			},
 			captureArgs: []string{
 				"-type", "capture", "-test",
-				"-tip", "5.00", "-amount", "66.00",
+				"-tip", "1.00", "-amount", add(amount(0), 100),
 				"-tx",
 			},
 			captureAssert: blockchyp.CaptureResponse{
@@ -286,8 +298,8 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "capture",
-				AuthorizedAmount: "66.00",
-				TipAmount:        "5.00",
+				AuthorizedAmount: add(amount(0), 100),
+				TipAmount:        "1.00",
 			},
 		},
 		"OrphanCapture": {
@@ -307,16 +319,16 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 		"VoidCapture": {
 			instructions: "Insert an EMV test card when prompted.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "82.00",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
 				Success:          true,
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "preauth",
-				RequestedAmount:  "82.00",
-				AuthorizedAmount: "82.00",
+				RequestedAmount:  amount(0),
+				AuthorizedAmount: amount(0),
 			},
 			voidArgs: []string{
 				"-type", "void", "-test",
@@ -342,16 +354,16 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 		"ClosedBatchCapture": {
 			instructions: "Insert an EMV test card when prompted.",
 			authArgs: []string{
-				"-type", "preauth", "-terminal", "Test Terminal",
-				"-test", "-amount", "83.00",
+				"-type", "preauth", "-terminal", terminalName,
+				"-test", "-amount", amount(0),
 			},
 			authAssert: blockchyp.AuthorizationResponse{
 				Success:          true,
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "preauth",
-				RequestedAmount:  "83.00",
-				AuthorizedAmount: "83.00",
+				RequestedAmount:  amount(0),
+				AuthorizedAmount: amount(0),
 			},
 			closeBatchArgs: []string{
 				"-type", "close-batch", "-test",
@@ -371,15 +383,19 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Approved:         true,
 				Test:             true,
 				TransactionType:  "capture",
-				AuthorizedAmount: "83.00",
+				AuthorizedAmount: amount(0),
 			},
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			if test.simOnly && acquirerMode {
+				t.Skip("skipped for acquirer test run")
+			}
+
+			cli := newCLI(t)
+
 			setup(t, test.instructions, true)
 
 			txID := test.txID

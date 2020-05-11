@@ -3,7 +3,6 @@
 package regression
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -22,8 +21,8 @@ func TestReverse(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "12.00",
+					"-type", "charge", "-terminal", terminalName, "-test",
+					"-amount", amount(0),
 					"-txRef",
 				},
 				{
@@ -61,8 +60,8 @@ func TestReverse(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "preauth", "-terminal", "Test Terminal", "-test",
-					"-amount", "12.01",
+					"-type", "preauth", "-terminal", terminalName, "-test",
+					"-amount", amount(0),
 					"-txRef",
 				},
 				{
@@ -89,8 +88,8 @@ func TestReverse(t *testing.T) {
 			instructions: "Insert an EMV test card when prompted.",
 			args: [][]string{
 				{
-					"-type", "preauth", "-terminal", "Test Terminal", "-test",
-					"-amount", "12.02",
+					"-type", "preauth", "-terminal", terminalName, "-test",
+					"-amount", amount(0),
 					"-txRef",
 				},
 				{
@@ -128,8 +127,8 @@ func TestReverse(t *testing.T) {
 			wait:         125 * time.Second,
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test",
-					"-amount", "12.03",
+					"-type", "charge", "-terminal", terminalName, "-test",
+					"-amount", amount(0),
 					"-txRef",
 				},
 				{
@@ -145,7 +144,7 @@ func TestReverse(t *testing.T) {
 					TransactionType: "charge",
 				},
 				blockchyp.AuthorizationResponse{
-					Success:             true,
+					Success:             false,
 					Approved:            false,
 					Test:                true,
 					TransactionType:     "reverse",
@@ -155,10 +154,10 @@ func TestReverse(t *testing.T) {
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, test.instructions, true)
 
 			var txID string
@@ -178,8 +177,7 @@ func TestReverse(t *testing.T) {
 				}
 
 				if test.wait > 0 && i == 0 {
-					fmt.Println("\n" + yellow + "Wait " + test.wait.String() + " for the test to complete." + noColor)
-					time.Sleep(test.wait)
+					wait(test.wait)
 				}
 			}
 		})

@@ -68,6 +68,7 @@ type CommandLineArguments struct {
 	YesCaption                  string `arg:"yesCaption"`
 	NoCaption                   string `arg:"noCaption"`
 	EBT                         bool   `arg:"ebt"`
+	Debit                       bool   `arg:"debit"`
 	TCAlias                     string `arg:"tcAlias"`
 	TCName                      string `arg:"tcName"`
 	TCContent                   string `arg:"tcContent"`
@@ -93,6 +94,9 @@ type CommandLineArguments struct {
 	CallbackURL                 string `arg:"callbackUrl"`
 	Surcharge                   bool   `arg:"surcharge"`
 	CashDiscount                bool   `arg:"cashDiscount"`
+	PostalCode                  string `arg:"postalCode"`
+	Address                     string `arg:"address"`
+	Cashier                     bool   `arg:"cashier"`
 }
 
 var defaultSettings = &ConfigSettings{

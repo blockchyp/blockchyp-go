@@ -1604,6 +1604,9 @@ type GiftActivateResponse struct {
 
 	// PublicKey is the public key of the activated card.
 	PublicKey string `json:"publicKey"`
+
+	// MaskedPAN is the masked card identifier.
+	MaskedPAN string `json:"maskedPan,omitempty"`
 }
 
 // CloseBatchRequest contains the information needed to manually close a
@@ -2270,6 +2273,9 @@ type PaymentLinkRequest struct {
 	// AutoSend automatically send the link via an email.
 	AutoSend bool `json:"autoSend"`
 
+	// Cashier flags the payment link as cashier facing.
+	Cashier bool `json:"cashier"`
+
 	// Description description explaining the transaction for display to the
 	// user.
 	Description string `json:"description"`
@@ -2320,6 +2326,221 @@ type PaymentLinkResponse struct {
 
 	// CustomerID the customer id created or used for the payment.
 	CustomerID string `json:"customerId"`
+}
+
+// CashDiscountRequest computes the cash discount for a cash discount if
+// enabled.
+type CashDiscountRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// CurrencyCode indicates the transaction currency code.
+	CurrencyCode string `json:"currencyCode"`
+
+	// Amount is the requested amount.
+	Amount string `json:"amount"`
+
+	// TaxExempt indicates that the request is tax exempt. Only required for tax
+	// exempt level 2 processing.
+	TaxExempt bool `json:"taxExempt"`
+
+	// Surcharge is a flag to add a surcharge to the transaction to cover credit
+	// card fees, if permitted.
+	Surcharge bool `json:"surcharge"`
+
+	// CashDiscount is a flag that applies a discount to negate the surcharge for
+	// debit transactions or other surcharge ineligible payment methods.
+	CashDiscount bool `json:"cashDiscount"`
+}
+
+// CashDiscountResponse models the results of a cash discount calculation.
+type CashDiscountResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// CurrencyCode indicates the transaction currency code.
+	CurrencyCode string `json:"currencyCode"`
+
+	// Amount is the new calculated total amount.
+	Amount string `json:"amount"`
+
+	// TaxExempt indicates that the request is tax exempt. Only required for tax
+	// exempt level 2 processing.
+	TaxExempt bool `json:"taxExempt"`
+
+	// Surcharge is the normal surcharge for a transaction. Will only be returned
+	// if an offsetting cash discount is also returned.
+	Surcharge string `json:"surcharge"`
+
+	// CashDiscount is the cash discount. Will not be returned in surcharge only
+	// mode.
+	CashDiscount string `json:"cashDiscount"`
+}
+
+// TransactionHistoryRequest models a batch history request.
+type TransactionHistoryRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// BatchID optional batch id.
+	BatchID string `json:"batchId"`
+
+	// TerminalName optional terminal name.
+	TerminalName string `json:"terminalName"`
+
+	// StartDate optional start date filter for batch history.
+	StartDate time.Time `json:"startDate"`
+
+	// EndDate optional end date filter for batch history.
+	EndDate time.Time `json:"endDate"`
+}
+
+// TransactionHistoryResponse models response to a batch history request.
+type TransactionHistoryResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// BatchID batch identifier if filtered by batch.
+	BatchID string `json:"batchId"`
+
+	// TerminalName terminal name if filtered by terminal.
+	TerminalName string `json:"terminalName"`
+
+	// StartDate start date if filtered by start date.
+	StartDate time.Time `json:"startDate"`
+
+	// EndDate end date if filtered by end date.
+	EndDate time.Time `json:"endDate"`
+
+	// Transactions matching transaction history.
+	Transactions []TransactionStatus `json:"transactions"`
+}
+
+// BatchHistoryRequest models a batch history request.
+type BatchHistoryRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// StartDate optional start date filter for batch history.
+	StartDate time.Time `json:"startDate"`
+
+	// EndDate optional end date filter for batch history.
+	EndDate time.Time `json:"endDate"`
+}
+
+// BatchHistoryResponse models response to a batch history request.
+type BatchHistoryResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// StartDate start date if filtered by start date.
+	StartDate time.Time `json:"startDate"`
+
+	// EndDate end date if filtered by end date.
+	EndDate time.Time `json:"endDate"`
+
+	// Batches merchant's batch history in descending order.
+	Batches []BatchDetails `json:"batches"`
+}
+
+// BatchDetails models high level information about a single batch.
+type BatchDetails struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// BatchID batch identifier.
+	BatchID string `json:"batchId"`
+
+	// CapturedAmount is the new captured amount.
+	CapturedAmount string `json:"capturedAmount"`
+
+	// UncapturedPreauths is the new captured amount.
+	UncapturedPreauths string `json:"uncapturedPreauths"`
+
+	// TransactionCount the number of transactions in the batch
+	TransactionCount int `json:"transactionCount"`
+
+	// Open flag indicating whether or not the batch is open
+	Open bool `json:"open"`
+
+	// OpenDate date and time of the first transaction for this batch.
+	OpenDate time.Time `json:"openDate"`
+
+	// CloseDate date and time the batch was closed.
+	CloseDate time.Time `json:"closeDate"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature

@@ -11,6 +11,10 @@ import (
 )
 
 func TestStatus(t *testing.T) {
+	if acquirerMode {
+		t.Skip("skipped for acquirer test run")
+	}
+
 	tests := map[string]struct {
 		args   [][]string
 		assert []interface{}
@@ -18,7 +22,7 @@ func TestStatus(t *testing.T) {
 		"Idle": {
 			args: [][]string{
 				{
-					"-type", "terminal-status", "-terminal", "Test Terminal",
+					"-type", "terminal-status", "-terminal", terminalName,
 				},
 			},
 			assert: []interface{}{
@@ -31,13 +35,13 @@ func TestStatus(t *testing.T) {
 		"Charge": {
 			args: [][]string{
 				{
-					"-type", "charge", "-terminal", "Test Terminal", "-test", "-amount", "1.00",
+					"-type", "charge", "-terminal", terminalName, "-test", "-amount", "1.00",
 				},
 				{
-					"-type", "terminal-status", "-terminal", "Test Terminal",
+					"-type", "terminal-status", "-terminal", terminalName,
 				},
 				{
-					"-type", "clear", "-terminal", "Test Terminal",
+					"-type", "clear", "-terminal", terminalName,
 				},
 			},
 			assert: []interface{}{
@@ -55,14 +59,14 @@ func TestStatus(t *testing.T) {
 		"TC": {
 			args: [][]string{
 				{
-					"-type", "tc", "-terminal", "Test Terminal", "-test",
+					"-type", "tc", "-terminal", terminalName, "-test",
 					"-tcName", "Contract Title", "-tcContent", "Blah Blah Blah",
 				},
 				{
-					"-type", "terminal-status", "-terminal", "Test Terminal",
+					"-type", "terminal-status", "-terminal", terminalName,
 				},
 				{
-					"-type", "clear", "-terminal", "Test Terminal",
+					"-type", "clear", "-terminal", terminalName,
 				},
 			},
 			assert: []interface{}{
@@ -79,10 +83,10 @@ func TestStatus(t *testing.T) {
 		},
 	}
 
-	cli := newCLI(t)
-
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			cli := newCLI(t)
+
 			setup(t, "", false)
 
 			var wg sync.WaitGroup
