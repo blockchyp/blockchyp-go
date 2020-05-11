@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
@@ -19,6 +20,15 @@ var validSignatureFormats = []string{
 	"jpg",
 	"png",
 }
+
+/*
+Constants for various time/date formats.
+*/
+const (
+	ShortDateFormat = "01/02/2006"
+	HTMLDateFormat  = "2006-01-02"
+	ISOFormat       = "2006-01-02T15:04:05Z0700"
+)
 
 var config *blockchyp.ConfigSettings
 
@@ -118,6 +128,9 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.PostalCode, "postalCode", "", "postal code to use for address verification")
 	flag.StringVar(&args.Address, "address", "", "street address to use for address verification")
 	flag.BoolVar(&args.Cashier, "cashier", false, "indicates that a payment link should be displayed in cashier facing mode")
+	flag.StringVar(&args.StartDate, "startDate", "", "start date for filtering history results")
+	flag.StringVar(&args.EndDate, "endDate", "", "end date for filtering history results")
+	flag.StringVar(&args.BatchID, "batchId", "", "batch id for filtering history results")
 	flag.Parse()
 
 	if args.Version {
@@ -259,9 +272,49 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processTransactionStatus(client, args)
 	case "cash-discount":
 		processCashDiscount(client, args)
+	case "batch-history":
+		processBatchHistory(client, args)
+	case "tx-history":
+		processTransactionHistory(client, args)
 	default:
 		fatalErrorf("unknown transaction type: %s", args.Type)
 	}
+
+}
+
+func processBatchHistory(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := blockchyp.BatchHistoryRequest{}
+
+	if args.StartDate != "" {
+		parsedDate, err := parseTimestamp(args.StartDate)
+		if err != nil {
+			handleError(&args, err)
+		}
+		if parsedDate != nil {
+			request.StartDate = *parsedDate
+		}
+	}
+	if args.EndDate != "" {
+		parsedDate, err := parseTimestamp(args.EndDate)
+		if err != nil {
+			handleError(&args, err)
+		}
+		if parsedDate != nil {
+			request.EndDate = *parsedDate
+		}
+	}
+
+	ack, err := client.BatchHistory(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
+
+}
+
+func processTransactionHistory(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
 }
 
@@ -878,6 +931,25 @@ func processPing(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 		handleError(&args, err)
 	}
 	dumpResponse(&args, res)
+}
+
+func parseTimestamp(ts string) (*time.Time, error) {
+
+	parsedResult, err := parseTimestampWithFormat(ts, ISOFormat)
+	if err == nil {
+		return parsedResult, nil
+	}
+	parsedResult, err = parseTimestampWithFormat(ts, ShortDateFormat)
+	if err == nil {
+		return parsedResult, nil
+	}
+	return parseTimestampWithFormat(ts, HTMLDateFormat)
+
+}
+
+func parseTimestampWithFormat(ts string, format string) (*time.Time, error) {
+
+	return nil, nil
 }
 
 func validateRequired(value string, arg string) {
