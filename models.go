@@ -2430,6 +2430,12 @@ type TransactionHistoryRequest struct {
 
 	// EndDate optional end date filter for batch history.
 	EndDate time.Time `json:"endDate"`
+
+	// MaxResults max results to be returned by this request
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index for results to be returned
+	StartIndex int `json:"startIndex"`
 }
 
 // TransactionHistoryResponse models response to a batch history request.
@@ -2455,6 +2461,16 @@ type TransactionHistoryResponse struct {
 
 	// EndDate end date if filtered by end date.
 	EndDate time.Time `json:"endDate"`
+
+	// MaxResults max results from the original request echoed back. Defaults to
+	// the system max of 100.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index from the original request echoed back.
+	StartIndex int `json:"startIndex"`
+
+	// TotalResultCount total number of results accessible through paging.
+	TotalResultCount int `json:"totalResultCount"`
 
 	// Transactions matching transaction history.
 	Transactions []TransactionStatus `json:"transactions"`
@@ -2485,6 +2501,13 @@ type BatchHistoryRequest struct {
 
 	// EndDate optional end date filter for batch history.
 	EndDate time.Time `json:"endDate"`
+
+	// MaxResults max results to be returned by this request. Defaults to the
+	// system max of 100.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index for results to be returned
+	StartIndex int `json:"startIndex"`
 }
 
 // BatchHistoryResponse models response to a batch history request.
@@ -2507,6 +2530,15 @@ type BatchHistoryResponse struct {
 
 	// Batches merchant's batch history in descending order.
 	Batches []BatchDetails `json:"batches"`
+
+	// MaxResults max results from the original request echoed back.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index from the original request echoed back.
+	StartIndex int `json:"startIndex"`
+
+	// TotalResultCount total number of results accessible through paging.
+	TotalResultCount int `json:"totalResultCount"`
 }
 
 // BatchDetails models high level information about a single batch.
