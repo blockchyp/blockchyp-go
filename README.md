@@ -2167,7 +2167,7 @@ import (
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func transactionDiscountExample() {
+func transactionHistoryExample() {
     // sample credentials
     creds := blockchyp.APICredentials{
         APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -2181,7 +2181,7 @@ func transactionDiscountExample() {
     // setup request object
     request := blockchyp.TransactionHistoryRequest{}
 
-    response, err := client.TransactionDiscount(request)
+    response, err := client.TransactionHistory(request)
 
     if err != nil {
         log.Fatal(err)

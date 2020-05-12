@@ -343,6 +343,37 @@ func processBatchDetails(client *blockchyp.Client, args blockchyp.CommandLineArg
 
 func processTransactionHistory(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
+	request := blockchyp.TransactionHistoryRequest{
+		MaxResults: args.MaxResults,
+		StartIndex: args.StartIndex,
+	}
+
+	if args.StartDate != "" {
+		parsedDate, err := parseTimestamp(args.StartDate)
+		if err != nil {
+			handleError(&args, err)
+		}
+		if parsedDate != nil {
+			request.StartDate = *parsedDate
+		}
+	}
+	if args.EndDate != "" {
+		parsedDate, err := parseTimestamp(args.EndDate)
+		if err != nil {
+			handleError(&args, err)
+		}
+		if parsedDate != nil {
+			request.EndDate = *parsedDate
+		}
+	}
+
+	ack, err := client.TransactionHistory(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
+
 }
 
 func processTransactionStatus(client *blockchyp.Client, args blockchyp.CommandLineArguments) {

@@ -1073,8 +1073,8 @@ func (client *Client) BatchDetails(request BatchDetailsRequest) (*BatchDetailsRe
 	return &response, err
 }
 
-// TransactionDiscount returns the transaction history for a merchant.
-func (client *Client) TransactionDiscount(request TransactionHistoryRequest) (*TransactionHistoryResponse, error) {
+// TransactionHistory returns the transaction history for a merchant.
+func (client *Client) TransactionHistory(request TransactionHistoryRequest) (*TransactionHistoryResponse, error) {
 	var response TransactionHistoryResponse
 
 	err := client.GatewayRequest("/tx-history", "POST", request, &response, request.Test, request.Timeout)
