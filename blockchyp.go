@@ -1058,6 +1058,21 @@ func (client *Client) BatchHistory(request BatchHistoryRequest) (*BatchHistoryRe
 	return &response, err
 }
 
+// BatchDetails returns the batch details for a single batch.
+func (client *Client) BatchDetails(request BatchDetailsRequest) (*BatchDetailsResponse, error) {
+	var response BatchDetailsResponse
+
+	err := client.GatewayRequest("/batch-details", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // TransactionDiscount returns the transaction history for a merchant.
 func (client *Client) TransactionDiscount(request TransactionHistoryRequest) (*TransactionHistoryResponse, error) {
 	var response TransactionHistoryResponse

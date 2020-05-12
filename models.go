@@ -2529,7 +2529,7 @@ type BatchHistoryResponse struct {
 	EndDate time.Time `json:"endDate"`
 
 	// Batches merchant's batch history in descending order.
-	Batches []BatchDetails `json:"batches"`
+	Batches []BatchSummary `json:"batches"`
 
 	// MaxResults max results from the original request echoed back.
 	MaxResults int `json:"maxResults"`
@@ -2541,8 +2541,8 @@ type BatchHistoryResponse struct {
 	TotalResultCount int `json:"totalResultCount"`
 }
 
-// BatchDetails models high level information about a single batch.
-type BatchDetails struct {
+// BatchSummary models high level information about a single batch.
+type BatchSummary struct {
 	// BatchID batch identifier.
 	BatchID string `json:"batchId"`
 
@@ -2557,6 +2557,79 @@ type BatchDetails struct {
 
 	// CloseDate date and time the batch was closed.
 	CloseDate time.Time `json:"closeDate"`
+}
+
+// BatchDetailsRequest models a request for details about a single batch.
+type BatchDetailsRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// BatchID id for the batch to be retrieved.
+	BatchID string `json:"batchId"`
+}
+
+// BatchDetailsResponse models a response for details about a single batch.
+type BatchDetailsResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// BatchID batch identifier.
+	BatchID string `json:"batchId"`
+
+	// CapturedAmount is the new captured amount.
+	CapturedAmount string `json:"capturedAmount"`
+
+	// Open flag indicating whether or not the batch is open
+	Open bool `json:"open"`
+
+	// OpenDate date and time of the first transaction for this batch.
+	OpenDate time.Time `json:"openDate"`
+
+	// CloseDate date and time the batch was closed.
+	CloseDate time.Time `json:"closeDate"`
+
+	// VolumeByTerminal merchant's batch history in descending order.
+	VolumeByTerminal []TerminalVolume `json:"volumeByTerminal"`
+}
+
+// TerminalVolume models transaction volume for a single terminal.
+type TerminalVolume struct {
+	// TerminalName is the terminal name assigned during activation.
+	TerminalName string `json:"terminalName"`
+
+	// SerialNumber is the manufacturer's serial number.
+	SerialNumber string `json:"serialNumber"`
+
+	// TerminalType is the terminal type.
+	TerminalType string `json:"terminalType"`
+
+	// CapturedAmount is the captured amount.
+	CapturedAmount string `json:"capturedAmount"`
+
+	// TransactionCount is the number of transactions run on this terminal.
+	TransactionCount int `json:"transactionCount"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature
