@@ -2473,7 +2473,7 @@ type TransactionHistoryResponse struct {
 	TotalResultCount int `json:"totalResultCount"`
 
 	// Transactions matching transaction history.
-	Transactions []TransactionStatus `json:"transactions"`
+	Transactions []AuthorizationResponse `json:"transactions"`
 }
 
 // BatchHistoryRequest models a batch history request.
