@@ -2601,6 +2601,25 @@ type BatchDetailsResponse struct {
 	// CapturedAmount is the new captured amount.
 	CapturedAmount string `json:"capturedAmount"`
 
+	// OpenPreauths preauths from this batch still open.
+	OpenPreauths string `json:"openPreauths"`
+
+	// TotalVolume is the total volume from this batch.
+	TotalVolume string `json:"totalVolume"`
+
+	// TransactionCount is the total number of transactions in this batch.
+	TransactionCount int `json:"transactionCount"`
+
+	// GiftCardsSold is the total volume of gift cards sold.
+	GiftCardsSold string `json:"giftCardsSold"`
+
+	// GiftCardVolume is the total volume of gift cards transactions.
+	GiftCardVolume string `json:"giftCardVolume"`
+
+	// ExpectedDeposit is the expected volume for this batch, usually captured
+	// volume less gift card volume.
+	ExpectedDeposit string `json:"expectedDeposit"`
+
 	// Open flag indicating whether or not the batch is open
 	Open bool `json:"open"`
 

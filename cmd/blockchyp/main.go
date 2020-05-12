@@ -131,6 +131,9 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.StartDate, "startDate", "", "start date for filtering history results")
 	flag.StringVar(&args.EndDate, "endDate", "", "end date for filtering history results")
 	flag.StringVar(&args.BatchID, "batchId", "", "batch id for filtering history results")
+	flag.IntVar(&args.MaxResults, "maxResults", 250, "max results for query and history functions")
+	flag.IntVar(&args.StartIndex, "startIndex", 0, "start index for paged queries")
+
 	flag.Parse()
 
 	if args.Version {
@@ -274,6 +277,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processCashDiscount(client, args)
 	case "batch-history":
 		processBatchHistory(client, args)
+	case "batch-details":
+		processBatchDetails(client, args)
 	case "tx-history":
 		processTransactionHistory(client, args)
 	default:
@@ -284,7 +289,10 @@ func processCommand(args blockchyp.CommandLineArguments) {
 
 func processBatchHistory(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
-	request := blockchyp.BatchHistoryRequest{}
+	request := blockchyp.BatchHistoryRequest{
+		MaxResults: args.MaxResults,
+		StartIndex: args.StartIndex,
+	}
 
 	if args.StartDate != "" {
 		parsedDate, err := parseTimestamp(args.StartDate)
@@ -306,6 +314,25 @@ func processBatchHistory(client *blockchyp.Client, args blockchyp.CommandLineArg
 	}
 
 	ack, err := client.BatchHistory(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
+
+}
+
+func processBatchDetails(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	if args.BatchID == "" {
+		fatalErrorf("-batchId is required")
+	}
+
+	request := blockchyp.BatchDetailsRequest{
+		BatchID: args.BatchID,
+	}
+
+	ack, err := client.BatchDetails(request)
 	if err != nil {
 		handleError(&args, err)
 	}
