@@ -2463,7 +2463,7 @@ type TransactionHistoryResponse struct {
 	EndDate time.Time `json:"endDate"`
 
 	// MaxResults max results from the original request echoed back. Defaults to
-	// the system max of 100.
+	// the system max of 250.
 	MaxResults int `json:"maxResults"`
 
 	// StartIndex starting index from the original request echoed back.
@@ -2503,7 +2503,7 @@ type BatchHistoryRequest struct {
 	EndDate time.Time `json:"endDate"`
 
 	// MaxResults max results to be returned by this request. Defaults to the
-	// system max of 100.
+	// system max of 250.
 	MaxResults int `json:"maxResults"`
 
 	// StartIndex starting index for results to be returned
@@ -2543,27 +2543,11 @@ type BatchHistoryResponse struct {
 
 // BatchDetails models high level information about a single batch.
 type BatchDetails struct {
-	// Success indicates whether or not the request succeeded.
-	Success bool `json:"success"`
-
-	// Error is the error, if an error occurred.
-	Error string `json:"error"`
-
-	// ResponseDescription contains a narrative description of the transaction
-	// result.
-	ResponseDescription string `json:"responseDescription"`
-
 	// BatchID batch identifier.
 	BatchID string `json:"batchId"`
 
 	// CapturedAmount is the new captured amount.
 	CapturedAmount string `json:"capturedAmount"`
-
-	// UncapturedPreauths is the new captured amount.
-	UncapturedPreauths string `json:"uncapturedPreauths"`
-
-	// TransactionCount the number of transactions in the batch
-	TransactionCount int `json:"transactionCount"`
 
 	// Open flag indicating whether or not the batch is open
 	Open bool `json:"open"`
