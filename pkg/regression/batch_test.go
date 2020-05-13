@@ -3,7 +3,9 @@
 package regression
 
 import (
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/blockchyp/blockchyp-go"
 )
@@ -13,7 +15,7 @@ func TestBatch(t *testing.T) {
 		instructions string
 		args         [][]string
 		assert       []interface{}
-		txID         string
+		batchID      string
 	}{
 		"Charge": {
 			instructions: "Insert an EMV test card when prompted.",
@@ -23,10 +25,28 @@ func TestBatch(t *testing.T) {
 					"-amount", amount(0),
 				},
 				{
+					"-type", "batch-history", "-test",
+					"-maxResults", "1",
+					"-startDate", time.Now().Add(-5 * time.Second).Format(time.RFC3339),
+				},
+				{
 					"-type", "close-batch", "-test",
 				},
 				{
 					"-type", "close-batch", "-test",
+				},
+				{
+					"-type", "batch-history", "-test",
+					"-maxResults", "1",
+					"-startDate", time.Now().Add(-5 * time.Second).Format(time.RFC3339),
+				},
+				{
+					"-type", "batch-details", "-test",
+					"-batchId",
+				},
+				{
+					"-type", "tx-history", "-test",
+					"-batchId",
 				},
 			},
 			assert: []interface{}{
@@ -36,6 +56,14 @@ func TestBatch(t *testing.T) {
 					Test:             true,
 					TransactionType:  "charge",
 					AuthorizedAmount: amount(0),
+				},
+				blockchyp.BatchHistoryResponse{
+					Success: true,
+					Batches: []blockchyp.BatchSummary{
+						{
+							Open: true,
+						},
+					},
 				},
 				blockchyp.CloseBatchResponse{
 					Success:       true,
@@ -47,6 +75,34 @@ func TestBatch(t *testing.T) {
 					Success:             false,
 					Test:                true,
 					ResponseDescription: "No batch",
+				},
+				blockchyp.BatchHistoryResponse{
+					Success: true,
+					Batches: []blockchyp.BatchSummary{
+						{
+							Open: false,
+						},
+					},
+				},
+				blockchyp.BatchDetailsResponse{
+					Success:          true,
+					CapturedAmount:   amount(0),
+					TotalVolume:      amount(0),
+					TransactionCount: 1,
+					Open:             false,
+				},
+				blockchyp.TransactionHistoryResponse{
+					Success:          true,
+					TotalResultCount: 1,
+					Transactions: []blockchyp.AuthorizationResponse{
+						{
+							Success:          true,
+							Approved:         true,
+							Test:             true,
+							TransactionType:  "charge",
+							AuthorizedAmount: amount(0),
+						},
+					},
 				},
 			},
 		},
@@ -118,12 +174,18 @@ Leave it in the terminal until the test completes.`,
 			cli.run([]string{"-type", "close-batch", "-test"}, struct{}{})
 
 			for i := range test.args {
-				if test.txID != "" && test.args[i][len(test.args[i])-1] == "-tx" {
-					test.args[i] = append(test.args[i], test.txID)
+				if test.batchID != "" && test.args[i][len(test.args[i])-1] == "-batchId" {
+					fmt.Println("foo")
+					test.args[i] = append(test.args[i], test.batchID)
 				}
 
-				if res, ok := cli.run(test.args[i], test.assert[i]).(*blockchyp.AuthorizationResponse); ok && test.txID == "" {
-					test.txID = res.TransactionID
+				res := cli.run(test.args[i], test.assert[i])
+				switch v := res.(type) {
+				case *blockchyp.AuthorizationResponse:
+					if test.batchID == "" {
+						test.batchID = v.BatchID
+					}
+					fmt.Println(test.batchID)
 				}
 			}
 		})
