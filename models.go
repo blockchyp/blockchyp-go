@@ -164,6 +164,15 @@ type CaptureSignatureRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -221,6 +230,15 @@ type PingRequest struct {
 	// transaction request. If no transaction ref was assiged on the request,
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -286,6 +304,15 @@ type MessageRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -312,6 +339,15 @@ type BooleanPromptRequest struct {
 	// transaction request. If no transaction ref was assiged on the request,
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -346,6 +382,15 @@ type TextPromptRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -372,6 +417,15 @@ type CustomerRequest struct {
 	// transaction request. If no transaction ref was assiged on the request,
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -417,6 +471,15 @@ type CustomerSearchRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -440,6 +503,15 @@ type UpdateCustomerRequest struct {
 	// transaction request. If no transaction ref was assiged on the request,
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -574,6 +646,15 @@ type AuthorizationRequest struct {
 	// transaction request. If no transaction ref was assiged on the request,
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -740,6 +821,15 @@ type BalanceRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -895,6 +985,15 @@ type RefundRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1034,6 +1133,15 @@ type CaptureRequest struct {
 	// transaction request. If no transaction ref was assiged on the request,
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1218,6 +1326,15 @@ type VoidRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1325,6 +1442,15 @@ type EnrollRequest struct {
 	// transaction request. If no transaction ref was assiged on the request,
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1491,6 +1617,15 @@ type ClearTerminalRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1515,6 +1650,15 @@ type GiftActivateRequest struct {
 	// transaction request. If no transaction ref was assiged on the request,
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1617,6 +1761,15 @@ type CloseBatchRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1692,6 +1845,15 @@ type TermsAndConditionsRequest struct {
 	// transaction request. If no transaction ref was assiged on the request,
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1926,6 +2088,15 @@ type TransactionStatusRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -2129,6 +2300,15 @@ type TransactionDisplayRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -2186,6 +2366,15 @@ type TerminalStatusRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -2235,6 +2424,15 @@ type PaymentLinkRequest struct {
 	// transaction request. If no transaction ref was assiged on the request,
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2336,6 +2534,15 @@ type CashDiscountRequest struct {
 	// then the gateway will randomly generate one.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -2397,6 +2604,294 @@ type CashDiscountResponse struct {
 	// CashDiscount is the cash discount. Will not be returned in surcharge only
 	// mode.
 	CashDiscount string `json:"cashDiscount"`
+}
+
+// TransactionHistoryRequest models a batch history request.
+type TransactionHistoryRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// BatchID optional batch id.
+	BatchID string `json:"batchId"`
+
+	// TerminalName optional terminal name.
+	TerminalName string `json:"terminalName"`
+
+	// StartDate optional start date filter for batch history.
+	StartDate time.Time `json:"startDate"`
+
+	// EndDate optional end date filter for batch history.
+	EndDate time.Time `json:"endDate"`
+
+	// MaxResults max results to be returned by this request.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index for results to be returned.
+	StartIndex int `json:"startIndex"`
+}
+
+// TransactionHistoryResponse models response to a batch history request.
+type TransactionHistoryResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Test indicates that the response came from the test gateway.
+	Test bool `json:"test"`
+
+	// BatchID batch identifier if filtered by batch.
+	BatchID string `json:"batchId"`
+
+	// TerminalName terminal name if filtered by terminal.
+	TerminalName string `json:"terminalName"`
+
+	// StartDate start date if filtered by start date.
+	StartDate time.Time `json:"startDate"`
+
+	// EndDate end date if filtered by end date.
+	EndDate time.Time `json:"endDate"`
+
+	// MaxResults max results from the original request echoed back. Defaults to
+	// the system max of 250.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index from the original request echoed back.
+	StartIndex int `json:"startIndex"`
+
+	// TotalResultCount total number of results accessible through paging.
+	TotalResultCount int `json:"totalResultCount"`
+
+	// Transactions matching transaction history.
+	Transactions []AuthorizationResponse `json:"transactions"`
+}
+
+// BatchHistoryRequest models a batch history request.
+type BatchHistoryRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// StartDate optional start date filter for batch history.
+	StartDate time.Time `json:"startDate"`
+
+	// EndDate optional end date filter for batch history.
+	EndDate time.Time `json:"endDate"`
+
+	// MaxResults max results to be returned by this request. Defaults to the
+	// system max of 250.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index for results to be returned.
+	StartIndex int `json:"startIndex"`
+}
+
+// BatchHistoryResponse models response to a batch history request.
+type BatchHistoryResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Test indicates that the response came from the test gateway.
+	Test bool `json:"test"`
+
+	// StartDate start date if filtered by start date.
+	StartDate time.Time `json:"startDate"`
+
+	// EndDate end date if filtered by end date.
+	EndDate time.Time `json:"endDate"`
+
+	// Batches merchant's batch history in descending order.
+	Batches []BatchSummary `json:"batches"`
+
+	// MaxResults max results from the original request echoed back.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index from the original request echoed back.
+	StartIndex int `json:"startIndex"`
+
+	// TotalResultCount total number of results accessible through paging.
+	TotalResultCount int `json:"totalResultCount"`
+}
+
+// BatchSummary models high level information about a single batch.
+type BatchSummary struct {
+	// BatchID batch identifier.
+	BatchID string `json:"batchId"`
+
+	// CapturedAmount is the new captured amount.
+	CapturedAmount string `json:"capturedAmount"`
+
+	// Open flag indicating whether or not the batch is open.
+	Open bool `json:"open"`
+
+	// OpenDate date and time of the first transaction for this batch.
+	OpenDate time.Time `json:"openDate"`
+
+	// CloseDate date and time the batch was closed.
+	CloseDate time.Time `json:"closeDate"`
+}
+
+// BatchDetailsRequest models a request for details about a single batch.
+type BatchDetailsRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// BatchID id for the batch to be retrieved.
+	BatchID string `json:"batchId"`
+}
+
+// BatchDetailsResponse models a response for details about a single batch.
+type BatchDetailsResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Test indicates that the response came from the test gateway.
+	Test bool `json:"test"`
+
+	// BatchID batch identifier.
+	BatchID string `json:"batchId"`
+
+	// CapturedAmount is the new captured amount.
+	CapturedAmount string `json:"capturedAmount"`
+
+	// OpenPreauths preauths from this batch still open.
+	OpenPreauths string `json:"openPreauths"`
+
+	// TotalVolume is the total volume from this batch.
+	TotalVolume string `json:"totalVolume"`
+
+	// TransactionCount is the total number of transactions in this batch.
+	TransactionCount int `json:"transactionCount"`
+
+	// GiftCardsSold is the total volume of gift cards sold.
+	GiftCardsSold string `json:"giftCardsSold"`
+
+	// GiftCardVolume is the total volume of gift cards transactions.
+	GiftCardVolume string `json:"giftCardVolume"`
+
+	// ExpectedDeposit is the expected volume for this batch, usually captured
+	// volume less gift card volume.
+	ExpectedDeposit string `json:"expectedDeposit"`
+
+	// Open flag indicating whether or not the batch is open.
+	Open bool `json:"open"`
+
+	// OpenDate date and time of the first transaction for this batch.
+	OpenDate time.Time `json:"openDate"`
+
+	// CloseDate date and time the batch was closed.
+	CloseDate time.Time `json:"closeDate"`
+
+	// VolumeByTerminal merchant's batch history in descending order.
+	VolumeByTerminal []TerminalVolume `json:"volumeByTerminal"`
+}
+
+// TerminalVolume models transaction volume for a single terminal.
+type TerminalVolume struct {
+	// TerminalName is the terminal name assigned during activation.
+	TerminalName string `json:"terminalName"`
+
+	// SerialNumber is the manufacturer's serial number.
+	SerialNumber string `json:"serialNumber"`
+
+	// TerminalType is the terminal type.
+	TerminalType string `json:"terminalType"`
+
+	// CapturedAmount is the captured amount.
+	CapturedAmount string `json:"capturedAmount"`
+
+	// TransactionCount is the number of transactions run on this terminal.
+	TransactionCount int `json:"transactionCount"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature
@@ -2597,6 +3092,15 @@ type CoreRequest struct {
 	// transaction request. If no transaction ref was assiged on the request,
 	// then the gateway will randomly generate one.
 	TransactionRef string
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string
