@@ -103,6 +103,7 @@ func TestPreauth(t *testing.T) {
 			},
 			validation: validation{
 				prompt: "Does the signature appear valid in the browser?",
+				serve:  "/tmp/blockchyp-regression-test/sig.png",
 				expect: true,
 			},
 		},
