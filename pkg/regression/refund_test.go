@@ -239,6 +239,7 @@ Leave the card in the terminal until the test completes.`,
 			},
 			validation: validation{
 				prompt: "Does the signature appear valid in the browser?",
+				serve:  "/tmp/blockchyp-regression-test/sig.jpg",
 				expect: true,
 			},
 		},

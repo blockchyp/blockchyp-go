@@ -1396,6 +1396,10 @@ type EnrollRequest struct {
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
+	// EntryMethod is the method by which the payment card was entered (MSR,
+	// CHIP, KEYED, etc.).
+	EntryMethod string `json:"entryMethod,omitempty"`
+
 	// Customer customer with which the new token should be associated.
 	Customer *Customer `json:"customer"`
 }
@@ -2450,6 +2454,9 @@ type TransactionHistoryResponse struct {
 	// result.
 	ResponseDescription string `json:"responseDescription"`
 
+	// Test indicates that the response came from the test gateway.
+	Test bool `json:"test"`
+
 	// BatchID batch identifier if filtered by batch.
 	BatchID string `json:"batchId"`
 
@@ -2521,6 +2528,9 @@ type BatchHistoryResponse struct {
 	// ResponseDescription contains a narrative description of the transaction
 	// result.
 	ResponseDescription string `json:"responseDescription"`
+
+	// Test indicates that the response came from the test gateway.
+	Test bool `json:"test"`
 
 	// StartDate start date if filtered by start date.
 	StartDate time.Time `json:"startDate"`
@@ -2594,6 +2604,9 @@ type BatchDetailsResponse struct {
 	// ResponseDescription contains a narrative description of the transaction
 	// result.
 	ResponseDescription string `json:"responseDescription"`
+
+	// Test indicates that the response came from the test gateway.
+	Test bool `json:"test"`
 
 	// BatchID batch identifier.
 	BatchID string `json:"batchId"`
