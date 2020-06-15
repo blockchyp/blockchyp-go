@@ -85,22 +85,8 @@ integration:
 # Runs regrssion tests
 .PHONY: regrssion
 regression:
+	rm -rf /tmp/blockchyp-regression-test
 	mkdir -p /tmp/blockchyp-regression-test
-	$(GO) run github.com/blockchyp/blockchyp-go/pkg/regression/watcher $$PPID /tmp/blockchyp-regression-test &
-	$(if $(LOCALBUILD),, \
-		$(foreach path,$(CACHEPATHS),mkdir -p $(CACHE)/$(path) ; ) \
-		sed 's/localhost/$(HOSTIP)/' $(HOME)/.config/blockchyp/blockchyp.json >$(CACHE)/$(HOME)/.config/blockchyp/blockchyp.json ; \
-		$(DOCKER) run \
-		-u $(shell id -u):$(shell id -g) \
-		-v $(SCMROOT):$(SCMROOT):Z \
-		-v /etc/passwd:/etc/passwd:ro \
-		-v /tmp/blockchyp-regression-test:/tmp/blockchyp-regression-test \
-		$(foreach path,$(CACHEPATHS),-v $(CACHE)/$(path):$(path):Z) \
-		-e HOME=$(HOME) \
-		-e GOPATH=$(HOME)/go \
-		-e MODE=$(MODE) \
-		-w $(PWD) \
-		--rm -it $(IMAGE)) \
 	$(GO) test -timeout=0 $(TESTFLAGS) $(if $(TEST), -run=$(TEST),) -tags=regression github.com/blockchyp/blockchyp-go/pkg/regression
 
 # Performs any tasks necessary before a release build

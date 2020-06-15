@@ -102,6 +102,8 @@ type CommandLineArguments struct {
 	BatchID                     string `arg:"batchId"`
 	MaxResults                  int    `arg:"maxResults"`
 	StartIndex                  int    `arg:"startIndex"`
+	Queue                       bool   `args:"queue"`
+	Async                       bool   `args:"async"`
 }
 
 var defaultSettings = &ConfigSettings{

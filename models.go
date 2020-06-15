@@ -1522,6 +1522,10 @@ type EnrollRequest struct {
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
+	// EntryMethod is the method by which the payment card was entered (MSR,
+	// CHIP, KEYED, etc.).
+	EntryMethod string `json:"entryMethod,omitempty"`
+
 	// Customer customer with which the new token should be associated.
 	Customer *Customer `json:"customer"`
 }
