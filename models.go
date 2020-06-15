@@ -2592,6 +2592,13 @@ type BatchSummary struct {
 	// CapturedAmount is the new captured amount.
 	CapturedAmount string `json:"capturedAmount"`
 
+	// OpenPreauths is the amount of preauths opend during the batch that have
+	// not been captured.
+	OpenPreauths string `json:"openPreauths"`
+
+	// CurrencyCode is the currency the batch was settled in.
+	CurrencyCode string `json:"currencyCode"`
+
 	// Open flag indicating whether or not the batch is open.
 	Open bool `json:"open"`
 
