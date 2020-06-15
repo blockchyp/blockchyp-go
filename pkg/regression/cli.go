@@ -272,6 +272,10 @@ func validate(t *testing.T, v validation) {
 		return
 	}
 
+	if v.serve != "" {
+		showInBrowser(v.serve)
+	}
+
 	fmt.Printf("\n%s%s y/N:%s ", format(yellow), v.prompt, format())
 
 	f, err := os.Open("/dev/tty")
@@ -293,5 +297,6 @@ func wait(duration time.Duration) {
 
 type validation struct {
 	prompt string
+	serve  string
 	expect bool
 }

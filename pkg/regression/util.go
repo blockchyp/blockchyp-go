@@ -3,9 +3,15 @@
 package regression
 
 import (
+	"context"
 	"fmt"
 	"math"
 	"math/rand"
+	"net"
+	"net/http"
+	"net/url"
+	"os/exec"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -257,3 +263,54 @@ const (
 	timeOutTriggerAmount        = "68.00"
 	noResponseTriggerAmount     = "72.00"
 )
+
+func getAddr() string {
+	for i := 8080; i < 9000; i++ {
+		addr := fmt.Sprintf("localhost:%d", i)
+		ln, err := net.Listen("tcp", addr)
+		if err != nil {
+			continue
+		}
+		ln.Close()
+
+		return addr
+	}
+
+	panic("could not open port")
+}
+
+func showInBrowser(path string) {
+	srv := &http.Server{Addr: getAddr()}
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, path)
+
+		srv.Shutdown(context.Background())
+	})
+
+	go func() {
+		srv.ListenAndServe()
+	}()
+
+	u := (&url.URL{
+		Scheme: "http",
+		Host:   srv.Addr,
+		Path:   path,
+	}).String()
+
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "linux":
+		cmd = exec.Command("xdg-open", u)
+	case "windows":
+		cmd = exec.Command("rundll32", u)
+	case "darwin":
+		cmd = exec.Command("open", u)
+	default:
+		panic("unsupported platform")
+	}
+
+	if err := cmd.Run(); err != nil {
+		panic(err)
+	}
+}

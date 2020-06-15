@@ -274,6 +274,10 @@ type PingResponse struct {
 	// Test indicates that the transaction was processed on the test gateway.
 	Test bool `json:"test"`
 
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
 	Sig string `json:"sig,omitempty"`
@@ -846,6 +850,10 @@ type BalanceResponse struct {
 	// Test indicates that the transaction was processed on the test gateway.
 	Test bool `json:"test"`
 
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
 	Sig string `json:"sig,omitempty"`
@@ -1135,6 +1143,10 @@ type CaptureResponse struct {
 	// Test indicates that the transaction was processed on the test gateway.
 	Test bool `json:"test"`
 
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
 	Sig string `json:"sig,omitempty"`
@@ -1275,6 +1287,10 @@ type VoidResponse struct {
 
 	// Test indicates that the transaction was processed on the test gateway.
 	Test bool `json:"test"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
 
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
@@ -1441,6 +1457,10 @@ type EnrollResponse struct {
 	// Test indicates that the transaction was processed on the test gateway.
 	Test bool `json:"test"`
 
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
 	Sig string `json:"sig,omitempty"`
@@ -1586,6 +1606,10 @@ type GiftActivateResponse struct {
 	// Test indicates that the transaction was processed on the test gateway.
 	Test bool `json:"test"`
 
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
 	Sig string `json:"sig,omitempty"`
@@ -1629,6 +1653,9 @@ type CloseBatchRequest struct {
 
 	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
+
+	// BatchID optional batch id.
+	BatchID string `json:"batchId"`
 }
 
 // CloseBatchResponse contains the response to a close batch request.
@@ -1666,23 +1693,17 @@ type CloseBatchResponse struct {
 	// Test indicates that the transaction was processed on the test gateway.
 	Test bool `json:"test"`
 
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
 	Sig string `json:"sig,omitempty"`
 
-	// CurrencyCode is the currency code of amounts indicated.
-	CurrencyCode string `json:"currencyCode"`
-
-	// CapturedTotal is the total captured amount for this batch. Should be the
-	// expected deposit amount.
-	CapturedTotal string `json:"capturedTotal"`
-
-	// OpenPreauths contains the total amount of preauths opened during the batch
-	// that weren't captured.
-	OpenPreauths string `json:"openPreauths"`
-
-	// CardBrands contains the captured totals by card brand.
-	CardBrands map[string]string `json:"cardBrands"`
+	// Batches is a collection of batches closed during the batch close
+	// operation.
+	Batches []BatchSummary `json:"batches"`
 }
 
 // TermsAndConditionsRequest contains the fields needed for custom Terms and
@@ -1781,6 +1802,10 @@ type TermsAndConditionsResponse struct {
 	// Test indicates that the transaction was processed on the test gateway.
 	Test bool `json:"test"`
 
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
 	Sig string `json:"sig,omitempty"`
@@ -1829,6 +1854,10 @@ type AuthorizationResponse struct {
 
 	// Test indicates that the transaction was processed on the test gateway.
 	Test bool `json:"test"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
 
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
@@ -1983,6 +2012,10 @@ type TransactionStatus struct {
 
 	// Test indicates that the transaction was processed on the test gateway.
 	Test bool `json:"test"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
 
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
@@ -2450,6 +2483,9 @@ type TransactionHistoryResponse struct {
 	// result.
 	ResponseDescription string `json:"responseDescription"`
 
+	// Test indicates that the response came from the test gateway.
+	Test bool `json:"test"`
+
 	// BatchID batch identifier if filtered by batch.
 	BatchID string `json:"batchId"`
 
@@ -2521,6 +2557,9 @@ type BatchHistoryResponse struct {
 	// ResponseDescription contains a narrative description of the transaction
 	// result.
 	ResponseDescription string `json:"responseDescription"`
+
+	// Test indicates that the response came from the test gateway.
+	Test bool `json:"test"`
 
 	// StartDate start date if filtered by start date.
 	StartDate time.Time `json:"startDate"`
@@ -2594,6 +2633,9 @@ type BatchDetailsResponse struct {
 	// ResponseDescription contains a narrative description of the transaction
 	// result.
 	ResponseDescription string `json:"responseDescription"`
+
+	// Test indicates that the response came from the test gateway.
+	Test bool `json:"test"`
 
 	// BatchID batch identifier.
 	BatchID string `json:"batchId"`
@@ -3125,6 +3167,10 @@ type CoreResponse struct {
 
 	// Test indicates that the transaction was processed on the test gateway.
 	Test bool
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string
 
 	// Sig is the ECC signature of the response. Can be used to ensure that it
 	// was signed by the terminal and detect man-in-the middle attacks.
