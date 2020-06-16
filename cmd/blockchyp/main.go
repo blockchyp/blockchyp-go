@@ -133,6 +133,8 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.BatchID, "batchId", "", "batch id for filtering history results")
 	flag.IntVar(&args.MaxResults, "maxResults", 250, "max results for query and history functions")
 	flag.IntVar(&args.StartIndex, "startIndex", 0, "start index for paged queries")
+	flag.BoolVar(&args.Queue, "queue", false, "queue transaction without running it")
+	flag.BoolVar(&args.Async, "async", false, "run transaction asynchronously and don't wait for the response")
 
 	flag.Parse()
 
@@ -924,30 +926,35 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	if (args.TerminalName == "") && (args.Token == "") && (args.PAN == "") {
 		fatalError("-terminal or -token requred")
 	}
-	req := blockchyp.AuthorizationRequest{}
-	req.TerminalName = args.TerminalName
-	req.TransactionRef = args.TransactionRef
-	req.Token = args.Token
-	req.PAN = args.PAN
-	req.ExpMonth = args.ExpiryMonth
-	req.ExpYear = args.ExpiryYear
-	req.Description = args.Description
-	req.Amount = args.Amount
-	req.PromptForTip = args.PromptForTip
-	req.TaxAmount = args.TaxAmount
-	req.TipAmount = args.TipAmount
-	req.Test = args.Test
-	req.Enroll = args.Enroll
-	req.ManualEntry = args.ManualEntry
-	req.SigWidth = args.SigWidth
-	req.SigFile = args.SigFile
-	req.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
-	req.DisableSignature = args.DisableSignature
-	req.CashBackEnabled = args.CashBackEnabled
-	req.Surcharge = args.Surcharge
-	req.CashDiscount = args.CashDiscount
-	req.PostalCode = args.PostalCode
-	req.Address = args.Address
+
+	req := blockchyp.AuthorizationRequest{
+		TerminalName:     args.TerminalName,
+		TransactionRef:   args.TransactionRef,
+		Token:            args.Token,
+		PAN:              args.PAN,
+		ExpMonth:         args.ExpiryMonth,
+		ExpYear:          args.ExpiryYear,
+		Description:      args.Description,
+		Amount:           args.Amount,
+		PromptForTip:     args.PromptForTip,
+		TaxAmount:        args.TaxAmount,
+		TipAmount:        args.TipAmount,
+		Test:             args.Test,
+		Enroll:           args.Enroll,
+		ManualEntry:      args.ManualEntry,
+		SigWidth:         args.SigWidth,
+		SigFile:          args.SigFile,
+		SigFormat:        blockchyp.SignatureFormat(args.SigFormat),
+		DisableSignature: args.DisableSignature,
+		CashBackEnabled:  args.CashBackEnabled,
+		Surcharge:        args.Surcharge,
+		CashDiscount:     args.CashDiscount,
+		PostalCode:       args.PostalCode,
+		Address:          args.Address,
+		Queue:            args.Queue,
+		Async:            args.Async,
+		OrderRef:         args.OrderRef,
+	}
 
 	if args.Debit {
 		req.CardType = blockchyp.CardTypeDebit
