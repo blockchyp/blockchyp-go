@@ -2814,6 +2814,13 @@ type BatchSummary struct {
 	// BatchID batch identifier.
 	BatchID string `json:"batchId"`
 
+	// EntryMethod entry method for the batch, if any.
+	EntryMethod string `json:"entryMethod"`
+
+	// DestinationAccountID merchant deposit account into which proceeds should
+	// be deposited.
+	DestinationAccountID string `json:"destinationAccountId"`
+
 	// CapturedAmount is the new captured amount.
 	CapturedAmount string `json:"capturedAmount"`
 
@@ -2885,6 +2892,13 @@ type BatchDetailsResponse struct {
 	// BatchID batch identifier.
 	BatchID string `json:"batchId"`
 
+	// EntryMethod entry method for the batch, if any.
+	EntryMethod string `json:"entryMethod"`
+
+	// DestinationAccountID merchant deposit account into which proceeds should
+	// be deposited.
+	DestinationAccountID string `json:"destinationAccountId"`
+
 	// CapturedAmount is the new captured amount.
 	CapturedAmount string `json:"capturedAmount"`
 
@@ -2936,6 +2950,123 @@ type TerminalVolume struct {
 
 	// TransactionCount is the number of transactions run on this terminal.
 	TransactionCount int `json:"transactionCount"`
+}
+
+// MerchantProfileRequest models a request for information about the merchant
+// profile.
+type MerchantProfileRequest struct {
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+}
+
+// MerchantProfileResponse models a response for details about a single batch.
+type MerchantProfileResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Test indicates that the response came from the test gateway.
+	Test bool `json:"test"`
+
+	// MerchantID is the merchant id.
+	MerchantID string `json:"merchantId"`
+
+	// CompanyName is the merchant's company name.
+	CompanyName string `json:"companyName"`
+
+	// LocationName is the location name.
+	LocationName string `json:"locationName"`
+
+	// StoreNumber is the store number.
+	StoreNumber string `json:"storeNumber"`
+
+	// TimeZone is the merchant's local time zone.
+	TimeZone string `json:"timeZone"`
+
+	// BatchCloseTime is the batch close time in the merchant's time zone.
+	BatchCloseTime string `json:"batchCloseTime"`
+
+	// TerminalUpdateTime is the terminal firmware update time.
+	TerminalUpdateTime string `json:"terminalUpdateTime"`
+
+	// AutoBatchClose flag indicating whether or not the batch automatically
+	// closes.
+	AutoBatchClose bool `json:"autoBatchClose"`
+
+	// PINEnabled flag indicating whether or not pin entry is enabled.
+	PINEnabled bool `json:"pinEnabled"`
+
+	// CashBackEnabled flag indicating whether or not cash back is enabled.
+	CashBackEnabled bool `json:"cashBackEnabled"`
+
+	// StoreAndForwardEnabled flag indicating whether or not store and forward is
+	// enabled.
+	StoreAndForwardEnabled bool `json:"storeAndForwardEnabled"`
+
+	// PartialAuthEnabled flag indicating whether or not partial authorizations
+	// are supported for this merchant.
+	PartialAuthEnabled bool `json:"partialAuthEnabled"`
+
+	// SplitBankAccountsEnabled flag indicating whether or not this merchant
+	// support split settlement.
+	SplitBankAccountsEnabled bool `json:"splitBankAccountsEnabled"`
+
+	// StoreAndForwardFloorLimit floor limit for store and forward transactions.
+	StoreAndForwardFloorLimit string `json:"storeAndForwardFloorLimit"`
+
+	// PublicKey is the blockchyp public key for this merchant.
+	PublicKey string `json:"publicKey"`
+
+	// Status is the undwriting/processing status for the the merchant.
+	Status string `json:"status"`
+
+	// BankAccounts bank accounts for split bank account merchants.
+	BankAccounts []BankAccount `json:"bankAccounts"`
+}
+
+// BankAccount models meta data about a merchant bank account.
+type BankAccount struct {
+	// ID is the account identifier to be used with authorization requests.
+	ID string `json:"id"`
+
+	// Name is the name of the account.
+	Name string `json:"name"`
+
+	// Purpose is the purpose of the account.
+	Purpose string `json:"purpose"`
+
+	// MaskedAccountNumber is the masked account number.
+	MaskedAccountNumber string `json:"maskedAccountNumber"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature

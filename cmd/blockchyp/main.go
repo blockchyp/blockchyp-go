@@ -283,9 +283,26 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processBatchDetails(client, args)
 	case "tx-history":
 		processTransactionHistory(client, args)
+	case "merchant-profile":
+		processMerchantProfile(client, args)
 	default:
 		fatalErrorf("unknown transaction type: %s", args.Type)
 	}
+
+}
+
+func processMerchantProfile(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := blockchyp.MerchantProfileRequest{
+		Test: args.Test,
+	}
+
+	ack, err := client.MerchantProfile(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
 
 }
 
