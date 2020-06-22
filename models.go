@@ -2998,23 +2998,26 @@ type MerchantProfileResponse struct {
 	// Test indicates that the response came from the test gateway.
 	Test bool `json:"test"`
 
-	// MerchantID merchant id.
+	// MerchantID is the merchant id.
 	MerchantID string `json:"merchantId"`
 
-	// CompanyName company name.
+	// CompanyName is the merchant's company name.
 	CompanyName string `json:"companyName"`
 
-	// LocationName location name.
+	// LocationName is the location name.
 	LocationName string `json:"locationName"`
 
-	// StoreNumber store number.
+	// StoreNumber is the store number.
 	StoreNumber string `json:"storeNumber"`
 
-	// TimeZone merchant's local time zone.
+	// TimeZone is the merchant's local time zone.
 	TimeZone string `json:"timeZone"`
 
-	// BatchCloseTime batch close time in the merchant's time zone.
+	// BatchCloseTime is the batch close time in the merchant's time zone.
 	BatchCloseTime string `json:"batchCloseTime"`
+
+	// TerminalUpdateTime is the terminal firmware update time.
+	TerminalUpdateTime string `json:"terminalUpdateTime"`
 
 	// AutoBatchClose flag indicating whether or not the batch automatically
 	// closes.
@@ -3030,8 +3033,22 @@ type MerchantProfileResponse struct {
 	// enabled.
 	StoreAndForwardEnabled bool `json:"storeAndForwardEnabled"`
 
+	// PartialAuthEnabled flag indicating whether or not partial authorizations
+	// are supported for this merchant.
+	PartialAuthEnabled bool `json:"partialAuthEnabled"`
+
+	// SplitBankAccountsEnabled flag indicating whether or not this merchant
+	// support split settlement.
+	SplitBankAccountsEnabled bool `json:"splitBankAccountsEnabled"`
+
 	// StoreAndForwardFloorLimit floor limit for store and forward transactions.
 	StoreAndForwardFloorLimit string `json:"storeAndForwardFloorLimit"`
+
+	// PublicKey is the blockchyp public key for this merchant.
+	PublicKey string `json:"publicKey"`
+
+	// Status is the undwriting/processing status for the the merchant.
+	Status string `json:"status"`
 
 	// BankAccounts bank accounts for split bank account merchants.
 	BankAccounts []BankAccount `json:"bankAccounts"`
