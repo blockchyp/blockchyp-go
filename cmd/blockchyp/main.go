@@ -103,7 +103,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.TCName, "tcName", "", "optional name for a terms and conditions template")
 	flag.StringVar(&args.TCContent, "tcContent", "", "raw content for the terms and conditions, plain text")
 	flag.BoolVar(&args.SigRequired, "sigRequired", true, "optional flag that indicates whether signatures are required, defaults to true")
-	flag.IntVar(&args.Timeout, "timeout", 90, "overrides default timeouts for terminal interaction")
+	flag.IntVar(&args.Timeout, "timeout", 120, "overrides default timeouts for terminal interaction")
 	flag.BoolVar(&args.CashBackEnabled, "cashback", false, "enables cash back transactions")
 	flag.BoolVar(&args.Enroll, "enroll", false, "enroll the payment in the token vault")
 	flag.BoolVar(&args.DisableSignature, "disableSignature", false, "prevent terminal from prompting for signatures")

@@ -74,7 +74,7 @@ func TestStatus(t *testing.T) {
 				blockchyp.TerminalStatusResponse{
 					Success: true,
 					Idle:    false,
-					Status:  "terms-and-conditions-prompt",
+					Status:  "terms-and-conditions",
 				},
 				blockchyp.Acknowledgement{
 					Success: true,

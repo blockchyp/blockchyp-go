@@ -66,10 +66,14 @@ func TestBatch(t *testing.T) {
 					},
 				},
 				blockchyp.CloseBatchResponse{
-					Success:       true,
-					Test:          true,
-					CapturedTotal: amount(0),
-					OpenPreauths:  "0.00",
+					Success: true,
+					Test:    true,
+					Batches: []blockchyp.BatchSummary{
+						{
+							CapturedAmount: amount(0),
+							OpenPreauths:   "0.00",
+						},
+					},
 				},
 				blockchyp.CloseBatchResponse{
 					Success:             false,
@@ -139,10 +143,14 @@ Leave it in the terminal until the test completes.`,
 					AuthorizedAmount: amount(1),
 				},
 				blockchyp.CloseBatchResponse{
-					Success:       true,
-					Test:          true,
-					CapturedTotal: amount(1),
-					OpenPreauths:  amount(0),
+					Success: true,
+					Test:    true,
+					Batches: []blockchyp.BatchSummary{
+						{
+							CapturedAmount: amount(1),
+							OpenPreauths:   amount(0),
+						},
+					},
 				},
 			},
 		},

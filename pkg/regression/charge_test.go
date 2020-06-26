@@ -292,7 +292,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Success:             false,
 				Approved:            false,
 				Test:                true,
-				ResponseDescription: "user canceled",
+				ResponseDescription: "User canceled",
 			},
 		},
 		"ManualApproval": {

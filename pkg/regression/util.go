@@ -280,9 +280,13 @@ func getAddr() string {
 }
 
 func showInBrowser(path string) {
-	srv := &http.Server{Addr: getAddr()}
+	mux := http.NewServeMux()
+	srv := &http.Server{
+		Addr:    getAddr(),
+		Handler: mux,
+	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, path)
 
 		srv.Shutdown(context.Background())
