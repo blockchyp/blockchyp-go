@@ -27,7 +27,6 @@ Constants for various time/date formats.
 const (
 	ShortDateFormat = "01/02/2006"
 	HTMLDateFormat  = "2006-01-02"
-	ISOFormat       = "2006-01-02T15:04:05Z0700"
 )
 
 var config *blockchyp.ConfigSettings
@@ -1041,7 +1040,7 @@ func processPing(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 
 func parseTimestamp(ts string) (time.Time, error) {
 
-	parsedResult, err := parseTimestampWithFormat(ts, ISOFormat)
+	parsedResult, err := parseTimestampWithFormat(ts, time.RFC3339)
 	if err == nil {
 		return parsedResult, nil
 	}
