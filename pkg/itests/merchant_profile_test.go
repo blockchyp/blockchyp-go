@@ -42,7 +42,9 @@ func TestMerchantProfile(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.MerchantProfileRequest{}
+	request := blockchyp.MerchantProfileRequest{
+		Test: true,
+	}
 
 	logRequest(request)
 
