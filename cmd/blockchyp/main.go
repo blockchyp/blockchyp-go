@@ -310,6 +310,7 @@ func processBatchHistory(client *blockchyp.Client, args blockchyp.CommandLineArg
 	request := blockchyp.BatchHistoryRequest{
 		MaxResults: args.MaxResults,
 		StartIndex: args.StartIndex,
+		Test:       args.Test,
 	}
 
 	if args.StartDate != "" {
@@ -344,6 +345,7 @@ func processBatchDetails(client *blockchyp.Client, args blockchyp.CommandLineArg
 
 	request := blockchyp.BatchDetailsRequest{
 		BatchID: args.BatchID,
+		Test:    args.Test,
 	}
 
 	ack, err := client.BatchDetails(request)
@@ -362,6 +364,7 @@ func processTransactionHistory(client *blockchyp.Client, args blockchyp.CommandL
 		StartIndex:   args.StartIndex,
 		BatchID:      args.BatchID,
 		TerminalName: args.TerminalName,
+		Test:         args.Test,
 	}
 
 	if args.StartDate != "" {
@@ -514,6 +517,7 @@ func processTerminalStatus(client *blockchyp.Client, args blockchyp.CommandLineA
 
 	response, err := client.TerminalStatus(blockchyp.TerminalStatusRequest{
 		TerminalName: args.TerminalName,
+		Test:         args.Test,
 	})
 	if err != nil {
 		handleError(&args, err)
@@ -532,6 +536,7 @@ func processCaptureSignature(client *blockchyp.Client, args blockchyp.CommandLin
 		SigFile:      args.SigFile,
 		SigFormat:    blockchyp.SignatureFormat(args.SigFormat),
 		SigWidth:     args.SigWidth,
+		Test:         args.Test,
 	})
 	if err != nil {
 		handleError(&args, err)
@@ -591,6 +596,7 @@ func processClear(client *blockchyp.Client, args blockchyp.CommandLineArguments)
 	request := blockchyp.ClearTerminalRequest{
 		TerminalName: args.TerminalName,
 		Timeout:      args.Timeout,
+		Test:         args.Test,
 	}
 
 	ack, err := client.Clear(request)
@@ -618,6 +624,7 @@ func processTermsAndConditions(client *blockchyp.Client, args blockchyp.CommandL
 		Timeout:          args.Timeout,
 		TransactionID:    args.TransactionID,
 		TransactionRef:   args.TransactionRef,
+		Test:             args.Test,
 	}
 
 	ack, err := client.TermsAndConditions(request)
@@ -699,6 +706,7 @@ func processDisplay(client *blockchyp.Client, args blockchyp.CommandLineArgument
 		TerminalName: args.TerminalName,
 		Transaction:  assembleDisplayTransaction(args),
 		Timeout:      args.Timeout,
+		Test:         args.Test,
 	}
 
 	ack, err := client.UpdateTransactionDisplay(request)
