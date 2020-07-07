@@ -438,6 +438,7 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 		TCName:         args.TCName,
 		TCContent:      args.TCContent,
 		Cashier:        args.Cashier,
+		Enroll:         args.Enroll,
 	}
 
 	ack, err := client.SendPaymentLink(request)

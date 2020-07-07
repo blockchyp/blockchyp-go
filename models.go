@@ -2508,6 +2508,10 @@ type PaymentLinkRequest struct {
 	// AutoSend automatically send the link via an email.
 	AutoSend bool `json:"autoSend"`
 
+	// Enroll indicates that the payment method should be added to the token
+	// vault alongside the authorization.
+	Enroll bool `json:"enroll,omitempty"`
+
 	// Cashier flags the payment link as cashier facing.
 	Cashier bool `json:"cashier"`
 
