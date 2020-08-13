@@ -59,6 +59,7 @@ func TestBatch(t *testing.T) {
 				},
 				blockchyp.BatchHistoryResponse{
 					Success: true,
+					Test:    true,
 					Batches: []blockchyp.BatchSummary{
 						{
 							Open: true,
@@ -78,10 +79,11 @@ func TestBatch(t *testing.T) {
 				blockchyp.CloseBatchResponse{
 					Success:             false,
 					Test:                true,
-					ResponseDescription: "No batch",
+					ResponseDescription: "no open batches",
 				},
 				blockchyp.BatchHistoryResponse{
 					Success: true,
+					Test:    true,
 					Batches: []blockchyp.BatchSummary{
 						{
 							Open: false,
@@ -90,6 +92,7 @@ func TestBatch(t *testing.T) {
 				},
 				blockchyp.BatchDetailsResponse{
 					Success:          true,
+					Test:             true,
 					CapturedAmount:   amount(0),
 					TotalVolume:      amount(0),
 					TransactionCount: 1,
@@ -97,6 +100,7 @@ func TestBatch(t *testing.T) {
 				},
 				blockchyp.TransactionHistoryResponse{
 					Success:          true,
+					Test:             true,
 					TotalResultCount: 1,
 					Transactions: []blockchyp.AuthorizationResponse{
 						{
@@ -183,7 +187,6 @@ Leave it in the terminal until the test completes.`,
 
 			for i := range test.args {
 				if test.batchID != "" && test.args[i][len(test.args[i])-1] == "-batchId" {
-					fmt.Println("foo")
 					test.args[i] = append(test.args[i], test.batchID)
 				}
 

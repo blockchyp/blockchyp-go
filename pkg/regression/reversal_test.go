@@ -52,7 +52,7 @@ func TestReverse(t *testing.T) {
 					Approved:            false,
 					Test:                true,
 					TransactionType:     "reverse",
-					ResponseDescription: "Reversed",
+					ResponseDescription: "Already Reversed",
 				},
 			},
 		},
