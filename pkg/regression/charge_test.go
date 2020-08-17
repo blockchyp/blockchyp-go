@@ -230,6 +230,7 @@ func TestCharge(t *testing.T) {
 			},
 			validation: validation{
 				prompt: "Does the signature appear valid in the browser?",
+				serve:  "/tmp/blockchyp-regression-test/sig.jpg",
 				expect: true,
 			},
 		},
@@ -291,7 +292,7 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				Success:             false,
 				Approved:            false,
 				Test:                true,
-				ResponseDescription: "user canceled",
+				ResponseDescription: "User canceled",
 			},
 		},
 		"ManualApproval": {

@@ -1043,6 +1043,66 @@ func (client *Client) CashDiscount(request CashDiscountRequest) (*CashDiscountRe
 	return &response, err
 }
 
+// BatchHistory returns the batch history for a merchant.
+func (client *Client) BatchHistory(request BatchHistoryRequest) (*BatchHistoryResponse, error) {
+	var response BatchHistoryResponse
+
+	err := client.GatewayRequest("/batch-history", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// BatchDetails returns the batch details for a single batch.
+func (client *Client) BatchDetails(request BatchDetailsRequest) (*BatchDetailsResponse, error) {
+	var response BatchDetailsResponse
+
+	err := client.GatewayRequest("/batch-details", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TransactionHistory returns the transaction history for a merchant.
+func (client *Client) TransactionHistory(request TransactionHistoryRequest) (*TransactionHistoryResponse, error) {
+	var response TransactionHistoryResponse
+
+	err := client.GatewayRequest("/tx-history", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// MerchantProfile returns profile information for a merchant.
+func (client *Client) MerchantProfile(request MerchantProfileRequest) (*MerchantProfileResponse, error) {
+	var response MerchantProfileResponse
+
+	err := client.GatewayRequest("/public-merchant-profile", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 func getTimeout(requestTimeout interface{}, defaultTimeout time.Duration) time.Duration {
 	var requestTimeoutDuration time.Duration
 	switch v := requestTimeout.(type) {

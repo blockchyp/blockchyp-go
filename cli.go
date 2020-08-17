@@ -97,6 +97,13 @@ type CommandLineArguments struct {
 	PostalCode                  string `arg:"postalCode"`
 	Address                     string `arg:"address"`
 	Cashier                     bool   `arg:"cashier"`
+	StartDate                   string `arg:"startDate"`
+	EndDate                     string `arg:"endDate"`
+	BatchID                     string `arg:"batchId"`
+	MaxResults                  int    `arg:"maxResults"`
+	StartIndex                  int    `arg:"startIndex"`
+	Queue                       bool   `args:"queue"`
+	Async                       bool   `args:"async"`
 }
 
 var defaultSettings = &ConfigSettings{

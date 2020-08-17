@@ -103,6 +103,7 @@ func TestPreauth(t *testing.T) {
 			},
 			validation: validation{
 				prompt: "Does the signature appear valid in the browser?",
+				serve:  "/tmp/blockchyp-regression-test/sig.png",
 				expect: true,
 			},
 		},
@@ -133,7 +134,7 @@ When prompted for a signature, hit 'Done' without signing.`,
 				Success:             false,
 				Approved:            false,
 				Test:                true,
-				ResponseDescription: "user canceled",
+				ResponseDescription: "User canceled",
 			},
 		},
 		"SignatureTimeout": {
@@ -369,10 +370,14 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				"-type", "close-batch", "-test",
 			},
 			closeBatchAssert: blockchyp.CloseBatchResponse{
-				Success:       true,
-				Test:          true,
-				CapturedTotal: notEmpty,
-				OpenPreauths:  notEmpty,
+				Success: true,
+				Test:    true,
+				Batches: []blockchyp.BatchSummary{
+					{
+						CapturedAmount: notEmpty,
+						OpenPreauths:   notEmpty,
+					},
+				},
 			},
 			captureArgs: []string{
 				"-type", "capture", "-test",

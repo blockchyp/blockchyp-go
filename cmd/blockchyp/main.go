@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
@@ -19,6 +20,14 @@ var validSignatureFormats = []string{
 	"jpg",
 	"png",
 }
+
+/*
+Constants for various time/date formats.
+*/
+const (
+	ShortDateFormat = "01/02/2006"
+	HTMLDateFormat  = "2006-01-02"
+)
 
 var config *blockchyp.ConfigSettings
 
@@ -94,7 +103,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.TCName, "tcName", "", "optional name for a terms and conditions template")
 	flag.StringVar(&args.TCContent, "tcContent", "", "raw content for the terms and conditions, plain text")
 	flag.BoolVar(&args.SigRequired, "sigRequired", true, "optional flag that indicates whether signatures are required, defaults to true")
-	flag.IntVar(&args.Timeout, "timeout", 90, "overrides default timeouts for terminal interaction")
+	flag.IntVar(&args.Timeout, "timeout", 120, "overrides default timeouts for terminal interaction")
 	flag.BoolVar(&args.CashBackEnabled, "cashback", false, "enables cash back transactions")
 	flag.BoolVar(&args.Enroll, "enroll", false, "enroll the payment in the token vault")
 	flag.BoolVar(&args.DisableSignature, "disableSignature", false, "prevent terminal from prompting for signatures")
@@ -118,6 +127,14 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.PostalCode, "postalCode", "", "postal code to use for address verification")
 	flag.StringVar(&args.Address, "address", "", "street address to use for address verification")
 	flag.BoolVar(&args.Cashier, "cashier", false, "indicates that a payment link should be displayed in cashier facing mode")
+	flag.StringVar(&args.StartDate, "startDate", "", "start date for filtering history results")
+	flag.StringVar(&args.EndDate, "endDate", "", "end date for filtering history results")
+	flag.StringVar(&args.BatchID, "batchId", "", "batch id for filtering history results")
+	flag.IntVar(&args.MaxResults, "maxResults", 250, "max results for query and history functions")
+	flag.IntVar(&args.StartIndex, "startIndex", 0, "start index for paged queries")
+	flag.BoolVar(&args.Queue, "queue", false, "queue transaction without running it")
+	flag.BoolVar(&args.Async, "async", false, "run transaction asynchronously and don't wait for the response")
+
 	flag.Parse()
 
 	if args.Version {
@@ -259,9 +276,118 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processTransactionStatus(client, args)
 	case "cash-discount":
 		processCashDiscount(client, args)
+	case "batch-history":
+		processBatchHistory(client, args)
+	case "batch-details":
+		processBatchDetails(client, args)
+	case "tx-history":
+		processTransactionHistory(client, args)
+	case "merchant-profile":
+		processMerchantProfile(client, args)
 	default:
 		fatalErrorf("unknown transaction type: %s", args.Type)
 	}
+
+}
+
+func processMerchantProfile(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := blockchyp.MerchantProfileRequest{
+		Test: args.Test,
+	}
+
+	ack, err := client.MerchantProfile(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
+
+}
+
+func processBatchHistory(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := blockchyp.BatchHistoryRequest{
+		MaxResults: args.MaxResults,
+		StartIndex: args.StartIndex,
+		Test:       args.Test,
+	}
+
+	if args.StartDate != "" {
+		parsedDate, err := parseTimestamp(args.StartDate)
+		if err != nil {
+			handleError(&args, err)
+		}
+		request.StartDate = parsedDate
+	}
+	if args.EndDate != "" {
+		parsedDate, err := parseTimestamp(args.EndDate)
+		if err != nil {
+			handleError(&args, err)
+		}
+		request.EndDate = parsedDate
+	}
+
+	ack, err := client.BatchHistory(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
+
+}
+
+func processBatchDetails(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	if args.BatchID == "" {
+		fatalErrorf("-batchId is required")
+	}
+
+	request := blockchyp.BatchDetailsRequest{
+		BatchID: args.BatchID,
+		Test:    args.Test,
+	}
+
+	ack, err := client.BatchDetails(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
+
+}
+
+func processTransactionHistory(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := blockchyp.TransactionHistoryRequest{
+		MaxResults:   args.MaxResults,
+		StartIndex:   args.StartIndex,
+		BatchID:      args.BatchID,
+		TerminalName: args.TerminalName,
+		Test:         args.Test,
+	}
+
+	if args.StartDate != "" {
+		parsedDate, err := parseTimestamp(args.StartDate)
+		if err != nil {
+			handleError(&args, err)
+		}
+		request.StartDate = parsedDate
+	}
+	if args.EndDate != "" {
+		parsedDate, err := parseTimestamp(args.EndDate)
+		if err != nil {
+			handleError(&args, err)
+		}
+		request.EndDate = parsedDate
+	}
+
+	ack, err := client.TransactionHistory(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
 
 }
 
@@ -291,7 +417,7 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 	validateRequired(args.OrderRef, "orderRef")
 	validateRequired(args.Amount, "amount")
 
-	if !hasCustomerFields(args) {
+	if !args.Cashier && !hasCustomerFields(args) {
 		fatalErrorf("customer fields (-customerId, -email, etc ) are required")
 	}
 
@@ -311,6 +437,8 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 		TCAlias:        args.TCAlias,
 		TCName:         args.TCName,
 		TCContent:      args.TCContent,
+		Cashier:        args.Cashier,
+		Enroll:         args.Enroll,
 	}
 
 	ack, err := client.SendPaymentLink(request)
@@ -390,6 +518,7 @@ func processTerminalStatus(client *blockchyp.Client, args blockchyp.CommandLineA
 
 	response, err := client.TerminalStatus(blockchyp.TerminalStatusRequest{
 		TerminalName: args.TerminalName,
+		Test:         args.Test,
 	})
 	if err != nil {
 		handleError(&args, err)
@@ -408,6 +537,7 @@ func processCaptureSignature(client *blockchyp.Client, args blockchyp.CommandLin
 		SigFile:      args.SigFile,
 		SigFormat:    blockchyp.SignatureFormat(args.SigFormat),
 		SigWidth:     args.SigWidth,
+		Test:         args.Test,
 	})
 	if err != nil {
 		handleError(&args, err)
@@ -418,10 +548,12 @@ func processCaptureSignature(client *blockchyp.Client, args blockchyp.CommandLin
 func processBalance(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TerminalName, "terminal")
 
-	request := blockchyp.BalanceRequest{}
-	request.TerminalName = args.TerminalName
-	request.ManualEntry = args.ManualEntry
-	request.Test = args.Test
+	request := blockchyp.BalanceRequest{
+		ManualEntry:  args.ManualEntry,
+		TerminalName: args.TerminalName,
+		Test:         args.Test,
+		Timeout:      args.Timeout,
+	}
 
 	if args.Debit {
 		request.CardType = blockchyp.CardTypeDebit
@@ -441,12 +573,14 @@ func processBalance(client *blockchyp.Client, args blockchyp.CommandLineArgument
 func processCashDiscount(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.Amount, "amount")
 
-	request := blockchyp.CashDiscountRequest{}
-	request.Amount = args.Amount
-	request.CurrencyCode = args.CurrencyCode
-	request.Test = args.Test
-	request.Surcharge = args.Surcharge
-	request.CashDiscount = args.CashDiscount
+	request := blockchyp.CashDiscountRequest{
+		Amount:       args.Amount,
+		CashDiscount: args.CashDiscount,
+		CurrencyCode: args.CurrencyCode,
+		Surcharge:    args.Surcharge,
+		Test:         args.Test,
+		Timeout:      args.Timeout,
+	}
 
 	response, err := client.CashDiscount(request)
 	if err != nil {
@@ -460,8 +594,11 @@ func processCashDiscount(client *blockchyp.Client, args blockchyp.CommandLineArg
 func processClear(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TerminalName, "terminal")
 
-	request := blockchyp.ClearTerminalRequest{}
-	request.TerminalName = args.TerminalName
+	request := blockchyp.ClearTerminalRequest{
+		TerminalName: args.TerminalName,
+		Timeout:      args.Timeout,
+		Test:         args.Test,
+	}
 
 	ack, err := client.Clear(request)
 	if err != nil {
@@ -475,19 +612,21 @@ func processClear(client *blockchyp.Client, args blockchyp.CommandLineArguments)
 func processTermsAndConditions(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TerminalName, "terminal")
 
-	request := blockchyp.TermsAndConditionsRequest{}
-	request.TerminalName = args.TerminalName
-	request.Timeout = args.Timeout
-	request.TCAlias = args.TCAlias
-	request.TCName = args.TCName
-	request.TCContent = args.TCContent
-	request.TransactionID = args.TransactionID
-	request.TransactionRef = args.TransactionRef
-	request.SigRequired = args.SigRequired
-	request.SigWidth = args.SigWidth
-	request.SigFile = args.SigFile
-	request.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
-	request.DisableSignature = args.DisableSignature
+	request := blockchyp.TermsAndConditionsRequest{
+		DisableSignature: args.DisableSignature,
+		SigFile:          args.SigFile,
+		SigFormat:        blockchyp.SignatureFormat(args.SigFormat),
+		SigRequired:      args.SigRequired,
+		SigWidth:         args.SigWidth,
+		TCAlias:          args.TCAlias,
+		TCContent:        args.TCContent,
+		TCName:           args.TCName,
+		TerminalName:     args.TerminalName,
+		Timeout:          args.Timeout,
+		TransactionID:    args.TransactionID,
+		TransactionRef:   args.TransactionRef,
+		Test:             args.Test,
+	}
 
 	ack, err := client.TermsAndConditions(request)
 	if err != nil {
@@ -564,9 +703,12 @@ func assembleDisplayTransaction(args blockchyp.CommandLineArguments) *blockchyp.
 func processDisplay(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TerminalName, "terminal")
 
-	request := blockchyp.TransactionDisplayRequest{}
-	request.TerminalName = args.TerminalName
-	request.Transaction = assembleDisplayTransaction(args)
+	request := blockchyp.TransactionDisplayRequest{
+		TerminalName: args.TerminalName,
+		Transaction:  assembleDisplayTransaction(args),
+		Timeout:      args.Timeout,
+		Test:         args.Test,
+	}
 
 	ack, err := client.UpdateTransactionDisplay(request)
 	if err != nil {
@@ -581,10 +723,12 @@ func processMessage(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	validateRequired(args.Message, "message")
 	validateRequired(args.TerminalName, "terminal")
 
-	req := blockchyp.MessageRequest{}
-	req.Message = args.Message
-	req.TerminalName = args.TerminalName
-	req.Test = args.Test
+	req := blockchyp.MessageRequest{
+		Message:      args.Message,
+		TerminalName: args.TerminalName,
+		Test:         args.Test,
+		Timeout:      args.Timeout,
+	}
 
 	res, err := client.Message(req)
 	if err != nil {
@@ -598,12 +742,14 @@ func processBooleanPrompt(client *blockchyp.Client, args blockchyp.CommandLineAr
 	validateRequired(args.Prompt, "prompt")
 	validateRequired(args.TerminalName, "terminal")
 
-	req := blockchyp.BooleanPromptRequest{}
-	req.Prompt = args.Prompt
-	req.TerminalName = args.TerminalName
-	req.YesCaption = args.YesCaption
-	req.NoCaption = args.NoCaption
-	req.Test = args.Test
+	req := blockchyp.BooleanPromptRequest{
+		NoCaption:    args.NoCaption,
+		Prompt:       args.Prompt,
+		TerminalName: args.TerminalName,
+		Test:         args.Test,
+		Timeout:      args.Timeout,
+		YesCaption:   args.YesCaption,
+	}
 
 	res, err := client.BooleanPrompt(req)
 	if err != nil {
@@ -617,10 +763,12 @@ func processTextPrompt(client *blockchyp.Client, args blockchyp.CommandLineArgum
 	validateRequired(args.PromptType, "promptType")
 	validateRequired(args.TerminalName, "terminal")
 
-	req := blockchyp.TextPromptRequest{}
-	req.PromptType = blockchyp.PromptType(args.PromptType)
-	req.TerminalName = args.TerminalName
-	req.Test = args.Test
+	req := blockchyp.TextPromptRequest{
+		PromptType:   blockchyp.PromptType(args.PromptType),
+		TerminalName: args.TerminalName,
+		Test:         args.Test,
+		Timeout:      args.Timeout,
+	}
 
 	res, err := client.TextPrompt(req)
 	if err != nil {
@@ -632,14 +780,22 @@ func processTextPrompt(client *blockchyp.Client, args blockchyp.CommandLineArgum
 
 func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
-	req := blockchyp.RefundRequest{}
-	req.TransactionRef = args.TransactionRef
-	req.TransactionID = args.TransactionID
-	req.Amount = args.Amount
-	req.TerminalName = args.TerminalName
-	req.Token = args.Token
-	req.PostalCode = args.PostalCode
-	req.Address = args.Address
+	req := blockchyp.RefundRequest{
+		Address:          args.Address,
+		Amount:           args.Amount,
+		DisableSignature: args.DisableSignature,
+		ManualEntry:      args.ManualEntry,
+		PostalCode:       args.PostalCode,
+		SigFile:          args.SigFile,
+		SigFormat:        blockchyp.SignatureFormat(args.SigFormat),
+		SigWidth:         args.SigWidth,
+		TerminalName:     args.TerminalName,
+		Test:             args.Test,
+		Timeout:          args.Timeout,
+		Token:            args.Token,
+		TransactionID:    args.TransactionID,
+		TransactionRef:   args.TransactionRef,
+	}
 
 	if args.Debit {
 		req.CardType = blockchyp.CardTypeDebit
@@ -648,13 +804,6 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 		// EBT free range refunds are not permitted.
 		req.TerminalName = args.TerminalName
 	}
-
-	req.Test = args.Test
-	req.ManualEntry = args.ManualEntry
-	req.SigWidth = args.SigWidth
-	req.SigFile = args.SigFile
-	req.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
-	req.DisableSignature = args.DisableSignature
 
 	res, err := client.Refund(req)
 
@@ -667,10 +816,12 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 
 func processReverse(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TransactionRef, "txRef")
-	req := blockchyp.AuthorizationRequest{}
-	req.TransactionRef = args.TransactionRef
-	req.Test = args.Test
-	req.ManualEntry = args.ManualEntry
+	req := blockchyp.AuthorizationRequest{
+		ManualEntry:    args.ManualEntry,
+		Test:           args.Test,
+		Timeout:        args.Timeout,
+		TransactionRef: args.TransactionRef,
+	}
 
 	if args.Debit {
 		req.CardType = blockchyp.CardTypeDebit
@@ -688,9 +839,11 @@ func processReverse(client *blockchyp.Client, args blockchyp.CommandLineArgument
 
 func processCloseBatch(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
-	req := blockchyp.CloseBatchRequest{}
-	req.TransactionRef = args.TransactionRef
-	req.Test = args.Test
+	req := blockchyp.CloseBatchRequest{
+		Test:           args.Test,
+		Timeout:        args.Timeout,
+		TransactionRef: args.TransactionRef,
+	}
 
 	res, err := client.CloseBatch(req)
 
@@ -702,10 +855,12 @@ func processCloseBatch(client *blockchyp.Client, args blockchyp.CommandLineArgum
 
 func processVoid(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TransactionID, "tx")
-	req := blockchyp.VoidRequest{}
-	req.TransactionRef = args.TransactionRef
-	req.TransactionID = args.TransactionID
-	req.Test = args.Test
+	req := blockchyp.VoidRequest{
+		Test:           args.Test,
+		Timeout:        args.Timeout,
+		TransactionID:  args.TransactionID,
+		TransactionRef: args.TransactionRef,
+	}
 
 	res, err := client.Void(req)
 
@@ -717,13 +872,15 @@ func processVoid(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 
 func processCapture(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TransactionID, "tx")
-	req := blockchyp.CaptureRequest{}
-	req.TransactionRef = args.TransactionRef
-	req.Amount = args.Amount
-	req.TransactionID = args.TransactionID
-	req.TipAmount = args.TipAmount
-	req.TaxAmount = args.TaxAmount
-	req.Test = args.Test
+	req := blockchyp.CaptureRequest{
+		Amount:         args.Amount,
+		TaxAmount:      args.TaxAmount,
+		Test:           args.Test,
+		Timeout:        args.Timeout,
+		TipAmount:      args.TipAmount,
+		TransactionID:  args.TransactionID,
+		TransactionRef: args.TransactionRef,
+	}
 
 	res, err := client.Capture(req)
 
@@ -736,11 +893,13 @@ func processCapture(client *blockchyp.Client, args blockchyp.CommandLineArgument
 func processGiftActivate(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.Amount, "amount")
 	validateRequired(args.TerminalName, "terminal")
-	req := blockchyp.GiftActivateRequest{}
-	req.TerminalName = args.TerminalName
-	req.TransactionRef = args.TransactionRef
-	req.Amount = args.Amount
-	req.Test = args.Test
+	req := blockchyp.GiftActivateRequest{
+		Amount:         args.Amount,
+		TerminalName:   args.TerminalName,
+		Test:           args.Test,
+		Timeout:        args.Timeout,
+		TransactionRef: args.TransactionRef,
+	}
 
 	res, err := client.GiftActivate(req)
 
@@ -790,16 +949,18 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	if (args.TerminalName == "") && (args.Token == "") && (args.PAN == "") {
 		fatalError("-terminal or -token requred")
 	}
-	req := blockchyp.EnrollRequest{}
-	req.TerminalName = args.TerminalName
-	req.TransactionRef = args.TransactionRef
-	req.Test = args.Test
-	req.ManualEntry = args.ManualEntry
-	req.PAN = args.PAN
-	req.ExpMonth = args.ExpiryMonth
-	req.ExpYear = args.ExpiryYear
-	req.PostalCode = args.PostalCode
-	req.Address = args.Address
+	req := blockchyp.EnrollRequest{
+		Address:        args.Address,
+		ExpMonth:       args.ExpiryMonth,
+		ExpYear:        args.ExpiryYear,
+		ManualEntry:    args.ManualEntry,
+		PAN:            args.PAN,
+		PostalCode:     args.PostalCode,
+		TerminalName:   args.TerminalName,
+		Test:           args.Test,
+		Timeout:        args.Timeout,
+		TransactionRef: args.TransactionRef,
+	}
 	if hasCustomerFields(args) {
 		req.Customer = populateCustomer(args)
 	}
@@ -818,30 +979,36 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	if (args.TerminalName == "") && (args.Token == "") && (args.PAN == "") {
 		fatalError("-terminal or -token requred")
 	}
-	req := blockchyp.AuthorizationRequest{}
-	req.TerminalName = args.TerminalName
-	req.TransactionRef = args.TransactionRef
-	req.Token = args.Token
-	req.PAN = args.PAN
-	req.ExpMonth = args.ExpiryMonth
-	req.ExpYear = args.ExpiryYear
-	req.Description = args.Description
-	req.Amount = args.Amount
-	req.PromptForTip = args.PromptForTip
-	req.TaxAmount = args.TaxAmount
-	req.TipAmount = args.TipAmount
-	req.Test = args.Test
-	req.Enroll = args.Enroll
-	req.ManualEntry = args.ManualEntry
-	req.SigWidth = args.SigWidth
-	req.SigFile = args.SigFile
-	req.SigFormat = blockchyp.SignatureFormat(args.SigFormat)
-	req.DisableSignature = args.DisableSignature
-	req.CashBackEnabled = args.CashBackEnabled
-	req.Surcharge = args.Surcharge
-	req.CashDiscount = args.CashDiscount
-	req.PostalCode = args.PostalCode
-	req.Address = args.Address
+
+	req := blockchyp.AuthorizationRequest{
+		Address:          args.Address,
+		Amount:           args.Amount,
+		Async:            args.Async,
+		CashBackEnabled:  args.CashBackEnabled,
+		CashDiscount:     args.CashDiscount,
+		Description:      args.Description,
+		DisableSignature: args.DisableSignature,
+		Enroll:           args.Enroll,
+		ExpMonth:         args.ExpiryMonth,
+		ExpYear:          args.ExpiryYear,
+		ManualEntry:      args.ManualEntry,
+		OrderRef:         args.OrderRef,
+		PAN:              args.PAN,
+		PostalCode:       args.PostalCode,
+		PromptForTip:     args.PromptForTip,
+		Queue:            args.Queue,
+		SigFile:          args.SigFile,
+		SigFormat:        blockchyp.SignatureFormat(args.SigFormat),
+		SigWidth:         args.SigWidth,
+		Surcharge:        args.Surcharge,
+		TaxAmount:        args.TaxAmount,
+		TerminalName:     args.TerminalName,
+		Test:             args.Test,
+		Timeout:          args.Timeout,
+		TipAmount:        args.TipAmount,
+		Token:            args.Token,
+		TransactionRef:   args.TransactionRef,
+	}
 
 	if args.Debit {
 		req.CardType = blockchyp.CardTypeDebit
@@ -871,12 +1038,33 @@ func processPing(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	validateRequired(args.TerminalName, "terminal")
 	req := blockchyp.PingRequest{
 		TerminalName: args.TerminalName,
+		Timeout:      args.Timeout,
 	}
 	res, err := client.Ping(req)
 	if err != nil {
 		handleError(&args, err)
 	}
 	dumpResponse(&args, res)
+}
+
+func parseTimestamp(ts string) (time.Time, error) {
+
+	parsedResult, err := parseTimestampWithFormat(ts, time.RFC3339)
+	if err == nil {
+		return parsedResult, nil
+	}
+	parsedResult, err = parseTimestampWithFormat(ts, ShortDateFormat)
+	if err == nil {
+		return parsedResult, nil
+	}
+	return parseTimestampWithFormat(ts, HTMLDateFormat)
+
+}
+
+func parseTimestampWithFormat(ts string, format string) (time.Time, error) {
+
+	return time.Parse(format, ts)
+
 }
 
 func validateRequired(value string, arg string) {
@@ -904,8 +1092,9 @@ func dumpResponse(args *blockchyp.CommandLineArguments, res interface{}) {
 
 func handleError(args *blockchyp.CommandLineArguments, err error) {
 
-	ack := blockchyp.Acknowledgement{}
-	ack.Error = err.Error()
+	ack := blockchyp.Acknowledgement{
+		Error: err.Error(),
+	}
 	dumpResponse(args, ack)
 	handleFatal()
 

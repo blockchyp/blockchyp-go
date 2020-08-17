@@ -7,7 +7,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func refundExample() {
+func merchantProfileExample() {
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -19,22 +19,17 @@ func refundExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.RefundRequest{
-		TransactionID: "<PREVIOUS TRANSACTION ID>",
+	request := blockchyp.MerchantProfileRequest{}
 
-		// Optional amount for partial refunds.
-		Amount: "5.00",
-	}
-
-	response, err := client.Refund(request)
+	response, err := client.MerchantProfile(request)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	//process the result
-	if response.Approved {
-		fmt.Println("approved")
+	if response.Success {
+		fmt.Println("Success")
 	}
 
 	fmt.Printf("Response: %+v\n", response)
