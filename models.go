@@ -159,9 +159,8 @@ type Acknowledgement struct {
 
 // CaptureSignatureRequest contains a request for customer signature data.
 type CaptureSignatureRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -226,9 +225,8 @@ type CaptureSignatureResponse struct {
 // PingRequest contains information needed to test connectivity with a
 // terminal.
 type PingRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -303,9 +301,8 @@ type PingResponse struct {
 
 // MessageRequest contains a message to be displayed on the terminal screen.
 type MessageRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -339,9 +336,8 @@ type MessageRequest struct {
 
 // BooleanPromptRequest contains a simple yes no prompt request.
 type BooleanPromptRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -381,9 +377,8 @@ type BooleanPromptRequest struct {
 
 // TextPromptRequest contains a text prompt request.
 type TextPromptRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -417,9 +412,8 @@ type TextPromptRequest struct {
 
 // CustomerRequest models a customer data request.
 type CustomerRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -470,9 +464,8 @@ type CustomerResponse struct {
 
 // CustomerSearchRequest models a customer data search request.
 type CustomerSearchRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -503,9 +496,8 @@ type CustomerSearchRequest struct {
 
 // UpdateCustomerRequest models a customer data search request.
 type UpdateCustomerRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -646,9 +638,8 @@ type WhiteListedCard struct {
 // AuthorizationRequest contains an authorization request for a charge,
 // preauth, or reverse transaction.
 type AuthorizationRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -820,9 +811,8 @@ type AuthorizationRequest struct {
 // BalanceRequest contains a request for the remaining balance on a payment
 // type.
 type BalanceRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -988,9 +978,8 @@ type BalanceResponse struct {
 
 // RefundRequest contains a refund request.
 type RefundRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -1137,9 +1126,8 @@ type RefundRequest struct {
 
 // CaptureRequest contains the information needed to capture a preauth.
 type CaptureRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -1333,9 +1321,8 @@ type CaptureResponse struct {
 
 // VoidRequest contains a void request.
 type VoidRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -1454,9 +1441,8 @@ type VoidResponse struct {
 // EnrollRequest contains the information needed to enroll a new payment
 // method in the token vault.
 type EnrollRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -1636,9 +1622,8 @@ type EnrollResponse struct {
 // ClearTerminalRequest contains the information needed to enroll a new
 // payment method in the token vault.
 type ClearTerminalRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -1670,9 +1655,8 @@ type ClearTerminalRequest struct {
 // GiftActivateRequest contains the information needed to activate or recharge
 // a gift card.
 type GiftActivateRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -1784,9 +1768,8 @@ type GiftActivateResponse struct {
 // CloseBatchRequest contains the information needed to manually close a
 // credit card batch.
 type CloseBatchRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -1866,9 +1849,8 @@ type CloseBatchResponse struct {
 // TermsAndConditionsRequest contains the fields needed for custom Terms and
 // Conditions prompts.
 type TermsAndConditionsRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -2116,9 +2098,8 @@ type AuthorizationResponse struct {
 // TransactionStatusRequest models the request for updated information about a
 // transaction.
 type TransactionStatusRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -2332,9 +2313,8 @@ type TransactionDisplayTransaction struct {
 // TransactionDisplayRequest is used to start or update a transaction line
 // item display on a terminal.
 type TransactionDisplayRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -2398,9 +2378,8 @@ type HeartbeatResponse struct {
 
 // TerminalStatusRequest contains a request for the status of a terminal.
 type TerminalStatusRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -2457,9 +2436,8 @@ type TerminalStatusResponse struct {
 
 // PaymentLinkRequest creates a payment link.
 type PaymentLinkRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -2570,9 +2548,8 @@ type PaymentLinkResponse struct {
 // CashDiscountRequest computes the cash discount for a cash discount if
 // enabled.
 type CashDiscountRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -2649,9 +2626,8 @@ type CashDiscountResponse struct {
 
 // TransactionHistoryRequest models a batch history request.
 type TransactionHistoryRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -2738,9 +2714,8 @@ type TransactionHistoryResponse struct {
 
 // BatchHistoryRequest models a batch history request.
 type BatchHistoryRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -2847,9 +2822,8 @@ type BatchSummary struct {
 
 // BatchDetailsRequest models a request for details about a single batch.
 type BatchDetailsRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -2959,9 +2933,8 @@ type TerminalVolume struct {
 // MerchantProfileRequest models a request for information about the merchant
 // profile.
 type MerchantProfileRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// Async defers the response to the transaction and returns immediately.
@@ -3267,9 +3240,8 @@ func (r ApprovalResponse) From(raw interface{}) (result ApprovalResponse, ok boo
 
 // CoreRequest contains core request fields for a transaction.
 type CoreRequest struct {
-	// TransactionRef is the transaction reference string assigned to the
-	// transaction request. If no transaction ref was assiged on the request,
-	// then the gateway will randomly generate one.
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
 	TransactionRef string
 
 	// Async defers the response to the transaction and returns immediately.
