@@ -2359,6 +2359,7 @@ Change these settings:
 
 * Enable partial auth
 * Enable PINs
+* Enable Missing Signature Reversal
 * Enable cash back
 * Enable JCB and Union Pay
 * Whitelist the BIN range for a chosen MSR test card
