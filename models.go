@@ -2490,6 +2490,10 @@ type PaymentLinkRequest struct {
 	// vault alongside the authorization.
 	Enroll bool `json:"enroll,omitempty"`
 
+	// EnrollOnly indicates that the link should be used to enroll a token only.
+	// Can only be used in cashier mode.
+	EnrollOnly bool `json:"enrollOnly,omitempty"`
+
 	// Cashier flags the payment link as cashier facing.
 	Cashier bool `json:"cashier"`
 

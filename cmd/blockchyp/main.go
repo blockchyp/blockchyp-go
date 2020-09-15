@@ -106,6 +106,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.IntVar(&args.Timeout, "timeout", 120, "overrides default timeouts for terminal interaction")
 	flag.BoolVar(&args.CashBackEnabled, "cashback", false, "enables cash back transactions")
 	flag.BoolVar(&args.Enroll, "enroll", false, "enroll the payment in the token vault")
+	flag.BoolVar(&args.EnrollOnly, "enrollOnly", false, "use to make a cashier facing payment link enroll only")
 	flag.BoolVar(&args.DisableSignature, "disableSignature", false, "prevent terminal from prompting for signatures")
 	flag.StringVar(&args.CustomerID, "customerId", "", "customer id for existing customer record")
 	flag.StringVar(&args.CustomerRef, "customerRef", "", "customer reference")
@@ -439,6 +440,11 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 		TCContent:      args.TCContent,
 		Cashier:        args.Cashier,
 		Enroll:         args.Enroll,
+		EnrollOnly:     args.EnrollOnly,
+	}
+
+	if args.EnrollOnly {
+		request.Enroll = true
 	}
 
 	ack, err := client.SendPaymentLink(request)

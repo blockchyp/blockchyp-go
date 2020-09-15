@@ -76,6 +76,7 @@ type CommandLineArguments struct {
 	SigRequired                 bool   `arg:"sigRequired"`
 	CashBackEnabled             bool   `arg:"cashback"`
 	Enroll                      bool   `arg:"enroll"`
+	EnrollOnly                  bool   `arg:"enrollOnly"`
 	DisableSignature            bool   `arg:"disableSignature"`
 	CustomerID                  string `arg:"customerId"`
 	CustomerRef                 string `arg:"customerRef"`
