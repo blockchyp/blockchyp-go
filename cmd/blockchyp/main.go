@@ -415,8 +415,10 @@ func processTransactionStatus(client *blockchyp.Client, args blockchyp.CommandLi
 
 func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
-	validateRequired(args.OrderRef, "orderRef")
-	validateRequired(args.Amount, "amount")
+	if !args.EnrollOnly {
+		validateRequired(args.OrderRef, "orderRef")
+		validateRequired(args.Amount, "amount")
+	}
 
 	if !args.Cashier && !hasCustomerFields(args) {
 		fatalErrorf("customer fields (-customerId, -email, etc ) are required")
