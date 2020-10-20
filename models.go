@@ -1910,6 +1910,10 @@ type TermsAndConditionsRequest struct {
 	// presented to the user.
 	TCContent string `json:"tcContent"`
 
+	// ContentHash is a hash of the terms and conditions content that can be used
+	// for caching.
+	ContentHash string `json:"contentHash"`
+
 	// SigRequired indicates that a signature should be requested.
 	SigRequired bool `json:"sigRequired"`
 }
