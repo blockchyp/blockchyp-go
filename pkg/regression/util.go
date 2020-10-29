@@ -1,5 +1,3 @@
-// +build regression
-
 package regression
 
 import (
@@ -22,6 +20,7 @@ func init() {
 }
 
 func randomStr() string {
+	rand.Seed(time.Now().UnixNano())
 	const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 	b := make([]byte, 24)
@@ -33,6 +32,7 @@ func randomStr() string {
 }
 
 func randomSMSNum() string {
+	rand.Seed(time.Now().UnixNano())
 	const charset = "0123456789"
 
 	b := make([]byte, 10)
@@ -318,3 +318,15 @@ func showInBrowser(path string) {
 		panic(err)
 	}
 }
+
+type testGroup uint8
+
+// The order that tests will be grouped in.
+const (
+	testGroupNonInteractive testGroup = iota + 1
+	testGroupNoCVM
+	testGroupSignature
+	testGroupMSR
+	testGroupDebit
+	testGroupInteractive
+)

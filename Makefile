@@ -87,7 +87,7 @@ integration:
 regression:
 	rm -rf /tmp/blockchyp-regression-test
 	mkdir -p /tmp/blockchyp-regression-test
-	$(GO) test -timeout=0 $(TESTFLAGS) $(if $(TEST), -run=$(TEST),) -tags=regression github.com/blockchyp/blockchyp-go/pkg/regression
+	$(GO) run ./scripts/regression-test $(if $(TEST), -run=$(TEST),)
 
 # Performs any tasks necessary before a release build
 .PHONY: stage

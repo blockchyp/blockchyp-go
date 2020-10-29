@@ -1,54 +1,47 @@
-// +build regression
-
 package regression
 
 import (
-	"testing"
-
 	"github.com/blockchyp/blockchyp-go"
 )
 
-func TestAsync(t *testing.T) {
-	tests := map[string]struct {
-		args       []interface{}
-		assert     []interface{}
-		validation validation
-		txRef      string
-	}{
-		"AsyncCharge": {
-			args: []interface{}{
-				"Insert an EMV test card when prompted",
-				[]string{
+var asyncTests = testCases{
+	{
+		name:  "Async/AsyncCharge",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
-					"-async", "-txRef",
+					"-async", "-txRef", newTxRef,
 				},
-				[]string{
-					"-type", "tx-status",
-					"-txRef",
-				},
-				"Complete the transaction before continuing",
-				[]string{
-					"-type", "tx-status",
-					"-txRef",
-				},
-			},
-			assert: []interface{}{
-				nil,
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
 					Approved:            false,
 					Test:                true,
 					ResponseDescription: "Accepted",
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "tx-status",
+					"-txRef", txRefN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
 					Approved:            false,
 					Test:                true,
 					ResponseDescription: "PENDING",
 				},
-				nil,
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				msg: "Complete the transaction before continuing",
+				args: []string{
+					"-type", "tx-status",
+					"-txRef", txRefN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -76,40 +69,44 @@ func TestAsync(t *testing.T) {
 				},
 			},
 		},
-		"AsyncPreauth": {
-			args: []interface{}{
-				"Insert an EMV test card when prompted",
-				[]string{
+	},
+	{
+		name:  "Async/AsyncPreauth",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted",
+				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
-					"-async", "-txRef",
+					"-async", "-txRef", newTxRef,
 				},
-				[]string{
-					"-type", "tx-status",
-					"-txRef",
-				},
-				"Complete the transaction before continuing",
-				[]string{
-					"-type", "tx-status",
-					"-txRef",
-				},
-			},
-			assert: []interface{}{
-				nil,
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
 					Approved:            false,
 					Test:                true,
 					ResponseDescription: "Accepted",
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "tx-status",
+					"-txRef", txRefN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
 					Approved:            false,
 					Test:                true,
 					ResponseDescription: "PENDING",
 				},
-				nil,
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				msg: "Complete the transaction before continuing",
+				args: []string{
+					"-type", "tx-status",
+					"-txRef", txRefN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -137,94 +134,108 @@ func TestAsync(t *testing.T) {
 				},
 			},
 		},
-		"QueueCharge": {
-			args: []interface{}{
-				[]string{
+	},
+	{
+		name:  "Async/QueueCharge",
+		group: testGroupInteractive,
+		operations: []operation{
+			{
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
-					"-queue", "-desc", "Test Ticket", "-txRef",
+					"-queue", "-desc", "Test Ticket", "-txRef", newTxRef,
 				},
-				[]string{
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
+				},
+			},
+			{
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(1),
 					"-queue", "-desc", "Dummy #1", "-txRef", "placeholder",
 				},
-				[]string{
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
+				},
+			},
+			{
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(2),
 					"-queue", "-desc", "Dummy #2", "-txRef", "placeholder",
 				},
-				[]string{
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
+				},
+			},
+			{
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(3),
 					"-queue", "-desc", "Dummy #3", "-txRef", "placeholder",
 				},
-				[]string{
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
+				},
+			},
+			{
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(4),
 					"-queue", "-desc", "Dummy #4", "-txRef", "placeholder",
 				},
-				[]string{
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
+				},
+			},
+			{
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(5),
 					"-queue", "-desc", "Dummy #5", "-txRef", "placeholder",
 				},
-				[]string{
-					"-type", "tx-status",
-					"-txRef",
-				},
-				"Select the ticket labeled 'Test Ticket` and insert an EMV test card when prompted.",
-				[]string{
-					"-type", "tx-status",
-					"-txRef",
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
 				},
 			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "Queued",
+			{
+				args: []string{
+					"-type", "tx-status",
+					"-txRef", txRefN(0),
 				},
-				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "Queued",
-				},
-				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "Queued",
-				},
-				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "Queued",
-				},
-				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "Queued",
-				},
-				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "Queued",
-				},
-
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
 					Approved:            false,
 					Test:                true,
 					ResponseDescription: "PENDING",
 				},
-				nil,
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				msg: "Select the ticket labeled 'Test Ticket` and insert an EMV test card when prompted.",
+				args: []string{
+					"-type", "tx-status",
+					"-txRef", txRefN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -252,94 +263,108 @@ func TestAsync(t *testing.T) {
 				},
 			},
 		},
-		"QueuePreauth": {
-			args: []interface{}{
-				[]string{
+	},
+	{
+		name:  "Async/QueuePreauth",
+		group: testGroupInteractive,
+		operations: []operation{
+			{
+				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
-					"-queue", "-desc", "Test Ticket", "-txRef",
+					"-queue", "-desc", "Test Ticket", "-txRef", newTxRef,
 				},
-				[]string{
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
+				},
+			},
+			{
+				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(1),
 					"-queue", "-desc", "Dummy #1", "-txRef", "placeholder",
 				},
-				[]string{
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
+				},
+			},
+			{
+				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(2),
 					"-queue", "-desc", "Dummy #2", "-txRef", "placeholder",
 				},
-				[]string{
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
+				},
+			},
+			{
+				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(3),
 					"-queue", "-desc", "Dummy #3", "-txRef", "placeholder",
 				},
-				[]string{
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
+				},
+			},
+			{
+				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(4),
 					"-queue", "-desc", "Dummy #4", "-txRef", "placeholder",
 				},
-				[]string{
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
+				},
+			},
+			{
+				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(5),
 					"-queue", "-desc", "Dummy #5", "-txRef", "placeholder",
 				},
-				[]string{
-					"-type", "tx-status",
-					"-txRef",
-				},
-				"Select the ticket labeled 'Test Ticket` and insert an EMV test card when prompted.",
-				[]string{
-					"-type", "tx-status",
-					"-txRef",
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
 				},
 			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "Queued",
+			{
+				args: []string{
+					"-type", "tx-status",
+					"-txRef", txRefN(0),
 				},
-				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "Queued",
-				},
-				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "Queued",
-				},
-				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "Queued",
-				},
-				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "Queued",
-				},
-				blockchyp.AuthorizationResponse{
-					Success:             true,
-					Approved:            false,
-					Test:                true,
-					ResponseDescription: "Queued",
-				},
-
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
 					Approved:            false,
 					Test:                true,
 					ResponseDescription: "PENDING",
 				},
-				nil,
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				msg: "Select the ticket labeled 'Test Ticket` and insert an EMV test card when prompted.",
+				args: []string{
+					"-type", "tx-status",
+					"-txRef", txRefN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -367,38 +392,5 @@ func TestAsync(t *testing.T) {
 				},
 			},
 		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			cli := newCLI(t)
-
-			if test.txRef == "" {
-				test.txRef = randomStr()
-			}
-
-			for i := range test.args {
-				args, ok := test.args[i].([]string)
-				if !ok {
-					continue
-				}
-				if args[len(args)-1] == "-txRef" {
-					test.args[i] = append(args, test.txRef)
-				}
-			}
-
-			for i := range test.args {
-				switch v := test.args[i].(type) {
-				case string:
-					setup(t, v, true)
-				case func(*testing.T):
-					v(t)
-				case []string:
-					cli.run(v, test.assert[i])
-				}
-			}
-
-			validate(t, test.validation)
-		})
-	}
+	},
 }

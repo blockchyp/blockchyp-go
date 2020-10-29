@@ -1,91 +1,84 @@
-// +build regression
-
 package regression
 
 import (
-	"testing"
-
 	"github.com/blockchyp/blockchyp-go"
 )
 
-func TestRefund(t *testing.T) {
-	tests := map[string]struct {
-		instructions string
-		args         [][]string
-		assert       []interface{}
-		txID         string
-		validation   validation
-
-		// localOnly causes tests to be skipped when running in cloud relay
-		// mode.
-		localOnly bool
-
-		// simOnly causes tests to be skipped when running in acquirer mode.
-		simOnly bool
-	}{
-		"Charge": {
-			instructions: "Insert an EMV test card when prompted.",
-			args: [][]string{
-				{
+var refundTests = testCases{
+	{
+		name:  "Refund/Charge",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
-				{
-					"-type", "refund", "-test",
-					"-tx",
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "charge",
 					AuthorizedAmount: amount(0),
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "refund", "-test",
+					"-tx", txIDN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
-					TransactionType:  "refund",
+					TransactionType:  "void", // Same-day refund processed as void
 					AuthorizedAmount: amount(0),
 				},
 			},
 		},
-		"Partial": {
-			instructions: "Insert an EMV test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Refund/Partial",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amountRange(0, 501, 999),
 				},
-				{
-					"-type", "refund", "-test",
-					"-amount", "5.00",
-					"-tx",
-				},
-				{
-					"-type", "refund", "-test",
-					"-amount", "10.00",
-					"-tx",
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "charge",
 					AuthorizedAmount: amount(0),
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
+					"-type", "refund", "-test",
+					"-amount", "5.00",
+					"-tx", txIDN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "refund",
 					AuthorizedAmount: "5.00",
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
+					"-type", "refund", "-test",
+					"-amount", "10.00",
+					"-tx", txIDN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
 					Approved:            false,
 					Test:                true,
@@ -95,28 +88,32 @@ func TestRefund(t *testing.T) {
 				},
 			},
 		},
-		"Excess": {
-			instructions: "Insert an EMV test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Refund/Excess",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amountRange(0, 500, 1000),
 				},
-				{
-					"-type", "refund", "-test",
-					"-amount", amountRange(1, 1001, 2000),
-					"-tx",
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
 					TransactionType:  "charge",
 					AuthorizedAmount: amount(0),
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "refund", "-test",
+					"-amount", amountRange(1, 1001, 2000),
+					"-tx", txIDN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
 					Approved:            false,
 					Test:                true,
@@ -126,18 +123,20 @@ func TestRefund(t *testing.T) {
 				},
 			},
 		},
-		"SF": {
-			simOnly:      true,
-			localOnly:    true,
-			instructions: "Insert an EMV test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Refund/SF",
+		group: testGroupNoCVM,
+		sim:   true,
+		local: true,
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
 					"-type", "refund", "-terminal", terminalName, "-test",
 					"-amount", "7.77",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          false,
 					Approved:         false,
 					Test:             true,
@@ -147,39 +146,39 @@ func TestRefund(t *testing.T) {
 				},
 			},
 		},
-		"BadCredentials": {
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Refund/BadCredentials",
+		group: testGroupNonInteractive,
+		operations: []operation{
+			{
+				args: []string{
 					"-type", "refund", "-test",
 					"-tx", "OFE3TTQFJ4I6TNTUNSLM7WZLHE",
 					"-apiKey", "X6N2KIQEWYI6TCADNSLM7WZLHE",
 					"-bearerToken", "RIKLAPSMSMG2YII27N2NPAMCS5",
 					"-signingKey", "4b556bc4e73ffc86fc5f8bfbba1598e7a8cd91f44fd7072d070c92fae7f48cd9",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:  false,
 					Approved: false,
 				},
 			},
 		},
-		"EMVFreeRange": {
-			instructions: `Insert an EMV test card when prompted.
+	},
+	{
+		name:  "Refund/EMVFreeRange",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: `Insert an EMV test card when prompted.
 
 Leave the card in the terminal until the test completes.`,
-			args: [][]string{
-				{
+				args: []string{
 					"-type", "refund", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
-				{
-					"-type", "refund", "-terminal", terminalName, "-test",
-					"-amount", amount(0),
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -188,7 +187,13 @@ Leave the card in the terminal until the test completes.`,
 					AuthorizedAmount: amount(0),
 					EntryMethod:      "CHIP",
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "refund", "-terminal", terminalName, "-test",
+					"-amount", amount(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
 					Approved:            false,
 					Test:                true,
@@ -200,19 +205,21 @@ Leave the card in the terminal until the test completes.`,
 				},
 			},
 		},
-		"SignatureInResponse": {
-			simOnly:      true,
-			instructions: "Insert a signature CVM test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Refund/SignatureInResponse",
+		group: testGroupSignature,
+		sim:   true,
+		operations: []operation{
+			{
+				msg: "Insert a signature CVM test card when prompted.",
+				args: []string{
 					"-type", "refund", "-terminal", terminalName,
 					"-test", "-amount", amount(0),
 					"-sigFormat", blockchyp.SignatureFormatJPG,
 					"-sigWidth", "50",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:  true,
 					Approved: true,
 					Test:     true,
@@ -220,42 +227,48 @@ Leave the card in the terminal until the test completes.`,
 				},
 			},
 		},
-		"SignatureInFile": {
-			simOnly:      true,
-			instructions: "Insert a signature CVM test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Refund/SignatureInFile",
+		group: testGroupSignature,
+		sim:   true,
+		operations: []operation{
+			{
+				msg: "Insert a signature CVM test card when prompted.",
+				args: []string{
 					"-type", "refund", "-terminal", terminalName,
 					"-test", "-amount", amount(0),
 					"-sigWidth", "400", "-sigFile", "/tmp/blockchyp-regression-test/sig.jpg",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:  true,
 					Approved: true,
 					Test:     true,
 				},
 			},
-			validation: validation{
-				prompt: "Does the signature appear valid in the browser?",
-				serve:  "/tmp/blockchyp-regression-test/sig.jpg",
-				expect: true,
+			{
+				validation: &validation{
+					prompt: "Does the signature appear valid in the browser?",
+					serve:  "/tmp/blockchyp-regression-test/sig.jpg",
+					expect: true,
+				},
 			},
 		},
-		"SignatureRefused": {
-			simOnly: true,
-			instructions: `Insert a signature CVM test card when prompted.
+	},
+	{
+		name:  "Refund/SignatureRefused",
+		group: testGroupSignature,
+		sim:   true,
+		operations: []operation{
+			{
+				msg: `Insert a signature CVM test card when prompted.
 
 When prompted for a signature, hit 'Done' without signing.`,
-			args: [][]string{
-				{
+				args: []string{
 					"-type", "charge", "-terminal", terminalName,
 					"-test", "-amount", amount(0),
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:             false,
 					Approved:            false,
 					Test:                true,
@@ -263,36 +276,38 @@ When prompted for a signature, hit 'Done' without signing.`,
 				},
 			},
 		},
-		"SignatureTimeout": {
-			simOnly: true,
-			instructions: `Insert a signature CVM test card when prompted.
+	},
+	{
+		name:  "Refund/SignatureTimeout",
+		group: testGroupSignature,
+		sim:   true,
+		operations: []operation{
+			{
+				msg: `Insert a signature CVM test card when prompted.
 
-Let the transaction time out when prompted for a signature. It should take 90 seconds.`,
-			args: [][]string{
-				{
+Let the transaction time out when prompted for a signature. It should take 20 seconds.`,
+				args: []string{
 					"-type", "charge", "-terminal", terminalName,
-					"-test", "-amount", amount(0),
+					"-test", "-timeout", "20", "-amount", amount(0),
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
-					Success:  false,
-					Approved: false,
-					Test:     true,
+				expect: blockchyp.Acknowledgement{
+					Success: false,
 				},
 			},
 		},
-		"SignatureDisabled": {
-			instructions: "Insert a signature CVM test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Refund/SignatureDisabled",
+		group: testGroupSignature,
+		operations: []operation{
+			{
+				msg: "Insert a signature CVM test card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName,
 					"-test", "-amount", amount(0),
 					"-disableSignature",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:  true,
 					Approved: true,
 					Test:     true,
@@ -302,17 +317,19 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				},
 			},
 		},
-		"UserCanceled": {
-			simOnly:      true,
-			instructions: "Hit the red 'X' button when prompted for a card.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Refund/UserCanceled",
+		group: testGroupInteractive,
+		sim:   true,
+		operations: []operation{
+			{
+				msg: "Hit the red 'X' button when prompted for a card.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName,
 					"-test", "-amount", amount(0),
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:             false,
 					Approved:            false,
 					Test:                true,
@@ -320,16 +337,18 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				},
 			},
 		},
-		"MSRFreeRange": {
-			instructions: "Swipe an MSR test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Refund/MSRFreeRange",
+		group: testGroupMSR,
+		operations: []operation{
+			{
+				msg: "Swipe an MSR test card when prompted.",
+				args: []string{
 					"-type", "refund", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -339,16 +358,18 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				},
 			},
 		},
-		"ManualFreeRange": {
-			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '123' when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Refund/ManualFreeRange",
+		group: testGroupInteractive,
+		operations: []operation{
+			{
+				msg: "Enter PAN '4111 1111 1111 1111' and CVV2 '123' when prompted.",
+				args: []string{
 					"-type", "refund", "-terminal", terminalName, "-test",
 					"-amount", amount(0), "-manual",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -358,17 +379,19 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				},
 			},
 		},
-		"DeclineFreeRange": {
-			simOnly:      true,
-			instructions: "Swipe the 'Decline' MSR test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Refund/DeclineFreeRange",
+		group: testGroupMSR,
+		sim:   true,
+		operations: []operation{
+			{
+				msg: "Swipe the 'Decline' MSR test card when prompted.",
+				args: []string{
 					"-type", "refund", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         false,
 					Test:             true,
@@ -379,32 +402,5 @@ Let the transaction time out when prompted for a signature. It should take 90 se
 				},
 			},
 		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			if test.simOnly && acquirerMode {
-				t.Skip("skipped for acquirer test run")
-			}
-
-			cli := newCLI(t)
-			if test.localOnly {
-				cli.skipCloudRelay()
-			}
-
-			setup(t, test.instructions, true)
-
-			for i := range test.args {
-				if test.txID != "" && test.args[i][len(test.args[i])-1] == "-tx" {
-					test.args[i] = append(test.args[i], test.txID)
-				}
-
-				if res, ok := cli.run(test.args[i], test.assert[i]).(*blockchyp.AuthorizationResponse); ok && test.txID == "" {
-					test.txID = res.TransactionID
-				}
-			}
-
-			validate(t, test.validation)
-		})
-	}
+	},
 }
