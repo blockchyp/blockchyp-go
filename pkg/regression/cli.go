@@ -129,7 +129,7 @@ func (app *TestRunner) validate(v validation) error {
 		showInBrowser(v.serve)
 	}
 
-	if !prompt(v.prompt, !v.expect) {
+	if prompt(v.prompt, !v.expect) != v.expect {
 		return fmt.Errorf("expected: %v", v.expect)
 	}
 

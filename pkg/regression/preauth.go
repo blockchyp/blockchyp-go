@@ -109,6 +109,9 @@ var preauthTests = testCases{
 		sim:   true,
 		operations: []operation{
 			{
+				msg: `Insert a signature CVM test card when prompted.
+
+When prompted for a signature, hit 'Done' without signing.`,
 				args: []string{
 					"-type", "preauth", "-terminal", terminalName,
 					"-test", "-amount", amount(0),
@@ -148,6 +151,9 @@ var preauthTests = testCases{
 		sim:   true,
 		operations: []operation{
 			{
+				msg: `Insert a signature CVM test card when prompted.
+
+Let the transaction time out when prompted for a signature. It should take 20 seconds.`,
 				args: []string{
 					"-type", "preauth", "-terminal", terminalName,
 					"-test", "-timeout", "20", "-amount", amount(0),

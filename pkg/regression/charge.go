@@ -671,7 +671,9 @@ Select $10 when prompted for cash back.`,
 		group: testGroupMSR,
 		operations: []operation{
 			{
-				msg: "Swipe the AMEX MSR test card when prompted. Enter PIN '1234'.",
+				msg: `Swipe the AMEX MSR test card when prompted. Enter PIN '1234'.
+
+It should not give you the option to select cash back.`,
 				args: []string{
 					"-type", "charge", "-terminal", terminalName,
 					"-test", "-amount", amount(0),

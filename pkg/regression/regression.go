@@ -85,8 +85,13 @@ TEST:
 
 		pauseForSetup := shouldPauseForSetup(test, last)
 
+		// Deep copy to re-generate args for every test run.
+		ops := copyOps(test.operations)
+
 	RETRY:
 		for {
+			test.operations = copyOps(ops)
+
 			if err := app.runTest(test, pauseForSetup); err != nil {
 				app.log.Printf("%sFAIL: %s%s: %+v", format(red), test.name, format(), err)
 
@@ -108,6 +113,15 @@ TEST:
 	}
 
 	return nil
+}
+
+func copyOps(v []operation) []operation {
+	ops := append([]operation{}, v...)
+	for i := range ops {
+		ops[i].args = append([]string{}, ops[i].args...)
+	}
+
+	return ops
 }
 
 func (app *TestRunner) runTest(test testCase, pauseForSetup bool) error {
@@ -444,6 +458,8 @@ func (app *TestRunner) printCmd(bin string, args []string) {
 }
 
 func (app *TestRunner) substituteConstants(test *testCase, i int) {
+	delete(testCache, test.name)
+
 	for j, arg := range test.operations[i].args {
 		switch {
 		case arg == terminalName:
