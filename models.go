@@ -2294,6 +2294,16 @@ type TransactionDisplayItem struct {
 	// not rounded at all.
 	Extended string `json:"extended"`
 
+	// UnitCode is an alphanumeric code for units of measurement as used in
+	// international trade.
+	UnitCode string `json:"unitCode"`
+
+	// CommodityCode is an international description code of the item.
+	CommodityCode string `json:"commodityCode"`
+
+	// ProductCode is a merchant-defined description code of the item.
+	ProductCode string `json:"productCode"`
+
 	// Discounts are displayed under their corresponding item.
 	Discounts []*TransactionDisplayDiscount `json:"discounts"`
 }
