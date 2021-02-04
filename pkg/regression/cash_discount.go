@@ -1,30 +1,22 @@
-// +build regression
-
 package regression
 
 import (
-	"testing"
-
 	"github.com/blockchyp/blockchyp-go"
 )
 
-func TestCashDiscount(t *testing.T) {
-	tests := map[string]struct {
-		instructions string
-		args         [][]string
-		assert       []interface{}
-	}{
-		"CreditSurchargeCashDiscount": {
-			instructions: "Insert a test EMV " + format(bold, yellow) + "credit" + format(normal, magenta) + " card when prompted.",
-			args: [][]string{
-				{
+var cashDiscountTests = testCases{
+	{
+		name:  "CashDiscount/CreditSurchargeCashDiscount",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert a test EMV " + format(bold, yellow) + "credit" + format(normal, magenta) + " card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 					"-surcharge", "-cashDiscount",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -46,17 +38,19 @@ func TestCashDiscount(t *testing.T) {
 				},
 			},
 		},
-		"CreditSurchargeNoCashDiscount": {
-			instructions: "Insert a test EMV " + format(bold, yellow) + "credit" + format(normal, magenta) + " card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "CashDiscount/CreditSurchargeNoCashDiscount",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert a test EMV " + format(bold, yellow) + "credit" + format(normal, magenta) + " card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 					"-surcharge",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -78,17 +72,19 @@ func TestCashDiscount(t *testing.T) {
 				},
 			},
 		},
-		"CreditNoSurchargeCashDiscount": {
-			instructions: "Insert a test EMV " + format(bold, yellow) + "credit" + format(normal, magenta) + " card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "CashDiscount/CreditNoSurchargeCashDiscount",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert a test EMV " + format(bold, yellow) + "credit" + format(normal, magenta) + " card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 					"-cashDiscount",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -110,17 +106,19 @@ func TestCashDiscount(t *testing.T) {
 				},
 			},
 		},
-		"DebitSurchargeCashDiscount": {
-			instructions: "Insert a test EMV " + format(bold, yellow) + "debit" + format(normal, magenta) + " card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "CashDiscount/DebitSurchargeCashDiscount",
+		group: testGroupInteractive,
+		operations: []operation{
+			{
+				msg: "Insert a test EMV " + format(bold, yellow) + "debit" + format(normal, magenta) + " card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 					"-surcharge", "-cashDiscount",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -143,17 +141,19 @@ func TestCashDiscount(t *testing.T) {
 				},
 			},
 		},
-		"DebitSurchargeNoCashDiscount": {
-			instructions: "Insert a test EMV " + format(bold, yellow) + "debit" + format(normal, magenta) + " card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "CashDiscount/DebitSurchargeNoCashDiscount",
+		group: testGroupInteractive,
+		operations: []operation{
+			{
+				msg: "Insert a test EMV " + format(bold, yellow) + "debit" + format(normal, magenta) + " card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 					"-surcharge",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -176,17 +176,19 @@ func TestCashDiscount(t *testing.T) {
 				},
 			},
 		},
-		"DebitNoSurchargeCashDiscount": {
-			instructions: "Insert a test EMV " + format(bold, yellow) + "debit" + format(normal, magenta) + " card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "CashDiscount/DebitNoSurchargeCashDiscount",
+		group: testGroupInteractive,
+		operations: []operation{
+			{
+				msg: "Insert a test EMV " + format(bold, yellow) + "debit" + format(normal, magenta) + " card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 					"-cashDiscount",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -209,16 +211,18 @@ func TestCashDiscount(t *testing.T) {
 				},
 			},
 		},
-		"APISurchargeCashDiscount": {
-			args: [][]string{
-				{
+	},
+	{
+		name:  "CashDiscount/APISurchargeCashDiscount",
+		group: testGroupNonInteractive,
+		operations: []operation{
+			{
+				args: []string{
 					"-type", "cash-discount", "-test",
 					"-amount", amount(0),
 					"-surcharge", "-cashDiscount",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.CashDiscountResponse{
+				expect: blockchyp.CashDiscountResponse{
 					Success:      true,
 					Amount:       amount(0),
 					Surcharge:    fees(amount(0)),
@@ -226,48 +230,40 @@ func TestCashDiscount(t *testing.T) {
 				},
 			},
 		},
-		"APISurchargeNoCashDiscount": {
-			args: [][]string{
-				{
+	},
+	{
+		name:  "CashDiscount/APISurchargeNoCashDiscount",
+		group: testGroupNonInteractive,
+		operations: []operation{
+			{
+				args: []string{
 					"-type", "cash-discount", "-test",
 					"-amount", amount(0),
 					"-surcharge",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.CashDiscountResponse{
+				expect: blockchyp.CashDiscountResponse{
 					Success: true,
 					Amount:  amount(0),
 				},
 			},
 		},
-		"APINoSurchargeCashDiscount": {
-			args: [][]string{
-				{
+	},
+	{
+		name:  "CashDiscount/APINoSurchargeCashDiscount",
+		group: testGroupNonInteractive,
+		operations: []operation{
+			{
+				args: []string{
 					"-type", "cash-discount", "-test",
 					"-amount", amount(0),
 					"-cashDiscount",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.CashDiscountResponse{
+				expect: blockchyp.CashDiscountResponse{
 					Success:      true,
 					Amount:       cashDiscount(amount(0)),
 					CashDiscount: fees(amount(0)),
 				},
 			},
 		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			cli := newCLI(t)
-
-			setup(t, test.instructions, true)
-
-			for i := range test.args {
-				cli.run(test.args[i], test.assert[i])
-			}
-		})
-	}
+	},
 }

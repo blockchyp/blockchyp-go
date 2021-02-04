@@ -19,7 +19,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestSimpleBatchClose(t *testing.T) {
+func TestPartialRefund(t *testing.T) {
 	assert := assert.New(t)
 
 	client := newTestClient(t)
@@ -33,7 +33,7 @@ func TestSimpleBatchClose(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestSimpleBatchClose in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestPartialRefund in %v seconds...", testDelay),
 		}
 		if _, err := client.Message(messageRequest); err != nil {
 			t.Fatal(err)
@@ -58,13 +58,15 @@ func TestSimpleBatchClose(t *testing.T) {
 	logResponse(setupResponse)
 
 	// setup request object
-	request := blockchyp.CloseBatchRequest{
-		Test: true,
+	request := blockchyp.RefundRequest{
+		TransactionID: setupResponse.TransactionID,
+		Amount:        "5.00",
+		Test:          true,
 	}
 
 	logRequest(request)
 
-	response, err := client.CloseBatch(request)
+	response, err := client.Refund(request)
 
 	assert.NoError(err)
 
@@ -72,4 +74,5 @@ func TestSimpleBatchClose(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
+	assert.True(response.Approved)
 }

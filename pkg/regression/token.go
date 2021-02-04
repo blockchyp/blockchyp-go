@@ -1,41 +1,21 @@
-// +build regression
-
 package regression
 
 import (
-	"testing"
-
 	"github.com/blockchyp/blockchyp-go"
 )
 
-func TestToken(t *testing.T) {
-	tests := map[string]struct {
-		instructions string
-		args         [][]string
-		assert       []interface{}
-		token        string
-	}{
-		"DirectEMV": {
-			instructions: "Insert an EMV test card when prompted.",
-			args: [][]string{
-				{
+var tokenTests = testCases{
+	{
+		name:  "Token/DirectEMV",
+		group: testGroupNoCVM,
+
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
 					"-type", "enroll", "-terminal", terminalName, "-test",
 				},
-				{
-					"-type", "charge", "-test",
-					"-amount", amount(0), "-token",
-				},
-				{
-					"-type", "preauth", "-test",
-					"-amount", amount(1), "-token",
-				},
-				{
-					"-type", "refund", "-test",
-					"-amount", amount(2), "-token",
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
@@ -50,7 +30,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:     "CHIP",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "charge", "-test",
+					"-amount", amount(0), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -67,7 +53,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:      "TOKEN",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "preauth", "-test",
+					"-amount", amount(1), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -84,7 +76,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:      "TOKEN",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "refund", "-test",
+					"-amount", amount(2), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -103,28 +101,18 @@ func TestToken(t *testing.T) {
 				},
 			},
 		},
-		"Charge": {
-			instructions: "Insert an EMV test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Token/Charge",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0), "-enroll",
 				},
-				{
-					"-type", "charge", "-test",
-					"-amount", amount(1), "-token",
-				},
-				{
-					"-type", "preauth", "-test",
-					"-amount", amount(2), "-token",
-				},
-				{
-					"-type", "refund", "-test",
-					"-amount", amount(3), "-token",
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -142,7 +130,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:      "CHIP",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "charge", "-test",
+					"-amount", amount(1), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -159,7 +153,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:      "TOKEN",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "preauth", "-test",
+					"-amount", amount(2), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -176,7 +176,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:      "TOKEN",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "refund", "-test",
+					"-amount", amount(3), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -195,28 +201,18 @@ func TestToken(t *testing.T) {
 				},
 			},
 		},
-		"Preauth": {
-			instructions: "Insert an EMV test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Token/Preauth",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(0), "-enroll",
 				},
-				{
-					"-type", "charge", "-test",
-					"-amount", amount(1), "-token",
-				},
-				{
-					"-type", "preauth", "-test",
-					"-amount", amount(2), "-token",
-				},
-				{
-					"-type", "refund", "-test",
-					"-amount", amount(3), "-token",
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -234,7 +230,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:      "CHIP",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "charge", "-test",
+					"-amount", amount(1), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -251,7 +253,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:      "TOKEN",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "preauth", "-test",
+					"-amount", amount(2), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -268,7 +276,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:      "TOKEN",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "refund", "-test",
+					"-amount", amount(3), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -287,27 +301,17 @@ func TestToken(t *testing.T) {
 				},
 			},
 		},
-		"DirectMSR": {
-			instructions: "Swipe an MSR test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Token/DirectMSR",
+		group: testGroupMSR,
+		operations: []operation{
+			{
+				msg: "Swipe an MSR test card when prompted.",
+				args: []string{
 					"-type", "enroll", "-terminal", terminalName, "-test",
 				},
-				{
-					"-type", "charge", "-test",
-					"-amount", amount(0), "-token",
-				},
-				{
-					"-type", "preauth", "-test",
-					"-amount", amount(1), "-token",
-				},
-				{
-					"-type", "refund", "-test",
-					"-amount", amount(2), "-token",
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
@@ -323,7 +327,13 @@ func TestToken(t *testing.T) {
 						RequestSignature: false,
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "charge", "-test",
+					"-amount", amount(0), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -340,7 +350,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:      "TOKEN",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "preauth", "-test",
+					"-amount", amount(1), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -357,7 +373,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:      "TOKEN",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "refund", "-test",
+					"-amount", amount(2), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -376,28 +398,18 @@ func TestToken(t *testing.T) {
 				},
 			},
 		},
-		"DirectManual": {
-			instructions: "Enter PAN '4111 1111 1111 1111' and CVV2 '123' when prompted",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Token/DirectManual",
+		group: testGroupInteractive,
+		operations: []operation{
+			{
+				msg: "Enter PAN '4111 1111 1111 1111' and CVV2 '123' when prompted",
+				args: []string{
 					"-type", "enroll", "-terminal", terminalName, "-test",
 					"-manual",
 				},
-				{
-					"-type", "charge", "-test",
-					"-amount", amount(0), "-token",
-				},
-				{
-					"-type", "preauth", "-test",
-					"-amount", amount(1), "-token",
-				},
-				{
-					"-type", "refund", "-test",
-					"-amount", amount(2), "-token",
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
@@ -412,7 +424,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:     "KEYED",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "charge", "-test",
+					"-amount", amount(0), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -429,7 +447,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:      "TOKEN",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "preauth", "-test",
+					"-amount", amount(1), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -446,7 +470,13 @@ func TestToken(t *testing.T) {
 						EntryMethod:      "TOKEN",
 					},
 				},
-				blockchyp.AuthorizationResponse{
+			},
+			{
+				args: []string{
+					"-type", "refund", "-test",
+					"-amount", amount(2), "-token", tokenN(0),
+				},
+				expect: blockchyp.AuthorizationResponse{
 					Success:          true,
 					Approved:         true,
 					Test:             true,
@@ -465,25 +495,5 @@ func TestToken(t *testing.T) {
 				},
 			},
 		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			cli := newCLI(t)
-
-			setup(t, test.instructions, true)
-
-			for i := range test.args {
-				if i > 0 && test.token != "" {
-					test.args[i] = append(test.args[i], test.token)
-				}
-
-				res := cli.run(test.args[i], test.assert[i]).(*blockchyp.AuthorizationResponse)
-
-				if test.token == "" {
-					test.token = res.Token
-				}
-			}
-		})
-	}
+	},
 }

@@ -19,7 +19,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestSimpleBatchClose(t *testing.T) {
+func TestMerchantProfile(t *testing.T) {
 	assert := assert.New(t)
 
 	client := newTestClient(t)
@@ -33,7 +33,7 @@ func TestSimpleBatchClose(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestSimpleBatchClose in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestMerchantProfile in %v seconds...", testDelay),
 		}
 		if _, err := client.Message(messageRequest); err != nil {
 			t.Fatal(err)
@@ -42,29 +42,13 @@ func TestSimpleBatchClose(t *testing.T) {
 	}
 
 	// setup request object
-	setupRequest := blockchyp.AuthorizationRequest{
-		PAN:            "4111111111111111",
-		Amount:         "25.55",
-		Test:           true,
-		TransactionRef: randomID(),
-	}
-
-	logRequest(setupRequest)
-
-	setupResponse, err := client.Charge(setupRequest)
-
-	assert.NoError(err)
-
-	logResponse(setupResponse)
-
-	// setup request object
-	request := blockchyp.CloseBatchRequest{
+	request := blockchyp.MerchantProfileRequest{
 		Test: true,
 	}
 
 	logRequest(request)
 
-	response, err := client.CloseBatch(request)
+	response, err := client.MerchantProfile(request)
 
 	assert.NoError(err)
 
