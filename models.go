@@ -1223,6 +1223,10 @@ type CaptureResponse struct {
 	// AuthCode is the auth code from the payment network.
 	AuthCode string `json:"authCode,omitempty"`
 
+	// AuthResponseCode is the code returned by the terminal or the card issuer
+	// to indicate the disposition of the message.
+	AuthResponseCode string `json:"authResponseCode,omitempty"`
+
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
 
@@ -1375,6 +1379,10 @@ type VoidResponse struct {
 
 	// AuthCode is the auth code from the payment network.
 	AuthCode string `json:"authCode,omitempty"`
+
+	// AuthResponseCode is the code returned by the terminal or the card issuer
+	// to indicate the disposition of the message.
+	AuthResponseCode string `json:"authResponseCode,omitempty"`
 
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
@@ -1556,6 +1564,10 @@ type EnrollResponse struct {
 
 	// AuthCode is the auth code from the payment network.
 	AuthCode string `json:"authCode,omitempty"`
+
+	// AuthResponseCode is the code returned by the terminal or the card issuer
+	// to indicate the disposition of the message.
+	AuthResponseCode string `json:"authResponseCode,omitempty"`
 
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
@@ -1991,6 +2003,10 @@ type AuthorizationResponse struct {
 	// AuthCode is the auth code from the payment network.
 	AuthCode string `json:"authCode,omitempty"`
 
+	// AuthResponseCode is the code returned by the terminal or the card issuer
+	// to indicate the disposition of the message.
+	AuthResponseCode string `json:"authResponseCode,omitempty"`
+
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
 
@@ -2156,6 +2172,10 @@ type TransactionStatus struct {
 
 	// AuthCode is the auth code from the payment network.
 	AuthCode string `json:"authCode,omitempty"`
+
+	// AuthResponseCode is the code returned by the terminal or the card issuer
+	// to indicate the disposition of the message.
+	AuthResponseCode string `json:"authResponseCode,omitempty"`
 
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
@@ -3254,6 +3274,10 @@ type ApprovalResponse struct {
 
 	// AuthCode is the auth code from the payment network.
 	AuthCode string
+
+	// AuthResponseCode is the code returned by the terminal or the card issuer
+	// to indicate the disposition of the message.
+	AuthResponseCode string
 }
 
 // From creates an instance of ApprovalResponse with values
