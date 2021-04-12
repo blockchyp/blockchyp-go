@@ -962,6 +962,12 @@ type BalanceResponse struct {
 	// CardHolder is the cardholder name.
 	CardHolder string `json:"cardHolder,omitempty"`
 
+	// ExpMonth is the card expiration month in MM format.
+	ExpMonth string `json:"expMonth,omitempty"`
+
+	// ExpYear is the card expiration year in YY format.
+	ExpYear string `json:"expYear,omitempty"`
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
@@ -1308,6 +1314,12 @@ type CaptureResponse struct {
 	// CardHolder is the cardholder name.
 	CardHolder string `json:"cardHolder,omitempty"`
 
+	// ExpMonth is the card expiration month in MM format.
+	ExpMonth string `json:"expMonth,omitempty"`
+
+	// ExpYear is the card expiration year in YY format.
+	ExpYear string `json:"expYear,omitempty"`
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
@@ -1423,6 +1435,12 @@ type VoidResponse struct {
 
 	// CardHolder is the cardholder name.
 	CardHolder string `json:"cardHolder,omitempty"`
+
+	// ExpMonth is the card expiration month in MM format.
+	ExpMonth string `json:"expMonth,omitempty"`
+
+	// ExpYear is the card expiration year in YY format.
+	ExpYear string `json:"expYear,omitempty"`
 
 	// AVSResponse contains address verification results if address information
 	// was submitted.
@@ -1604,6 +1622,12 @@ type EnrollResponse struct {
 
 	// CardHolder is the cardholder name.
 	CardHolder string `json:"cardHolder,omitempty"`
+
+	// ExpMonth is the card expiration month in MM format.
+	ExpMonth string `json:"expMonth,omitempty"`
+
+	// ExpYear is the card expiration year in YY format.
+	ExpYear string `json:"expYear,omitempty"`
 
 	// AVSResponse contains address verification results if address information
 	// was submitted.
@@ -2076,6 +2100,12 @@ type AuthorizationResponse struct {
 	// CardHolder is the cardholder name.
 	CardHolder string `json:"cardHolder,omitempty"`
 
+	// ExpMonth is the card expiration month in MM format.
+	ExpMonth string `json:"expMonth,omitempty"`
+
+	// ExpYear is the card expiration year in YY format.
+	ExpYear string `json:"expYear,omitempty"`
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
@@ -2241,6 +2271,12 @@ type TransactionStatus struct {
 
 	// CardHolder is the cardholder name.
 	CardHolder string `json:"cardHolder,omitempty"`
+
+	// ExpMonth is the card expiration month in MM format.
+	ExpMonth string `json:"expMonth,omitempty"`
+
+	// ExpYear is the card expiration year in YY format.
+	ExpYear string `json:"expYear,omitempty"`
 
 	// AVSResponse contains address verification results if address information
 	// was submitted.
@@ -3317,6 +3353,12 @@ type PaymentMethodResponse struct {
 
 	// CardHolder is the cardholder name.
 	CardHolder string
+
+	// ExpMonth is the card expiration month in MM format.
+	ExpMonth string
+
+	// ExpYear is the card expiration year in YY format.
+	ExpYear string
 
 	// AVSResponse contains address verification results if address information
 	// was submitted.
