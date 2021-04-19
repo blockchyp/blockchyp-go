@@ -131,7 +131,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.StartDate, "startDate", "", "start date for filtering history results")
 	flag.StringVar(&args.EndDate, "endDate", "", "end date for filtering history results")
 	flag.StringVar(&args.BatchID, "batchId", "", "batch id for filtering history results")
-	flag.IntVar(&args.MaxResults, "maxResults", 250, "max results for query and history functions")
+	flag.IntVar(&args.MaxResults, "maxResults", 50, "max results for query and history functions")
 	flag.IntVar(&args.StartIndex, "startIndex", 0, "start index for paged queries")
 	flag.BoolVar(&args.Queue, "queue", false, "queue transaction without running it")
 	flag.BoolVar(&args.Async, "async", false, "run transaction asynchronously and don't wait for the response")
