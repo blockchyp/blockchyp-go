@@ -43,9 +43,11 @@ func TestPANPreauth(t *testing.T) {
 
 	// setup request object
 	request := blockchyp.AuthorizationRequest{
-		PAN:    "4111111111111111",
-		Amount: "25.55",
-		Test:   true,
+		PAN:      "4111111111111111",
+		ExpMonth: "12",
+		ExpYear:  "2025",
+		Amount:   "25.55",
+		Test:     true,
 	}
 
 	logRequest(request)
