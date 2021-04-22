@@ -47,7 +47,7 @@ var reversalTests = testCases{
 					Approved:            false,
 					Test:                true,
 					TransactionType:     "reverse",
-					ResponseDescription: "Already Reversed",
+					ResponseDescription: "No Action Taken",
 				},
 			},
 		},

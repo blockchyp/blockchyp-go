@@ -136,6 +136,8 @@ func (app *TestRunner) runTest(test testCase, pauseForSetup bool) error {
 
 	app.log.Printf("%sRUN:  %s%s", format(cyan), test.name, format())
 
+	delete(testCache, test.name)
+
 	var wg sync.WaitGroup
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -458,8 +460,6 @@ func (app *TestRunner) printCmd(bin string, args []string) {
 }
 
 func (app *TestRunner) substituteConstants(test *testCase, i int) {
-	delete(testCache, test.name)
-
 	for j, arg := range test.operations[i].args {
 		switch {
 		case arg == terminalName:
