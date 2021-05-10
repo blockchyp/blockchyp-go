@@ -73,6 +73,7 @@ type CommandLineArguments struct {
 	TCName                      string `arg:"tcName"`
 	TCContent                   string `arg:"tcContent"`
 	Timeout                     int    `arg:"timeout"`
+	WaitForRemovedCard          bool   `arg:"waitForRemovedCard"`
 	SigRequired                 bool   `arg:"sigRequired"`
 	CashBackEnabled             bool   `arg:"cashback"`
 	Enroll                      bool   `arg:"enroll"`

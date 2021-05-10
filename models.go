@@ -172,6 +172,10 @@ type CaptureSignatureRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -237,6 +241,10 @@ type PingRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -314,6 +322,10 @@ type MessageRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -348,6 +360,10 @@ type BooleanPromptRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -390,6 +406,10 @@ type TextPromptRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -424,6 +444,10 @@ type CustomerRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -477,6 +501,10 @@ type CustomerSearchRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -508,6 +536,10 @@ type UpdateCustomerRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -650,6 +682,10 @@ type AuthorizationRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -824,6 +860,10 @@ type BalanceRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -997,6 +1037,10 @@ type RefundRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1144,6 +1188,10 @@ type CaptureRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1346,6 +1394,10 @@ type VoidRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1471,6 +1523,10 @@ type EnrollRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1659,6 +1715,10 @@ type ClearTerminalRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1691,6 +1751,10 @@ type GiftActivateRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1805,6 +1869,10 @@ type CloseBatchRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1885,6 +1953,10 @@ type TermsAndConditionsRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2145,6 +2217,10 @@ type TransactionStatusRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -2376,6 +2452,10 @@ type TransactionDisplayRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -2441,6 +2521,10 @@ type TerminalStatusRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -2498,6 +2582,10 @@ type PaymentLinkRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2615,6 +2703,10 @@ type CashDiscountRequest struct {
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
 
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -2692,6 +2784,10 @@ type TransactionHistoryRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2780,6 +2876,10 @@ type BatchHistoryRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2888,6 +2988,10 @@ type BatchDetailsRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2999,6 +3103,10 @@ type MerchantProfileRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -3306,6 +3414,10 @@ type CoreRequest struct {
 	// Queue adds the transaction to the queue and returns immediately. Callers
 	// should retrive the transaction result using the Transaction Status API.
 	Queue bool
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string
