@@ -174,7 +174,7 @@ type CaptureSignatureRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -244,7 +244,7 @@ type PingRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -324,7 +324,7 @@ type MessageRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -363,7 +363,7 @@ type BooleanPromptRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -408,7 +408,7 @@ type TextPromptRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -447,7 +447,7 @@ type CustomerRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -503,7 +503,7 @@ type CustomerSearchRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -539,7 +539,7 @@ type UpdateCustomerRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -685,7 +685,7 @@ type AuthorizationRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -862,7 +862,7 @@ type BalanceRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1039,7 +1039,7 @@ type RefundRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1191,7 +1191,7 @@ type CaptureRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1396,7 +1396,7 @@ type VoidRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1526,7 +1526,7 @@ type EnrollRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1717,7 +1717,7 @@ type ClearTerminalRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1754,7 +1754,7 @@ type GiftActivateRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1871,7 +1871,7 @@ type CloseBatchRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1956,7 +1956,7 @@ type TermsAndConditionsRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2219,7 +2219,7 @@ type TransactionStatusRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2454,7 +2454,7 @@ type TransactionDisplayRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2523,7 +2523,7 @@ type TerminalStatusRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2585,7 +2585,7 @@ type PaymentLinkRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2705,7 +2705,7 @@ type CashDiscountRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2787,7 +2787,7 @@ type TransactionHistoryRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2879,7 +2879,7 @@ type BatchHistoryRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2991,7 +2991,7 @@ type BatchDetailsRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -3106,7 +3106,7 @@ type MerchantProfileRequest struct {
 
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
-	WaitForRemovedCard bool `json:"waitForRemovedCard"`
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
