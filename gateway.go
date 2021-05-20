@@ -8,10 +8,13 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"math"
 	"math/rand"
 	"net/http"
+	"net/http/httputil"
+	"os"
 	"time"
 )
 
@@ -104,7 +107,18 @@ func (client *Client) GatewayRequest(path, method string, request, response inte
 	ctx, cancel := context.WithTimeout(req.Context(), timeout)
 	defer cancel()
 
-	res, err := client.gatewayHTTPClient.Do(req.WithContext(ctx))
+	req = req.WithContext(ctx)
+
+	if client.LogRequests {
+		b, err := httputil.DumpRequestOut(req, true)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintln(os.Stderr, "GATEWAY REQUEST:")
+		fmt.Fprintln(os.Stderr, string(b))
+	}
+
+	res, err := client.gatewayHTTPClient.Do(req)
 	if err != nil {
 		return err
 	}

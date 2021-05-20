@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"os"
 	"time"
@@ -310,7 +311,18 @@ func (client *Client) terminalRequest(route TerminalRoute, path, method string, 
 	ctx, cancel := context.WithTimeout(req.Context(), timeout)
 	defer cancel()
 
-	res, err := client.terminalHTTPClient.Do(req.WithContext(ctx))
+	req = req.WithContext(ctx)
+
+	if client.LogRequests {
+		b, err := httputil.DumpRequestOut(req, true)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintln(os.Stderr, "TERMINAL REQUEST:")
+		fmt.Fprintln(os.Stderr, string(b))
+	}
+
+	res, err := client.terminalHTTPClient.Do(req)
 	if err != nil {
 		// Try to resolve the route again.
 		// If the route has changed, retry the request.

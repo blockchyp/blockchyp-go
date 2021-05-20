@@ -136,6 +136,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.IntVar(&args.StartIndex, "startIndex", 0, "start index for paged queries")
 	flag.BoolVar(&args.Queue, "queue", false, "queue transaction without running it")
 	flag.BoolVar(&args.Async, "async", false, "run transaction asynchronously and don't wait for the response")
+	flag.BoolVar(&args.LogRequests, "logRequests", false, "log full http request for API calls")
 
 	flag.Parse()
 
@@ -191,6 +192,8 @@ func resolveClient(args blockchyp.CommandLineArguments) (*blockchyp.Client, erro
 		return nil, err
 	}
 	client := blockchyp.NewClient(*creds)
+	client.LogRequests = args.LogRequests
+
 
 	if args.HTTPS {
 		client.HTTPS = true

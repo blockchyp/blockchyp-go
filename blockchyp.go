@@ -67,6 +67,8 @@ type Client struct {
 	routeCacheTTL      time.Duration
 	gatewayHTTPClient  *http.Client
 	terminalHTTPClient *http.Client
+
+	LogRequests bool
 }
 
 // NewClient returns a default Client configured with the given credentials.
@@ -899,7 +901,7 @@ func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) 
 	return &response, err
 }
 
-// Void discards a previous preauth transaction.
+// Void discards a previous transaction.
 func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
 	var response VoidResponse
 
