@@ -68,13 +68,16 @@ type CommandLineArguments struct {
 	YesCaption                  string `arg:"yesCaption"`
 	NoCaption                   string `arg:"noCaption"`
 	EBT                         bool   `arg:"ebt"`
+	Debit                       bool   `arg:"debit"`
 	TCAlias                     string `arg:"tcAlias"`
 	TCName                      string `arg:"tcName"`
 	TCContent                   string `arg:"tcContent"`
 	Timeout                     int    `arg:"timeout"`
+	WaitForRemovedCard          bool   `arg:"waitForRemovedCard"`
 	SigRequired                 bool   `arg:"sigRequired"`
 	CashBackEnabled             bool   `arg:"cashback"`
 	Enroll                      bool   `arg:"enroll"`
+	EnrollOnly                  bool   `arg:"enrollOnly"`
 	DisableSignature            bool   `arg:"disableSignature"`
 	CustomerID                  string `arg:"customerId"`
 	CustomerRef                 string `arg:"customerRef"`
@@ -91,6 +94,19 @@ type CommandLineArguments struct {
 	OrderRef                    string `args:"orderRef"`
 	Query                       string `arg:"query"`
 	CallbackURL                 string `arg:"callbackUrl"`
+	Surcharge                   bool   `arg:"surcharge"`
+	CashDiscount                bool   `arg:"cashDiscount"`
+	PostalCode                  string `arg:"postalCode"`
+	Address                     string `arg:"address"`
+	Cashier                     bool   `arg:"cashier"`
+	StartDate                   string `arg:"startDate"`
+	EndDate                     string `arg:"endDate"`
+	BatchID                     string `arg:"batchId"`
+	MaxResults                  int    `arg:"maxResults"`
+	StartIndex                  int    `arg:"startIndex"`
+	Queue                       bool   `args:"queue"`
+	Async                       bool   `args:"async"`
+	LogRequests                 bool   `args:"logRequests"`
 }
 
 var defaultSettings = &ConfigSettings{

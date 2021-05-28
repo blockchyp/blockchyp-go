@@ -44,6 +44,8 @@ func TestPANCharge(t *testing.T) {
 	// setup request object
 	request := blockchyp.AuthorizationRequest{
 		PAN:            "4111111111111111",
+		ExpMonth:       "12",
+		ExpYear:        "2025",
 		Amount:         "25.55",
 		Test:           true,
 		TransactionRef: randomID(),
@@ -65,7 +67,7 @@ func TestPANCharge(t *testing.T) {
 	assert.NotEmpty(response.TransactionID)
 	assert.NotEmpty(response.Timestamp)
 	assert.NotEmpty(response.TickBlock)
-	assert.Equal("Approved", response.ResponseDescription)
+	assert.Equal("approved", response.ResponseDescription)
 	assert.NotEmpty(response.PaymentType)
 	assert.NotEmpty(response.MaskedPAN)
 	assert.NotEmpty(response.EntryMethod)

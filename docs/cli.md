@@ -1,67 +1,111 @@
 # BlockChyp Command Line Interface
 
-BlockChyp has a good set of SDK's for application developers and over the coming
-months and years we'll be adding more.
+BlockChyp has native libraries and SDKs for most popular software development
+platforms, including Go (this SDK), Java, Javascript, Ruby, Python, PHP, and iOS.
+This is usually the fastest and most straightforward way to complete an integration
+since you just import the library and start calling functions or methods.
 
-But some platforms - for a variety of reasons ranging from legacy to architectural
-complexity - would be better suited with a simple executable client.
+We left C/C++ off the SDK list because there are so many different ways to do
+REST APIs in C++.  When you factor in Linux support, it's hard to create a C++
+REST client in such a way that it's suitable for all C++ developers.
 
-The BlockChyp CLI allows developers to invoke the client via the standard shell
-for their operating system.  Requests are passed in as command line arguments and
-the results are returned to stdout as JSON.
+We've also run into a number of developers using more niche development platforms
+these days like RPG, COBOL, etc.
+
+In order to address the needs of developers whose platforms lack SDK support,
+we created the BlockChyp Command Line Interface.  The CLI ships as a set of Linux
+and Windows executables. Developers working in any language can invoke the CLI as
+a shell command.  Parameters get bassed into the CLI as command line arguments
+and the response is returned to standard out (or an optional file)
+in hipster friendly JSON.
+
+We wrote the CLI in Go, since Go compiles to staticly linked cross platform
+binaries without any extra runtime requirements.  It's shipped as part of the
+Go SDK and is open source.  Developers can download CLI binaries directly from
+Github or build the CLI from source as part of their existing build process.
 
 ## Sample Transaction
 
-The following example shows a basic CLI charge transaction.
+The following example shows a basic test CLI charge transaction.
 
 ```
-$ ./blockchyp -type=charge -terminal="Test Terminal" -amount="25.55"
+$ ./blockchyp -test -type=charge -terminal="Test Terminal" -amount="25.55"
 {
-  "approved":true,
-  "responseDescription":"Approved",
-  "transactionId":"NZ6FGYAYLYI6TLVWNSLM7WZLHE",
-  "transactionRef":"cfd068099a4280f1f09a965d9cc522f25ef4e06a95c9a9461d59fa5deed62180",
-  "transactionType":"charge","timestamp":"2019-01-15T00:42:36Z",
-  "tickBlock":"000e61f8204a2a372cac288f833a8e0949dd50d0074d5133432dce4e78d97913",
-  "authCode":"612797",
-  "entryMethod":"CHIP",
-  "paymentType":"VISA",
-  "maskedPan":"************0010",
-  "cardHolder":"Test/Card 01              ",
-  "partialAuth":false,
-  "altCurrency":false,
-  "currencyCode":"USD",
-  "requestedAmount":"20.55",
-  "authorizedAmount":"20.55",
-  "receiptSuggestions":{
-    "AID":"A0000000031010",
-    "ARQC":"E0A09074268A87F4",
-    "IAD":"06010A03A0B800",
-    "TVR":"0240008000",
-    "TSI":"E800",
-    "merchantName":"Test Merchant",
-    "applicationLabel":"VISA CREDIT",
-    "requestSignature":true,
-    "maskedPan":"************0010",
-    "authorizedAmount":"20.55",
-    "transactionType":"charge",
-    "entryMethod":"CHIP"
-  }
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "143642",
+  "transactionId": "YDSTUGUGGQI6VF5IAJBKYEIAAM",
+  "transactionRef": "07888638306",
+  "transactionType": "charge",
+  "timestamp": "2020-04-24T14:06:11Z",
+  "tickBlock": "00051e1dd6afa36d390e6f93dada3124ed4fc1f20e569f2c8078f7a1d9612978",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "25.55",
+  "authorizedAmount": "25.55",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "0.00",
+  "entryMethod": "CHIP",
+  "paymentType": "VISA",
+  "maskedPan": "************0010",
+  "cardHolder": "UAT USA/Test Card 04",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "aid": "A0000000031010",
+    "arqc": "78B16D5CE17E6A41",
+    "iad": "06010A03A0B800",
+    "tvr": "8000008800",
+    "tsi": "6800",
+    "merchantName": "CLI Regression Test",
+    "applicationLabel": "VISA CREDIT",
+    "requestSignature": false,
+    "maskedPan": "************0010",
+    "authorizedAmount": "25.55",
+    "transactionType": "charge",
+    "entryMethod": "CHIP",
+    "cashBackAmount": "0.00",
+    "surcharge": "0.00",
+    "cashDiscount": "0.00"
+  },
+  "customer": null,
+  "whiteListedCard": null,
+  "storeAndForward": false
 }
 ```
 
+## Getting Binaries
+
+Binaries are available via [Github Releases](https://github.com/blockchyp/blockchyp-go/releases).
+
+The CLI executables are packed inside your choice of zip or tar archives.  The archive
+contains binaries for Windows and Linux.
+
+The Linux executable will run on all major distros plus Mac OS/Darwin.
+
+The Windows executables will run on any 64 bit version of Windows.  And note that
+there are two Windows binaries:
+
+* blockchyp.exe:  This is the standard Windows executable.
+* blockchyp-headless.exe:  This is identical to the standard Windows executable except that pop up command terminal windows are surpressed.  If you try using the standard executable and get annoying pop ups every time it runs, switch to blockchyp-headless.exe.
+
+
 ## Building and Installing
 
-For security reasons, BlockChyp does not distribute binaries for the CLI (at
-least not yet).  But, binaries can be easily built from source.
+We recommend most developers build the CLI from source as part of your standard
+build process.  This gives you the assurance that the binaries contain only the
+code you expect them to contain and in most build configurations makes the
+BlockChyp version you're using easier to control.
 
-Start by installing Go 1.11 or later on your workstation or CI environment.
+Start by installing Go 1.14 or later on your workstation or CI environment.
 If you're not already using `make`, install make as well.
-
-In both cases, the build process is very fast and should add very little time
-to your build process.
-
-
 
 ### For Linux and Mac OS
 
@@ -101,10 +145,21 @@ go build -o builds\blockchyp.exe cmd\blockchyp\main.go
 This will create a Windows exe file at `/build/blockchyp.exe` that you can then deploy
 as part of your solution.
 
-## Configuration
+## Using Credentials
 
-Key settings like API credentials can be passed in on the command line with
-every request, but the best option is to configure the command line by dropping a
+The example up above doesn't really tell you how to incorporate API credentials
+into your system.  No BlockChyp commands will succeed unless you've defined
+an apiKey, bearerToken, and signingKey.
+
+You can always pass these in on the command line if you want, like this...
+```
+$ ./blockchyp -test -apiKey=ZDSMMZLGRPBPRTJUBTAFBYZ33Q -bearerToken=ZLBW5NR4U5PKD5PNP3ZP3OZS5U -signingKey=9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947 -type=charge -terminal="Test Terminal" -amount="25.55"
+
+```
+
+We don't advise this however, because credentials will then show up in your shell command history, etc.
+
+The best option is to configure these settings in a file by dropping a
 `blockchyp.json` file on your file system.
 
 A typical `blockchyp.json` file looks like this:
@@ -114,15 +169,11 @@ A typical `blockchyp.json` file looks like this:
   "apiKey":"ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
   "bearerToken":"ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
   "signingKey":"9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-  "routeCacheTTL": 60,
-  "gatewayTimeout": 20,
-  "terminalTimeout": 2
+  "routeCacheTTL": 60,   //optional
+  "gatewayTimeout": 20,  //optional
+  "terminalTimeout": 2   //optional
 }
 ```
-
-The TTL and timeout settings are optional and so are the credentials, but the
-credentials are highly recommended.  Otherwise malicious users might be able
-to see your API credentials by looking at your shell command history.
 
 You can specify the location of this file via the `-f` command line argument, but
 BlockChyp does look for this file in a few default locations depending on your operating system.
@@ -138,12 +189,41 @@ For **Windows**, BlockChyp looks for the file in
 These default locations are fine for development, but we recommend production systems
 explicitly specify a file location via the `-f` argument.
 
+## The -test Flag
+
+Per PCI requirements, test transactions cannot be routed to the same servers used
+to process live transactions.  This means that when you're running test transactions
+in development, you'll need to add the `-test` flag to all commands
+and remove this flag in production.  This means your software will probably need
+it's own way to configure this setting, usually a test checkbox.
+
+Even if it weren't a PCI requirement, we like multiple intent confirmation mechanisms that
+confirm a developer's expectations about the API call.  Imagine if a production point-of-sale system
+were configured with test API credentials.  Real merchandise could walk out a
+merchant's door without real money changing hands.  The -test flag helps
+prevent mistakes like this.
+
+As you get further into BlockChyp, you'll notice other areas where BlockChyp
+has flags that help confirm a developer's intent when they make an
+API call.  (Examples would be cash back, cash discounting, etc.)
+
+## Redirecting Output
+
+Standard Out can be easy to work with or difficult depending on your platform.
+If you'd rather redirect responses to a file, just add `-out` to your list of
+command arguments and specify a file location.  For example:
+
+```
+$ ./blockchyp -test -type=charge -terminal="Test Terminal" -amount="25.55" -out="/a/file/location"
+
+```
+
 ## Command Line Options
 
 | Option           | Description                                         | Example                                    |
 |------------------|-----------------------------------------------------|--------------------------------------------|
 | `-f`             | Specifies config file location.                     | `-f="/path/to/blockchyp.json"`             |
-| `-t`             | Flags the transaction as a test transaction.        | `-t` (no value required)                   |
+| `-test`          | Flags the transaction as a test transaction.        | `-test` (no value required)                   |
 | `-type`          | Transaction type (charge, preauth, etc)             | `-type=charge`                             |
 | `-gateway`       | Used to override gateway host name.                 | `-gateway=https://api.blockchyp.com`       |
 | `-testGateway`   | Used to override the test gateway host name.        | `-testGateway=https://test.blockchyp.com`  |
@@ -154,6 +234,8 @@ explicitly specify a file location via the `-f` argument.
 | `-terminal`      | Name of the terminal for terminal transactions.     | `-terminal="Cashier #1"`                   |
 | `-token`         | Token for token based transactions.                 | `-token=ZLBW5NR4U5PKD5PNP3ZP3OZS5U`        |
 | `-amount`        | Amount to authorize for the transaction.            | `-amount=50.00`                            |
+| `-promptForTip`  | If set, the terminal will prompt the customer for a tip.  | `-promptForTip`                      |
+| `-message`       | Message to be displayed on the terminal.            |  `-message="Would you like to join our mailing list?"` |
 | `-tip`           | Tip amount, if needed.                              | `-tip=5.00`                                |
 | `-tax`           | Tax amount, if needed.                              | `-tax=23.45`                               |
 | `-taxExempt`     | Flags a transaction as tax exempt for Level 2 processing.  | `-taxExempt`                        |
@@ -183,26 +265,37 @@ explicitly specify a file location via the `-f` argument.
 | `-promptType`    | Type of prompt for text-prompts. Could be 'email', 'phone', 'customer-number', or 'rewards-number' | `-prompt="email"`           |
 | `-yesCaption`    | Overrides the label for the 'Yes' button on boolean-prompt screens. | `-yesCaption="Definitely"`           |
 | `-noCaption`    | Overrides the label for the 'No' button on boolean-prompt screens. | `-noCaption="I Think Not"`           |
-
-## Test Transactions
-
-BlockChyp's test system is designed to prevent mixups about whether a configuration
-is pointed at live or test environments.  When using test credentials, all transactions
-must have the `-test` flag set.
-
-To run the sample transactions below against a test merchant account, just append
-`-test` to the list of arguments.  For example,
-
-```
-> blockchyp.exe -type=charge -terminal="Test Terminal" -amount="20.55" -test
-```
+| `-ebt`    | Captures an EBT transaction.  | `-ebt`           |
+| `-debit`   | Forces a debit transaction.  Usually not necessary, but might be needed for some MSR debit cards.   |  `-debit`  |
+| `-tcAlias`   | Preconfigured template alias name for a terms & conditions capture.  | `-tcAlias=hippa`   |
+| `-tcName` | Name of an agreement to be displayed for terms & conditions capture | `-tcAlias="Rental Agreement"` |
+| `-tcContent`   | Text of agreement to be displayed for terms & conditions capture if not using a template.  | `-tcContent="Lorem Ipsum..."`   |
+| `-timeout`   | Overrides the default timeout for a transaction in seconds.  | `-timout=30`  |
+| `-sigRequired`   | Indicates that a signature is required for a transaction.  | `-sigRequired`  |
+| `-cashback`   | Enables cashback if the presented card is a debit card and cash back is enabled in the merchant profile.  | `-cashback`   |
+| `-enroll`   | For charge or preauth transactions, adds vault enrollment to the transaction.  | `-enroll`  |
+| `-disableSignature`   | Disables signature capture if the terminal would otherwise request a signature.  |  `-disableSignature`  |
+| `-customerId`   | Customer identifier for use with customer database requests.   | `-customerId=DD62YSX6G4I6RM3XNSLM7WZLHE`   |
+| `-customerRef`   | Optional reference id for a customer record.  This is probably your system's customer identifier.  | `-customerRef=MYID`   |
+| `-firstName`   | First name for a customer record.  | `-firstName="GAVIN"`  |
+| `-lastName`  | Last name for a customer record. | `-lastName="BELSON"`  |
+| `-companyName`   | Company name for a customer record.  | `-companyName="HOOLI"`  |
+| `-email`   | EMail address for a customer record or email link.  | `-email="gavin.belson@hooli.com"`   |
+| `-sms`   | Mobile/SMS number for a customer record.  | `-sms=9136488888`  |
+| `-subject`  | Subject for autosent email payment links.  | `-subject="Your Hooli Invoice"`  |
+| `-autoSend`   | Automatically send the customer a payment email.  | `-autoSend`   |
+| `-query`   | Search query for use with the customer search API. | `-query="gavin"`  |
+| `-orderRef`   | Order reference that can be associated with a payment link.   | `-orderRef=MYID`  |
+| `-callbackUrl`   | Optional callback URL that should be notified when a customer submits payment for a payment link. | `-callbackUrl=https://yourdomain.com/payment-callback`  |
+| `-surcharge`   | Adds a surcharge to a transaction if cash discount is enabled for the mercahnt.  | `-surcharge`  |
+| `-cashDiscount`   | Reduces the transaction amount by the processing fee if the presented card is a debit card and cash discounting is enabled.  |  `-cashDiscount`  |
 
 
 ## Sample Transactions
 
 The section below gives a few sample transactions for most common scenarios.
 
-Note  that responses are shown below with standard JSON pretty printing white space.
+Note that responses are shown below with standard JSON pretty printing white space.
 Real CLI responses are more compact.
 
 ### Terminal Ping
@@ -222,38 +315,55 @@ This transaction executes a direct auth and capture transaction against a BlockC
 payment terminal.
 
 ```
-> blockchyp.exe -type=charge -terminal="Test Terminal" -amount="20.55"
+> blockchyp.exe -test -type=charge -terminal="Test Terminal" -amount="20.55"
 {
-  "approved":true,
-  "responseDescription":"Approved",
-  "transactionId":"NZ6FGYAYLYI6TLVWNSLM7WZLHE",
-  "transactionRef":"cfd068099a4280f1f09a965d9cc522f25ef4e06a95c9a9461d59fa5deed62180",
-  "transactionType":"charge","timestamp":"2019-01-15T00:42:36Z",
-  "tickBlock":"000e61f8204a2a372cac288f833a8e0949dd50d0074d5133432dce4e78d97913",
-  "authCode":"612797",
-  "entryMethod":"CHIP",
-  "paymentType":"VISA",
-  "maskedPan":"************0010",
-  "cardHolder":"Test/Card 01              ",
-  "partialAuth":false,
-  "altCurrency":false,
-  "currencyCode":"USD",
-  "requestedAmount":"20.55",
-  "authorizedAmount":"20.55",
-  "receiptSuggestions":{
-    "AID":"A0000000031010",
-    "ARQC":"E0A09074268A87F4",
-    "IAD":"06010A03A0B800",
-    "TVR":"0240008000",
-    "TSI":"E800",
-    "merchantName":"Test Merchant",
-    "applicationLabel":"VISA CREDIT",
-    "requestSignature":true,
-    "maskedPan":"************0010",
-    "authorizedAmount":"20.55",
-    "transactionType":"charge",
-    "entryMethod":"CHIP"
-  }
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "945591",
+  "transactionId": "RSZ7MBMGKEI6VEVUAJBKYEIAAM",
+  "transactionRef": "70741102617",
+  "transactionType": "charge",
+  "timestamp": "2020-04-24T17:32:18Z",
+  "tickBlock": "00062f3095caceb110c594c2b92c8ad8cf04f6ac5df27a8761fb8799763bd8de",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "20.55",
+  "authorizedAmount": "20.55",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "0.00",
+  "entryMethod": "CHIP",
+  "paymentType": "VISA",
+  "maskedPan": "************0010",
+  "cardHolder": "UAT USA/Test Card 04",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "aid": "A0000000031010",
+    "arqc": "47D532151914305A",
+    "iad": "06010A03A0B800",
+    "tvr": "8000008800",
+    "tsi": "6800",
+    "merchantName": "CLI Regression Test",
+    "applicationLabel": "VISA CREDIT",
+    "requestSignature": false,
+    "maskedPan": "************0010",
+    "authorizedAmount": "20.55",
+    "transactionType": "charge",
+    "entryMethod": "CHIP",
+    "cashBackAmount": "0.00",
+    "surcharge": "0.00",
+    "cashDiscount": "0.00"
+  },
+  "customer": null,
+  "whiteListedCard": null,
+  "storeAndForward": false
 }
 ```
 
@@ -263,67 +373,99 @@ This transaction executes a preauthorization against a BlockChyp
 payment terminal.
 
 ```
-./blockchyp -type=preauth -terminal="Test Terminal" -amount="20.55"
+./blockchyp -test -type=preauth -terminal="Test Terminal" -amount="20.23"
 {
-  "approved":true,
-  "responseDescription":"Approved",
-  "transactionId":"NZ6FGYAYLYI6TLVWNSLM7WZLHE",
-  "transactionRef":"cfd068099a4280f1f09a965d9cc522f25ef4e06a95c9a9461d59fa5deed62180",
-  "transactionType":"preauth",
-  "timestamp":"2019-01-15T00:42:36Z",
-  "tickBlock":"000e61f8204a2a372cac288f833a8e0949dd50d0074d5133432dce4e78d97913",
-  "authCode":"612797",
-  "entryMethod":"CHIP",
-  "paymentType":"VISA",
-  "maskedPan":"************0010",
-  "cardHolder":"Test/Card 01              ",
-  "partialAuth":false,
-  "altCurrency":false,
-  "currencyCode":"USD",
-  "requestedAmount":"20.55",
-  "authorizedAmount":"20.55",
-  "receiptSuggestions":{
-    "AID":"A0000000031010",
-    "ARQC":"E0A09074268A87F4",
-    "IAD":"06010A03A0B800",
-    "TVR":"0240008000",
-    "TSI":"E800",
-    "merchantName":"Test Merchant",
-    "applicationLabel":"VISA CREDIT",
-    "requestSignature":true,
-    "maskedPan":"************0010",
-    "authorizedAmount":"20.55",
-    "transactionType":"charge",
-    "entryMethod":"CHIP"
-  }
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "317841",
+  "transactionId": "XGDHFSUGKEI6VN3BAJBKYEIAAI",
+  "transactionRef": "03474722242",
+  "transactionType": "preauth",
+  "timestamp": "2020-04-24T17:33:34Z",
+  "tickBlock": "00062f3095caceb110c594c2b92c8ad8cf04f6ac5df27a8761fb8799763bd8de",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "20.23",
+  "authorizedAmount": "20.23",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "0.00",
+  "entryMethod": "CHIP",
+  "paymentType": "VISA",
+  "maskedPan": "************0010",
+  "cardHolder": "UAT USA/Test Card 04",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "aid": "A0000000031010",
+    "arqc": "C2ADAF4143C29E02",
+    "iad": "06010A03A0B800",
+    "tvr": "8000008800",
+    "tsi": "6800",
+    "merchantName": "CLI Regression Test",
+    "applicationLabel": "VISA CREDIT",
+    "requestSignature": false,
+    "maskedPan": "************0010",
+    "authorizedAmount": "20.23",
+    "transactionType": "preauth",
+    "entryMethod": "CHIP",
+    "cashBackAmount": "0.00",
+    "surcharge": "0.00",
+    "cashDiscount": "0.00"
+  },
+  "customer": null,
+  "whiteListedCard": null,
+  "storeAndForward": false
 }
 ```
 
 ### Capture
 
 Captures an existing preauthorization.  `-tx` is required and developers have
-the option of adding tip adjustments or changing the amount.
+the option of adding tip adjustments or changing the amount.  If you want to capture
+the same amount as the original preauth, you may omit -t `-amount` parameter.
 
 ```
-> blockchyp.exe -type=capture -tx=DD62YXX6G4INSLM7WZLHE -tip=5.00 -amount=55.00
+> blockchyp.exe -test -type=capture -tx=XGDHFSUGKEI6VN3BAJBKYEIAAI -tip=5.00 -amount=55.00
 {
-  "responseDescription":"Approved",
-  "transactionId":"DD62YXX6G4I6RM35NSLM7WZLHE",
-  "batchId":"OGMJ72X5MUI6RD7MNSLM7WZLHE",
-  "transactionType":"capture",
-  "timestamp":"2018-12-12T21:20:11Z",
-  "tickBlock":"009991a8ac7b6a4420760e1e14e1689c88be2a610a033d6908c1b04b5c00f9da",
-  "approved":true,
-  "authCode":"349143",
-  "entryMethod":"CHIP",
-  "paymentType":"VISA",
-  "partialAuth":false,
-  "altCurrency":false,
-  "currencyCode":"USD",
-  "requestedAmount":"55.00",
-  "authorizedAmount":"55.00",
-  "tipAmount":"5.00",
-  "taxAmount":"0.00"
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "354258",
+  "transactionId": "RSZ7TXMGKEI6VEVUAJBKYEIAAM",
+  "batchId": "YDSTNCEGGQI6VF5IAJBKYEIAAM",
+  "transactionType": "capture",
+  "timestamp": "2020-04-24T17:35:00Z",
+  "tickBlock": "00062f3095caceb110c594c2b92c8ad8cf04f6ac5df27a8761fb8799763bd8de",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "55.00",
+  "authorizedAmount": "55.00",
+  "remainingBalance": "",
+  "tipAmount": "5.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "",
+  "authorizedCashBackAmount": "",
+  "entryMethod": "CHIP",
+  "paymentType": "VISA",
+  "maskedPan": "************0010",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "requestSignature": false,
+    "authorizedAmount": "",
+    "transactionType": ""
+  },
+  "customer": null
 }
 ```
 
@@ -332,25 +474,35 @@ the option of adding tip adjustments or changing the amount.
 Voids an existing transaction in the current batch.  `-tx` is required.
 
 ```
-$ ./blockchyp -type=void -tx=DD62YVH6G4I6RM33NSLM7WZLHE
+$ ./blockchyp -test -type=void -tx=DD62YVH6G4I6RM33NSLM7WZLHE
 {
-  "responseDescription":"Approved",
-  "transactionId":"DD62YXX6G4I6RM36NSLM7WZLHE",
-  "batchId":"OGMJ72X5MUI6RD7MNSLM7WZLHE",
-  "transactionType":"void",
-  "timestamp":"2018-12-12T21:24:19Z",
-  "tickBlock":"009991a8ac7b6a4420760e1e14e1689c88be2a610a033d6908c1b04b5c00f9da",
-  "approved":true,
-  "authCode":"686941",
-  "entryMethod":"CHIP",
-  "paymentType":"VISA"
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "503145",
+  "transactionId": "XGDHNOEGKEI6VN3BAJBKYEIAAI",
+  "batchId": "YDSTNCEGGQI6VF5IAJBKYEIAAM",
+  "transactionType": "void",
+  "timestamp": "2020-04-24T17:36:15Z",
+  "tickBlock": "00062f3095caceb110c594c2b92c8ad8cf04f6ac5df27a8761fb8799763bd8de",
+  "test": true,
+  "entryMethod": "CHIP",
+  "paymentType": "VISA",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "requestSignature": false,
+    "authorizedAmount": "",
+    "transactionType": ""
+  },
+  "customer": null
 }
 ```
 
 ### Refunds
 
 BlockChyp supports refunds that reference previous transactions and refunds that
-do not reference a previous transaction, which we call free range refunds.
+do not reference a previous transaction, which we call **free range refunds**.
 
 We strongly recommend that refunds always reference a previous transaction, but
 we know we don't live in an ideal world.
@@ -359,19 +511,46 @@ The example below shows how to refund the entire amount of a previous transactio
 without needing to lookup or pass in the amount.
 
 ```
-$ ./blockchyp -type=refund -tx=IU245GBFV4I6THQ3AJBKYEIAAY
-  {
-    "responseDescription":"Approved",
-    "transactionId":"IU245GBFV4I6THQ3AJBKYEIAAY",
-    "transactionType":"refund",
-    "timestamp":"2019-01-31T23:37:56Z",
-    "tickBlock":"00014bd97158fdbc02a0923a5a339db853c074aa3a460b9f54aafd003e630296",
-    "test":false,
-    "approved":true,
-    "authCode":"313097",
-    "currencyCode":"USD",
-    "authorizedAmount":"55.55"
-  }
+$ ./blockchyp -test -type=refund -tx=RSZ7TY4GKEI6VEVUAJBKYEIAAM
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "065100",
+  "transactionId": "RSZ7TZEGKEI6VEVUAJBKYEIAAM",
+  "batchId": "YDSTNCEGGQI6VF5IAJBKYEIAAM",
+  "transactionType": "refund",
+  "timestamp": "2020-04-24T17:40:56Z",
+  "tickBlock": "00062f3095caceb110c594c2b92c8ad8cf04f6ac5df27a8761fb8799763bd8de",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "",
+  "authorizedAmount": "20.55",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "",
+  "authorizedCashBackAmount": "",
+  "entryMethod": "CHIP",
+  "paymentType": "DISC",
+  "maskedPan": "************0133",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "merchantName": "CLI Regression Test",
+    "requestSignature": false,
+    "maskedPan": "************0133",
+    "authorizedAmount": "20.55",
+    "transactionType": "refund",
+    "entryMethod": "CHIP"
+  },
+  "customer": null,
+  "whiteListedCard": null,
+  "storeAndForward": false
+}
 ```
 
 #### Partial refunds
@@ -380,22 +559,46 @@ To refund some, but not all, of a previous transaction, just add an amount argum
 as shown below...
 
 ```
-$ ./blockchyp -type=refund -tx=IU245HBFV4I6THQ3AJBKYEIAAY -amount="25.00"
-  {
-    "responseDescription":"Approved",
-    "transactionId":"IU245HBFV4I6THQ3AJBKYEIAAY",
-    "transactionType":"refund",
-    "timestamp":"2019-01-31T23:41:25Z",
-    "tickBlock":"00014bd97158fdbc02a0923a5a339db853c074aa3a460b9f54aafd003e630296",
-    "test":false,
-    "approved":true,
-    "authCode":"139089",
-    "entryMethod":"CHIP",
-    "paymentType":"MC",
-    "currencyCode":"USD",
-    "requestedAmount":"25.00",
-    "authorizedAmount":"25.00"
-  }
+$ ./blockchyp -type=refund -tx=IU245HBFV4I6THQ3AJBKYEIAAY -amount="10.00"
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "065100",
+  "transactionId": "RSZ7TZEGKEI6VEVUAJBKYEIAAM",
+  "batchId": "YDSTNCEGGQI6VF5IAJBKYEIAAM",
+  "transactionType": "refund",
+  "timestamp": "2020-04-24T17:40:56Z",
+  "tickBlock": "00062f3095caceb110c594c2b92c8ad8cf04f6ac5df27a8761fb8799763bd8de",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "10.00",
+  "authorizedAmount": "10.00",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "",
+  "authorizedCashBackAmount": "",
+  "entryMethod": "CHIP",
+  "paymentType": "DISC",
+  "maskedPan": "************0133",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "merchantName": "CLI Regression Test",
+    "requestSignature": false,
+    "maskedPan": "************0133",
+    "authorizedAmount": "10.00",
+    "transactionType": "refund",
+    "entryMethod": "CHIP"
+  },
+  "customer": null,
+  "whiteListedCard": null,
+  "storeAndForward": false
+}
 ```
 
 #### Free Range Refunds
@@ -404,39 +607,56 @@ If you have to refund a card directly without referencing a previous transaction
 the syntax is similar to charge and preauth transactions.
 
 ```
-$ ./blockchyp -type=refund -terminal="Test Terminal" -amount="25.00"
-  {
-    "responseDescription":"Approved",
-    "transactionId":"IU245HRFV4I6THQ3AJBKYEIAAY",
-    "transactionRef":"2073d065659065e1ab0a565765992743993bc75e8875bdaad5e00947dddc029c",
-    "transactionType":"refund",
-    "timestamp":"2019-01-31T23:43:55Z",
-    "tickBlock":"00014bd97158fdbc02a0923a5a339db853c074aa3a460b9f54aafd003e630296",
-    "test":false,
-    "approved":true,
-    "authCode":"557464",
-    "sigFile":"",
-    "entryMethod":"CHIP",
-    "paymentType":"MC",
-    "maskedPan":"************0434",
-    "cardHolder":"Test/Card 10            ",
-    "currencyCode":"USD",
-    "requestedAmount":"25.00",
-    "authorizedAmount":"25.00",
-    "receiptSuggestions":{
-      "AID":"A0000000041010",
-      "ARQC":"47197067E0E722D2",
-      "IAD":"0110A0000F220000000000000000000000FF",
-      "TVR":"0840008000",
-      "TSI":"E800",
-      "merchantName":"Test Merchant",
-      "applicationLabel":"MasterCard",
-      "maskedPan":"************0434",
-      "authorizedAmount":"25.00",
-      "transactionType":"refund",
-      "entryMethod":"CHIP"
-    }
-  }
+$ ./blockchyp -test -type=refund -terminal="Test Terminal" -amount="25.00"
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "289967",
+  "transactionId": "RSZ7T2UGKEI6VEVUAJBKYEIAAM",
+  "transactionRef": "16085815032",
+  "transactionType": "refund",
+  "timestamp": "2020-04-24T17:44:36Z",
+  "tickBlock": "00062f3095caceb110c594c2b92c8ad8cf04f6ac5df27a8761fb8799763bd8de",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "25.00",
+  "authorizedAmount": "25.00",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "0.00",
+  "entryMethod": "CHIP",
+  "paymentType": "MC",
+  "maskedPan": "************0434",
+  "cardHolder": "Test/Card 10",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "aid": "A0000000041010",
+    "arqc": "C3D86F9FEE36AB6E",
+    "iad": "0110A0000F220000000000000000000000FF",
+    "tvr": "0840008800",
+    "tsi": "E800",
+    "merchantName": "CLI Regression Test",
+    "applicationLabel": "MasterCard",
+    "requestSignature": false,
+    "maskedPan": "************0434",
+    "authorizedAmount": "25.00",
+    "transactionType": "refund",
+    "entryMethod": "CHIP",
+    "cashBackAmount": "0.00",
+    "surcharge": "0.00",
+    "cashDiscount": "0.00"
+  },
+  "customer":  null,
+  "whiteListedCard": null,
+  "storeAndForward": false
+}
 ```
 
 ### Time Out Reversals
@@ -446,7 +666,7 @@ gone through.  In order to use reversals, always provide a value for the `-txRef
 option as shown in the sample charge transaction below.
 
 ```
-$ ./blockchyp -type=charge -terminal="Test Terminal" -amount=25.00 -txRef=4373223444
+$ ./blockchyp -test -type=charge -terminal="Test Terminal" -amount=25.00 -txRef=4373223444
 Request Timed Out
 ```
 
@@ -454,17 +674,154 @@ If the request times out, you have 2 minutes to submit a reversal as shown in th
 next sample transaction.
 
 ```
-./blockchyp -type=reverse -txRef=4373223444
+./blockchyp -test -type=reverse -txRef=4373223444
 {
-  "responseDescription":"No Action Taken",
-  "transactionId":"DD62Y2H6G4I6RM4ANSLM7WZLHE",
-  "batchId":"OGMJ72X5MUI6RD7MNSLM7WZLHE",
-  "transactionType":"reverse",
-  "timestamp":"2018-12-12T21:32:19Z",
-  "tickBlock":"009991a8ac7b6a4420760e1e14e1689c88be2a610a033d6908c1b04b5c00f9da",
-  "approved":true
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "823176",
+  "transactionId": "XGDHNPUGKEI6VN3BAJBKYEIAAI",
+  "batchId": "YDSTNCEGGQI6VF5IAJBKYEIAAM",
+  "transactionRef": "4373223444",
+  "transactionType": "reverse",
+  "timestamp": "2020-04-24T18:06:47Z",
+  "tickBlock": "000724fdad4840c9902fbc1084556845b43f8c8170cf25a9cb5e609ad64cb291",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "",
+  "authorizedAmount": "0.00",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "",
+  "authorizedCashBackAmount": "",
+  "entryMethod": "CHIP",
+  "paymentType": "MC",
+  "maskedPan": "************0434",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "merchantName": "CLI Regression Test",
+    "requestSignature": false,
+    "maskedPan": "************0434",
+    "authorizedAmount": "0.00",
+    "transactionType": "reverse",
+    "entryMethod": "CHIP",
+    "surcharge": "0.00",
+    "cashDiscount": "0.00"
+  },
+  "customer": null,
+  "whiteListedCard": null,
+  "storeAndForward": false
 }
 ```
+
+### EBT
+
+To run an EBT transaction, just add `-ebt` to a charge or refund transaction.
+
+```
+$ ./blockchyp -test -type=charge -terminal="Test Terminal" -amount="15.00" -ebt
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "474785",
+  "transactionId": "XGDHNQUGKEI6VN3BAJBKYEIAAI",
+  "transactionRef": "72572042134",
+  "transactionType": "charge",
+  "timestamp": "2020-04-24T18:09:57Z",
+  "tickBlock": "000724fdad4840c9902fbc1084556845b43f8c8170cf25a9cb5e609ad64cb291",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "15.00",
+  "authorizedAmount": "15.00",
+  "remainingBalance": "85.00",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "0.00",
+  "entryMethod": "SWIPE",
+  "paymentType": "EBT",
+  "maskedPan": "************1112",
+  "cardHolder": "BEGHETTI/NELSON",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "merchantName": "CLI Regression Test",
+    "requestSignature": false,
+    "maskedPan": "************1112",
+    "authorizedAmount": "15.00",
+    "transactionType": "charge",
+    "entryMethod": "SWIPE",
+    "pinVerified": true,
+    "cashBackAmount": "0.00",
+    "surcharge": "0.00",
+    "cashDiscount": "0.00"
+  },
+  "customer": null,
+  "whiteListedCard": null,
+  "storeAndForward": false
+}
+```
+
+BlockChyp also supports manually entered EBT transactions.  Add `-manual` to
+process a manual EBT transaction.
+
+```
+$ ./blockchyp -test -type=charge -terminal="Test Terminal" -amount="15.00" -ebt -manual
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "523571",
+  "transactionId": "RSZ7T3UGKEI6VEVUAJBKYEIAAM",
+  "transactionRef": "00333384056",
+  "transactionType": "charge",
+  "timestamp": "2020-04-24T18:11:41Z",
+  "tickBlock": "000724fdad4840c9902fbc1084556845b43f8c8170cf25a9cb5e609ad64cb291",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "15.00",
+  "authorizedAmount": "15.00",
+  "remainingBalance": "85.00",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "0.00",
+  "entryMethod": "KEYED",
+  "paymentType": "EBT",
+  "maskedPan": "************1111",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "merchantName": "CLI Regression Test",
+    "requestSignature": false,
+    "maskedPan": "************1111",
+    "authorizedAmount": "15.00",
+    "transactionType": "charge",
+    "entryMethod": "KEYED",
+    "pinVerified": true,
+    "cashBackAmount": "0.00",
+    "surcharge": "0.00",
+    "cashDiscount": "0.00"
+  },
+  "customer": null,
+  "whiteListedCard": null,
+  "storeAndForward": false
+}
+
+```
+
 
 ### Gift Card Activation
 
@@ -474,7 +831,7 @@ Note that BlockChyp gift cards do not have numbers.  They're identified by
 public key.
 
 ```
-./blockchyp -type=gift-activate -terminal="Test Terminal" -amount=25.00
+./blockchyp -test -type=gift-activate -terminal="Test Terminal" -amount=25.00
 {
   "responseDescription":"Approved",
   "transactionId":"DD62Y2H6G4I6RM4ANSLM7WZLHE",
@@ -595,7 +952,7 @@ The example below shows a typical manual transaction.
   }
 ```
 
-### Line Item Display
+## Line Item Display
 
 This command adds items to the line item display.
 
@@ -611,7 +968,7 @@ $ ./blockchyp -type=display -terminal="Test Terminal" -displaySubtotal="120.05" 
 }
 ```
 
-### Clear Terminal
+## Clear Terminal
 
 This command clears the terminal if a transaction is in progress. It also clears the line item display buffer.
 
@@ -623,7 +980,7 @@ $ ./blockchyp -type=clear -terminal="Test Terminal"
 }
 ```
 
-### Display Message
+## Display Message
 
 This command displays a free form message on the terminal.
 
@@ -635,7 +992,7 @@ $ ./blockchyp -type=message -terminal="Test Terminal" -message="Thank you for yo
 }
 ```
 
-### Boolean Prompt
+## Boolean Prompt
 
 This command asks the user a yes or no question.
 
@@ -650,7 +1007,7 @@ $ ./blockchyp -type="boolean-prompt" -terminal="Test Terminal" -prompt="Would yo
 }
 ```
 
-### Text Prompt
+## Text Prompt
 
 This command captures text input from the user.  Due to PCI restrictions, free
 form prompts are not allowed. You must pick between email, phone numbers, customer
@@ -662,6 +1019,697 @@ $ ./blockchyp -type="text-prompt" -terminal="Test Terminal" -promptType="phone"
   "success":true,
   "error":"",
   "response": "5095901945"
+}
+```
+
+## Surcharging / Cash Discounting
+
+It's a touchy subject, but some merchants may want to pass credit processing fees
+on to their customers.  This is allowed under certain conditions provided
+that debit cards are treated as cash.  It's somewhat euphamisticly called
+"cash discounting" in the industry.
+
+BlockChyp supports the two main variants of cash discounting used in the industry
+along with real cash discounting.
+
+There are three modes of operation:
+
+* Surcharge Only:  A surcharge is added to non-debit transactions and debit transactions are ignored. (Use `-surcharge` only.)
+* Surcharge + Cash Discount:  Under this mode, surcharges are added to all transactions.  When a debit card is presented, a cash discount is also applied to the transaction, negating the surcharge.  (Use `-surcharge` and `-cashDiscount`.)
+* Real Cash Discounting:  Non debit transactions behave normally.  When a debit card is presented, the total is reduced by the credit card fee amount. (Use `-cashDiscount` only.)
+
+Cash discounting only works on flat rate pricing and if enabled.  For test merchant accounts, you have the ability to enable cash discounting and set pricing for testing purposes.  Just click the "TEST SETTINGS" button on the test merchant's status page.
+
+Here's a quick example using a conventional credit card with `-surcharge` and `-cashDiscount` enabled.
+
+```
+$ ./blockchyp -test -type="charge" -terminal="Test Terminal" -amount="25.55" -surcharge -cashDiscount
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "756139",
+  "transactionId": "XGDHNRUGKEI6VN3BAJBKYEIAAI",
+  "transactionRef": "17636240256",
+  "transactionType": "charge",
+  "timestamp": "2020-04-24T20:27:32Z",
+  "tickBlock": "000f584be5168bbf9839f58b5da7b5eea1a132c824a27ddfff3ca68ab906a7a4",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "26.75",
+  "authorizedAmount": "26.75",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "0.00",
+  "entryMethod": "CHIP",
+  "paymentType": "AMEX",
+  "maskedPan": "***********1006",
+  "cardHolder": "UAT USA/Test Card 12",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "aid": "A000000025010402",
+    "arqc": "DB05B8508BA56C0D",
+    "iad": "06020103A02800",
+    "tvr": "8000048800",
+    "tsi": "6800",
+    "merchantName": "CLI Regression Test",
+    "applicationLabel": "AMERICAN EXPRESS",
+    "requestSignature": false,
+    "maskedPan": "***********1006",
+    "authorizedAmount": "26.75",
+    "transactionType": "charge",
+    "entryMethod": "CHIP",
+    "pinVerified": true,
+    "cashBackAmount": "0.00",
+    "surcharge": "1.20",
+    "cashDiscount": "0.00"
+  },
+  "customer": null,
+  "whiteListedCard": null,
+  "storeAndForward": false
+}
+```
+
+Note that the requested and authorized amounts have been increased to tack on
+the fees and that receipt suggestions now has surcharge
+and cash discount details that should be added to the receipt.
+
+Let's try this same transaction again with a debit card:
+
+```
+$ ./blockchyp -test -type="charge" -terminal="Test Terminal" -amount="25.55" -surcharge -cashDiscount
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "064759",
+  "transactionId": "XGDHNSEGKEI6VN3BAJBKYEIAAI",
+  "transactionRef": "27250062468",
+  "transactionType": "charge",
+  "timestamp": "2020-04-24T20:30:26Z",
+  "tickBlock": "000cde15cd107853c4d3863bdf2c8796c33ca1c9d3c52b7053e45ac80044fb9d",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "25.55",
+  "authorizedAmount": "25.55",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "0.00",
+  "entryMethod": "CHIP",
+  "paymentType": "VISA",
+  "maskedPan": "************0135",
+  "cardHolder": "UAT USA/Test Card 19",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "aid": "A0000000980840",
+    "arqc": "F3A0E153B7E9DFF7",
+    "iad": "06010A03A00800",
+    "tvr": "8040048800",
+    "tsi": "6800",
+    "merchantName": "CLI Regression Test",
+    "applicationLabel": "US DEBIT",
+    "requestSignature": false,
+    "maskedPan": "************0135",
+    "authorizedAmount": "25.55",
+    "transactionType": "charge",
+    "entryMethod": "CHIP",
+    "pinVerified": true,
+    "cashBackAmount": "0.00",
+    "surcharge": "1.20",
+    "cashDiscount": "1.20"
+  },
+  "customer": null,
+  "whiteListedCard": null,
+  "storeAndForward": false
+}
+```
+
+This variation shows that the surcharge offset on the receipt suggestions with
+a cash discount.
+
+---
+**NOTE**
+
+Be very careful if you use `-cashDisount` without `-surcharge`.  This will reduce
+totals for debit transactions and will cause your merchants to lose revenue.
+Make sure this is what the merchant wants before using `-cashDisount` by itself.
+
+---
+
+### Actual Cash
+
+If you'd like BlockChyp to calculate any discounts and fees for real folding money
+cash transactions, this convenience API can help keep the math consistent between
+cash and terminal transactions.
+
+```
+./blockchyp -test -type="cash-discount" -amount="25.55" -surcharge -cashDiscount
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "",
+  "currencyCode": "",
+  "amount": "25.55",
+  "taxExempt": false,
+  "surcharge": "1.20",
+  "cashDiscount": "1.20"
+}
+```
+
+## Customer Records
+
+You have the option to use BlockChyp to track customers and associate multiple
+payment methods with a customer.  These can be used to support recurring
+transactions or to automatically identify customers by their payment methods.
+
+### Creating A New Customer Record
+
+The following example manually creates a new customer record.
+
+```
+$ ./blockchyp -test -type="update-customer" -firstName="Laurie" -lastName="Bream" -companyName="Bream Hall" -customerRef="MYCUSTID" -email="laurie.bream@breamhall.com"
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "",
+  "customer": {
+    "id": "KRYSSMMGKEI6VBYKAJBKYEIAAI",
+    "customerRef": "MYCUSTID",
+    "firstName": "Laurie",
+    "lastName": "Bream",
+    "companyName": "Bream Hall",
+    "emailAddress": "laurie.bream@breamhall.com",
+    "smsNumber": "",
+    "paymentMethods": null
+  }
+}
+```
+
+You can also create a new customer record as part of a transaction, as shown below.  This will automatically associate the payment
+method presented for the transaction with the customer record.
+
+```
+$ ./blockchyp -test -type="charge" -amount="55.00" -terminal="Test Terminal" -firstName="Monica" -lastName="Hall" -companyName="Bream Hall" -customerRef="MYCUSTID" -email="monica.hall@breamhall.com"
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "173152",
+  "transactionId": "RSZ7T4EGKEI6VEVUAJBKYEIAAM",
+  "transactionRef": "28344436347",
+  "transactionType": "charge",
+  "timestamp": "2020-04-24T18:31:19Z",
+  "tickBlock": "00033cd7cf0c3344e514ea11db232c410af0ca878cb319224d0c9468d3866c40",
+  "test": true,
+  "partialAuth": true,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "55.00",
+  "authorizedAmount": "25.00",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "0.00",
+  "token": "DWLDXH3J25AJSMMVSZ4HZ5EM7Q",
+  "entryMethod": "CHIP",
+  "paymentType": "MC",
+  "maskedPan": "************0434",
+  "cardHolder": "Test/Card 10",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "aid": "A0000000041010",
+    "arqc": "4C48CC01B50FE823",
+    "iad": "0110A0000F220000000000000000000000FF",
+    "tvr": "0840008800",
+    "tsi": "E800",
+    "merchantName": "CLI Regression Test",
+    "applicationLabel": "MasterCard",
+    "requestSignature": false,
+    "maskedPan": "************0434",
+    "authorizedAmount": "25.00",
+    "transactionType": "charge",
+    "entryMethod": "CHIP",
+    "cashBackAmount": "0.00",
+    "surcharge": "0.00",
+    "cashDiscount": "0.00"
+  },
+  "customer": {
+    "id": "KRYSSMMGKEI6VBYKAJBKYEIAAI",
+    "customerRef": "MYCUSTID",
+    "firstName": "Monica",
+    "lastName": "Hall",
+    "companyName": "Bream Hall",
+    "emailAddress": "monica.hall@breamhall.com",
+    "smsNumber": "",
+    "paymentMethods": null
+  },
+  "whiteListedCard": null,
+  "storeAndForward": false
+}
+```
+
+### Looking Up Customer By Payment Method
+
+One of the cooler things about customer records is that customer information
+is returned everytime that customer uses a payment card they've used previously.
+
+The example below is just a basic charge transaction, but returns customer data.
+
+```
+$ ./blockchyp -test -type="charge" -amount="25.00" -terminal="Test Terminal"
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "approved",
+  "approved": true,
+  "authCode": "776360",
+  "transactionId": "RSZ7T4UGKEI6VEVUAJBKYEIAAM",
+  "transactionRef": "30102384050",
+  "transactionType": "charge",
+  "timestamp": "2020-04-24T18:34:03Z",
+  "tickBlock": "00033cd7cf0c3344e514ea11db232c410af0ca878cb319224d0c9468d3866c40",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "25.00",
+  "authorizedAmount": "25.00",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "0.00",
+  "entryMethod": "CHIP",
+  "paymentType": "MC",
+  "maskedPan": "************0434",
+  "cardHolder": "Test/Card 10",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "aid": "A0000000041010",
+    "arqc": "8A83340952A60A36",
+    "iad": "0110A0000F220000000000000000000000FF",
+    "tvr": "0840008800",
+    "tsi": "E800",
+    "merchantName": "CLI Regression Test",
+    "applicationLabel": "MasterCard",
+    "requestSignature": false,
+    "maskedPan": "************0434",
+    "authorizedAmount": "25.00",
+    "transactionType": "charge",
+    "entryMethod": "CHIP",
+    "cashBackAmount": "0.00",
+    "surcharge": "0.00",
+    "cashDiscount": "0.00"
+  },
+  "customer": {
+    "id": "5SFZSHTOBAI6VNC7AJBKYEIAAI",
+    "customerRef": "",
+    "firstName": "Nancy",
+    "lastName": "Drew",
+    "companyName": "",
+    "emailAddress": "nancy.drew@aviato.com",
+    "smsNumber": "",
+    "paymentMethods": null
+  },
+  "whiteListedCard": null,
+  "storeAndForward": false
+}
+```
+### Searching The Customer Database
+
+To search the customer database, use the search-customer API.
+
+```
+$ ./blockchyp -test -type="search-customer" -query="bream"
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "",
+  "customers": [
+    {
+      "id": "KRYSSMMGKEI6VBYKAJBKYEIAAI",
+      "customerRef": "MYCUSTID",
+      "firstName": "Monica",
+      "lastName": "Hall",
+      "companyName": "Bream Hall",
+      "emailAddress": "monica.hall@breamhall.com",
+      "smsNumber": "",
+      "paymentMethods": null
+    }
+  ]
+}
+```
+
+The results will contain all matching customer records, but payment methods will
+not be returned with search results.  To get payment methods, you'll need to pull
+down a single customer record.
+
+### Retrieving A Single Customer Record
+
+The example below shows how to retrieve a single customer record.  Note that
+you can retrieve customer records with `-customerId` or `-customerRef`.
+
+```
+$ ./blockchyp -test -type="get-customer" -customerId=5SFZSHTOBAI6VNC7AJBKYEIAAI
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "",
+  "customer": {
+    "id": "5SFZSHTOBAI6VNC7AJBKYEIAAI",
+    "customerRef": "",
+    "firstName": "Nancy",
+    "lastName": "Drew",
+    "companyName": "",
+    "emailAddress": "",
+    "smsNumber": "",
+    "paymentMethods": [
+      {
+        "token": "FJF5K5BHPBAKFFMP2LIUUELTC4",
+        "maskedPan": "************0434",
+        "expiryMonth": "12",
+        "expiryYear": "18",
+        "paymentType": "MC"
+      }
+    ]
+  }
+}
+```
+
+## Sending Payment Links
+
+In addition to conventional card present and e-commerce transactions, you can
+use the BlockChyp Payment Link API to create and optionally email the customer
+a payment link.  The payment link will take the customer to a hosted payment
+page and capture the payment.
+
+BlockChyp can send the email for you via our white listed SendGrid IP if you
+pass in `-autoSend`.  Otherwise, the request will return the payment link for
+you to incorporate into your own email or SMS delivery system.
+
+You have the option to specify line item detail using the same interface
+used for terminal line item display.  You can also use terms and conditions
+parameters to incorporate terms and conditions acceptance into the payment
+process.
+
+```
+$ ./blockchyp -type="send-link" -displaySubtotal="120.05" -displayTax="5.00" -displayTotal="125.05" -lineItemDescription="Leki Trekking Poles" -lineItemQty=1 -lineItemPrice="135.05" -lineItemDiscountDescription="Member Discount" -lineItemDiscountAmount="10.00" -lineItemExtended="120.05" -desc="Thank you for your order. Your order will be ready in 20 minutes" -email="erlich.bachman@aviato.com" -firstName="Erlich" -lastName="Bachman" -amount="125.05" -orderRef="12345" -txRef="12334" -autoSend -txRef="EXAMPLEREF"
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "",
+  "linkCode": "OHB7JC54PCJGK5KJRNSHKGHA74",
+  "url": "https://test.blockchyp.com/pay/OHB7JC54PCJGK5KJRNSHKGHA74",
+  "customerId": "KRYSSN4GKEI6VBYKAJBKYEIAAI"
+}
+```
+
+The merchant will be notified by email when payment is collected.  Optionally, you may pass in
+`-callbackUrl` and specify a url to be notified payment is collected or attempted.  If provided, a BlockChyp AuthorizationResponse
+will be posted to the given URL.  The callback will be invoked whenever
+a payment is submitted, even if it was declined, so make sure you check
+the approval status when processing callback data.
+
+If passing in an `-txRef` to the initial request, you can use that transaction reference
+to poll for status updates on the transaction.
+
+## Transaction Status Checks
+
+This API allows you to check on the status of any transaction.  It's especially
+useful for determining the final disposition of a store and forward transaction
+or a payment link.  You can lookup transactions by `-tx` or `-txRef`, but txRef
+is the only method that can be used to resolve store and forward or payment link status.
+
+The API returns an AuthorizationResponse, the same response data structure that would
+be returned for a conventional terminal transaction.
+
+```
+./blockchyp -type="tx-status" -txRef="12334"
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "",
+  "approved": true,
+  "authCode": "634627",
+  "transactionId": "5SFZSITOBAI6VNC7AJBKYEIAAI",
+  "batchId": "3FKFPZDOBAI6VC26AJBKYEIAAM",
+  "transactionRef": "12334",
+  "transactionType": "charge",
+  "timestamp": "2020-03-25T00:20:14Z",
+  "tickBlock": "00047a76215e4eadd7d8d67227748264ecfc1e89e4708bafad3e43cf5f5f7b0c",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "125.05",
+  "authorizedAmount": "125.05",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "",
+  "entryMethod": "KEYED",
+  "paymentType": "VISA",
+  "maskedPan": "************1111",
+  "cardHolder": "JEFFREY PAYNE",
+  "avsResponse": "N",
+  "receiptSuggestions": {
+    "merchantName": "CLI Regression Test",
+    "merchantId": "MFLQFJUJJAI6TBE3AJBKYEIAAQ",
+    "requestSignature": false,
+    "maskedPan": "************1111",
+    "authorizedAmount": "125.05",
+    "transactionType": "charge",
+    "entryMethod": "ECOM"
+  },
+  "customer": {
+    "id": "SX6ZAYDOBAI6VMKYAJBKYEIAAI",
+    "customerRef": "",
+    "firstName": "Jeffrey",
+    "lastName": "Payne",
+    "companyName": "",
+    "emailAddress": "jeff@blockchyp.com",
+    "smsNumber": "",
+    "paymentMethods": null
+  },
+  "whiteListedCard": null,
+  "storeAndForward": false
+}
+```
+
+## Store and Forward
+
+The CLI, like all BlockChyp SDKs, has the ability to obtain a provisional
+authorization for a terminal transaction, even if the store's internet access is down.
+If Store & Forward is enabled for the merchant and the amount of the transaction
+is below the floor limit, the terminal will store up to 100 transactions encrypted
+in flash memory and forward them to BlockChyp for authorization once network
+access is restored.
+
+Refunds and cash back transactions are not eligible for store and forward.  EBT
+and gift card transaction are likewise exempted.
+
+Store and forward also doesn't work if the terminals are running in cloud relay mode
+since cloud relay requires the internet to function.
+
+To test store and forward transactions, you could always just unplug your office
+from the Internet, but this isn't very practical.  We've made it easy to test
+and simulate store and forward with special trigger amounts.
+
+If you're using a test merchant account, any transaction amounts consisting of
+all sevens will cause the terminal to simulate a network failure.
+
+### Below The Floor Limit
+
+The following example shows a sample store and forward transaction below the
+floor limit:
+
+```
+./blockchyp -test -type="charge" -terminal="Test Terminal" -amount="7.77" -txRef="SFTEST01"
+{
+  "success": true,
+  "error": "",
+  "responseDescription": "Approved Offline (SF)",
+  "approved": true,
+  "authCode": "000000",
+  "transactionId": "",
+  "transactionRef": "SFTEST01",
+  "transactionType": "charge",
+  "timestamp": "2020-04-24T19:51:49Z",
+  "tickBlock": "",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "USD",
+  "requestedAmount": "7.77",
+  "authorizedAmount": "7.77",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "0.00",
+  "entryMethod": "CHIP",
+  "paymentType": "MC",
+  "maskedPan": "************0434",
+  "cardHolder": "Test/Card 10",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "aid": "A0000000041010",
+    "arqc": "99A8F6CDF59DEF0D",
+    "iad": "0110A0000F220000000000000000000000FF",
+    "tvr": "0840008800",
+    "tsi": "E800",
+    "applicationLabel": "MasterCard",
+    "requestSignature": false,
+    "maskedPan": "************0434",
+    "authorizedAmount": "7.77",
+    "transactionType": "charge",
+    "entryMethod": "CHIP",
+    "cashBackAmount": "0.00",
+    "surcharge": "0.00",
+    "cashDiscount": "0.00"
+  },
+  "customer": null,
+  "whiteListedCard": null,
+  "storeAndForward": true
+}
+```
+
+Note that the `storeAndForward` flag is set in the response.  Use this flag to
+keep track of which transactions might need to be checked against the transaction
+status API later to ensure they went through.
+
+
+### Above The Floor Limit
+
+This next example increases the amount to 77.77, which is above the test merchant
+account floor limit of 50.00.
+
+```
+{
+  "success": false,
+  "error": "",
+  "responseDescription": "Transaction was reversed because there was a problem during authorization",
+  "approved": false,
+  "transactionId": "",
+  "transactionRef": "SFTEST02",
+  "transactionType": "charge",
+  "timestamp": "",
+  "tickBlock": "",
+  "test": true,
+  "partialAuth": false,
+  "altCurrency": false,
+  "fsaAuth": false,
+  "currencyCode": "",
+  "requestedAmount": "77.77",
+  "authorizedAmount": "0.00",
+  "remainingBalance": "",
+  "tipAmount": "0.00",
+  "taxAmount": "0.00",
+  "requestedCashBackAmount": "0.00",
+  "authorizedCashBackAmount": "0.00",
+  "entryMethod": "CHIP",
+  "cardHolder": "Test/Card 10",
+  "avsResponse": "",
+  "receiptSuggestions": {
+    "aid": "A0000000041010",
+    "arqc": "CBFC220E992E5C88",
+    "iad": "0110A0000F220000000000000000000000FF",
+    "tvr": "0840008800",
+    "tsi": "E800",
+    "applicationLabel": "MasterCard",
+    "requestSignature": false,
+    "authorizedAmount": "0.00",
+    "transactionType": "charge",
+    "entryMethod": "CHIP",
+    "cashBackAmount": "0.00",
+    "surcharge": "0.00",
+    "cashDiscount": "0.00"
+  },
+  "customer": null,
+  "whiteListedCard": null,
+  "storeAndForward": false
+}
+```
+
+## Terms And Conditions
+
+This feature allows you to present custom agreements and contract language to a
+customer for acceptance.  You can provide content for these agreements by
+preconfigurating a template in the BlockChyp dashboard or by passing content
+in directly .
+
+Whatever method you choose, BlockChyp maintains a log of all terms and conditions
+acceptance events, including the signature image and the exact text of the agreement
+presented.
+
+### Using a Template
+
+Assuming you've preconfigured a content template, you can capture acceptance
+and a signature like this:
+
+```
+./blockchyp -test -type="tc" -terminal="Test Terminal" -tcAlias="SAMPLEAGREEMENT"
+{
+  "success": true,
+  "test": true
+}
+```
+
+In the above example, the signature image is forwarded to the BlockChyp gateway for
+storage.  If you want to get the signature image in the response, just add a few additional paramters
+to the request to specify image size and desired format.  The Signature Images
+section below has all the details.
+
+### Using Dynamic Content
+
+You don't have to preconfigure terms and conditions templates.  If your system
+generates agreements dynamically or maintains all the details internally,
+you can just pass your content in on demand as shown in the next example:
+
+```
+./blockchyp -test -type="tc" -terminal="Test Terminal" -tcName="Sample Agreement" -tcContent="Lorem Ipsum..."
+{
+  "success": true,
+  "test": true
+}
+```
+
+## Direct Signature Capture
+
+In situations where you need to capture a written signature, terms and conditions
+is usually the best option because it captures the signature in full context
+of the agreement being signed for.
+
+But you still have the option to capture a signature without any context.
+
+The only caveat is that you must add the extra parameters needed to return
+the signature image.
+
+```
+./blockchyp -test -type="capture-signature" -terminal="Test Terminal" -sigFormat=png -sigWidth=500 -sigFile="sig.png"
+{
+  "success": true,
+  "error": "",
+  "responseDescription": ""
 }
 ```
 
@@ -754,11 +1802,10 @@ how a signature image can be captured in full resolution.
   }
 ```
 
-
 ## The Route Cache
 
 BlockChyp automatically locates payment terminals on your network, even if you
-stick with DHCP (which you shouldn't do).  Every time a payment terminal comes
+stick with DHCP (which you still shouldn't do).  Every time a payment terminal comes
 online, it reports its internal IP address to the BlockChyp gateway.  It also
 updates its network status periodically.
 
@@ -770,6 +1817,8 @@ invocation of the CLI is a new process, making in memory caches unfeasible.  We
 address this by maintaining an offline cache file.  This file is stored in your
 temp directory by default. You can use the `-routeCache`
 parameter to override this location if you'd like.
+
+This cache is refreshed every hour or immediately if a terminal request times out.
 
 ## What Are Tick Blocks?
 

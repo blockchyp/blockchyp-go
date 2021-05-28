@@ -6,8 +6,9 @@ RELEASE := $(or $(BUILD_NUMBER), 1)
 VERSION := $(or $(TAG:v%=%),$(LASTTAG:v%=%))-$(or $(BUILD_NUMBER), 1)$(if $(TAG),,.$(SNAPINFO))
 
 # Build config
-TESTFLAGS := -v -race
+TESTFLAGS := -v -race -count=1
 TESTENV :=
+MODE :=
 BUILDDIR := build
 DISTDIR := $(BUILDDIR)/dist
 CMDDIR := cmd
@@ -80,6 +81,13 @@ integration:
 		-w $(PWD) \
 		--rm -it $(IMAGE)) \
 	$(GO) test $(TESTFLAGS) $(if $(TEST), -run=$(TEST),) -tags=integration $(PKGS)
+
+# Runs regrssion tests
+.PHONY: regrssion
+regression:
+	rm -rf /tmp/blockchyp-regression-test
+	mkdir -p /tmp/blockchyp-regression-test
+	$(GO) run ./scripts/regression-test $(if $(TEST), -run=$(TEST),)
 
 # Performs any tasks necessary before a release build
 .PHONY: stage

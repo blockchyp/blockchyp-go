@@ -45,6 +45,8 @@ func TestGatewayTimeout(t *testing.T) {
 	request := blockchyp.AuthorizationRequest{
 		Timeout:        1,
 		PAN:            "5555555555554444",
+		ExpMonth:       "12",
+		ExpYear:        "2025",
 		Amount:         "25.55",
 		Test:           true,
 		TransactionRef: randomID(),
