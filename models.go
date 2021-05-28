@@ -41,6 +41,18 @@ const (
 	SignatureFormatGIF  = "gif"
 )
 
+// CVMType designates a customer verification method.
+type CVMType string
+
+// CVMs defined.
+const (
+	CVMTypeSignature  CVMType = "Signature"
+	CVMTypeOfflinePIN CVMType = "Offline PIN"
+	CVMTypeOnlinePIN  CVMType = "Online PIN"
+	CVMTypeCDCVM      CVMType = "CDCVM"
+	CVMTypeNoCVM      CVMType = "No CVM"
+)
+
 // PromptType is used to specify the type of text input data being requested
 // from a customer.
 type PromptType string
@@ -131,6 +143,17 @@ type ReceiptSuggestions struct {
 
 	// PINVerified indicates that PIN verification was performed.
 	PINVerified bool `json:"pinVerified,omitempty"`
+
+	// CVMUsed indicates the customer verification method used for the
+	// transaction.
+	CVMUsed CVMType `json:"cvmUsed,omitempty"`
+
+	// Fallback indicates that a chip read failure caused the transaction to fall
+	// back to the magstripe.
+	Fallback bool `json:"fallback,omitempty"`
+
+	// BatchSequence is the sequence of the transaction in the batch.
+	BatchSequence int `json:"batchSequence,omitempty"`
 
 	// CashBackAmount is the amount of cash back that was approved.
 	CashBackAmount string `json:"cashBackAmount,omitempty"`
@@ -1270,6 +1293,10 @@ type CaptureResponse struct {
 	// AuthCode is the auth code from the payment network.
 	AuthCode string `json:"authCode,omitempty"`
 
+	// AuthResponseCode is the code returned by the terminal or the card issuer
+	// to indicate the disposition of the message.
+	AuthResponseCode string `json:"authResponseCode,omitempty"`
+
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
 
@@ -1432,6 +1459,10 @@ type VoidResponse struct {
 
 	// AuthCode is the auth code from the payment network.
 	AuthCode string `json:"authCode,omitempty"`
+
+	// AuthResponseCode is the code returned by the terminal or the card issuer
+	// to indicate the disposition of the message.
+	AuthResponseCode string `json:"authResponseCode,omitempty"`
 
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
@@ -1623,6 +1654,10 @@ type EnrollResponse struct {
 
 	// AuthCode is the auth code from the payment network.
 	AuthCode string `json:"authCode,omitempty"`
+
+	// AuthResponseCode is the code returned by the terminal or the card issuer
+	// to indicate the disposition of the message.
+	AuthResponseCode string `json:"authResponseCode,omitempty"`
 
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
@@ -2080,6 +2115,10 @@ type AuthorizationResponse struct {
 	// AuthCode is the auth code from the payment network.
 	AuthCode string `json:"authCode,omitempty"`
 
+	// AuthResponseCode is the code returned by the terminal or the card issuer
+	// to indicate the disposition of the message.
+	AuthResponseCode string `json:"authResponseCode,omitempty"`
+
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
 
@@ -2255,6 +2294,10 @@ type TransactionStatus struct {
 
 	// AuthCode is the auth code from the payment network.
 	AuthCode string `json:"authCode,omitempty"`
+
+	// AuthResponseCode is the code returned by the terminal or the card issuer
+	// to indicate the disposition of the message.
+	AuthResponseCode string `json:"authResponseCode,omitempty"`
 
 	// TransactionID is the ID assigned to the transaction.
 	TransactionID string `json:"transactionId"`
@@ -3391,6 +3434,10 @@ type ApprovalResponse struct {
 
 	// AuthCode is the auth code from the payment network.
 	AuthCode string
+
+	// AuthResponseCode is the code returned by the terminal or the card issuer
+	// to indicate the disposition of the message.
+	AuthResponseCode string
 }
 
 // From creates an instance of ApprovalResponse with values
