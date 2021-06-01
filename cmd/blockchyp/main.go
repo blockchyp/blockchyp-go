@@ -105,6 +105,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.SigRequired, "sigRequired", true, "optional flag that indicates whether signatures are required, defaults to true")
 	flag.IntVar(&args.Timeout, "timeout", 120, "overrides default timeouts for terminal interaction")
 	flag.BoolVar(&args.WaitForRemovedCard, "waitForRemovedCard", false, "causes the request to block until all cards have been removed from the card reader.")
+	flag.BoolVar(&args.Force, "force", false, "overrides any in-progress transactions.")
 	flag.BoolVar(&args.CashBackEnabled, "cashback", false, "enables cash back transactions")
 	flag.BoolVar(&args.Enroll, "enroll", false, "enroll the payment in the token vault")
 	flag.BoolVar(&args.EnrollOnly, "enrollOnly", false, "use to make a cashier facing payment link enroll only")
@@ -193,7 +194,6 @@ func resolveClient(args blockchyp.CommandLineArguments) (*blockchyp.Client, erro
 	}
 	client := blockchyp.NewClient(*creds)
 	client.LogRequests = args.LogRequests
-
 
 	if args.HTTPS {
 		client.HTTPS = true
@@ -532,6 +532,7 @@ func processTerminalStatus(client *blockchyp.Client, args blockchyp.CommandLineA
 		TerminalName:       args.TerminalName,
 		Timeout:            args.Timeout,
 		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
 		Test:               args.Test,
 	})
 	if err != nil {
@@ -554,6 +555,7 @@ func processCaptureSignature(client *blockchyp.Client, args blockchyp.CommandLin
 		Test:               args.Test,
 		Timeout:            args.Timeout,
 		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
 	})
 	if err != nil {
 		handleError(&args, err)
@@ -569,6 +571,7 @@ func processBalance(client *blockchyp.Client, args blockchyp.CommandLineArgument
 		TerminalName:       args.TerminalName,
 		Timeout:            args.Timeout,
 		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
 		Test:               args.Test,
 	}
 
@@ -615,6 +618,7 @@ func processClear(client *blockchyp.Client, args blockchyp.CommandLineArguments)
 		TerminalName:       args.TerminalName,
 		Timeout:            args.Timeout,
 		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
 		Test:               args.Test,
 	}
 
@@ -642,6 +646,7 @@ func processTermsAndConditions(client *blockchyp.Client, args blockchyp.CommandL
 		TerminalName:       args.TerminalName,
 		Timeout:            args.Timeout,
 		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
 		TransactionID:      args.TransactionID,
 		TransactionRef:     args.TransactionRef,
 		Test:               args.Test,
@@ -727,6 +732,7 @@ func processDisplay(client *blockchyp.Client, args blockchyp.CommandLineArgument
 		Transaction:        assembleDisplayTransaction(args),
 		Timeout:            args.Timeout,
 		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
 		Test:               args.Test,
 	}
 
@@ -748,6 +754,7 @@ func processMessage(client *blockchyp.Client, args blockchyp.CommandLineArgument
 		TerminalName:       args.TerminalName,
 		Timeout:            args.Timeout,
 		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
 		Test:               args.Test,
 	}
 
@@ -770,6 +777,7 @@ func processBooleanPrompt(client *blockchyp.Client, args blockchyp.CommandLineAr
 		Test:               args.Test,
 		Timeout:            args.Timeout,
 		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
 		YesCaption:         args.YesCaption,
 	}
 
@@ -790,6 +798,7 @@ func processTextPrompt(client *blockchyp.Client, args blockchyp.CommandLineArgum
 		TerminalName:       args.TerminalName,
 		Timeout:            args.Timeout,
 		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
 		Test:               args.Test,
 	}
 
@@ -804,20 +813,22 @@ func processTextPrompt(client *blockchyp.Client, args blockchyp.CommandLineArgum
 func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
 	req := blockchyp.RefundRequest{
-		Address:          args.Address,
-		Amount:           args.Amount,
-		DisableSignature: args.DisableSignature,
-		ManualEntry:      args.ManualEntry,
-		PostalCode:       args.PostalCode,
-		SigFile:          args.SigFile,
-		SigFormat:        blockchyp.SignatureFormat(args.SigFormat),
-		SigWidth:         args.SigWidth,
-		TerminalName:     args.TerminalName,
-		Test:             args.Test,
-		Timeout:          args.Timeout,
-		Token:            args.Token,
-		TransactionID:    args.TransactionID,
-		TransactionRef:   args.TransactionRef,
+		Address:            args.Address,
+		Amount:             args.Amount,
+		DisableSignature:   args.DisableSignature,
+		ManualEntry:        args.ManualEntry,
+		PostalCode:         args.PostalCode,
+		SigFile:            args.SigFile,
+		SigFormat:          blockchyp.SignatureFormat(args.SigFormat),
+		SigWidth:           args.SigWidth,
+		TerminalName:       args.TerminalName,
+		Test:               args.Test,
+		Timeout:            args.Timeout,
+		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
+		Token:              args.Token,
+		TransactionID:      args.TransactionID,
+		TransactionRef:     args.TransactionRef,
 	}
 
 	if args.Debit {
@@ -840,10 +851,12 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 func processReverse(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TransactionRef, "txRef")
 	req := blockchyp.AuthorizationRequest{
-		ManualEntry:    args.ManualEntry,
-		Test:           args.Test,
-		Timeout:        args.Timeout,
-		TransactionRef: args.TransactionRef,
+		ManualEntry:        args.ManualEntry,
+		Test:               args.Test,
+		Timeout:            args.Timeout,
+		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
+		TransactionRef:     args.TransactionRef,
 	}
 
 	if args.Debit {
@@ -863,9 +876,11 @@ func processReverse(client *blockchyp.Client, args blockchyp.CommandLineArgument
 func processCloseBatch(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
 	req := blockchyp.CloseBatchRequest{
-		Test:           args.Test,
-		Timeout:        args.Timeout,
-		TransactionRef: args.TransactionRef,
+		Test:               args.Test,
+		Timeout:            args.Timeout,
+		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
+		TransactionRef:     args.TransactionRef,
 	}
 
 	res, err := client.CloseBatch(req)
@@ -879,10 +894,12 @@ func processCloseBatch(client *blockchyp.Client, args blockchyp.CommandLineArgum
 func processVoid(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TransactionID, "tx")
 	req := blockchyp.VoidRequest{
-		Test:           args.Test,
-		Timeout:        args.Timeout,
-		TransactionID:  args.TransactionID,
-		TransactionRef: args.TransactionRef,
+		Test:               args.Test,
+		Timeout:            args.Timeout,
+		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
+		TransactionID:      args.TransactionID,
+		TransactionRef:     args.TransactionRef,
 	}
 
 	res, err := client.Void(req)
@@ -896,13 +913,15 @@ func processVoid(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 func processCapture(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 	validateRequired(args.TransactionID, "tx")
 	req := blockchyp.CaptureRequest{
-		Amount:         args.Amount,
-		TaxAmount:      args.TaxAmount,
-		Test:           args.Test,
-		Timeout:        args.Timeout,
-		TipAmount:      args.TipAmount,
-		TransactionID:  args.TransactionID,
-		TransactionRef: args.TransactionRef,
+		Amount:             args.Amount,
+		TaxAmount:          args.TaxAmount,
+		Test:               args.Test,
+		Timeout:            args.Timeout,
+		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
+		TipAmount:          args.TipAmount,
+		TransactionID:      args.TransactionID,
+		TransactionRef:     args.TransactionRef,
 	}
 
 	res, err := client.Capture(req)
@@ -921,6 +940,7 @@ func processGiftActivate(client *blockchyp.Client, args blockchyp.CommandLineArg
 		TerminalName:       args.TerminalName,
 		Timeout:            args.Timeout,
 		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
 		TransactionRef:     args.TransactionRef,
 		Test:               args.Test,
 	}
@@ -974,16 +994,18 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 		fatalError("-terminal or -token requred")
 	}
 	req := blockchyp.EnrollRequest{
-		Address:        args.Address,
-		ExpMonth:       args.ExpiryMonth,
-		ExpYear:        args.ExpiryYear,
-		ManualEntry:    args.ManualEntry,
-		PAN:            args.PAN,
-		PostalCode:     args.PostalCode,
-		TerminalName:   args.TerminalName,
-		Test:           args.Test,
-		Timeout:        args.Timeout,
-		TransactionRef: args.TransactionRef,
+		Address:            args.Address,
+		ExpMonth:           args.ExpiryMonth,
+		ExpYear:            args.ExpiryYear,
+		ManualEntry:        args.ManualEntry,
+		PAN:                args.PAN,
+		PostalCode:         args.PostalCode,
+		TerminalName:       args.TerminalName,
+		Test:               args.Test,
+		Timeout:            args.Timeout,
+		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
+		TransactionRef:     args.TransactionRef,
 	}
 	if hasCustomerFields(args) {
 		req.Customer = populateCustomer(args)
@@ -1005,33 +1027,35 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	}
 
 	req := blockchyp.AuthorizationRequest{
-		Address:          args.Address,
-		Amount:           args.Amount,
-		Async:            args.Async,
-		CashBackEnabled:  args.CashBackEnabled,
-		CashDiscount:     args.CashDiscount,
-		Description:      args.Description,
-		DisableSignature: args.DisableSignature,
-		Enroll:           args.Enroll,
-		ExpMonth:         args.ExpiryMonth,
-		ExpYear:          args.ExpiryYear,
-		ManualEntry:      args.ManualEntry,
-		OrderRef:         args.OrderRef,
-		PAN:              args.PAN,
-		PostalCode:       args.PostalCode,
-		PromptForTip:     args.PromptForTip,
-		Queue:            args.Queue,
-		SigFile:          args.SigFile,
-		SigFormat:        blockchyp.SignatureFormat(args.SigFormat),
-		SigWidth:         args.SigWidth,
-		Surcharge:        args.Surcharge,
-		TaxAmount:        args.TaxAmount,
-		TerminalName:     args.TerminalName,
-		Test:             args.Test,
-		Timeout:          args.Timeout,
-		TipAmount:        args.TipAmount,
-		Token:            args.Token,
-		TransactionRef:   args.TransactionRef,
+		Address:            args.Address,
+		Amount:             args.Amount,
+		Async:              args.Async,
+		CashBackEnabled:    args.CashBackEnabled,
+		CashDiscount:       args.CashDiscount,
+		Description:        args.Description,
+		DisableSignature:   args.DisableSignature,
+		Enroll:             args.Enroll,
+		ExpMonth:           args.ExpiryMonth,
+		ExpYear:            args.ExpiryYear,
+		ManualEntry:        args.ManualEntry,
+		OrderRef:           args.OrderRef,
+		PAN:                args.PAN,
+		PostalCode:         args.PostalCode,
+		PromptForTip:       args.PromptForTip,
+		Queue:              args.Queue,
+		SigFile:            args.SigFile,
+		SigFormat:          blockchyp.SignatureFormat(args.SigFormat),
+		SigWidth:           args.SigWidth,
+		Surcharge:          args.Surcharge,
+		TaxAmount:          args.TaxAmount,
+		TerminalName:       args.TerminalName,
+		Test:               args.Test,
+		Timeout:            args.Timeout,
+		WaitForRemovedCard: args.WaitForRemovedCard,
+		Force:              args.Force,
+		TipAmount:          args.TipAmount,
+		Token:              args.Token,
+		TransactionRef:     args.TransactionRef,
 	}
 
 	if args.Debit {

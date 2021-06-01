@@ -199,6 +199,9 @@ type CaptureSignatureRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -268,6 +271,9 @@ type PingRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -349,6 +355,9 @@ type MessageRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -387,6 +396,9 @@ type BooleanPromptRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -433,6 +445,9 @@ type TextPromptRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -471,6 +486,9 @@ type CustomerRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -528,6 +546,9 @@ type CustomerSearchRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -563,6 +584,9 @@ type UpdateCustomerRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -709,6 +733,9 @@ type AuthorizationRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -887,6 +914,9 @@ type BalanceRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1064,6 +1094,9 @@ type RefundRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1215,6 +1248,9 @@ type CaptureRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1425,6 +1461,9 @@ type VoidRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1558,6 +1597,9 @@ type EnrollRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1754,6 +1796,9 @@ type ClearTerminalRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1790,6 +1835,9 @@ type GiftActivateRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -1908,6 +1956,9 @@ type CloseBatchRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -1992,6 +2043,9 @@ type TermsAndConditionsRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2260,6 +2314,9 @@ type TransactionStatusRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -2499,6 +2556,9 @@ type TransactionDisplayRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -2568,6 +2628,9 @@ type TerminalStatusRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -2629,6 +2692,9 @@ type PaymentLinkRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2750,6 +2816,9 @@ type CashDiscountRequest struct {
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
 
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
 
@@ -2831,6 +2900,9 @@ type TransactionHistoryRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -2923,6 +2995,9 @@ type BatchHistoryRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -3035,6 +3110,9 @@ type BatchDetailsRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -3150,6 +3228,9 @@ type MerchantProfileRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string `json:"orderRef,omitempty"`
@@ -3465,6 +3546,9 @@ type CoreRequest struct {
 	// WaitForRemovedCard specifies whether or not the request should block until
 	// all cards have been removed from the card reader.
 	WaitForRemovedCard bool
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool
 
 	// OrderRef is an identifier from an external point of sale system.
 	OrderRef string
