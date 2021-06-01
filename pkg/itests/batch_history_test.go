@@ -19,7 +19,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestSimpleReversal(t *testing.T) {
+func TestBatchHistory(t *testing.T) {
 	assert := assert.New(t)
 
 	client := newTestClient(t)
@@ -33,7 +33,7 @@ func TestSimpleReversal(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestSimpleReversal in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestBatchHistory in %v seconds...", testDelay),
 		}
 		if _, err := client.Message(messageRequest); err != nil {
 			t.Fatal(err)
@@ -60,14 +60,13 @@ func TestSimpleReversal(t *testing.T) {
 	logResponse(setupResponse)
 
 	// setup request object
-	request := blockchyp.AuthorizationRequest{
-		TransactionRef: setupResponse.TransactionRef,
-		Test:           true,
+	request := blockchyp.BatchHistoryRequest{
+		MaxResults: 10,
 	}
 
 	logRequest(request)
 
-	response, err := client.Reverse(request)
+	response, err := client.BatchHistory(request)
 
 	assert.NoError(err)
 
@@ -75,5 +74,4 @@ func TestSimpleReversal(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
-	assert.True(response.Approved)
 }

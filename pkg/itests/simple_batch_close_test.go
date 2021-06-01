@@ -44,6 +44,8 @@ func TestSimpleBatchClose(t *testing.T) {
 	// setup request object
 	setupRequest := blockchyp.AuthorizationRequest{
 		PAN:            "4111111111111111",
+		ExpMonth:       "12",
+		ExpYear:        "2025",
 		Amount:         "25.55",
 		Test:           true,
 		TransactionRef: randomID(),
@@ -72,6 +74,4 @@ func TestSimpleBatchClose(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
-	assert.NotEmpty(response.CapturedTotal)
-	assert.NotEmpty(response.OpenPreauths)
 }

@@ -19,7 +19,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestSimpleReversal(t *testing.T) {
+func TestMerchantProfile(t *testing.T) {
 	assert := assert.New(t)
 
 	client := newTestClient(t)
@@ -33,7 +33,7 @@ func TestSimpleReversal(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: "Test Terminal",
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestSimpleReversal in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestMerchantProfile in %v seconds...", testDelay),
 		}
 		if _, err := client.Message(messageRequest); err != nil {
 			t.Fatal(err)
@@ -42,32 +42,13 @@ func TestSimpleReversal(t *testing.T) {
 	}
 
 	// setup request object
-	setupRequest := blockchyp.AuthorizationRequest{
-		PAN:            "4111111111111111",
-		ExpMonth:       "12",
-		ExpYear:        "2025",
-		Amount:         "25.55",
-		Test:           true,
-		TransactionRef: randomID(),
-	}
-
-	logRequest(setupRequest)
-
-	setupResponse, err := client.Charge(setupRequest)
-
-	assert.NoError(err)
-
-	logResponse(setupResponse)
-
-	// setup request object
-	request := blockchyp.AuthorizationRequest{
-		TransactionRef: setupResponse.TransactionRef,
-		Test:           true,
+	request := blockchyp.MerchantProfileRequest{
+		Test: true,
 	}
 
 	logRequest(request)
 
-	response, err := client.Reverse(request)
+	response, err := client.MerchantProfile(request)
 
 	assert.NoError(err)
 
@@ -75,5 +56,4 @@ func TestSimpleReversal(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
-	assert.True(response.Approved)
 }
