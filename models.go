@@ -848,9 +848,6 @@ type AuthorizationRequest struct {
 	// TaxAmount is the tax amount.
 	TaxAmount string `json:"taxAmount,omitempty"`
 
-	// CashBackAmount is the amount of cash back requested.
-	CashBackAmount string `json:"cashBackAmount,omitempty"`
-
 	// FSAEligibleAmount is the amount of the transaction that should be charged
 	// to an FSA card. This amount may be less than the transaction total, in
 	// which case only this amount will be charged if an FSA card is presented.
@@ -1208,9 +1205,6 @@ type RefundRequest struct {
 	// TaxAmount is the tax amount.
 	TaxAmount string `json:"taxAmount,omitempty"`
 
-	// CashBackAmount is the amount of cash back requested.
-	CashBackAmount string `json:"cashBackAmount,omitempty"`
-
 	// FSAEligibleAmount is the amount of the transaction that should be charged
 	// to an FSA card. This amount may be less than the transaction total, in
 	// which case only this amount will be charged if an FSA card is presented.
@@ -1291,9 +1285,6 @@ type CaptureRequest struct {
 
 	// TaxAmount is the tax amount.
 	TaxAmount string `json:"taxAmount,omitempty"`
-
-	// CashBackAmount is the amount of cash back requested.
-	CashBackAmount string `json:"cashBackAmount,omitempty"`
 
 	// FSAEligibleAmount is the amount of the transaction that should be charged
 	// to an FSA card. This amount may be less than the transaction total, in
@@ -3767,9 +3758,6 @@ type Subtotals struct {
 
 	// TaxAmount is the tax amount.
 	TaxAmount string
-
-	// CashBackAmount is the amount of cash back requested.
-	CashBackAmount string
 
 	// FSAEligibleAmount is the amount of the transaction that should be charged
 	// to an FSA card. This amount may be less than the transaction total, in
