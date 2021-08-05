@@ -1011,6 +1011,12 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 		req.Customer = populateCustomer(args)
 	}
 
+	if args.Debit {
+		req.CardType = blockchyp.CardTypeDebit
+	} else if args.EBT {
+		req.CardType = blockchyp.CardTypeEBT
+	}
+
 	res, err := client.Enroll(req)
 
 	if err != nil {
