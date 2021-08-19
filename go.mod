@@ -14,4 +14,15 @@ require (
 	golang.org/x/tools v0.0.0-20181221235234-d00ac6d27372 // indirect
 )
 
-go 1.14
+require (
+	github.com/BurntSushi/toml v0.3.0 // indirect
+	github.com/fatih/color v1.7.0 // indirect
+	github.com/fatih/structtag v1.0.0 // indirect
+	github.com/mattn/go-colorable v0.0.9 // indirect
+	github.com/mattn/go-isatty v0.0.4 // indirect
+	github.com/mattn/go-runewidth v0.0.3 // indirect
+	github.com/mgechev/dots v0.0.0-20180605013149-8e09d8ea2757 // indirect
+	github.com/olekukonko/tablewriter v0.0.0-20180912035003-be2c049b30cc // indirect
+)
+
+go 1.17
