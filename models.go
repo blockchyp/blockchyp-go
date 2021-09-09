@@ -3323,6 +3323,67 @@ type BankAccount struct {
 	MaskedAccountNumber string `json:"maskedAccountNumber"`
 }
 
+// ListQueuedTransactionsRequest returns a list of queued transactions on a
+// terminal.
+type ListQueuedTransactionsRequest struct {
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+}
+
+// ListQueuedTransactionsResponse contains a list of queued transactions on a
+// terminal.
+type ListQueuedTransactionsResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// TransactionRefs is a list of queued transactions on the terminal.
+	TransactionRefs []string `json:"transactionRefs"`
+}
+
+// DeleteQueuedTransactionRequest deletes one or all transactions from a
+// terminal queue.
+type DeleteQueuedTransactionRequest struct {
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// TransactionRef contains a transaction reference string of the transaction
+	// to delete. Passing `*` will clear all queued transactions.
+	TransactionRef string `json:"transactionRef"`
+}
+
+// DeleteQueuedTransactionResponse is the response to a delete queued
+// transaction request.
+type DeleteQueuedTransactionResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+}
+
 // TerminalCaptureSignatureRequest contains a request for customer signature
 // data.
 type TerminalCaptureSignatureRequest struct {
@@ -3423,6 +3484,20 @@ type TerminalTransactionDisplayRequest struct {
 type TerminalTerminalStatusRequest struct {
 	APICredentials
 	Request TerminalStatusRequest `json:"request"`
+}
+
+// TerminalListQueuedTransactionsRequest returns a list of queued transactions
+// on a terminal.
+type TerminalListQueuedTransactionsRequest struct {
+	APICredentials
+	Request ListQueuedTransactionsRequest `json:"request"`
+}
+
+// TerminalDeleteQueuedTransactionRequest deletes one or all transactions from
+// a terminal queue.
+type TerminalDeleteQueuedTransactionRequest struct {
+	APICredentials
+	Request DeleteQueuedTransactionRequest `json:"request"`
 }
 
 // AbstractAcknowledgement contains fields which should be returned with

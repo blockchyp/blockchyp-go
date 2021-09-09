@@ -886,6 +886,100 @@ func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse
 	return &response, err
 }
 
+// ListQueuedTransactions returns a list of queued transactions on a terminal.
+func (client *Client) ListQueuedTransactions(request ListQueuedTransactionsRequest) (*ListQueuedTransactionsResponse, error) {
+	var response ListQueuedTransactionsResponse
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/queue/list", "GET", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalListQueuedTransactionsRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/queue/list", "GET", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/queue/list", "GET", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
+// DeleteQueuedTransaction deletes a queued transaction from the terminal.
+func (client *Client) DeleteQueuedTransaction(request DeleteQueuedTransactionRequest) (*DeleteQueuedTransactionResponse, error) {
+	var response DeleteQueuedTransactionResponse
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/queue/delete", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalDeleteQueuedTransactionRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/queue/delete", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/queue/delete", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
 // Capture captures a preauthorization.
 func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) {
 	var response CaptureResponse

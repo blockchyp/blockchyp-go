@@ -156,7 +156,7 @@ var asyncTests = testCases{
 				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(1),
-					"-queue", "-desc", "Dummy #1", "-txRef", "placeholder",
+					"-queue", "-desc", "Dummy #1", "-txRef", "placeholder1",
 				},
 				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
@@ -169,7 +169,7 @@ var asyncTests = testCases{
 				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(2),
-					"-queue", "-desc", "Dummy #2", "-txRef", "placeholder",
+					"-queue", "-desc", "Dummy #2", "-txRef", "placeholder2",
 				},
 				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
@@ -182,7 +182,7 @@ var asyncTests = testCases{
 				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(3),
-					"-queue", "-desc", "Dummy #3", "-txRef", "placeholder",
+					"-queue", "-desc", "Dummy #3", "-txRef", "placeholder3",
 				},
 				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
@@ -195,7 +195,7 @@ var asyncTests = testCases{
 				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(4),
-					"-queue", "-desc", "Dummy #4", "-txRef", "placeholder",
+					"-queue", "-desc", "Dummy #4", "-txRef", "placeholder4",
 				},
 				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
@@ -208,7 +208,7 @@ var asyncTests = testCases{
 				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(5),
-					"-queue", "-desc", "Dummy #5", "-txRef", "placeholder",
+					"-queue", "-desc", "Dummy #5", "-txRef", "placeholder5",
 				},
 				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
@@ -262,6 +262,24 @@ var asyncTests = testCases{
 					},
 				},
 			},
+			{
+				args: []string{
+					"-type", "delete-queue", "-terminal", terminalName, "-test",
+					"-txRef", "*",
+				},
+				expect: blockchyp.DeleteQueuedTransactionResponse{
+					Success: true,
+				},
+			},
+			{
+				args: []string{
+					"-type", "clear", "-terminal", terminalName, "-test",
+					"-txRef", "*",
+				},
+				expect: blockchyp.Acknowledgement{
+					Success: true,
+				},
+			},
 		},
 	},
 	{
@@ -285,7 +303,7 @@ var asyncTests = testCases{
 				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(1),
-					"-queue", "-desc", "Dummy #1", "-txRef", "placeholder",
+					"-queue", "-desc", "Dummy #1", "-txRef", "placeholder1",
 				},
 				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
@@ -298,7 +316,7 @@ var asyncTests = testCases{
 				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(2),
-					"-queue", "-desc", "Dummy #2", "-txRef", "placeholder",
+					"-queue", "-desc", "Dummy #2", "-txRef", "placeholder2",
 				},
 				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
@@ -311,7 +329,7 @@ var asyncTests = testCases{
 				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(3),
-					"-queue", "-desc", "Dummy #3", "-txRef", "placeholder",
+					"-queue", "-desc", "Dummy #3", "-txRef", "placeholder3",
 				},
 				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
@@ -324,7 +342,7 @@ var asyncTests = testCases{
 				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(4),
-					"-queue", "-desc", "Dummy #4", "-txRef", "placeholder",
+					"-queue", "-desc", "Dummy #4", "-txRef", "placeholder4",
 				},
 				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
@@ -337,7 +355,7 @@ var asyncTests = testCases{
 				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(5),
-					"-queue", "-desc", "Dummy #5", "-txRef", "placeholder",
+					"-queue", "-desc", "Dummy #5", "-txRef", "placeholder5",
 				},
 				expect: blockchyp.AuthorizationResponse{
 					Success:             true,
@@ -389,6 +407,160 @@ var asyncTests = testCases{
 						TransactionType:  "preauth",
 						EntryMethod:      "CHIP",
 					},
+				},
+			},
+			{
+				args: []string{
+					"-type", "delete-queue", "-terminal", terminalName, "-test",
+					"-txRef", "*",
+				},
+				expect: blockchyp.DeleteQueuedTransactionResponse{
+					Success: true,
+				},
+			},
+			{
+				args: []string{
+					"-type", "clear", "-terminal", terminalName, "-test",
+					"-txRef", "*",
+				},
+				expect: blockchyp.Acknowledgement{
+					Success: true,
+				},
+			},
+		},
+	},
+	{
+		name:  "Async/QueueManagement",
+		group: testGroupInteractive,
+		operations: []operation{
+			{
+				args: []string{
+					"-type", "delete-queue", "-terminal", terminalName, "-test",
+					"-txRef", "*",
+				},
+				expect: blockchyp.DeleteQueuedTransactionResponse{
+					Success: true,
+				},
+			},
+			{
+				args: []string{
+					"-type", "charge", "-terminal", terminalName, "-test",
+					"-amount", amount(0),
+					"-queue", "-desc", "Test Ticket #1", "-txRef", newTxRef,
+				},
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
+				},
+			},
+			{
+				args: []string{
+					"-type", "charge", "-terminal", terminalName, "-test",
+					"-amount", amount(0),
+					"-queue", "-desc", "Test Ticket #2", "-txRef", newTxRef,
+				},
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "Queued",
+				},
+			},
+			{
+				args: []string{
+					"-type", "tx-status",
+					"-txRef", txRefN(1),
+				},
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "PENDING",
+				},
+			},
+			{
+				args: []string{
+					"-type", "list-queue", "-terminal", terminalName, "-test",
+				},
+				expect: blockchyp.ListQueuedTransactionsResponse{
+					Success: true,
+					TransactionRefs: []string{
+						txRefN(1),
+						txRefN(2),
+					},
+				},
+			},
+			{
+				args: []string{
+					"-type", "delete-queue", "-terminal", terminalName, "-test",
+					"-txRef", txRefN(1),
+				},
+				expect: blockchyp.DeleteQueuedTransactionResponse{
+					Success: true,
+				},
+			},
+			{
+				args: []string{
+					"-type", "list-queue", "-terminal", terminalName, "-test",
+				},
+				expect: blockchyp.ListQueuedTransactionsResponse{
+					Success: true,
+					TransactionRefs: []string{
+						txRefN(2),
+					},
+				},
+			},
+			{
+				args: []string{
+					"-type", "tx-status",
+					"-txRef", txRefN(1),
+				},
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "CANCELED",
+				},
+			},
+			{
+				args: []string{
+					"-type", "delete-queue", "-terminal", terminalName, "-test",
+					"-txRef", txRefN(1),
+				},
+				expect: blockchyp.DeleteQueuedTransactionResponse{
+					Success: false,
+				},
+			},
+			{
+				args: []string{
+					"-type", "delete-queue", "-terminal", terminalName, "-test",
+					"-txRef", "*",
+				},
+				expect: blockchyp.DeleteQueuedTransactionResponse{
+					Success: true,
+				},
+			},
+			{
+				args: []string{
+					"-type", "tx-status",
+					"-txRef", txRefN(2),
+				},
+				expect: blockchyp.AuthorizationResponse{
+					Success:             true,
+					Approved:            false,
+					Test:                true,
+					ResponseDescription: "CANCELED",
+				},
+			},
+			{
+				args: []string{
+					"-type", "list-queue", "-terminal", terminalName, "-test",
+				},
+				expect: blockchyp.ListQueuedTransactionsResponse{
+					Success:         true,
+					TransactionRefs: []string{},
 				},
 			},
 		},

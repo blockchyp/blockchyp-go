@@ -289,6 +289,10 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processTransactionHistory(client, args)
 	case "merchant-profile":
 		processMerchantProfile(client, args)
+	case "list-queue":
+		processQueueList(client, args)
+	case "delete-queue":
+		processQueueDelete(client, args)
 	default:
 		fatalErrorf("unknown transaction type: %s", args.Type)
 	}
@@ -1095,6 +1099,34 @@ func processPing(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 		Timeout:      args.Timeout,
 	}
 	res, err := client.Ping(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processQueueList(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.TerminalName, "terminal")
+	req := blockchyp.ListQueuedTransactionsRequest{
+		TerminalName: args.TerminalName,
+		Timeout:      args.Timeout,
+	}
+	res, err := client.ListQueuedTransactions(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processQueueDelete(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.TerminalName, "terminal")
+	validateRequired(args.TransactionRef, "txRef")
+	req := blockchyp.DeleteQueuedTransactionRequest{
+		TerminalName:   args.TerminalName,
+		Timeout:        args.Timeout,
+		TransactionRef: args.TransactionRef,
+	}
+	res, err := client.DeleteQueuedTransaction(req)
 	if err != nil {
 		handleError(&args, err)
 	}

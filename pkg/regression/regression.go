@@ -224,7 +224,7 @@ func (app *TestRunner) runOperation(ctx context.Context, test *testCase, i int, 
 	}
 
 	if result != nil {
-		if err := cmp(test.name, op.expect, result); err != nil {
+		if err := cmp(op.expect, result); err != nil {
 			return nil, err
 		}
 
@@ -325,7 +325,7 @@ func (o *operation) setArg(arg, value string) {
 	}
 }
 
-func cmp(name string, expect, result interface{}) error {
+func cmp(expect, result interface{}) error {
 	resultVal := reflect.ValueOf(result)
 	if resultVal.Kind() == reflect.Ptr {
 		resultVal = resultVal.Elem()
@@ -360,11 +360,8 @@ func cmp(name string, expect, result interface{}) error {
 				}
 				continue
 			}
-			if strings.HasPrefix(s, replacementPrefix) {
-				expectVal.Field(i).SetString(getAmount(name, s))
-			}
 		case reflect.Struct:
-			if err := cmp(name, expectVal.Field(i).Interface(), resultVal.Field(i).Interface()); err != nil {
+			if err := cmp(expectVal.Field(i).Interface(), resultVal.Field(i).Interface()); err != nil {
 				return err
 			}
 			continue
@@ -373,7 +370,7 @@ func cmp(name string, expect, result interface{}) error {
 				continue
 			}
 			if expectVal.Field(i).Elem().Kind() == reflect.Struct {
-				if err := cmp(name, expectVal.Field(i).Interface(), resultVal.Field(i).Interface()); err != nil {
+				if err := cmp(expectVal.Field(i).Interface(), resultVal.Field(i).Interface()); err != nil {
 					return err
 				}
 				continue
@@ -382,16 +379,25 @@ func cmp(name string, expect, result interface{}) error {
 			if expectVal.Field(i).Len() == 0 {
 				continue
 			}
-			if ln := resultVal.Field(i).Len(); ln != 1 {
-				return fmt.Errorf("%s: expected 1 element, got %d", expectVal.Type().Field(i).Name, ln)
+
+			resultLn := resultVal.Field(i).Len()
+			expectLn := expectVal.Field(i).Len()
+
+			if resultLn != expectLn {
+				return fmt.Errorf("%s: expected %d element, got %d", expectVal.Type().Field(i).Name, expectLn, resultLn)
 			}
-			// This only handles cases where we compare a slice of structs with
-			// one element in the assertion and the result. If we need to test
-			// more than this, it will require modification.
-			if expectVal.Field(i).Index(0).Kind() == reflect.Struct {
-				if err := cmp(name, expectVal.Field(i).Index(0), resultVal.Field(i).Index(0)); err != nil {
-					return err
+
+			switch expectVal.Field(i).Kind() {
+			case reflect.Struct:
+				for j := 0; j < resultLn; j++ {
+					expectValN := expectVal.Field(i).Index(j)
+					resultvalN := resultVal.Field(i).Index(j)
+
+					if err := cmp(expectValN, resultvalN); err != nil {
+						return err
+					}
 				}
+
 				continue
 			}
 		default:
@@ -460,34 +466,73 @@ func (app *TestRunner) printCmd(bin string, args []string) {
 }
 
 func (app *TestRunner) substituteConstants(test *testCase, i int) {
-	for j, arg := range test.operations[i].args {
-		switch {
-		case arg == terminalName:
-			test.operations[i].args[j] = app.Terminal
-		case arg == previousAmount:
-			if i > 0 {
-				test.operations[i].args[j] = argFrom("-amount", test.operations[i-1].args)
+	for j := range test.operations[i].args {
+		app.substituteConstant(reflect.ValueOf(&test.operations[i].args[j]).Elem(), i, test)
+	}
+
+	v := reflect.ValueOf(test.operations[i].expect)
+	app.substituteInExpect(v, test, i)
+}
+
+func (app *TestRunner) substituteInExpect(v reflect.Value, test *testCase, i int) {
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+
+	switch v.Kind() {
+	case reflect.Struct:
+		for j := 0; j < v.NumField(); j++ {
+			if !v.Field(j).CanInterface() {
+				continue
 			}
-		case arg == newTxRef:
-			test.operations[i].args[j] = randomStr()
-		case strings.HasPrefix(arg, txRefPrefix):
-			op := opN(test.operations[i].args[j], i, test.operations)
-			test.operations[i].args[j] = argFrom("-txRef", op.args)
-		case strings.HasPrefix(arg, txIDPrefix):
-			op := opN(test.operations[i].args[j], i, test.operations)
-			test.operations[i].args[j] = op.txID
-		case strings.HasPrefix(arg, batchIDPrefix):
-			op := opN(test.operations[i].args[j], i, test.operations)
-			test.operations[i].args[j] = op.batchID
-		case strings.HasPrefix(arg, tokenPrefix):
-			op := opN(test.operations[i].args[j], i, test.operations)
-			test.operations[i].args[j] = op.token
-		case strings.HasPrefix(arg, customerIDPrefix):
-			op := opN(test.operations[i].args[j], i, test.operations)
-			test.operations[i].args[j] = op.customerID
-		case strings.HasPrefix(arg, replacementPrefix):
-			test.operations[i].args[j] = getAmount(test.name, arg)
+
+			app.substituteInExpect(v.Field(j), test, i)
 		}
+	case reflect.Slice:
+		for j := 0; j < v.Len(); j++ {
+			app.substituteInExpect(v.Index(j), test, i)
+		}
+	case reflect.String:
+		app.substituteConstant(v, i, test)
+	}
+}
+
+func (app *TestRunner) substituteConstant(s reflect.Value, i int, test *testCase) {
+	var newVal string
+	v, ok := s.Interface().(string)
+	if !ok {
+		return
+	}
+	switch {
+	case v == terminalName:
+		newVal = app.Terminal
+	case v == previousAmount:
+		if i > 0 {
+			newVal = argFrom("-amount", test.operations[i-1].args)
+		}
+	case v == newTxRef:
+		newVal = randomStr()
+	case strings.HasPrefix(v, txRefPrefix):
+		op := opN(v, i, test.operations)
+		newVal = argFrom("-txRef", op.args)
+	case strings.HasPrefix(v, txIDPrefix):
+		op := opN(v, i, test.operations)
+		newVal = op.txID
+	case strings.HasPrefix(v, batchIDPrefix):
+		op := opN(v, i, test.operations)
+		newVal = op.batchID
+	case strings.HasPrefix(v, tokenPrefix):
+		op := opN(v, i, test.operations)
+		newVal = op.token
+	case strings.HasPrefix(v, customerIDPrefix):
+		op := opN(v, i, test.operations)
+		newVal = op.customerID
+	case strings.HasPrefix(v, replacementPrefix):
+		newVal = getAmount(test.name, v)
+	}
+
+	if newVal != "" {
+		s.SetString(newVal)
 	}
 }
 
