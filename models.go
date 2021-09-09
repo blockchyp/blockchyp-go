@@ -3326,14 +3326,41 @@ type BankAccount struct {
 // ListQueuedTransactionsRequest returns a list of queued transactions on a
 // terminal.
 type ListQueuedTransactionsRequest struct {
-	// TerminalName is the name of the target payment terminal.
-	TerminalName string `json:"terminalName,omitempty"`
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
 
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
 	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
+
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
 }
 
 // ListQueuedTransactionsResponse contains a list of queued transactions on a
@@ -3356,14 +3383,37 @@ type ListQueuedTransactionsResponse struct {
 // DeleteQueuedTransactionRequest deletes one or all transactions from a
 // terminal queue.
 type DeleteQueuedTransactionRequest struct {
-	// TerminalName is the name of the target payment terminal.
-	TerminalName string `json:"terminalName,omitempty"`
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
 
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
 	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
+
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
 
 	// TransactionRef contains a transaction reference string of the transaction
 	// to delete. Passing `*` will clear all queued transactions.
