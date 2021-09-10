@@ -24,7 +24,8 @@ import (
 func TestGatewayTimeout(t *testing.T) {
 	assert := assert.New(t)
 
-	client := newTestClient(t)
+	config := loadTestConfiguration(t)
+	client := config.newTestClient(t)
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -33,7 +34,7 @@ func TestGatewayTimeout(t *testing.T) {
 			t.Fatal(err)
 		}
 		messageRequest := blockchyp.MessageRequest{
-			TerminalName: "Test Terminal",
+			TerminalName: config.DefaultTerminalName,
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestGatewayTimeout in %v seconds...", testDelay),
 		}
@@ -54,11 +55,11 @@ func TestGatewayTimeout(t *testing.T) {
 		TransactionRef: randomID(),
 	}
 
-	logRequest(request)
+	logObj(t, "Request:", request)
 
 	response, err := client.Charge(request)
 
-	logResponse(response)
+	logObj(t, "Response:", response)
 	t.Logf("Response Error: %+v", err)
 
 	assert.Error(err)

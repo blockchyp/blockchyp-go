@@ -24,7 +24,8 @@ import (
 func TestTerminalEBTBalance(t *testing.T) {
 	assert := assert.New(t)
 
-	client := newTestClient(t)
+	config := loadTestConfiguration(t)
+	client := config.newTestClient(t)
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -33,7 +34,7 @@ func TestTerminalEBTBalance(t *testing.T) {
 			t.Fatal(err)
 		}
 		messageRequest := blockchyp.MessageRequest{
-			TerminalName: "Test Terminal",
+			TerminalName: config.DefaultTerminalName,
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestTerminalEBTBalance in %v seconds...", testDelay),
 		}
@@ -46,17 +47,17 @@ func TestTerminalEBTBalance(t *testing.T) {
 	// setup request object
 	request := blockchyp.BalanceRequest{
 		Test:         true,
-		TerminalName: "Test Terminal",
+		TerminalName: config.DefaultTerminalName,
 		CardType:     blockchyp.CardTypeEBT,
 	}
 
-	logRequest(request)
+	logObj(t, "Request:", request)
 
 	response, err := client.Balance(request)
 
 	assert.NoError(err)
 
-	logResponse(response)
+	logObj(t, "Response:", response)
 
 	// response assertions
 	assert.True(response.Success)

@@ -24,7 +24,8 @@ import (
 func TestSimpleReversal(t *testing.T) {
 	assert := assert.New(t)
 
-	client := newTestClient(t)
+	config := loadTestConfiguration(t)
+	client := config.newTestClient(t)
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -33,7 +34,7 @@ func TestSimpleReversal(t *testing.T) {
 			t.Fatal(err)
 		}
 		messageRequest := blockchyp.MessageRequest{
-			TerminalName: "Test Terminal",
+			TerminalName: config.DefaultTerminalName,
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestSimpleReversal in %v seconds...", testDelay),
 		}
@@ -53,13 +54,13 @@ func TestSimpleReversal(t *testing.T) {
 		TransactionRef: randomID(),
 	}
 
-	logRequest(setupRequest)
+	logObj(t, "Request:", setupRequest)
 
 	setupResponse, err := client.Charge(setupRequest)
 
 	assert.NoError(err)
 
-	logResponse(setupResponse)
+	logObj(t, "Response:", setupResponse)
 
 	// setup request object
 	request := blockchyp.AuthorizationRequest{
@@ -67,13 +68,13 @@ func TestSimpleReversal(t *testing.T) {
 		Test:           true,
 	}
 
-	logRequest(request)
+	logObj(t, "Request:", request)
 
 	response, err := client.Reverse(request)
 
 	assert.NoError(err)
 
-	logResponse(response)
+	logObj(t, "Response:", response)
 
 	// response assertions
 	assert.True(response.Success)

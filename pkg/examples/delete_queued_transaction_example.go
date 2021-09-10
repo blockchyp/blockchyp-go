@@ -32,7 +32,7 @@ func deleteQueuedTransactionExample() {
 
 	//process the result
 	if response.Success {
-		fmt.Println("")
+		fmt.Println("Success")
 	}
 
 	fmt.Printf("Response: %+v\n", response)

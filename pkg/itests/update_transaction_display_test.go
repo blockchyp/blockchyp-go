@@ -24,7 +24,8 @@ import (
 func TestUpdateTransactionDisplay(t *testing.T) {
 	assert := assert.New(t)
 
-	client := newTestClient(t)
+	config := loadTestConfiguration(t)
+	client := config.newTestClient(t)
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -33,7 +34,7 @@ func TestUpdateTransactionDisplay(t *testing.T) {
 			t.Fatal(err)
 		}
 		messageRequest := blockchyp.MessageRequest{
-			TerminalName: "Test Terminal",
+			TerminalName: config.DefaultTerminalName,
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestUpdateTransactionDisplay in %v seconds...", testDelay),
 		}
@@ -46,7 +47,7 @@ func TestUpdateTransactionDisplay(t *testing.T) {
 	// setup request object
 	request := blockchyp.TransactionDisplayRequest{
 		Test:         true,
-		TerminalName: "Test Terminal",
+		TerminalName: config.DefaultTerminalName,
 		Transaction: &blockchyp.TransactionDisplayTransaction{
 			Subtotal: "35.00",
 			Tax:      "5.00",
@@ -68,13 +69,13 @@ func TestUpdateTransactionDisplay(t *testing.T) {
 		},
 	}
 
-	logRequest(request)
+	logObj(t, "Request:", request)
 
 	response, err := client.UpdateTransactionDisplay(request)
 
 	assert.NoError(err)
 
-	logResponse(response)
+	logObj(t, "Response:", response)
 
 	// response assertions
 	assert.True(response.Success)

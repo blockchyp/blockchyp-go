@@ -7,7 +7,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func listQueuedTransactionsExample() {
+func deleteTokenExample() {
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -19,11 +19,11 @@ func listQueuedTransactionsExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.ListQueuedTransactionsRequest{
-		TerminalName: "Test Terminal",
+	request := blockchyp.DeleteTokenRequest{
+		Token: "Token to delete",
 	}
 
-	response, err := client.ListQueuedTransactions(request)
+	response, err := client.DeleteToken(request)
 
 	if err != nil {
 		log.Fatal(err)

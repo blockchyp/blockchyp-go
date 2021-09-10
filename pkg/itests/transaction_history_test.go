@@ -24,7 +24,8 @@ import (
 func TestTransactionHistory(t *testing.T) {
 	assert := assert.New(t)
 
-	client := newTestClient(t)
+	config := loadTestConfiguration(t)
+	client := config.newTestClient(t)
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -33,7 +34,7 @@ func TestTransactionHistory(t *testing.T) {
 			t.Fatal(err)
 		}
 		messageRequest := blockchyp.MessageRequest{
-			TerminalName: "Test Terminal",
+			TerminalName: config.DefaultTerminalName,
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestTransactionHistory in %v seconds...", testDelay),
 		}
@@ -53,26 +54,26 @@ func TestTransactionHistory(t *testing.T) {
 		TransactionRef: randomID(),
 	}
 
-	logRequest(setupRequest)
+	logObj(t, "Request:", setupRequest)
 
 	setupResponse, err := client.Charge(setupRequest)
 
 	assert.NoError(err)
 
-	logResponse(setupResponse)
+	logObj(t, "Response:", setupResponse)
 
 	// setup request object
 	request := blockchyp.TransactionHistoryRequest{
 		MaxResults: 10,
 	}
 
-	logRequest(request)
+	logObj(t, "Request:", request)
 
 	response, err := client.TransactionHistory(request)
 
 	assert.NoError(err)
 
-	logResponse(response)
+	logObj(t, "Response:", response)
 
 	// response assertions
 	assert.True(response.Success)

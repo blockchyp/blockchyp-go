@@ -24,7 +24,8 @@ import (
 func TestTextPrompt(t *testing.T) {
 	assert := assert.New(t)
 
-	client := newTestClient(t)
+	config := loadTestConfiguration(t)
+	client := config.newTestClient(t)
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -33,7 +34,7 @@ func TestTextPrompt(t *testing.T) {
 			t.Fatal(err)
 		}
 		messageRequest := blockchyp.MessageRequest{
-			TerminalName: "Test Terminal",
+			TerminalName: config.DefaultTerminalName,
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestTextPrompt in %v seconds...", testDelay),
 		}
@@ -46,17 +47,17 @@ func TestTextPrompt(t *testing.T) {
 	// setup request object
 	request := blockchyp.TextPromptRequest{
 		Test:         true,
-		TerminalName: "Test Terminal",
+		TerminalName: config.DefaultTerminalName,
 		PromptType:   blockchyp.PromptTypeEmail,
 	}
 
-	logRequest(request)
+	logObj(t, "Request:", request)
 
 	response, err := client.TextPrompt(request)
 
 	assert.NoError(err)
 
-	logResponse(response)
+	logObj(t, "Response:", response)
 
 	// response assertions
 	assert.True(response.Success)

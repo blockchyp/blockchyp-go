@@ -21,7 +21,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestTerminalClear(t *testing.T) {
+func TestDeleteCustomer(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
@@ -36,7 +36,7 @@ func TestTerminalClear(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: config.DefaultTerminalName,
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestTerminalClear in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestDeleteCustomer in %v seconds...", testDelay),
 		}
 		if _, err := client.Message(messageRequest); err != nil {
 			t.Fatal(err)
@@ -45,14 +45,32 @@ func TestTerminalClear(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.ClearTerminalRequest{
-		Test:         true,
-		TerminalName: config.DefaultTerminalName,
+	setupRequest := blockchyp.UpdateCustomerRequest{
+		Customer: blockchyp.Customer{
+			FirstName:    "Test",
+			LastName:     "Customer",
+			CompanyName:  "Test Company",
+			EmailAddress: "support@blockchyp.com",
+			SmsNumber:    "(123) 123-1234",
+		},
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.UpdateCustomer(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.DeleteCustomerRequest{
+		CustomerID: setupResponse.Customer.ID,
 	}
 
 	logObj(t, "Request:", request)
 
-	response, err := client.Clear(request)
+	response, err := client.DeleteCustomer(request)
 
 	assert.NoError(err)
 

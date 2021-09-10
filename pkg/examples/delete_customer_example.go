@@ -7,7 +7,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func deleteQueuedTransactionsExample() {
+func deleteCustomerExample() {
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -19,11 +19,11 @@ func deleteQueuedTransactionsExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.DeleteQueuedTransactionsRequest{
-		TerminalName: "Test Terminal",
+	request := blockchyp.DeleteCustomerRequest{
+		CustomerID: "ID of the customer to delete",
 	}
 
-	response, err := client.DeleteQueuedTransactions(request)
+	response, err := client.DeleteCustomer(request)
 
 	if err != nil {
 		log.Fatal(err)
@@ -31,7 +31,7 @@ func deleteQueuedTransactionsExample() {
 
 	//process the result
 	if response.Success {
-		fmt.Println("")
+		fmt.Println("Success")
 	}
 
 	fmt.Printf("Response: %+v\n", response)

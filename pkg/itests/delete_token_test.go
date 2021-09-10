@@ -21,7 +21,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestTerminalClear(t *testing.T) {
+func TestDeleteToken(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
@@ -36,7 +36,7 @@ func TestTerminalClear(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: config.DefaultTerminalName,
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestTerminalClear in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestDeleteToken in %v seconds...", testDelay),
 		}
 		if _, err := client.Message(messageRequest); err != nil {
 			t.Fatal(err)
@@ -45,14 +45,27 @@ func TestTerminalClear(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.ClearTerminalRequest{
-		Test:         true,
-		TerminalName: config.DefaultTerminalName,
+	setupRequest := blockchyp.EnrollRequest{
+		PAN:  "4111111111111111",
+		Test: true,
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.Enroll(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.DeleteTokenRequest{
+		Token: setupResponse.Token,
 	}
 
 	logObj(t, "Request:", request)
 
-	response, err := client.Clear(request)
+	response, err := client.DeleteToken(request)
 
 	assert.NoError(err)
 

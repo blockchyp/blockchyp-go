@@ -293,6 +293,10 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processQueueList(client, args)
 	case "delete-queue":
 		processQueueDelete(client, args)
+	case "delete-customer":
+		processCustomerDelete(client, args)
+	case "delete-token":
+		processTokenDelete(client, args)
 	default:
 		fatalErrorf("unknown transaction type: %s", args.Type)
 	}
@@ -1127,6 +1131,32 @@ func processQueueDelete(client *blockchyp.Client, args blockchyp.CommandLineArgu
 		TransactionRef: args.TransactionRef,
 	}
 	res, err := client.DeleteQueuedTransaction(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processCustomerDelete(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.CustomerID, "customerID")
+	req := blockchyp.DeleteCustomerRequest{
+		Timeout:    args.Timeout,
+		CustomerID: args.CustomerID,
+	}
+	res, err := client.DeleteCustomer(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processTokenDelete(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.Token, "token")
+	req := blockchyp.DeleteTokenRequest{
+		Timeout: args.Timeout,
+		Token:   args.Token,
+	}
+	res, err := client.DeleteToken(req)
 	if err != nil {
 		handleError(&args, err)
 	}

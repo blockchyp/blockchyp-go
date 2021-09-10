@@ -55,7 +55,6 @@ func (client *Client) assembleGatewayURL(path string, testTx bool) string {
 			buffer.WriteString(DefaultGatewayHost)
 		}
 	}
-	buffer.WriteString("/api")
 	buffer.WriteString(path)
 	return buffer.String()
 
