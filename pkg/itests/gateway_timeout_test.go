@@ -1,4 +1,6 @@
+//go:build integration
 // +build integration
+
 // Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
 // governed by a license that can be found in the LICENSE file.
 //
@@ -22,7 +24,8 @@ import (
 func TestGatewayTimeout(t *testing.T) {
 	assert := assert.New(t)
 
-	client := newTestClient(t)
+	config := loadTestConfiguration(t)
+	client := config.newTestClient(t)
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -31,7 +34,7 @@ func TestGatewayTimeout(t *testing.T) {
 			t.Fatal(err)
 		}
 		messageRequest := blockchyp.MessageRequest{
-			TerminalName: "Test Terminal",
+			TerminalName: config.DefaultTerminalName,
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestGatewayTimeout in %v seconds...", testDelay),
 		}
@@ -45,16 +48,18 @@ func TestGatewayTimeout(t *testing.T) {
 	request := blockchyp.AuthorizationRequest{
 		Timeout:        1,
 		PAN:            "5555555555554444",
+		ExpMonth:       "12",
+		ExpYear:        "2025",
 		Amount:         "25.55",
 		Test:           true,
 		TransactionRef: randomID(),
 	}
 
-	logRequest(request)
+	logObj(t, "Request:", request)
 
 	response, err := client.Charge(request)
 
-	logResponse(response)
+	logObj(t, "Response:", response)
 	t.Logf("Response Error: %+v", err)
 
 	assert.Error(err)

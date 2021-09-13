@@ -1,4 +1,6 @@
+//go:build integration
 // +build integration
+
 // Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
 // governed by a license that can be found in the LICENSE file.
 //
@@ -22,7 +24,8 @@ import (
 func TestGetCustomer(t *testing.T) {
 	assert := assert.New(t)
 
-	client := newTestClient(t)
+	config := loadTestConfiguration(t)
+	client := config.newTestClient(t)
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -31,7 +34,7 @@ func TestGetCustomer(t *testing.T) {
 			t.Fatal(err)
 		}
 		messageRequest := blockchyp.MessageRequest{
-			TerminalName: "Test Terminal",
+			TerminalName: config.DefaultTerminalName,
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestGetCustomer in %v seconds...", testDelay),
 		}
@@ -52,26 +55,26 @@ func TestGetCustomer(t *testing.T) {
 		},
 	}
 
-	logRequest(setupRequest)
+	logObj(t, "Request:", setupRequest)
 
 	setupResponse, err := client.UpdateCustomer(setupRequest)
 
 	assert.NoError(err)
 
-	logResponse(setupResponse)
+	logObj(t, "Response:", setupResponse)
 
 	// setup request object
 	request := blockchyp.CustomerRequest{
 		CustomerID: setupResponse.Customer.ID,
 	}
 
-	logRequest(request)
+	logObj(t, "Request:", request)
 
 	response, err := client.Customer(request)
 
 	assert.NoError(err)
 
-	logResponse(response)
+	logObj(t, "Response:", response)
 
 	// response assertions
 	assert.True(response.Success)

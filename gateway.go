@@ -8,10 +8,13 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"math"
 	"math/rand"
 	"net/http"
+	"net/http/httputil"
+	"os"
 	"time"
 )
 
@@ -52,7 +55,6 @@ func (client *Client) assembleGatewayURL(path string, testTx bool) string {
 			buffer.WriteString(DefaultGatewayHost)
 		}
 	}
-	buffer.WriteString("/api")
 	buffer.WriteString(path)
 	return buffer.String()
 
@@ -104,7 +106,18 @@ func (client *Client) GatewayRequest(path, method string, request, response inte
 	ctx, cancel := context.WithTimeout(req.Context(), timeout)
 	defer cancel()
 
-	res, err := client.gatewayHTTPClient.Do(req.WithContext(ctx))
+	req = req.WithContext(ctx)
+
+	if client.LogRequests {
+		b, err := httputil.DumpRequestOut(req, true)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintln(os.Stderr, "GATEWAY REQUEST:")
+		fmt.Fprintln(os.Stderr, string(b))
+	}
+
+	res, err := client.gatewayHTTPClient.Do(req)
 	if err != nil {
 		return err
 	}
@@ -139,7 +152,7 @@ func (client *Client) GatewayGet(path string, responseEntity interface{}) error 
 func (client *Client) highClockDiff() bool {
 
 	response := HeartbeatResponse{}
-	err := client.GatewayRequest("/heartbeat", http.MethodGet, nil, &response, false, nil)
+	err := client.GatewayRequest("/api/heartbeat", http.MethodGet, nil, &response, false, nil)
 	if err != nil {
 		return false
 	}

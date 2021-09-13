@@ -1,4 +1,6 @@
+//go:build integration
 // +build integration
+
 // Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
 // governed by a license that can be found in the LICENSE file.
 //
@@ -22,7 +24,8 @@ import (
 func TestNewTransactionDisplay(t *testing.T) {
 	assert := assert.New(t)
 
-	client := newTestClient(t)
+	config := loadTestConfiguration(t)
+	client := config.newTestClient(t)
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -31,7 +34,7 @@ func TestNewTransactionDisplay(t *testing.T) {
 			t.Fatal(err)
 		}
 		messageRequest := blockchyp.MessageRequest{
-			TerminalName: "Test Terminal",
+			TerminalName: config.DefaultTerminalName,
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestNewTransactionDisplay in %v seconds...", testDelay),
 		}
@@ -44,7 +47,7 @@ func TestNewTransactionDisplay(t *testing.T) {
 	// setup request object
 	request := blockchyp.TransactionDisplayRequest{
 		Test:         true,
-		TerminalName: "Test Terminal",
+		TerminalName: config.DefaultTerminalName,
 		Transaction: &blockchyp.TransactionDisplayTransaction{
 			Subtotal: "35.00",
 			Tax:      "5.00",
@@ -66,13 +69,13 @@ func TestNewTransactionDisplay(t *testing.T) {
 		},
 	}
 
-	logRequest(request)
+	logObj(t, "Request:", request)
 
 	response, err := client.NewTransactionDisplay(request)
 
 	assert.NoError(err)
 
-	logResponse(response)
+	logObj(t, "Response:", response)
 
 	// response assertions
 	assert.True(response.Success)

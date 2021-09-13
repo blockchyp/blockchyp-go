@@ -1,40 +1,33 @@
-// +build regression
-
 package regression
 
 import (
-	"testing"
-
 	"github.com/blockchyp/blockchyp-go"
 )
 
-func TestVoid(t *testing.T) {
-	tests := map[string]struct {
-		instructions string
-		args         [][]string
-		assert       []interface{}
-		txID         string
-	}{
-		"Charge": {
-			instructions: "Insert an EMV test card when prompted.",
-			args: [][]string{
-				{
+var voidTests = testCases{
+	{
+		name:  "Void/Charge",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
-				{
-					"-type", "void", "-test",
-					"-tx",
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
 					TransactionType: "charge",
 				},
-				blockchyp.VoidResponse{
+			},
+			{
+				args: []string{
+					"-type", "void", "-test",
+					"-tx", txIDN(0),
+				},
+				expect: blockchyp.VoidResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
@@ -42,26 +35,30 @@ func TestVoid(t *testing.T) {
 				},
 			},
 		},
-		"Preauth": {
-			instructions: "Insert an EMV test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Void/Preauth",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
-				{
-					"-type", "void", "-test",
-					"-tx",
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
 					TransactionType: "preauth",
 				},
-				blockchyp.VoidResponse{
+			},
+			{
+				args: []string{
+					"-type", "void", "-test",
+					"-tx", txIDN(0),
+				},
+				expect: blockchyp.VoidResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
@@ -69,36 +66,42 @@ func TestVoid(t *testing.T) {
 				},
 			},
 		},
-		"Capture": {
-			instructions: "Insert an EMV test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Void/Capture",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
 					"-type", "preauth", "-terminal", terminalName, "-test",
 					"-amount", "63.00",
 				},
-				{
-					"-type", "capture", "-test",
-					"-tx",
-				},
-				{
-					"-type", "void", "-test",
-					"-tx",
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
 					TransactionType: "preauth",
 				},
-				blockchyp.CaptureResponse{
+			},
+			{
+				args: []string{
+					"-type", "capture", "-test",
+					"-tx", txIDN(0),
+				},
+				expect: blockchyp.CaptureResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
 					TransactionType: "capture",
 				},
-				blockchyp.VoidResponse{
+			},
+			{
+				args: []string{
+					"-type", "void", "-test",
+					"-tx", txIDN(0),
+				},
+				expect: blockchyp.VoidResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
@@ -106,15 +109,17 @@ func TestVoid(t *testing.T) {
 				},
 			},
 		},
-		"Unknown": {
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Void/Unknown",
+		group: testGroupNonInteractive,
+		operations: []operation{
+			{
+				args: []string{
 					"-type", "void", "-test",
 					"-tx", "NOT A REAL TRANSACTION",
 				},
-			},
-			assert: []interface{}{
-				blockchyp.VoidResponse{
+				expect: blockchyp.VoidResponse{
 					Success:             false,
 					Approved:            false,
 					Test:                true,
@@ -123,36 +128,42 @@ func TestVoid(t *testing.T) {
 				},
 			},
 		},
-		"Double": {
-			instructions: "Insert an EMV test card when prompted.",
-			args: [][]string{
-				{
+	},
+	{
+		name:  "Void/Double",
+		group: testGroupNoCVM,
+		operations: []operation{
+			{
+				msg: "Insert an EMV test card when prompted.",
+				args: []string{
 					"-type", "charge", "-terminal", terminalName, "-test",
 					"-amount", amount(0),
 				},
-				{
-					"-type", "void", "-test",
-					"-tx",
-				},
-				{
-					"-type", "void", "-test",
-					"-tx",
-				},
-			},
-			assert: []interface{}{
-				blockchyp.AuthorizationResponse{
+				expect: blockchyp.AuthorizationResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
 					TransactionType: "charge",
 				},
-				blockchyp.VoidResponse{
+			},
+			{
+				args: []string{
+					"-type", "void", "-test",
+					"-tx", txIDN(0),
+				},
+				expect: blockchyp.VoidResponse{
 					Success:         true,
 					Approved:        true,
 					Test:            true,
 					TransactionType: "void",
 				},
-				blockchyp.VoidResponse{
+			},
+			{
+				args: []string{
+					"-type", "void", "-test",
+					"-tx", txIDN(0),
+				},
+				expect: blockchyp.VoidResponse{
 					Success:             false,
 					Approved:            false,
 					Test:                true,
@@ -161,24 +172,5 @@ func TestVoid(t *testing.T) {
 				},
 			},
 		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			cli := newCLI(t)
-
-			setup(t, test.instructions, true)
-
-			for i := range test.args {
-				if test.txID != "" {
-					test.args[i] = append(test.args[i], test.txID)
-				}
-
-				res, ok := cli.run(test.args[i], test.assert[i]).(*blockchyp.AuthorizationResponse)
-				if ok && test.txID == "" {
-					test.txID = res.TransactionID
-				}
-			}
-		})
-	}
+	},
 }

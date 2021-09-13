@@ -67,6 +67,8 @@ type Client struct {
 	routeCacheTTL      time.Duration
 	gatewayHTTPClient  *http.Client
 	terminalHTTPClient *http.Client
+
+	LogRequests bool
 }
 
 // NewClient returns a default Client configured with the given credentials.
@@ -152,16 +154,16 @@ func (client *Client) Ping(request PingRequest) (*PingResponse, error) {
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/terminal-test", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/terminal-test", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalPingRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/test", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/test", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/terminal-test", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/terminal-test", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -199,16 +201,16 @@ func (client *Client) Charge(request AuthorizationRequest) (*AuthorizationRespon
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/charge", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/charge", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalAuthorizationRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/charge", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/charge", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/charge", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/charge", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -246,16 +248,16 @@ func (client *Client) Preauth(request AuthorizationRequest) (*AuthorizationRespo
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/preauth", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/preauth", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalAuthorizationRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/preauth", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/preauth", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/preauth", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/preauth", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -293,16 +295,16 @@ func (client *Client) Refund(request RefundRequest) (*AuthorizationResponse, err
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/refund", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/refund", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalRefundRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/refund", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/refund", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/refund", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/refund", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -340,16 +342,16 @@ func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/enroll", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/enroll", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalEnrollRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/enroll", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/enroll", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/enroll", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/enroll", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -387,16 +389,16 @@ func (client *Client) GiftActivate(request GiftActivateRequest) (*GiftActivateRe
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/gift-activate", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/gift-activate", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalGiftActivateRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/gift-activate", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/gift-activate", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/gift-activate", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/gift-activate", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -434,16 +436,16 @@ func (client *Client) Balance(request BalanceRequest) (*BalanceResponse, error) 
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/balance", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/balance", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalBalanceRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/balance", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/balance", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/balance", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/balance", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -481,16 +483,16 @@ func (client *Client) Clear(request ClearTerminalRequest) (*Acknowledgement, err
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/terminal-clear", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/terminal-clear", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalClearTerminalRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/clear", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/clear", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/terminal-clear", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/terminal-clear", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -528,16 +530,16 @@ func (client *Client) TerminalStatus(request TerminalStatusRequest) (*TerminalSt
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/terminal-status", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/terminal-status", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalTerminalStatusRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/terminal-status", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/terminal-status", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/terminal-status", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/terminal-status", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -575,16 +577,16 @@ func (client *Client) TermsAndConditions(request TermsAndConditionsRequest) (*Te
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/terminal-tc", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/terminal-tc", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalTermsAndConditionsRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/tc", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/tc", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/terminal-tc", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/terminal-tc", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -622,16 +624,16 @@ func (client *Client) CaptureSignature(request CaptureSignatureRequest) (*Captur
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/capture-signature", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/capture-signature", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalCaptureSignatureRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/capture-signature", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/capture-signature", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/capture-signature", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/capture-signature", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -669,16 +671,16 @@ func (client *Client) NewTransactionDisplay(request TransactionDisplayRequest) (
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/terminal-txdisplay", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/terminal-txdisplay", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalTransactionDisplayRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/txdisplay", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/txdisplay", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/terminal-txdisplay", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/terminal-txdisplay", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -718,16 +720,16 @@ func (client *Client) UpdateTransactionDisplay(request TransactionDisplayRequest
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/terminal-txdisplay", "PUT", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/terminal-txdisplay", "PUT", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalTransactionDisplayRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/txdisplay", "PUT", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/txdisplay", "PUT", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/terminal-txdisplay", "PUT", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/terminal-txdisplay", "PUT", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -765,16 +767,16 @@ func (client *Client) Message(request MessageRequest) (*Acknowledgement, error) 
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/message", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/message", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalMessageRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/message", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/message", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/message", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/message", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -812,16 +814,16 @@ func (client *Client) BooleanPrompt(request BooleanPromptRequest) (*BooleanPromp
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/boolean-prompt", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/boolean-prompt", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalBooleanPromptRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/boolean-prompt", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/boolean-prompt", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/boolean-prompt", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/boolean-prompt", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -859,16 +861,110 @@ func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse
 		}
 
 		if route.CloudRelayEnabled {
-			err = client.RelayRequest("/text-prompt", "POST", request, &response, request.Test, request.Timeout)
+			err = client.RelayRequest("/api/text-prompt", "POST", request, &response, request.Test, request.Timeout)
 		} else {
 			authRequest := TerminalTextPromptRequest{
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "/text-prompt", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/text-prompt", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
-		err = client.GatewayRequest("/text-prompt", "POST", request, &response, request.Test, request.Timeout)
+		err = client.GatewayRequest("/api/text-prompt", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
+// ListQueuedTransactions returns a list of queued transactions on a terminal.
+func (client *Client) ListQueuedTransactions(request ListQueuedTransactionsRequest) (*ListQueuedTransactionsResponse, error) {
+	var response ListQueuedTransactionsResponse
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/api/queue/list", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalListQueuedTransactionsRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/api/queue/list", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/api/queue/list", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
+// DeleteQueuedTransaction deletes a queued transaction from the terminal.
+func (client *Client) DeleteQueuedTransaction(request DeleteQueuedTransactionRequest) (*DeleteQueuedTransactionResponse, error) {
+	var response DeleteQueuedTransactionResponse
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/api/queue/delete", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalDeleteQueuedTransactionRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/api/queue/delete", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/api/queue/delete", "POST", request, &response, request.Test, request.Timeout)
 	}
 
 	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
@@ -888,7 +984,7 @@ func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse
 func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) {
 	var response CaptureResponse
 
-	err := client.GatewayRequest("/capture", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/api/capture", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -899,11 +995,11 @@ func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) 
 	return &response, err
 }
 
-// Void discards a previous preauth transaction.
+// Void discards a previous transaction.
 func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
 	var response VoidResponse
 
-	err := client.GatewayRequest("/void", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/api/void", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -927,7 +1023,7 @@ func (client *Client) Void(request VoidRequest) (*VoidResponse, error) {
 func (client *Client) Reverse(request AuthorizationRequest) (*AuthorizationResponse, error) {
 	var response AuthorizationResponse
 
-	err := client.GatewayRequest("/reverse", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/api/reverse", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -942,7 +1038,7 @@ func (client *Client) Reverse(request AuthorizationRequest) (*AuthorizationRespo
 func (client *Client) CloseBatch(request CloseBatchRequest) (*CloseBatchResponse, error) {
 	var response CloseBatchResponse
 
-	err := client.GatewayRequest("/close-batch", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/api/close-batch", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -957,7 +1053,22 @@ func (client *Client) CloseBatch(request CloseBatchRequest) (*CloseBatchResponse
 func (client *Client) SendPaymentLink(request PaymentLinkRequest) (*PaymentLinkResponse, error) {
 	var response PaymentLinkResponse
 
-	err := client.GatewayRequest("/send-payment-link", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/api/send-payment-link", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// CancelPaymentLink cancels a payment link.
+func (client *Client) CancelPaymentLink(request CancelPaymentLinkRequest) (*CancelPaymentLinkResponse, error) {
+	var response CancelPaymentLinkResponse
+
+	err := client.GatewayRequest("/api/cancel-payment-link", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -972,7 +1083,7 @@ func (client *Client) SendPaymentLink(request PaymentLinkRequest) (*PaymentLinkR
 func (client *Client) TransactionStatus(request TransactionStatusRequest) (*AuthorizationResponse, error) {
 	var response AuthorizationResponse
 
-	err := client.GatewayRequest("/tx-status", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/api/tx-status", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -987,7 +1098,7 @@ func (client *Client) TransactionStatus(request TransactionStatusRequest) (*Auth
 func (client *Client) UpdateCustomer(request UpdateCustomerRequest) (*CustomerResponse, error) {
 	var response CustomerResponse
 
-	err := client.GatewayRequest("/update-customer", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/api/update-customer", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -1002,7 +1113,7 @@ func (client *Client) UpdateCustomer(request UpdateCustomerRequest) (*CustomerRe
 func (client *Client) Customer(request CustomerRequest) (*CustomerResponse, error) {
 	var response CustomerResponse
 
-	err := client.GatewayRequest("/customer", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/api/customer", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -1017,7 +1128,7 @@ func (client *Client) Customer(request CustomerRequest) (*CustomerResponse, erro
 func (client *Client) CustomerSearch(request CustomerSearchRequest) (*CustomerSearchResponse, error) {
 	var response CustomerSearchResponse
 
-	err := client.GatewayRequest("/customer-search", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/api/customer-search", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -1032,7 +1143,97 @@ func (client *Client) CustomerSearch(request CustomerSearchRequest) (*CustomerSe
 func (client *Client) CashDiscount(request CashDiscountRequest) (*CashDiscountResponse, error) {
 	var response CashDiscountResponse
 
-	err := client.GatewayRequest("/cash-discount", "POST", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/api/cash-discount", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// BatchHistory returns the batch history for a merchant.
+func (client *Client) BatchHistory(request BatchHistoryRequest) (*BatchHistoryResponse, error) {
+	var response BatchHistoryResponse
+
+	err := client.GatewayRequest("/api/batch-history", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// BatchDetails returns the batch details for a single batch.
+func (client *Client) BatchDetails(request BatchDetailsRequest) (*BatchDetailsResponse, error) {
+	var response BatchDetailsResponse
+
+	err := client.GatewayRequest("/api/batch-details", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TransactionHistory returns the transaction history for a merchant.
+func (client *Client) TransactionHistory(request TransactionHistoryRequest) (*TransactionHistoryResponse, error) {
+	var response TransactionHistoryResponse
+
+	err := client.GatewayRequest("/api/tx-history", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// MerchantProfile returns profile information for a merchant.
+func (client *Client) MerchantProfile(request MerchantProfileRequest) (*MerchantProfileResponse, error) {
+	var response MerchantProfileResponse
+
+	err := client.GatewayRequest("/api/public-merchant-profile", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// DeleteCustomer deletes a customer record.
+func (client *Client) DeleteCustomer(request DeleteCustomerRequest) (*DeleteCustomerResponse, error) {
+	var response DeleteCustomerResponse
+
+	err := client.GatewayRequest("/api/customer/"+request.CustomerID, "DELETE", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// DeleteToken deletes a payment token.
+func (client *Client) DeleteToken(request DeleteTokenRequest) (*DeleteTokenResponse, error) {
+	var response DeleteTokenResponse
+
+	err := client.GatewayRequest("/api/token/"+request.Token, "DELETE", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut

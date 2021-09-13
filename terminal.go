@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"os"
 	"time"
@@ -134,7 +135,7 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 
 // requestRouteFromGateway resolves a terminal route via the gateway.
 func (client *Client) requestRouteFromGateway(terminalName string) (*TerminalRoute, error) {
-	path := "/terminal-route?terminal=" + url.QueryEscape(terminalName)
+	path := "/api/terminal-route?terminal=" + url.QueryEscape(terminalName)
 
 	var res TerminalRouteResponse
 	if err := client.GatewayRequest(path, http.MethodGet, nil, &res, false, nil); err != nil {
@@ -276,7 +277,6 @@ func (client *Client) assembleTerminalURL(route TerminalRoute, path string) stri
 	} else {
 		buffer.WriteString(":8080")
 	}
-	buffer.WriteString("/api")
 	buffer.WriteString(path)
 	return buffer.String()
 
@@ -310,7 +310,18 @@ func (client *Client) terminalRequest(route TerminalRoute, path, method string, 
 	ctx, cancel := context.WithTimeout(req.Context(), timeout)
 	defer cancel()
 
-	res, err := client.terminalHTTPClient.Do(req.WithContext(ctx))
+	req = req.WithContext(ctx)
+
+	if client.LogRequests {
+		b, err := httputil.DumpRequestOut(req, true)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintln(os.Stderr, "TERMINAL REQUEST:")
+		fmt.Fprintln(os.Stderr, string(b))
+	}
+
+	res, err := client.terminalHTTPClient.Do(req)
 	if err != nil {
 		// Try to resolve the route again.
 		// If the route has changed, retry the request.
