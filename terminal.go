@@ -135,7 +135,7 @@ func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, 
 
 // requestRouteFromGateway resolves a terminal route via the gateway.
 func (client *Client) requestRouteFromGateway(terminalName string) (*TerminalRoute, error) {
-	path := "/terminal-route?terminal=" + url.QueryEscape(terminalName)
+	path := "/api/terminal-route?terminal=" + url.QueryEscape(terminalName)
 
 	var res TerminalRouteResponse
 	if err := client.GatewayRequest(path, http.MethodGet, nil, &res, false, nil); err != nil {

@@ -152,7 +152,7 @@ func (client *Client) GatewayGet(path string, responseEntity interface{}) error 
 func (client *Client) highClockDiff() bool {
 
 	response := HeartbeatResponse{}
-	err := client.GatewayRequest("/heartbeat", http.MethodGet, nil, &response, false, nil)
+	err := client.GatewayRequest("/api/heartbeat", http.MethodGet, nil, &response, false, nil)
 	if err != nil {
 		return false
 	}
