@@ -108,6 +108,7 @@ type CommandLineArguments struct {
 	Queue                       bool   `args:"queue"`
 	Async                       bool   `args:"async"`
 	LogRequests                 bool   `args:"logRequests"`
+	LinkCode                    string `args:"linkCode"`
 }
 
 var defaultSettings = &ConfigSettings{

@@ -138,6 +138,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.Queue, "queue", false, "queue transaction without running it")
 	flag.BoolVar(&args.Async, "async", false, "run transaction asynchronously and don't wait for the response")
 	flag.BoolVar(&args.LogRequests, "logRequests", false, "log full http request for API calls")
+	flag.StringVar(&args.LinkCode, "linkCode", "", "payment link code")
 
 	flag.Parse()
 
@@ -271,6 +272,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processCaptureSignature(client, args)
 	case "send-link":
 		processSendLink(client, args)
+	case "cancel-link":
+		processCancelLink(client, args)
 	case "get-customer":
 		getCustomer(client, args)
 	case "search-customer":
@@ -467,6 +470,23 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 	}
 
 	dumpResponse(&args, ack)
+}
+
+func processCancelLink(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.LinkCode, "linkCode")
+
+	request := blockchyp.CancelPaymentLinkRequest{
+		Test:     args.Test,
+		Timeout:  args.Timeout,
+		LinkCode: args.LinkCode,
+	}
+
+	res, err := client.CancelPaymentLink(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, res)
 }
 
 func getCustomer(client *blockchyp.Client, args blockchyp.CommandLineArguments) {

@@ -2777,14 +2777,68 @@ type PaymentLinkResponse struct {
 	// result.
 	ResponseDescription string `json:"responseDescription"`
 
-	// LinkCode the payment link code.
+	// LinkCode is the payment link code.
 	LinkCode string `json:"linkCode"`
 
-	// URL the url for the payment link.
+	// URL is the url for the payment link.
 	URL string `json:"url"`
 
-	// CustomerID the customer id created or used for the payment.
+	// CustomerID is the customer id created or used for the payment.
 	CustomerID string `json:"customerId"`
+}
+
+// CancelPaymentLinkRequest cancels a pending payment link. Payment links that
+// have already been used cannot be canceled and the request will be rejected.
+type CancelPaymentLinkRequest struct {
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// LinkCode is the payment link code to cancel.
+	LinkCode string `json:"linkCode"`
+}
+
+// CancelPaymentLinkResponse indicates success or failure of a payment link
+// cancellation.
+type CancelPaymentLinkResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
 }
 
 // CashDiscountRequest computes the cash discount for a cash discount if
