@@ -47,7 +47,7 @@ func TestSimplePing(t *testing.T) {
 	// setup request object
 	request := blockchyp.PingRequest{
 		Test:         true,
-		TerminalName: "$testTerminal",
+		TerminalName: config.DefaultTerminalName,
 	}
 
 	logObj(t, "Request:", request)

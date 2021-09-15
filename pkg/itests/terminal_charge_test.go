@@ -46,7 +46,7 @@ func TestTerminalCharge(t *testing.T) {
 
 	// setup request object
 	request := blockchyp.AuthorizationRequest{
-		TerminalName: "$testTerminal",
+		TerminalName: config.DefaultTerminalName,
 		Amount:       "25.15",
 		Test:         true,
 	}
