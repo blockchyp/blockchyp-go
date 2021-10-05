@@ -1244,6 +1244,51 @@ func (client *Client) DeleteToken(request DeleteTokenRequest) (*DeleteTokenRespo
 	return &response, err
 }
 
+// TokenMetadata retrieves payment token metadata.
+func (client *Client) TokenMetadata(request TokenMetadataRequest) (*TokenMetadataResponse, error) {
+	var response TokenMetadataResponse
+
+	err := client.GatewayRequest("/api/token/"+request.Token, "GET", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// LinkToken links a token to a customer record.
+func (client *Client) LinkToken(request LinkTokenRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.GatewayRequest("/api/link-token", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// UnlinkToken removes a link between a customer and a token.
+func (client *Client) UnlinkToken(request UnlinkTokenRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.GatewayRequest("/api/unlink-token", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 func getTimeout(requestTimeout interface{}, defaultTimeout time.Duration) time.Duration {
 	var requestTimeoutDuration time.Duration
 	switch v := requestTimeout.(type) {

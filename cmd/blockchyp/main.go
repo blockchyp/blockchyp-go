@@ -300,9 +300,62 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processCustomerDelete(client, args)
 	case "delete-token":
 		processTokenDelete(client, args)
+	case "token-metadata":
+		processTokenMetadata(client, args)
+	case "link-token":
+		processLinkToken(client, args)
+	case "unlink-token":
+		processUnlinkToken(client, args)
 	default:
 		fatalErrorf("unknown transaction type: %s", args.Type)
 	}
+
+}
+
+func processUnlinkToken(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := blockchyp.UnlinkTokenRequest{
+		Token:      args.Token,
+		CustomerID: args.CustomerID,
+	}
+
+	ack, err := client.UnlinkToken(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
+
+}
+
+func processLinkToken(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := blockchyp.LinkTokenRequest{
+		Token:      args.Token,
+		CustomerID: args.CustomerID,
+	}
+
+	ack, err := client.LinkToken(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
+
+}
+
+func processTokenMetadata(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := blockchyp.TokenMetadataRequest{
+		Token: args.Token,
+	}
+
+	ack, err := client.TokenMetadata(request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
 
 }
 
@@ -381,6 +434,7 @@ func processTransactionHistory(client *blockchyp.Client, args blockchyp.CommandL
 		BatchID:      args.BatchID,
 		TerminalName: args.TerminalName,
 		Test:         args.Test,
+		Query:        args.Query,
 	}
 
 	if args.StartDate != "" {

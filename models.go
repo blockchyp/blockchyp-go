@@ -649,6 +649,61 @@ type Customer struct {
 	PaymentMethods []CustomerToken `json:"paymentMethods"`
 }
 
+// TokenMetadataRequest retrieves token metadata.
+type TokenMetadataRequest struct {
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Token the token to retrieve.
+	Token string `json:"token"`
+}
+
+// TokenMetadataResponse models a payment token metadata response.
+type TokenMetadataResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Token the token metadata for a given query.
+	Token CustomerToken `json:"token"`
+}
+
 // CustomerToken models a customer token.
 type CustomerToken struct {
 	// Token BlockChyp assigned customer id.
@@ -665,6 +720,9 @@ type CustomerToken struct {
 
 	// PaymentType payment type.
 	PaymentType string `json:"paymentType"`
+
+	// Customers models customer records associated with a payment token.
+	Customers []Customer `json:"customers"`
 }
 
 // TextPromptResponse contains the response to a text prompt request.
@@ -1065,8 +1123,12 @@ type BalanceResponse struct {
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
-	// Customer contains customer data, if any.
+	// Customer contains customer data, if any. Preserved for reverse
+	// compatibility.
 	Customer *Customer `json:"customer"`
+
+	// Customers contains customer data, if any.
+	Customers []Customer `json:"customers"`
 
 	// RemainingBalance remaining balance on the payment method.
 	RemainingBalance string `json:"remainingBalance,omitempty"`
@@ -1429,8 +1491,12 @@ type CaptureResponse struct {
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
-	// Customer contains customer data, if any.
+	// Customer contains customer data, if any. Preserved for reverse
+	// compatibility.
 	Customer *Customer `json:"customer"`
+
+	// Customers contains customer data, if any.
+	Customers []Customer `json:"customers"`
 }
 
 // VoidRequest contains a void request.
@@ -1562,8 +1628,12 @@ type VoidResponse struct {
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
-	// Customer contains customer data, if any.
+	// Customer contains customer data, if any. Preserved for reverse
+	// compatibility.
 	Customer *Customer `json:"customer"`
+
+	// Customers contains customer data, if any.
+	Customers []Customer `json:"customers"`
 
 	// SigFile contains the hex encoded signature data.
 	SigFile string `json:"sigFile,omitempty"`
@@ -1760,8 +1830,12 @@ type EnrollResponse struct {
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
-	// Customer contains customer data, if any.
+	// Customer contains customer data, if any. Preserved for reverse
+	// compatibility.
 	Customer *Customer `json:"customer"`
+
+	// Customers contains customer data, if any.
+	Customers []Customer `json:"customers"`
 
 	// SigFile contains the hex encoded signature data.
 	SigFile string `json:"sigFile,omitempty"`
@@ -2269,8 +2343,12 @@ type AuthorizationResponse struct {
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
-	// Customer contains customer data, if any.
+	// Customer contains customer data, if any. Preserved for reverse
+	// compatibility.
 	Customer *Customer `json:"customer"`
+
+	// Customers contains customer data, if any.
+	Customers []Customer `json:"customers"`
 
 	// SigFile contains the hex encoded signature data.
 	SigFile string `json:"sigFile,omitempty"`
@@ -2452,8 +2530,12 @@ type TransactionStatus struct {
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
-	// Customer contains customer data, if any.
+	// Customer contains customer data, if any. Preserved for reverse
+	// compatibility.
 	Customer *Customer `json:"customer"`
+
+	// Customers contains customer data, if any.
+	Customers []Customer `json:"customers"`
 
 	// SigFile contains the hex encoded signature data.
 	SigFile string `json:"sigFile,omitempty"`
@@ -2961,6 +3043,10 @@ type TransactionHistoryRequest struct {
 
 	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
+
+	// Query optional search query. Will match amount, last 4 and customer name.
+	// batchId and terminalName are not supported with this option.
+	Query string `json:"query"`
 
 	// BatchID optional batch id.
 	BatchID string `json:"batchId"`
@@ -3592,6 +3678,91 @@ type DeleteTokenResponse struct {
 	ResponseDescription string `json:"responseDescription"`
 }
 
+// LinkTokenRequest links a payment token with a customer record.
+type LinkTokenRequest struct {
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Token the token to delete.
+	Token string `json:"token"`
+
+	// CustomerID BlockChyp assigned customer id.
+	CustomerID string `json:"customerId"`
+}
+
+// UnlinkTokenRequest removes a link between a payment token with a customer
+// record, if one exists.
+type UnlinkTokenRequest struct {
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Token the token to delete.
+	Token string `json:"token"`
+
+	// CustomerID BlockChyp assigned customer id.
+	CustomerID string `json:"customerId"`
+}
+
 // TerminalCaptureSignatureRequest contains a request for customer signature
 // data.
 type TerminalCaptureSignatureRequest struct {
@@ -3706,18 +3877,6 @@ type TerminalListQueuedTransactionsRequest struct {
 type TerminalDeleteQueuedTransactionRequest struct {
 	APICredentials
 	Request DeleteQueuedTransactionRequest `json:"request"`
-}
-
-// TerminalDeleteCustomerRequest deletes a customer record.
-type TerminalDeleteCustomerRequest struct {
-	APICredentials
-	Request DeleteCustomerRequest `json:"request"`
-}
-
-// TerminalDeleteTokenRequest deletes a payment token.
-type TerminalDeleteTokenRequest struct {
-	APICredentials
-	Request DeleteTokenRequest `json:"request"`
 }
 
 // AbstractAcknowledgement contains fields which should be returned with
@@ -3896,8 +4055,12 @@ type PaymentMethodResponse struct {
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions
 
-	// Customer contains customer data, if any.
+	// Customer contains customer data, if any. Preserved for reverse
+	// compatibility.
 	Customer *Customer
+
+	// Customers contains customer data, if any.
+	Customers []Customer
 }
 
 // From creates an instance of PaymentMethodResponse with values
