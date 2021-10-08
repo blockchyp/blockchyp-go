@@ -48,6 +48,11 @@ func TestLinkToken(t *testing.T) {
 	setupRequest := blockchyp.EnrollRequest{
 		PAN:  "4111111111111111",
 		Test: true,
+		Customer: &blockchyp.Customer{
+			CustomerRef: "TESTCUSTOMER",
+			FirstName:   "Test",
+			LastName:    "Customer",
+		},
 	}
 
 	logObj(t, "Request:", setupRequest)
@@ -61,7 +66,7 @@ func TestLinkToken(t *testing.T) {
 	// setup request object
 	request := blockchyp.LinkTokenRequest{
 		Token:      setupResponse.Token,
-		CustomerID: "$customerId",
+		CustomerID: setupResponse.Customer.ID,
 	}
 
 	logObj(t, "Request:", request)

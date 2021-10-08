@@ -48,6 +48,11 @@ func TestTokenMetadata(t *testing.T) {
 	setupRequest := blockchyp.EnrollRequest{
 		PAN:  "4111111111111111",
 		Test: true,
+		Customer: &blockchyp.Customer{
+			CustomerRef: "TESTCUSTOMER",
+			FirstName:   "Test",
+			LastName:    "Customer",
+		},
 	}
 
 	logObj(t, "Request:", setupRequest)
