@@ -348,7 +348,10 @@ func cmp(expect, result interface{}) error {
 
 		switch expectVal.Field(i).Kind() {
 		case reflect.Bool:
-		// Check booleans even if they are falsey
+			// Check booleans even if they are falsey
+			if !reflect.DeepEqual(expectVal.Field(i).Interface(), resultVal.Field(i).Interface()) {
+				return fmt.Errorf("%s should be %+v", expectVal.Type().Field(i).Name, expectVal.Field(i).Interface())
+			}
 		case reflect.String:
 			if expectVal.Field(i).IsZero() {
 				continue
@@ -405,11 +408,12 @@ func cmp(expect, result interface{}) error {
 			if expectVal.Field(i).IsZero() {
 				continue
 			}
+
+			if !reflect.DeepEqual(expectVal.Field(i).Interface(), resultVal.Field(i).Interface()) {
+				return fmt.Errorf("%s should be %+v", expectVal.Type().Field(i).Name, expectVal.Field(i).Interface())
+			}
 		}
 
-		if !reflect.DeepEqual(expectVal.Field(i).Interface(), resultVal.Field(i).Interface()) {
-			return fmt.Errorf("%s should be %+v", expectVal.Type().Field(i).Name, expectVal.Field(i).Interface())
-		}
 	}
 
 	return nil
@@ -470,8 +474,17 @@ func (app *TestRunner) substituteConstants(test *testCase, i int) {
 		app.substituteConstant(reflect.ValueOf(&test.operations[i].args[j]).Elem(), i, test)
 	}
 
-	v := reflect.ValueOf(test.operations[i].expect)
+	fv := reflect.ValueOf(test.operations[i].expect)
+
+	if !fv.IsValid() || fv.IsZero() {
+		return
+	}
+
+	ptr := reflect.New(fv.Type())
+	v := reflect.ValueOf(ptr.Interface()).Elem()
+	v.Set(fv)
 	app.substituteInExpect(v, test, i)
+	test.operations[i].expect = ptr.Elem().Interface()
 }
 
 func (app *TestRunner) substituteInExpect(v reflect.Value, test *testCase, i int) {
