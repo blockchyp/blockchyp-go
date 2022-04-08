@@ -980,6 +980,21 @@ func (client *Client) DeleteQueuedTransaction(request DeleteQueuedTransactionReq
 	return &response, err
 }
 
+// Locate returns routing and location data for a payment terminal.
+func (client *Client) Locate(request LocateRequest) (*LocateResponse, error) {
+	var response LocateResponse
+
+	err := client.GatewayRequest("/api/terminal-locate", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // Capture captures a preauthorization.
 func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) {
 	var response CaptureResponse

@@ -336,6 +336,103 @@ type PingResponse struct {
 	Sig string `json:"sig,omitempty"`
 }
 
+// LocateRequest contains information needed to retrieve location information
+// for a terminal.
+type LocateRequest struct {
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
+}
+
+// LocateResponse contains the response to a locate request.
+type LocateResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// TransactionID is the ID assigned to the transaction.
+	TransactionID string `json:"transactionId"`
+
+	// BatchID is the ID assigned to the batch.
+	BatchID string `json:"batchId,omitempty"`
+
+	// TransactionRef is the transaction reference string assigned to the
+	// transaction request. If no transaction ref was assiged on the request,
+	// then the gateway will randomly generate one.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// TransactionType is the type of transaction.
+	TransactionType string `json:"transactionType"`
+
+	// Timestamp is the timestamp of the transaction.
+	Timestamp string `json:"timestamp"`
+
+	// TickBlock is the hash of the last tick block.
+	TickBlock string `json:"tickBlock"`
+
+	// Test indicates that the transaction was processed on the test gateway.
+	Test bool `json:"test"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Sig is the ECC signature of the response. Can be used to ensure that it
+	// was signed by the terminal and detect man-in-the middle attacks.
+	Sig string `json:"sig,omitempty"`
+
+	// TerminalName is the name assigned to the terminal at activation.
+	TerminalName string `json:"terminalName"`
+
+	// IPAddress is the local IP address of the terminal.
+	IPAddress string `json:"ipAddress"`
+
+	// CloudRelay indicates whether or not the terminal is running in cloud relay
+	// mode.
+	CloudRelay bool `json:"cloudRelay"`
+
+	// PublicKey is the terminal's public key.
+	PublicKey string `json:"publicKey"`
+}
+
 // MessageRequest contains a message to be displayed on the terminal screen.
 type MessageRequest struct {
 	// TransactionRef contains a user-assigned reference that can be used to
@@ -3775,6 +3872,13 @@ type TerminalCaptureSignatureRequest struct {
 type TerminalPingRequest struct {
 	APICredentials
 	Request PingRequest `json:"request"`
+}
+
+// TerminalLocateRequest contains information needed to retrieve location
+// information for a terminal.
+type TerminalLocateRequest struct {
+	APICredentials
+	Request LocateRequest `json:"request"`
 }
 
 // TerminalMessageRequest contains a message to be displayed on the terminal
