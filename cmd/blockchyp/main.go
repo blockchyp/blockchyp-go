@@ -232,6 +232,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 	switch args.Type {
 	case "ping":
 		processPing(client, args)
+	case "locate":
+		processLocate(client, args)
 	case "enroll":
 		processEnroll(client, args)
 	case "charge", "preauth":
@@ -1164,6 +1166,19 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 		res, err = client.Preauth(req)
 	}
 
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processLocate(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.TerminalName, "terminal")
+	req := blockchyp.LocateRequest{
+		TerminalName: args.TerminalName,
+		Timeout:      args.Timeout,
+	}
+	res, err := client.Locate(req)
 	if err != nil {
 		handleError(&args, err)
 	}
