@@ -1040,10 +1040,36 @@ type AuthorizationRequest struct {
 	CashBackEnabled bool `json:"cashBackEnabled,omitempty"`
 
 	// AltPrices is a map of alternate currencies and the price in each currency.
+	// Use only if you want to set your own exchange rate for a crypto
+	// transaction.
 	AltPrices map[string]string `json:"altPrices,omitempty"`
 
 	// Customer contains suggested receipt fields.
 	Customer *Customer `json:"customer"`
+
+	// Cryptocurrency indicates that the transaction should be a cryptocurrency
+	// transaction. Value should be a crypto currency code (ETH, BTC) or ANY to
+	// prompt the user to choose from supported cryptocurrencies.
+	Cryptocurrency *string `json:"cryptocurrency"`
+
+	// CryptoNetwork is an optional parameter that can be used to force a crypto
+	// transaction onto a level one or level two network. Valid values are L1 and
+	// L2. Defaults to L1.
+	CryptoNetwork *string `json:"cryptoNetwork"`
+
+	// CryptoReceiveAddress can be used to specify a specific receive address for
+	// a crypto transaction. Disabled by default. This should only be used by
+	// sophisticated users with access to properly configured hot wallets.
+	CryptoReceiveAddress *string `json:"cryptoReceiveAddress"`
+
+	// PaymentRequestLabel can optionally add a label to the payment request if
+	// the target cryptocurrency supports labels. Defaults to the merchant's DBA
+	// Name.
+	PaymentRequestLabel *string `json:"paymentRequestLabel"`
+
+	// PaymentRequestMessage can optionally add a message to the payment request
+	// if the target cryptocurrency supports labels. Defaults to empty.
+	PaymentRequestMessage *string `json:"paymentRequestMessage"`
 }
 
 // BalanceRequest contains a request for the remaining balance on a payment
@@ -2402,6 +2428,47 @@ type AuthorizationResponse struct {
 	// AuthorizedCashBackAmount is the amount of cash back authorized by the
 	// gateway. This amount will be the entire amount requested, or zero.
 	AuthorizedCashBackAmount string `json:"authorizedCashBackAmount"`
+
+	// Confirmed indicates that the transaction has met the standard criteria for
+	// confirmation on the network. (For example, 6 confirmations for level one
+	// bitcoin.)
+	Confirmed bool `json:"confirmed"`
+
+	// CryptoAuthorizedAmount is the amount submitted to the blockchain.
+	CryptoAuthorizedAmount string `json:"cryptoAuthorizedAmount"`
+
+	// CryptoNetworkFee is the network level fee assessed for the transaction
+	// denominated in cryptocurrency. This fee goes to channel operators and
+	// crypto miners, not BlockChyp.
+	CryptoNetworkFee string `json:"cryptoNetworkFee"`
+
+	// Cryptocurrency is the three letter cryptocurrency code used for the
+	// transactions.
+	Cryptocurrency string `json:"cryptocurrency"`
+
+	// CryptoNetwork indicates whether or not the transaction was processed on
+	// the level one or level two network.
+	CryptoNetwork string `json:"cryptoNetwork"`
+
+	// CryptoReceiveAddress the address on the crypto network the transaction was
+	// sent to.
+	CryptoReceiveAddress string `json:"cryptoReceiveAddress"`
+
+	// CryptoBlock hash or other identifier that identifies the block on the
+	// cryptocurrency network, if available or relevant.
+	CryptoBlock string `json:"cryptoBlock"`
+
+	// CryptoTransactionID hash or other transaction identifier that identifies
+	// the transaction on the cryptocurrency network, if available or relevant.
+	CryptoTransactionID string `json:"cryptoTransactionId"`
+
+	// CryptoPaymentRequest is the payment request URI used for the transaction,
+	// if available.
+	CryptoPaymentRequest string `json:"cryptoPaymentRequest"`
+
+	// CryptoStatus is used for additional status information related to crypto
+	// transactions.
+	CryptoStatus string `json:"cryptoStatus"`
 
 	// Token is the payment token, if the payment was enrolled in the vault.
 	Token string `json:"token,omitempty"`
@@ -4170,6 +4237,57 @@ type PaymentMethodResponse struct {
 // From creates an instance of PaymentMethodResponse with values
 // from a generic type.
 func (r PaymentMethodResponse) From(raw interface{}) (result PaymentMethodResponse, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
+// CryptocurrencyResponse
+type CryptocurrencyResponse struct {
+	// Confirmed indicates that the transaction has met the standard criteria for
+	// confirmation on the network. (For example, 6 confirmations for level one
+	// bitcoin.)
+	Confirmed bool
+
+	// CryptoAuthorizedAmount is the amount submitted to the blockchain.
+	CryptoAuthorizedAmount string
+
+	// CryptoNetworkFee is the network level fee assessed for the transaction
+	// denominated in cryptocurrency. This fee goes to channel operators and
+	// crypto miners, not BlockChyp.
+	CryptoNetworkFee string
+
+	// Cryptocurrency is the three letter cryptocurrency code used for the
+	// transactions.
+	Cryptocurrency string
+
+	// CryptoNetwork indicates whether or not the transaction was processed on
+	// the level one or level two network.
+	CryptoNetwork string
+
+	// CryptoReceiveAddress the address on the crypto network the transaction was
+	// sent to.
+	CryptoReceiveAddress string
+
+	// CryptoBlock hash or other identifier that identifies the block on the
+	// cryptocurrency network, if available or relevant.
+	CryptoBlock string
+
+	// CryptoTransactionID hash or other transaction identifier that identifies
+	// the transaction on the cryptocurrency network, if available or relevant.
+	CryptoTransactionID string
+
+	// CryptoPaymentRequest is the payment request URI used for the transaction,
+	// if available.
+	CryptoPaymentRequest string
+
+	// CryptoStatus is used for additional status information related to crypto
+	// transactions.
+	CryptoStatus string
+}
+
+// From creates an instance of CryptocurrencyResponse with values
+// from a generic type.
+func (r CryptocurrencyResponse) From(raw interface{}) (result CryptocurrencyResponse, ok bool) {
 	ok = copyTo(raw, &r)
 	return r, ok
 }
