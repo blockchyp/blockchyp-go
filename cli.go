@@ -109,6 +109,10 @@ type CommandLineArguments struct {
 	Async                       bool   `args:"async"`
 	LogRequests                 bool   `args:"logRequests"`
 	LinkCode                    string `args:"linkCode"`
+	Cryptocurrency              string `args:"crypto"`
+	CryptoNetwork               string `args:"cryptoNetwork"`
+	CryptoReceiveAddress        string `args:"receiveAddress"`
+	Label                       string `args:"label"`
 }
 
 var defaultSettings = &ConfigSettings{

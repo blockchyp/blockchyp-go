@@ -139,6 +139,10 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.Async, "async", false, "run transaction asynchronously and don't wait for the response")
 	flag.BoolVar(&args.LogRequests, "logRequests", false, "log full http request for API calls")
 	flag.StringVar(&args.LinkCode, "linkCode", "", "payment link code")
+	flag.StringVar(&args.Cryptocurrency, "crypto", "", "crypto currency code for crypto transaction")
+	flag.StringVar(&args.CryptoNetwork, "cryptoNetwork", "L1", "optional network code for crypto currency (L1 or L2)")
+	flag.StringVar(&args.CryptoReceiveAddress, "receiveAddress", "", "destination address for cryptocurrency transactions")
+	flag.StringVar(&args.Label, "label", "", "optional label for cryptocurrency transactions")
 
 	flag.Parse()
 
@@ -514,6 +518,22 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 		Cashier:        args.Cashier,
 		Enroll:         args.Enroll,
 		EnrollOnly:     args.EnrollOnly,
+	}
+
+	if args.Cryptocurrency != "" {
+		request.Cryptocurrency = &args.Cryptocurrency
+		if args.CryptoNetwork != "" {
+			request.CryptoNetwork = &args.CryptoNetwork
+		}
+		if args.CryptoReceiveAddress != "" {
+			request.CryptoReceiveAddress = &args.CryptoReceiveAddress
+		}
+		if args.Label != "" {
+			request.PaymentRequestLabel = &args.Label
+		}
+		if args.Message != "" {
+			request.PaymentRequestMessage = &args.Message
+		}
 	}
 
 	if args.EnrollOnly {
@@ -1146,6 +1166,22 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 		TipAmount:          args.TipAmount,
 		Token:              args.Token,
 		TransactionRef:     args.TransactionRef,
+	}
+
+	if args.Cryptocurrency != "" {
+		req.Cryptocurrency = &args.Cryptocurrency
+		if args.CryptoNetwork != "" {
+			req.CryptoNetwork = &args.CryptoNetwork
+		}
+		if args.CryptoReceiveAddress != "" {
+			req.CryptoReceiveAddress = &args.CryptoReceiveAddress
+		}
+		if args.Label != "" {
+			req.PaymentRequestLabel = &args.Label
+		}
+		if args.Message != "" {
+			req.PaymentRequestMessage = &args.Message
+		}
 	}
 
 	if args.Debit {
