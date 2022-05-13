@@ -38,6 +38,21 @@ type APIRequestHeaders struct {
 	Signature   string
 }
 
+func (client *Client) assembleDashboardURL(path string) string {
+
+	buffer := bytes.Buffer{}
+
+	if len(client.GatewayHost) > 0 {
+		buffer.WriteString(client.DashboardHost)
+	} else {
+		buffer.WriteString(DefaultDashboardHost)
+	}
+
+	buffer.WriteString(path)
+	return buffer.String()
+
+}
+
 func (client *Client) assembleGatewayURL(path string, testTx bool) string {
 
 	buffer := bytes.Buffer{}
@@ -84,6 +99,53 @@ func consumeResponse(resp *http.Response, responseEntity interface{}) error {
 	}
 
 	return nil
+}
+
+// DashboardRequest sends a gateway request with the default timeout.
+func (client *Client) DashboardRequest(path, method string, request, response interface{}, requestTimeout interface{}) error {
+	content, err := json.Marshal(request)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequest(method, client.assembleDashboardURL(path), bytes.NewBuffer(content))
+	if err != nil {
+		return err
+	}
+
+	if err := addAPIRequestHeaders(req, client.Credentials); err != nil {
+		return err
+	}
+
+	timeout := getTimeout(requestTimeout, client.GatewayTimeout)
+	ctx, cancel := context.WithTimeout(req.Context(), timeout)
+	defer cancel()
+
+	req = req.WithContext(ctx)
+
+	if client.LogRequests {
+		b, err := httputil.DumpRequestOut(req, true)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintln(os.Stderr, "DASHBOARD REQUEST:")
+		fmt.Fprintln(os.Stderr, string(b))
+	}
+
+	res, err := client.gatewayHTTPClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode == http.StatusForbidden {
+		//on 403's we check time diffs in order to help troubleshoot time issues
+		if client.highClockDiff() {
+			return errors.New("high clock drift, reset time on client")
+		}
+	}
+
+	return consumeResponse(res, response)
 }
 
 // GatewayRequest sends a gateway request with the default timeout.

@@ -16,6 +16,7 @@ type ConfigSettings struct {
 	BearerToken     string `json:"bearerToken"`
 	SigningKey      string `json:"signingKey"`
 	GatewayHost     string `json:"gatewayHost"`
+	DashboardHost   string `json:"dashboardHost"`
 	TestGatewayHost string `json:"testGatewayHost"`
 	Secure          bool   `json:"https"`
 	RouteCacheTTL   int    `json:"routeCacheTTL"`
@@ -26,10 +27,13 @@ type ConfigSettings struct {
 // CommandLineArguments contains arguments which are passed in at runtime.
 type CommandLineArguments struct {
 	Type                        string `arg:"type"`
+	Command                     string `arg:"cmd"`
 	ManualEntry                 bool   `arg:"manual"`
 	ConfigFile                  string `arg:"f"`
 	GatewayHost                 string `arg:"gateway"`
+	DashboardHost               string `arg:"dashboard"`
 	TestGatewayHost             string `arg:"testGateway"`
+	Dashboard                   string `arg:"dashboard"`
 	Test                        bool   `arg:"test"`
 	APIKey                      string `arg:"apiKey"`
 	BearerToken                 string `arg:"bearerToken"`
@@ -113,11 +117,14 @@ type CommandLineArguments struct {
 	CryptoNetwork               string `args:"cryptoNetwork"`
 	CryptoReceiveAddress        string `args:"receiveAddress"`
 	Label                       string `args:"label"`
+	DBAName                     string `args:"dbaName"`
+	MerchantID                  string `args:"merchantId"`
 }
 
 var defaultSettings = &ConfigSettings{
 	GatewayHost:     "https://api.blockchyp.com",
 	TestGatewayHost: "https://test.blockchyp.com",
+	DashboardHost:   "https://dashboard.blockchyp.com",
 	Secure:          true,
 }
 

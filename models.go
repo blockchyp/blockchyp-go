@@ -3528,6 +3528,19 @@ type TerminalVolume struct {
 	TransactionCount int `json:"transactionCount"`
 }
 
+// AddTestMerchantRequest models basic information needed to create a test
+// merchant.
+type AddTestMerchantRequest struct {
+	// DbaName the DBA name for the test merchant.
+	DbaName string `json:"dbaName"`
+
+	// CompanyName is the corporate name for the test merchant.
+	CompanyName string `json:"companyName"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+}
+
 // MerchantProfileRequest models a request for information about the merchant
 // profile.
 type MerchantProfileRequest struct {
@@ -3563,19 +3576,43 @@ type MerchantProfileRequest struct {
 
 	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
+
+	// MerchantID is the merchant id. Optional for merchant scoped requests.
+	MerchantID string `json:"merchantId"`
 }
 
-// MerchantProfileResponse models a response for details about a single batch.
-type MerchantProfileResponse struct {
-	// Success indicates whether or not the request succeeded.
-	Success bool `json:"success"`
+// Address models a physical address.
+type Address struct {
+	// Address1 is the first line of the street address.
+	Address1 string `json:"address1"`
 
-	// Error is the error, if an error occurred.
-	Error string `json:"error"`
+	// Address2 is the second line of the street address.
+	Address2 string `json:"address2"`
 
-	// ResponseDescription contains a narrative description of the transaction
-	// result.
-	ResponseDescription string `json:"responseDescription"`
+	// City is the city associated with the street address.
+	City string `json:"city"`
+
+	// StateOrProvince is the state or province associated with the street
+	// address.
+	StateOrProvince string `json:"stateOrProvince"`
+
+	// PostalCode is the postal code associated with the street address.
+	PostalCode string `json:"postalCode"`
+
+	// CountryCode is the ISO country code associated with the street address.
+	CountryCode string `json:"countryCode"`
+
+	// Latitude is the latitude component of the address's GPS coordinates.
+	Latitude float64 `json:"latitude"`
+
+	// Longitude is the longitude component of the address's GPS coordinates.
+	Longitude float64 `json:"longitude"`
+}
+
+// MerchantProfile models a merchant profile.
+type MerchantProfile struct {
+	// Timeout overrides the default timeout for merchant profile updates.
+	Timeout int `json:"timeout"`
 
 	// Test indicates that the response came from the test gateway.
 	Test bool `json:"test"`
@@ -3586,11 +3623,23 @@ type MerchantProfileResponse struct {
 	// CompanyName is the merchant's company name.
 	CompanyName string `json:"companyName"`
 
+	// DbaName is the dba name of the merchant.
+	DbaName string `json:"dbaName"`
+
+	// ContactName is the contact name for the merchant.
+	ContactName string `json:"contactName"`
+
+	// ContactNumber is the contact number for the merchant.
+	ContactNumber string `json:"contactNumber"`
+
 	// LocationName is the location name.
 	LocationName string `json:"locationName"`
 
 	// StoreNumber is the store number.
 	StoreNumber string `json:"storeNumber"`
+
+	// PartnerRef is the partner assigne reference for this merchant.
+	PartnerRef string `json:"partnerRef"`
 
 	// TimeZone is the merchant's local time zone.
 	TimeZone string `json:"timeZone"`
@@ -3604,6 +3653,10 @@ type MerchantProfileResponse struct {
 	// AutoBatchClose flag indicating whether or not the batch automatically
 	// closes.
 	AutoBatchClose bool `json:"autoBatchClose"`
+
+	// DisableBatchEmails flag indicating whether or not batch closure emails
+	// should be automatically sent.
+	DisableBatchEmails bool `json:"disableBatchEmails"`
 
 	// PINEnabled flag indicating whether or not pin entry is enabled.
 	PINEnabled bool `json:"pinEnabled"`
@@ -3629,8 +3682,280 @@ type MerchantProfileResponse struct {
 	// PublicKey is the blockchyp public key for this merchant.
 	PublicKey string `json:"publicKey"`
 
-	// Status is the undwriting/processing status for the the merchant.
+	// Status is the underwriting/processing status for the the merchant.
 	Status string `json:"status"`
+
+	// CashDiscountEnabled enables cash discount or surcharging.
+	CashDiscountEnabled bool `json:"cashDiscountEnabled"`
+
+	// SurveyTimeout is the post transaction survey timeout in seconds.
+	SurveyTimeout int `json:"surveyTimeout"`
+
+	// CooldownTimeout is time a transaction result is displayed on a terminal
+	// before the terminal is automatically cleared in seconds.
+	CooldownTimeout int `json:"cooldownTimeout"`
+
+	// TipEnabled indicates that tips are enabled for a merchant account.
+	TipEnabled bool `json:"tipEnabled"`
+
+	// PromptForTip indicates that tips should be automatically prompted for
+	// after charge and preauth transactions.
+	PromptForTip bool `json:"promptForTip"`
+
+	// TipDefaults three default values for tips. Can be provided as a percentage
+	// if a percent sign is provided. Otherwise the values are assumed to be
+	// basis points.
+	TipDefaults []string `json:"tipDefaults"`
+
+	// CashbackPresets four default values for cashback prompts.
+	CashbackPresets []string `json:"cashbackPresets"`
+
+	// EBTEnabled indicates that EBT cards are enabled.
+	EBTEnabled bool `json:"ebtEnabled"`
+
+	// FreeRangeRefundsEnabled indicates that refunds without transaction
+	// references are permitted.
+	FreeRangeRefundsEnabled bool `json:"freeRangeRefundsEnabled"`
+
+	// PINBypassEnabled indicates that pin bypass is enabled.
+	PINBypassEnabled bool `json:"pinBypassEnabled"`
+
+	// GiftCardsDisabled indicates that gift cards are disabled.
+	GiftCardsDisabled bool `json:"giftCardsDisabled"`
+
+	// TCDisabled disables terms and conditions pages in the merchant UI.
+	TCDisabled bool `json:"tcDisabled"`
+
+	// DigitalSignaturesEnabled indicates that digital signature capture is
+	// enabled.
+	DigitalSignaturesEnabled bool `json:"digitalSignaturesEnabled"`
+
+	// DigitalSignatureReversal indicates that transactions should auto-reverse
+	// when signatures are refused.
+	DigitalSignatureReversal bool `json:"digitalSignatureReversal"`
+
+	// BillingAddress is the address to be used for billing correspondence.
+	BillingAddress Address `json:"billingAddress"`
+
+	// ShippingAddress is the address to be used for shipping.
+	ShippingAddress Address `json:"shippingAddress"`
+
+	// Visa indicates that Visa cards are supported.
+	Visa bool `json:"visa"`
+
+	// MasterCard indicates that MasterCard is supported.
+	MasterCard bool `json:"masterCard"`
+
+	// Amex indicates that American Express is supported.
+	Amex bool `json:"amex"`
+
+	// Discover indicates that Discover cards are supported.
+	Discover bool `json:"discover"`
+
+	// Jcb indicates that JCB (Japan Card Bureau) cards are supported.
+	Jcb bool `json:"jcb"`
+
+	// UnionPay indicates that China Union Pay cards are supported.
+	UnionPay bool `json:"unionPay"`
+
+	// ContactlessEmv indicates that contactless EMV cards are supported.
+	ContactlessEmv bool `json:"contactlessEmv"`
+
+	// ManualEntryEnabled indicates that manual card entry is enabled.
+	ManualEntryEnabled bool `json:"manualEntryEnabled"`
+
+	// ManualEntryPromptZip requires a zip code to be entered for manually
+	// entered transactions.
+	ManualEntryPromptZip bool `json:"manualEntryPromptZip"`
+
+	// ManualEntryPromptStreetNumber requires a street number to be entered for
+	// manually entered transactions.
+	ManualEntryPromptStreetNumber bool `json:"manualEntryPromptStreetNumber"`
+
+	// GatewayOnly indicates that this merchant is boarded on BlockChyp in
+	// gateway only mode.
+	GatewayOnly bool `json:"gatewayOnly"`
+
+	// BankAccounts bank accounts for split bank account merchants.
+	BankAccounts []BankAccount `json:"bankAccounts"`
+}
+
+// MerchantProfileResponse models a response for a single merchant profile.
+type MerchantProfileResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Timeout overrides the default timeout for merchant profile updates.
+	Timeout int `json:"timeout"`
+
+	// Test indicates that the response came from the test gateway.
+	Test bool `json:"test"`
+
+	// MerchantID is the merchant id.
+	MerchantID string `json:"merchantId"`
+
+	// CompanyName is the merchant's company name.
+	CompanyName string `json:"companyName"`
+
+	// DbaName is the dba name of the merchant.
+	DbaName string `json:"dbaName"`
+
+	// ContactName is the contact name for the merchant.
+	ContactName string `json:"contactName"`
+
+	// ContactNumber is the contact number for the merchant.
+	ContactNumber string `json:"contactNumber"`
+
+	// LocationName is the location name.
+	LocationName string `json:"locationName"`
+
+	// StoreNumber is the store number.
+	StoreNumber string `json:"storeNumber"`
+
+	// PartnerRef is the partner assigne reference for this merchant.
+	PartnerRef string `json:"partnerRef"`
+
+	// TimeZone is the merchant's local time zone.
+	TimeZone string `json:"timeZone"`
+
+	// BatchCloseTime is the batch close time in the merchant's time zone.
+	BatchCloseTime string `json:"batchCloseTime"`
+
+	// TerminalUpdateTime is the terminal firmware update time.
+	TerminalUpdateTime string `json:"terminalUpdateTime"`
+
+	// AutoBatchClose flag indicating whether or not the batch automatically
+	// closes.
+	AutoBatchClose bool `json:"autoBatchClose"`
+
+	// DisableBatchEmails flag indicating whether or not batch closure emails
+	// should be automatically sent.
+	DisableBatchEmails bool `json:"disableBatchEmails"`
+
+	// PINEnabled flag indicating whether or not pin entry is enabled.
+	PINEnabled bool `json:"pinEnabled"`
+
+	// CashBackEnabled flag indicating whether or not cash back is enabled.
+	CashBackEnabled bool `json:"cashBackEnabled"`
+
+	// StoreAndForwardEnabled flag indicating whether or not store and forward is
+	// enabled.
+	StoreAndForwardEnabled bool `json:"storeAndForwardEnabled"`
+
+	// PartialAuthEnabled flag indicating whether or not partial authorizations
+	// are supported for this merchant.
+	PartialAuthEnabled bool `json:"partialAuthEnabled"`
+
+	// SplitBankAccountsEnabled flag indicating whether or not this merchant
+	// support split settlement.
+	SplitBankAccountsEnabled bool `json:"splitBankAccountsEnabled"`
+
+	// StoreAndForwardFloorLimit floor limit for store and forward transactions.
+	StoreAndForwardFloorLimit string `json:"storeAndForwardFloorLimit"`
+
+	// PublicKey is the blockchyp public key for this merchant.
+	PublicKey string `json:"publicKey"`
+
+	// Status is the underwriting/processing status for the the merchant.
+	Status string `json:"status"`
+
+	// CashDiscountEnabled enables cash discount or surcharging.
+	CashDiscountEnabled bool `json:"cashDiscountEnabled"`
+
+	// SurveyTimeout is the post transaction survey timeout in seconds.
+	SurveyTimeout int `json:"surveyTimeout"`
+
+	// CooldownTimeout is time a transaction result is displayed on a terminal
+	// before the terminal is automatically cleared in seconds.
+	CooldownTimeout int `json:"cooldownTimeout"`
+
+	// TipEnabled indicates that tips are enabled for a merchant account.
+	TipEnabled bool `json:"tipEnabled"`
+
+	// PromptForTip indicates that tips should be automatically prompted for
+	// after charge and preauth transactions.
+	PromptForTip bool `json:"promptForTip"`
+
+	// TipDefaults three default values for tips. Can be provided as a percentage
+	// if a percent sign is provided. Otherwise the values are assumed to be
+	// basis points.
+	TipDefaults []string `json:"tipDefaults"`
+
+	// CashbackPresets four default values for cashback prompts.
+	CashbackPresets []string `json:"cashbackPresets"`
+
+	// EBTEnabled indicates that EBT cards are enabled.
+	EBTEnabled bool `json:"ebtEnabled"`
+
+	// FreeRangeRefundsEnabled indicates that refunds without transaction
+	// references are permitted.
+	FreeRangeRefundsEnabled bool `json:"freeRangeRefundsEnabled"`
+
+	// PINBypassEnabled indicates that pin bypass is enabled.
+	PINBypassEnabled bool `json:"pinBypassEnabled"`
+
+	// GiftCardsDisabled indicates that gift cards are disabled.
+	GiftCardsDisabled bool `json:"giftCardsDisabled"`
+
+	// TCDisabled disables terms and conditions pages in the merchant UI.
+	TCDisabled bool `json:"tcDisabled"`
+
+	// DigitalSignaturesEnabled indicates that digital signature capture is
+	// enabled.
+	DigitalSignaturesEnabled bool `json:"digitalSignaturesEnabled"`
+
+	// DigitalSignatureReversal indicates that transactions should auto-reverse
+	// when signatures are refused.
+	DigitalSignatureReversal bool `json:"digitalSignatureReversal"`
+
+	// BillingAddress is the address to be used for billing correspondence.
+	BillingAddress Address `json:"billingAddress"`
+
+	// ShippingAddress is the address to be used for shipping.
+	ShippingAddress Address `json:"shippingAddress"`
+
+	// Visa indicates that Visa cards are supported.
+	Visa bool `json:"visa"`
+
+	// MasterCard indicates that MasterCard is supported.
+	MasterCard bool `json:"masterCard"`
+
+	// Amex indicates that American Express is supported.
+	Amex bool `json:"amex"`
+
+	// Discover indicates that Discover cards are supported.
+	Discover bool `json:"discover"`
+
+	// Jcb indicates that JCB (Japan Card Bureau) cards are supported.
+	Jcb bool `json:"jcb"`
+
+	// UnionPay indicates that China Union Pay cards are supported.
+	UnionPay bool `json:"unionPay"`
+
+	// ContactlessEmv indicates that contactless EMV cards are supported.
+	ContactlessEmv bool `json:"contactlessEmv"`
+
+	// ManualEntryEnabled indicates that manual card entry is enabled.
+	ManualEntryEnabled bool `json:"manualEntryEnabled"`
+
+	// ManualEntryPromptZip requires a zip code to be entered for manually
+	// entered transactions.
+	ManualEntryPromptZip bool `json:"manualEntryPromptZip"`
+
+	// ManualEntryPromptStreetNumber requires a street number to be entered for
+	// manually entered transactions.
+	ManualEntryPromptStreetNumber bool `json:"manualEntryPromptStreetNumber"`
+
+	// GatewayOnly indicates that this merchant is boarded on BlockChyp in
+	// gateway only mode.
+	GatewayOnly bool `json:"gatewayOnly"`
 
 	// BankAccounts bank accounts for split bank account merchants.
 	BankAccounts []BankAccount `json:"bankAccounts"`
@@ -3951,6 +4276,52 @@ type UnlinkTokenRequest struct {
 	CustomerID string `json:"customerId"`
 }
 
+// GetMerchantsRequest models a request for merchant information.
+type GetMerchantsRequest struct {
+	// Timeout allows developers to override the default timeout.
+	Timeout int `json:"timeout"`
+
+	// Test indicates whether or not to return test or live merchants.
+	Test bool `json:"test"`
+
+	// MaxResults max to be returned in a single page. Defaults to the system max
+	// of 250.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index for paged results. Defaults to zero.
+	StartIndex int `json:"startIndex"`
+}
+
+// GetMerchantsResponse contains the results for a merchant list request.
+type GetMerchantsResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Test indicates whether or not these results are for test or live
+	// merchants.
+	Test bool `json:"test"`
+
+	// MaxResults max to be returned in a single page. Defaults to the system max
+	// of 250.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index for paged results. Defaults to zero.
+	StartIndex int `json:"startIndex"`
+
+	// TotalResultCount total number of results accessible through paging.
+	TotalResultCount int `json:"totalResultCount"`
+
+	// Merchants merchants in the current page of results.
+	Merchants []MerchantProfileResponse `json:"merchants"`
+}
+
 // TerminalCaptureSignatureRequest contains a request for customer signature
 // data.
 type TerminalCaptureSignatureRequest struct {
@@ -4265,7 +4636,8 @@ func (r PaymentMethodResponse) From(raw interface{}) (result PaymentMethodRespon
 	return r, ok
 }
 
-// CryptocurrencyResponse
+// CryptocurrencyResponse contains response details for a cryptocurrency
+// transaction.
 type CryptocurrencyResponse struct {
 	// Confirmed indicates that the transaction has met the standard criteria for
 	// confirmation on the network. (For example, 6 confirmations for level one

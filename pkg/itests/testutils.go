@@ -34,6 +34,7 @@ var (
 type TestConfiguration struct {
 	GatewayHost            string `json:"gatewayHost"`
 	TestGatewayHost        string `json:"testGatewayHost"`
+	DashboardHost          string `json:"dashboardHost"`
 	DefaultTerminalName    string `json:"defaultTerminalName"`
 	DefaultTerminalAddress string `json:"defaultTerminalAddress"`
 	APIKey                 string `json:"apiKey"`
@@ -97,6 +98,7 @@ func (c *TestConfiguration) newTestClient(t *testing.T) blockchyp.Client {
 	client := blockchyp.NewClient(creds)
 	client.HTTPS = false
 	client.GatewayHost = c.GatewayHost
+	client.DashboardHost = c.DashboardHost
 	client.TestGatewayHost = c.TestGatewayHost
 
 	logObj(t, "Client:", client)

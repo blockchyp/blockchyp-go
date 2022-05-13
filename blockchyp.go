@@ -24,6 +24,7 @@ import (
 // Default client configuration constants.
 const (
 	DefaultGatewayHost     = "https://api.blockchyp.com"
+	DefaultDashboardHost   = "https://dashboard.blockchyp.com"
 	DefaultTestGatewayHost = "https://test.blockchyp.com"
 	DefaultHTTPS           = true
 	DefaultRouteCacheTTL   = 60 * time.Minute
@@ -57,6 +58,7 @@ var Version string
 type Client struct {
 	Credentials     APICredentials
 	GatewayHost     string
+	DashboardHost   string
 	TestGatewayHost string
 	HTTPS           bool
 	RouteCache      string
@@ -76,10 +78,12 @@ func NewClient(creds APICredentials) Client {
 	userAgent := BuildUserAgent()
 
 	return Client{
-		Credentials: creds,
-		GatewayHost: DefaultGatewayHost,
-		HTTPS:       DefaultHTTPS,
-		RouteCache:  filepath.Join(os.TempDir(), ".blockchyp_routes"),
+		Credentials:     creds,
+		GatewayHost:     DefaultGatewayHost,
+		TestGatewayHost: DefaultTestGatewayHost,
+		DashboardHost:   DefaultDashboardHost,
+		HTTPS:           DefaultHTTPS,
+		RouteCache:      filepath.Join(os.TempDir(), ".blockchyp_routes"),
 
 		GatewayTimeout:  DefaultGatewayTimeout,
 		TerminalTimeout: DefaultTerminalTimeout,
@@ -1294,6 +1298,69 @@ func (client *Client) UnlinkToken(request UnlinkTokenRequest) (*Acknowledgement,
 	var response Acknowledgement
 
 	err := client.GatewayRequest("/api/unlink-token", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// AddTestMerchant adds a test merchant account.
+func (client *Client) AddTestMerchant(request AddTestMerchantRequest) (*MerchantProfileResponse, error) {
+	var response MerchantProfileResponse
+
+	err := client.DashboardRequest("/api/add-test-merchant", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// GetMerchants adds a test merchant account.
+func (client *Client) GetMerchants(request GetMerchantsRequest) (*GetMerchantsResponse, error) {
+	var response GetMerchantsResponse
+
+	err := client.DashboardRequest("/api/get-merchants", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// UpdateMerchant adds or updates a merchant account. Can be used to create or
+// update test merchants. Only gateway only partners may create new live
+// merchants.
+func (client *Client) UpdateMerchant(request MerchantProfile) (*MerchantProfileResponse, error) {
+	var response MerchantProfileResponse
+
+	err := client.DashboardRequest("/api/update-merchant", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// DeleteTestMerchant deletes a test merchant account. Supports partner scoped
+// API credentials only. Live merchant accounts cannot be deleted.
+func (client *Client) DeleteTestMerchant(request MerchantProfileRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/test-merchant/"+request.MerchantID, "DELETE", request, &response, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut

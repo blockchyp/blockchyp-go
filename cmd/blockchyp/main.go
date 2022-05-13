@@ -55,9 +55,11 @@ func parseArgs() blockchyp.CommandLineArguments {
 
 	args := blockchyp.CommandLineArguments{}
 
-	flag.StringVar(&args.Type, "type", "", "transaction type")
+	flag.StringVar(&args.Type, "type", "", "transaction type (deprecated, use cmd instead)")
+	flag.StringVar(&args.Command, "cmd", "", "command")
 	flag.StringVar(&args.ConfigFile, "f", "", "config location")
 	flag.StringVar(&args.GatewayHost, "gateway", "", "gateway host address")
+	flag.StringVar(&args.DashboardHost, "dashboard", "", "dashboard host address")
 	flag.StringVar(&args.TestGatewayHost, "testGateway", "", "test gateway host address")
 	flag.StringVar(&args.APIKey, "apiKey", "", "api key")
 	flag.StringVar(&args.BearerToken, "bearerToken", "", "bearer token")
@@ -143,6 +145,8 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.CryptoNetwork, "cryptoNetwork", "L1", "optional network code for crypto currency (L1 or L2)")
 	flag.StringVar(&args.CryptoReceiveAddress, "receiveAddress", "", "destination address for cryptocurrency transactions")
 	flag.StringVar(&args.Label, "label", "", "optional label for cryptocurrency transactions")
+	flag.StringVar(&args.DBAName, "dbaName", "", "dba name for merchant account commands")
+	flag.StringVar(&args.MerchantID, "merchantId", "", "merchant id for partner and org related apis")
 
 	flag.Parse()
 
@@ -158,8 +162,8 @@ func parseArgs() blockchyp.CommandLineArguments {
 }
 
 func validateArgs(args *blockchyp.CommandLineArguments) {
-	if args.Type == "" {
-		fatalError("-type is required")
+	if args.Type == "" && args.Command == "" {
+		fatalError("-cmd is required")
 	}
 }
 
@@ -212,6 +216,12 @@ func resolveClient(args blockchyp.CommandLineArguments) (*blockchyp.Client, erro
 		client.GatewayHost = config.GatewayHost
 	}
 
+	if args.DashboardHost != "" {
+		client.DashboardHost = args.DashboardHost
+	} else {
+		client.DashboardHost = config.DashboardHost
+	}
+
 	if args.TestGatewayHost != "" {
 		client.TestGatewayHost = args.TestGatewayHost
 	} else {
@@ -233,7 +243,19 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		handleFatalError(err)
 	}
 
-	switch args.Type {
+	cmd := args.Command
+
+	if cmd == "" {
+		cmd = args.Type
+	}
+
+	switch cmd {
+	case "add-test-merchant":
+		processAddTestMerchant(client, args)
+	case "delete-test-merchant":
+		processDeleteTestMerchant(client, args)
+	case "get-merchants":
+		processGetMerchants(client, args)
 	case "ping":
 		processPing(client, args)
 	case "locate":
@@ -368,7 +390,8 @@ func processTokenMetadata(client *blockchyp.Client, args blockchyp.CommandLineAr
 func processMerchantProfile(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
 	request := blockchyp.MerchantProfileRequest{
-		Test: args.Test,
+		Test:       args.Test,
+		MerchantID: args.MerchantID,
 	}
 
 	ack, err := client.MerchantProfile(request)
@@ -1215,6 +1238,45 @@ func processLocate(client *blockchyp.Client, args blockchyp.CommandLineArguments
 		Timeout:      args.Timeout,
 	}
 	res, err := client.Locate(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processGetMerchants(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.GetMerchantsRequest{
+		Test:       args.Test,
+		StartIndex: args.StartIndex,
+		MaxResults: args.MaxResults,
+	}
+	res, err := client.GetMerchants(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processDeleteTestMerchant(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.MerchantID, "merchantId")
+	req := blockchyp.MerchantProfileRequest{
+		MerchantID: args.MerchantID,
+	}
+	res, err := client.DeleteTestMerchant(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processAddTestMerchant(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.CompanyName, "companyName")
+	req := blockchyp.AddTestMerchantRequest{
+		DbaName:     args.DBAName,
+		CompanyName: args.CompanyName,
+	}
+	res, err := client.AddTestMerchant(req)
 	if err != nil {
 		handleError(&args, err)
 	}

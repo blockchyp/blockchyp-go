@@ -2811,6 +2811,216 @@ func unlinkTokenExample() {
 
 ```
 
+#### Add Test Merchant
+
+
+
+This is a partner level API that can be used to create test merchant accounts.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func addTestMerchantExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.AddTestMerchantRequest{
+        DbaName:     "DBA name.",
+        CompanyName: "test merchant customer name.",
+    }
+
+    response, err := client.AddTestMerchant(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Get Merchants
+
+
+
+This is a partner or organization level API that can be used to return the merchant portfolio.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func getMerchantsExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.GetMerchantsRequest{
+        Test: true,
+    }
+
+    response, err := client.GetMerchants(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Update Or Create Merchant
+
+
+
+This API can be used to update or create merchant accounts.
+
+Merchant scoped API credentials can be used to update merchant account settings.
+
+Partner scoped API credentials can be used to update merchants, create new test 
+merchants or board new gateway merchants. 
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func updateMerchantExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.MerchantProfile{
+        Test: true,
+    }
+
+    response, err := client.UpdateMerchant(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Delete Test Merchant
+
+
+
+This partner API can be used to deleted unused test merchant accounts.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func deleteTestMerchantExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.MerchantProfileRequest{
+        MerchantID: "ID for the test merchant being deleted.",
+    }
+
+    response, err := client.DeleteTestMerchant(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
 ## Running Integration Tests
 
 If you'd like to run the integration tests, create a new file on your system
