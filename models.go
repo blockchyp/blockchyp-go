@@ -4972,7 +4972,7 @@ type MediaMetadata struct {
 	Video bool `json:"video"`
 }
 
-// UploadMetadata models information needed to process a fail upload.
+// UploadMetadata models information needed to process a file upload.
 type UploadMetadata struct {
 	// UploadID optional id used to track status and progress of an upload while
 	// in progress.
@@ -4986,6 +4986,339 @@ type UploadMetadata struct {
 
 	// Timeout is an optional upload timeout override.
 	Timeout int `json:"timeout"`
+}
+
+// UploadStatus models the current status of a file upload.
+type UploadStatus struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ID id used to track status and progress of an upload while in progress.
+	ID string `json:"id"`
+
+	// MediaID is the media id assigned to the result.
+	MediaID string `json:"mediaId"`
+
+	// FileSize is the size of the file to be uploaded in bytes.
+	FileSize int64 `json:"fileSize"`
+
+	// UploadedAmount is the amount of the file already uploaded.
+	UploadedAmount int64 `json:"uploadedAmount"`
+
+	// Status is the current status of a file upload.
+	Status string `json:"status"`
+
+	// Complete indicates whether or not the upload and associated file
+	// processing is complete.
+	Complete bool `json:"complete"`
+
+	// Processing indicates whether or not the file is processing. This normally
+	// applied to video files undergoing format transcoding.
+	Processing bool `json:"processing"`
+
+	// Percentage current upload progress rounded to the nearest integer.
+	Percentage int `json:"percentage"`
+
+	// ThumbnailLocation is the url of a thumbnail for the file, if available.
+	ThumbnailLocation string `json:"thumbnailLocation"`
+}
+
+// UploadStatusRequest is used to request the status of a file upload.
+type UploadStatusRequest struct {
+	// UploadID id used to track status and progress of an upload while in
+	// progress.
+	UploadID string `json:"uploadId"`
+
+	// Timeout is an optional timeout override.
+	Timeout int `json:"timeout"`
+}
+
+// MediaRequest models a request to retrieve or manipulate media assets.
+type MediaRequest struct {
+	// MediaID id used to track a media asset.
+	MediaID string `json:"mediaId"`
+
+	// Timeout is an optional timeout override.
+	Timeout int `json:"timeout"`
+}
+
+// MediaLibraryResponse models a media library response.
+type MediaLibraryResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// MaxResults max to be returned in a single page. Defaults to the system max
+	// of 250.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index for paged results. Defaults to zero.
+	StartIndex int `json:"startIndex"`
+
+	// ResultCount total number of results accessible through paging.
+	ResultCount int `json:"resultCount"`
+
+	// Results enumerates all media assets available in the context.
+	Results []MediaMetadata `json:"results"`
+}
+
+// Slide models a slide within a slide show.
+type Slide struct {
+	// MediaID is the id for the media asset to be used for this slide. Must be
+	// an image.
+	MediaID string `json:"mediaId"`
+
+	// Ordinal position of the slide within the slide show.
+	Ordinal int `json:"ordinal"`
+
+	// ThumbnailURL is the fully qualified thumbnail url for the slide.
+	ThumbnailURL string `json:"thumbnailUrl"`
+}
+
+// SlideShow models a media library response.
+type SlideShow struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ID is the primary id for the slide show.
+	ID string `json:"id"`
+
+	// Name is the name of the slide show.
+	Name string `json:"name"`
+
+	// Delay time between slides in seconds.
+	Delay int `json:"delay"`
+
+	// Enabled indicates whether or not the slide show is enabled and can be
+	// included in the terminal branding stack.
+	Enabled bool `json:"enabled"`
+
+	// Slides enumerates all slides in the display sequence.
+	Slides []Slide `json:"slides"`
+
+	// Timeout is an optional timeout override.
+	Timeout int `json:"timeout"`
+}
+
+// SlideShowResponse models a slide show response.
+type SlideShowResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// MaxResults max to be returned in a single page. Defaults to the system max
+	// of 250.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index for paged results. Defaults to zero.
+	StartIndex int `json:"startIndex"`
+
+	// ResultCount total number of results accessible through paging.
+	ResultCount int `json:"resultCount"`
+
+	// Results enumerates all slide shows responsive to the original query.
+	Results []SlideShow `json:"results"`
+}
+
+// SlideShowRequest models a request to retrieve or manipulate terminal slide
+// shows.
+type SlideShowRequest struct {
+	// SlideShowID id used to track a slide show.
+	SlideShowID string `json:"slideShowId"`
+
+	// Timeout is an optional timeout override.
+	Timeout int `json:"timeout"`
+}
+
+// BrandingAssetRequest models a request to retrieve or manipulate terminal
+// slide shows.
+type BrandingAssetRequest struct {
+	// AssetID id used to track a branding asset.
+	AssetID string `json:"assetId"`
+
+	// Timeout is an optional timeout override.
+	Timeout int `json:"timeout"`
+}
+
+// BrandingAsset models the priority and display settings for terminal media.
+type BrandingAsset struct {
+	// ID id used to track a branding asset.
+	ID string `json:"id"`
+
+	// OwnerID is the id owner of the tenant who owns the branding asset.
+	OwnerID string `json:"ownerId"`
+
+	// TerminalID is the terminal id if this branding asset is specific to a
+	// single terminal.
+	TerminalID string `json:"terminalId"`
+
+	// TerminalGroupID is the terminal group id if this branding asset is
+	// specific to a terminal group.
+	TerminalGroupID string `json:"terminalGroupId"`
+
+	// MerchantID is the merchant id associated with this branding asset.
+	MerchantID string `json:"merchantId"`
+
+	// OrganizationID is the organization id associated with this branding asset.
+	OrganizationID string `json:"organizationId"`
+
+	// PartnerID is the partner id associated with this branding asset.
+	PartnerID string `json:"partnerId"`
+
+	// SlideShowID is the slide show associated with this branding asset, if any.
+	// A branding asset can reference a slide show or media asset, but not both.
+	SlideShowID string `json:"slideShowId"`
+
+	// MediaID is the media id associated with this branding asset, if any. A
+	// branding asset can reference a slide show or media asset, but not both.
+	MediaID string `json:"mediaId"`
+
+	// Padded applies standard margins to images displayed on terminals. Usually
+	// the best option for logos.
+	Padded bool `json:"padded"`
+
+	// StartDate is the start date if this asset should be displayed based on a
+	// schedule. Format: MM/DD/YYYY
+	StartDate string `json:"startDate"`
+
+	// EndDate is the end date if this asset should be displayed based on a
+	// schedule. Format: MM/DD/YYYY
+	EndDate string `json:"endDate"`
+
+	// DaysOfWeek is an array of days of the week during which a branding asset
+	// should be enabled. Days of the week are coded as integers starting with
+	// Sunday (0) and ending with Saturday (6).
+	DaysOfWeek []int `json:"daysOfWeek"`
+
+	// StartTime is the start date if this asset should be displayed based on a
+	// schedule. Format: MM/DD/YYYY
+	StartTime string `json:"startTime"`
+
+	// EndTime is the end date if this asset should be displayed based on a
+	// schedule. Format: MM/DD/YYYY
+	EndTime string `json:"endTime"`
+
+	// Ordinal is the ordinal number marking the position of this asset within
+	// the branding stack.
+	Ordinal int `json:"ordinal"`
+
+	// Enabled enables the asset for display.
+	Enabled bool `json:"enabled"`
+
+	// Preview if true, the asset will be displayed in the merchant portal, but
+	// not on merchant terminal hardware. Developers will usually want this to
+	// always be false.
+	Preview bool `json:"preview"`
+
+	// UserID id of the user who created this branding asset, if applicable.
+	UserID string `json:"userId"`
+
+	// UserName name of the user who created this branding asset, if applicable.
+	UserName string `json:"userName"`
+
+	// Thumbnail the fully qualified URL of the thumbnail image for this branding
+	// asset.
+	Thumbnail string `json:"thumbnail"`
+
+	// LastModified is the time and date this asset was last modified.
+	LastModified string `json:"lastModified"`
+
+	// Notes is a field for notes related to a branding asset.
+	Notes string `json:"notes"`
+
+	// Editable if true, the API credentials used to retrieve the branding asset
+	// record can be used to update it.
+	Editable bool `json:"editable"`
+
+	// AssetType is the type of branding asset.
+	AssetType string `json:"assetType"`
+
+	// OwnerType is the type of user or tenant that owns this asset.
+	OwnerType string `json:"ownerType"`
+
+	// OwnerTypeCaption is a recommended caption for displaying the owner. Takes
+	// into account multiple organization types.
+	OwnerTypeCaption string `json:"ownerTypeCaption"`
+
+	// OwnerName is the name of the tenant or entity that owns the branding
+	// asset.
+	OwnerName string `json:"ownerName"`
+
+	// PreviewImage is the recommended image to be displayed when rendering a
+	// preview of this branding asset.
+	PreviewImage string `json:"previewImage"`
+
+	// NarrativeEffectiveDates is a compact narrative string explaining the
+	// effective date and time rules for a branding asset.
+	NarrativeEffectiveDates string `json:"narrativeEffectiveDates"`
+
+	// NarrativeDisplayPeriod is a compact narrative string explaining the
+	// display period for a branding asset.
+	NarrativeDisplayPeriod string `json:"narrativeDisplayPeriod"`
+
+	// Timeout is an optional timeout override.
+	Timeout int `json:"timeout"`
+}
+
+// BrandingAssetResponse models a branding asset response.
+type BrandingAssetResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// OwnerID is the id owner of this branding stack.
+	OwnerID string `json:"ownerId"`
+
+	// OwnerType is the type of user or tenant that owns this branding stack.
+	OwnerType string `json:"ownerType"`
+
+	// OwnerName is the name of the entity or tenant that owns this branding
+	// stack.
+	OwnerName string `json:"ownerName"`
+
+	// LevelName is the owner level currently being displayed.
+	LevelName string `json:"levelName"`
+
+	// NarrativeTime is a narrative description of the current simulate time.
+	NarrativeTime string `json:"narrativeTime"`
+
+	// ActiveAsset is the asset currently displayed on the terminal.
+	ActiveAsset BrandingAsset `json:"activeAsset"`
+
+	// Results enumerates all branding assets in a given credential scope.
+	Results []BrandingAsset `json:"results"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature

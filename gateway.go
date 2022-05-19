@@ -163,7 +163,7 @@ func (client *Client) DashboardUpload(path string, request UploadMetadata, reade
 	}
 
 	if request.FileSize > 0 {
-		req.Header.Add("Content-Length", strconv.FormatInt(request.FileSize, 10))
+		req.Header.Add("X-File-Size", strconv.FormatInt(request.FileSize, 10))
 	}
 	if request.FileName != "" {
 		req.Header.Add("X-Upload-File-Name", request.FileName)

@@ -26,8 +26,8 @@ type ConfigSettings struct {
 
 // CommandLineArguments contains arguments which are passed in at runtime.
 type CommandLineArguments struct {
-	Type                        string `arg:"type"` //deprecated - use cmd instead
-	Command                     string `arg:"cmd"`
+	Type                        string `args:"type"` //deprecated - use cmd instead
+	Command                     string `args:"cmd"`
 	ManualEntry                 bool   `arg:"manual"`
 	ConfigFile                  string `arg:"f"`
 	GatewayHost                 string `arg:"gateway"`
@@ -94,9 +94,9 @@ type CommandLineArguments struct {
 	PAN                         string `arg:"pan"`
 	ExpiryMonth                 string `arg:"expMonth"`
 	ExpiryYear                  string `arg:"expYear"`
-	Subject                     string `args:"subject"`
-	AutoSend                    bool   `args:"autoSend"`
-	OrderRef                    string `args:"orderRef"`
+	Subject                     string `arg:"subject"`
+	AutoSend                    bool   `arg:"autoSend"`
+	OrderRef                    string `arg:"orderRef"`
 	Query                       string `arg:"query"`
 	CallbackURL                 string `arg:"callbackUrl"`
 	Surcharge                   bool   `arg:"surcharge"`
@@ -109,28 +109,33 @@ type CommandLineArguments struct {
 	BatchID                     string `arg:"batchId"`
 	MaxResults                  int    `arg:"maxResults"`
 	StartIndex                  int    `arg:"startIndex"`
-	Queue                       bool   `args:"queue"`
-	Async                       bool   `args:"async"`
-	LogRequests                 bool   `args:"logRequests"`
-	LinkCode                    string `args:"linkCode"`
-	Cryptocurrency              string `args:"crypto"`
-	CryptoNetwork               string `args:"cryptoNetwork"`
-	CryptoReceiveAddress        string `args:"receiveAddress"`
-	Label                       string `args:"label"`
-	DBAName                     string `args:"dbaName"`
-	MerchantID                  string `args:"merchantId"`
-	TerminalID                  string `args:"terminalId"`
-	Code                        string `json:"code"`
-	TemplateID                  string `json:"templateId"`
-	LogEntryID                  string `json:"logEntryId"`
-	QuestionID                  string `json:"questionId"`
-	IncludeResponseData         bool   `json:"includeResponseData"`
-	QuestionType                string `json:"questionType"`
-	QuestionText                string `json:"questionText"`
-	Enabled                     bool   `json:"enabled"`
-	Ordinal                     int    `json:"ordinal"`
-	File                        string `json:"file"`
-	UploadID                    string `json:"uploadId"`
+	Queue                       bool   `arg:"queue"`
+	Async                       bool   `arg:"async"`
+	LogRequests                 bool   `arg:"logRequests"`
+	LinkCode                    string `arg:"linkCode"`
+	Cryptocurrency              string `arg:"crypto"`
+	CryptoNetwork               string `arg:"cryptoNetwork"`
+	CryptoReceiveAddress        string `arg:"receiveAddress"`
+	Label                       string `arg:"label"`
+	DBAName                     string `arg:"dbaName"`
+	MerchantID                  string `arg:"merchantId"`
+	TerminalID                  string `arg:"terminalId"`
+	Code                        string `arg:"code"`
+	TemplateID                  string `arg:"templateId"`
+	LogEntryID                  string `arg:"logEntryId"`
+	QuestionID                  string `arg:"questionId"`
+	IncludeResponseData         bool   `arg:"includeResponseData"`
+	QuestionType                string `arg:"questionType"`
+	QuestionText                string `arg:"questionText"`
+	Enabled                     bool   `arg:"enabled"`
+	Ordinal                     int    `arg:"ordinal"`
+	File                        string `arg:"file"`
+	UploadID                    string `arg:"uploadId"`
+	MediaID                     string `arg:"mediaId"`
+	Name                        string `arg:"name"`
+	Delay                       int    `arg:"delay"`
+	SlideShowID                 string `arg:"slideShowId"`
+	AssetID                     string `arg:"assetId"`
 }
 
 var defaultSettings = &ConfigSettings{

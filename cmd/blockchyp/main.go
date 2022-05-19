@@ -159,6 +159,11 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.IntVar(&args.Ordinal, "ordinal", 0, "ordinal value used to specify sort order for certain update operations.")
 	flag.StringVar(&args.File, "file", "", "is a file name for file upload operations")
 	flag.StringVar(&args.UploadID, "uploadId", "", "upload id to be used for tracking upload progress")
+	flag.StringVar(&args.MediaID, "mediaId", "", "media id to be used for media related commands")
+	flag.StringVar(&args.Name, "name", "", "specifies the name field for a data update")
+	flag.IntVar(&args.Delay, "delay", 5, "specifies the delay between slides in seconds")
+	flag.StringVar(&args.SlideShowID, "slideShowId", "", "id of a slide show for slide show related operations")
+	flag.StringVar(&args.AssetID, "assetId", "", "id of a branding asset")
 
 	flag.Parse()
 
@@ -302,6 +307,26 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processDeleteSurveyQuestion(client, args)
 	case "upload-media":
 		processUploadMedia(client, args)
+	case "upload-status":
+		processUploadStatus(client, args)
+	case "media":
+		processMedia(client, args)
+	case "delete-media":
+		processDeleteMedia(client, args)
+	case "update-slide-show":
+		processUpdateSlideShow(client, args)
+	case "slide-shows":
+		processSlideShows(client, args)
+	case "slide-show":
+		processSlideShow(client, args)
+	case "delete-slide-show":
+		processDeleteSlideShow(client, args)
+	case "terminal-branding":
+		processTerminalBranding(client, args)
+	case "update-branding-asset":
+		processUpdateBrandingAsset(client, args)
+	case "delete-branding-asset":
+		processDeleteBrandingAsset(client, args)
 	case "ping":
 		processPing(client, args)
 	case "locate":
@@ -1563,6 +1588,166 @@ func processAddTestMerchant(client *blockchyp.Client, args blockchyp.CommandLine
 		CompanyName: args.CompanyName,
 	}
 	res, err := client.AddTestMerchant(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processSlideShows(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.SlideShowRequest{
+		Timeout: args.Timeout,
+	}
+	res, err := client.SlideShows(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processSlideShow(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.SlideShowRequest{
+		Timeout:     args.Timeout,
+		SlideShowID: args.SlideShowID,
+	}
+	res, err := client.SlideShow(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processTerminalBranding(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.BrandingAssetRequest{
+		Timeout: args.Timeout,
+	}
+	res, err := client.TerminalBranding(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processDeleteBrandingAsset(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.BrandingAssetRequest{
+		AssetID: args.AssetID,
+		Timeout: args.Timeout,
+	}
+	res, err := client.DeleteBrandingAsset(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processUpdateBrandingAsset(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.BrandingAsset{
+		ID:          args.AssetID,
+		Timeout:     args.Timeout,
+		MediaID:     args.MediaID,
+		SlideShowID: args.SlideShowID,
+		Enabled:     args.Enabled,
+		Ordinal:     args.Ordinal,
+		Notes:       args.Message,
+	}
+	res, err := client.UpdateBrandingAsset(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processDeleteSlideShow(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.SlideShowRequest{
+		Timeout:     args.Timeout,
+		SlideShowID: args.SlideShowID,
+	}
+	res, err := client.DeleteSlideShow(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processUpdateSlideShow(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	slideIds := strings.Split(args.MediaID, ",")
+
+	req := blockchyp.SlideShow{
+		ID:      args.SlideShowID,
+		Timeout: args.Timeout,
+		Delay:   args.Delay,
+		Enabled: args.Enabled,
+		Name:    args.Name,
+	}
+
+	slides := make([]blockchyp.Slide, len(slideIds))
+
+	for idx, id := range slideIds {
+		slides[idx] = blockchyp.Slide{
+			MediaID: id,
+			Ordinal: idx,
+		}
+	}
+
+	req.Slides = slides
+
+	res, err := client.UpdateSlideShow(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processDeleteMedia(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.MediaRequest{
+		Timeout: args.Timeout,
+		MediaID: args.MediaID,
+	}
+
+	res, err := client.DeleteMediaAsset(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processMedia(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.MediaRequest{
+		Timeout: args.Timeout,
+	}
+
+	if args.MediaID != "" {
+		req.MediaID = args.MediaID
+		res, err := client.MediaAsset(req)
+		if err != nil {
+			handleError(&args, err)
+		}
+		dumpResponse(&args, res)
+		return
+	}
+	res, err := client.Media(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processUploadStatus(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.UploadID, "uploadId")
+	req := blockchyp.UploadStatusRequest{
+		Timeout:  args.Timeout,
+		UploadID: args.UploadID,
+	}
+	res, err := client.UploadStatus(req)
 	if err != nil {
 		handleError(&args, err)
 	}

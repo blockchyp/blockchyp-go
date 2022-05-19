@@ -1678,6 +1678,173 @@ func (client *Client) UploadMedia(request UploadMetadata, reader io.Reader) (*Me
 
 }
 
+// UploadStatus retrieves the current status of a file upload.
+func (client *Client) UploadStatus(request UploadStatusRequest) (*UploadStatus, error) {
+	var response UploadStatus
+
+	err := client.DashboardRequest("/api/media-upload/"+request.UploadID, "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// Media returns the media library for a given partner, merchant, or
+// organization.
+func (client *Client) Media(request MediaRequest) (*MediaLibraryResponse, error) {
+	var response MediaLibraryResponse
+
+	err := client.DashboardRequest("/api/media", "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// MediaAsset returns the media details for a single media asset.
+func (client *Client) MediaAsset(request MediaRequest) (*MediaMetadata, error) {
+	var response MediaMetadata
+
+	err := client.DashboardRequest("/api/media/"+request.MediaID, "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// DeleteMediaAsset deletes a media asset.
+func (client *Client) DeleteMediaAsset(request MediaRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/media/"+request.MediaID, "DELETE", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// UpdateSlideShow updates or creates a slide show.
+func (client *Client) UpdateSlideShow(request SlideShow) (*SlideShow, error) {
+	var response SlideShow
+
+	err := client.DashboardRequest("/api/slide-shows", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// SlideShows returns a collection of slide shows.
+func (client *Client) SlideShows(request SlideShowRequest) (*SlideShowResponse, error) {
+	var response SlideShowResponse
+
+	err := client.DashboardRequest("/api/slide-shows", "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// SlideShow returns a single slide show with slides.
+func (client *Client) SlideShow(request SlideShowRequest) (*SlideShow, error) {
+	var response SlideShow
+
+	err := client.DashboardRequest("/api/slide-shows/"+request.SlideShowID, "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// DeleteSlideShow deletes a single slide show.
+func (client *Client) DeleteSlideShow(request SlideShowRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/slide-shows/"+request.SlideShowID, "DELETE", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TerminalBranding returns the terminal branding stack for a given set of API
+// credentials.
+func (client *Client) TerminalBranding(request BrandingAssetRequest) (*BrandingAssetResponse, error) {
+	var response BrandingAssetResponse
+
+	err := client.DashboardRequest("/api/terminal-branding", "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// UpdateBrandingAsset updates a branding asset.
+func (client *Client) UpdateBrandingAsset(request BrandingAsset) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/terminal-branding", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// DeleteBrandingAsset deletes a branding asset.
+func (client *Client) DeleteBrandingAsset(request BrandingAssetRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/terminal-branding/"+request.AssetID, "DELETE", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 func getTimeout(requestTimeout interface{}, defaultTimeout time.Duration) time.Duration {
 	var requestTimeoutDuration time.Duration
 	switch v := requestTimeout.(type) {
