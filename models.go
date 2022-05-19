@@ -3581,6 +3581,99 @@ type MerchantProfileRequest struct {
 	MerchantID string `json:"merchantId"`
 }
 
+// MerchantPlatformRequest models a request related to a platform
+// configuration.
+type MerchantPlatformRequest struct {
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// PlatformID is the platform configuration id.
+	PlatformID string `json:"platformId"`
+}
+
+// InviteMerchantUserRequest models a request for adding a new user to a
+// merchant account.
+type InviteMerchantUserRequest struct {
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// MerchantID is the merchant id. Optional for merchant scoped requests.
+	MerchantID string `json:"merchantId"`
+
+	// Email is the email address of the user.
+	Email string `json:"email"`
+
+	// FirstName is the first name of the new user
+	FirstName string `json:"firstName"`
+
+	// LastName is the last name of the new user
+	LastName string `json:"lastName"`
+
+	// Roles an optional array of role codes that will be assigned to the user.
+	// If omitted defaults to the default merchant role.
+	Roles []string `json:"roles"`
+}
+
 // Address models a physical address.
 type Address struct {
 	// Address1 is the first line of the street address.
@@ -4315,11 +4408,584 @@ type GetMerchantsResponse struct {
 	// StartIndex starting index for paged results. Defaults to zero.
 	StartIndex int `json:"startIndex"`
 
-	// TotalResultCount total number of results accessible through paging.
-	TotalResultCount int `json:"totalResultCount"`
+	// ResultCount total number of results accessible through paging.
+	ResultCount int `json:"resultCount"`
 
 	// Merchants merchants in the current page of results.
 	Merchants []MerchantProfileResponse `json:"merchants"`
+}
+
+// MerchantUsersResponse contains the results for a merchant users list.
+type MerchantUsersResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Test indicates whether or not these results are for test or live
+	// merchants.
+	Test bool `json:"test"`
+
+	// Results users and pending invites associated with the merchant.
+	Results []MerchantUser `json:"results"`
+}
+
+// MerchantUser contains details about a merchant user.
+type MerchantUser struct {
+	// Test indicates whether or not these results are for test or live
+	// merchants.
+	Test bool `json:"test"`
+
+	// ID is the user's primary key.
+	ID string `json:"id"`
+
+	// FirstName is the user's first name.
+	FirstName string `json:"firstName"`
+
+	// LastName is the user's last name.
+	LastName string `json:"lastName"`
+
+	// Email is the user's email address.
+	Email string `json:"email"`
+
+	// Status is the user account status.
+	Status string `json:"status"`
+
+	// Type is the type of user account.
+	Type string `json:"type"`
+
+	// Roles are the role codes assigned to this user.
+	Roles []string `json:"roles"`
+
+	// Locked indicates whether or not this user account is locked.
+	Locked bool `json:"locked"`
+}
+
+// MerchantPlatformsResponse contains the results for a merchant platforms
+// inquiry.
+type MerchantPlatformsResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Test indicates whether or not these results are for test or live
+	// merchants.
+	Test bool `json:"test"`
+
+	// Results enumerates merchant platform settings.
+	Results []MerchantPlatform `json:"results"`
+}
+
+// MerchantPlatform contains details about a merchant board platform
+// configuration.
+type MerchantPlatform struct {
+	// ID primary identifier for a given platform configuration
+	ID string `json:"id"`
+
+	// Disabled indicates that a platform configuration is disabled.
+	Disabled bool `json:"disabled"`
+
+	// PlatformCode is BlockChyp's code for the boarding platform.
+	PlatformCode string `json:"platformCode"`
+
+	// Priority is the platform's priority in a multi platform setup.
+	Priority int `json:"priority"`
+
+	// RegistrationID is an optional field specifying the merchant's card brand
+	// registration record.
+	RegistrationID string `json:"registrationId"`
+
+	// MerchantID is the merchant's primary identifier.
+	MerchantID string `json:"merchantId"`
+
+	// AcquirerMid specifies the merchant id assigned by the acquiring bank.
+	AcquirerMid string `json:"acquirerMid"`
+
+	// Notes free form notes description the purpose or intent behind the
+	// platform configuration.
+	Notes string `json:"notes"`
+
+	// EntryMethod is the optional entry method code if a platform should only be
+	// used for specific entry methods. Leave blank for 'all'.
+	EntryMethod string `json:"entryMethod"`
+
+	// DateCreated is the date the platform configuration was first created.
+	DateCreated string `json:"dateCreated"`
+
+	// LastChange is the date the platform configuration was last modified.
+	LastChange string `json:"lastChange"`
+
+	// Timeout is an optional timeout override in seconds.
+	Timeout int `json:"timeout"`
+
+	// ConfigMap is a map of configuration values specific to the boarding
+	// platform. These are not published. Contact your BlockChyp rep for
+	// supported values.
+	ConfigMap map[string]string `json:"configMap,omitempty"`
+}
+
+// TerminalProfileRequest
+type TerminalProfileRequest struct {
+	// Timeout is the optional timeout override for a terminal profile request.
+	Timeout int `json:"timeout"`
+}
+
+// TerminalProfileResponse
+type TerminalProfileResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Results enumerates all terminal profiles in the response.
+	Results []TerminalProfile `json:"results"`
+}
+
+// TerminalDeactivationRequest
+type TerminalDeactivationRequest struct {
+	// TerminalName is the terminal name assigned to the terminal.
+	TerminalName string `json:"terminalName"`
+
+	// TerminalID is the id assigned by BlockChyp to the terminal.
+	TerminalID string `json:"terminalId"`
+
+	// Timeout is the optional timeout override for a terminal profile request.
+	Timeout int `json:"timeout"`
+}
+
+// TerminalActivationRequest
+type TerminalActivationRequest struct {
+	// MerchantID is the optional merchant id.
+	MerchantID string `json:"merchantId"`
+
+	// ActivationCode is the terminal activation code displayed on the terminal
+	ActivationCode string `json:"activationCode"`
+
+	// TerminalName is the name to be assigned to the terminal. Must be unique
+	// for the merchant account.
+	TerminalName string `json:"terminalName"`
+
+	// CloudRelay indicates that the terminal should be activated in cloud relay
+	// mode.
+	CloudRelay bool `json:"cloudRelay"`
+
+	// Timeout is the optional timeout override for a terminal profile request.
+	Timeout int `json:"timeout,omitempty"`
+}
+
+// TerminalProfile contains details about a merchant board platform
+// configuration.
+type TerminalProfile struct {
+	// ID primary identifier for a given terminal.
+	ID string `json:"id"`
+
+	// IPAddress is the terminal's local IP address.
+	IPAddress string `json:"ipAddress"`
+
+	// TerminalName is the name assigned to the terminal during activation.
+	TerminalName string `json:"terminalName"`
+
+	// TerminalType is the terminal type.
+	TerminalType string `json:"terminalType"`
+
+	// TerminalTypeDisplayString is the terminal type display string.
+	TerminalTypeDisplayString string `json:"terminalTypeDisplayString"`
+
+	// BlockChypFirmwareVersion is the current firmware version deployed on the
+	// terminal.
+	BlockChypFirmwareVersion string `json:"blockChypFirmwareVersion"`
+
+	// CloudBased indicates whether or not the terminal is configured for cloud
+	// relay.
+	CloudBased bool `json:"cloudBased"`
+
+	// PublicKey is the terminal's elliptic curve public key.
+	PublicKey string `json:"publicKey"`
+
+	// SerialNumber is the manufacturer's serial number.
+	SerialNumber string `json:"serialNumber"`
+
+	// Online indicates whether or not the terminal is currently online
+	Online bool `json:"online"`
+
+	// Since the date and time the terminal was first brought online.
+	Since string `json:"since"`
+
+	// TotalMemory is the total memory on the terminal.
+	TotalMemory int `json:"totalMemory"`
+
+	// TotalStorage is the storage on the terminal.
+	TotalStorage int `json:"totalStorage"`
+
+	// AvailableMemory is the available (unused) memory on the terminal.
+	AvailableMemory int `json:"availableMemory"`
+
+	// AvailableStorage is the available (unused) storage on the terminal.
+	AvailableStorage int `json:"availableStorage"`
+
+	// UsedMemory is the memory currently in use on the terminal.
+	UsedMemory int `json:"usedMemory"`
+
+	// UsedStorage is the storage currently in use on the terminal.
+	UsedStorage int `json:"usedStorage"`
+
+	// BrandingPreview is the branding asset currently displayed on the terminal.
+	BrandingPreview string `json:"brandingPreview"`
+
+	// GroupID the id of the terminal group to which the terminal belongs, if
+	// any.
+	GroupID string `json:"groupId"`
+
+	// GroupName the name of the terminal group to which the terminal belongs, if
+	// any.
+	GroupName string `json:"groupName"`
+}
+
+// TermsAndConditionsTemplate models a full terms and conditions template.
+type TermsAndConditionsTemplate struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ID primary identifier for a given template.
+	ID string `json:"id"`
+
+	// Alias is an alias or code used to refer to a template.
+	Alias string `json:"alias"`
+
+	// Name is the name of the template. Displayed as the agreement title on the
+	// terminal.
+	Name string `json:"name"`
+
+	// Content is the full text of the agreement template.
+	Content string `json:"content"`
+
+	// Timeout is an optional timeout override for endpoints where this type is
+	// used as a request.
+	Timeout int `json:"timeout,omitempty"`
+}
+
+// TermsAndConditionsTemplateRequest models a request to retrieve or
+// manipulate terms and conditions data.
+type TermsAndConditionsTemplateRequest struct {
+	// TemplateID id of a single template.
+	TemplateID string `json:"templateId"`
+
+	// Timeout is an optional timeout override.
+	Timeout int `json:"timeout,omitempty"`
+}
+
+// TermsAndConditionsTemplateResponse models a set of templates responsive to
+// a request.
+type TermsAndConditionsTemplateResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Results results responsive to a request.
+	Results []TermsAndConditionsTemplate `json:"results"`
+
+	// Timeout is an optional timeout override.
+	Timeout int `json:"timeout"`
+}
+
+// TermsAndConditionsLogRequest models a Terms and Conditions history request.
+type TermsAndConditionsLogRequest struct {
+	// LogEntryID is the identifier of the log entry to be returned for single
+	// result requests.
+	LogEntryID string `json:"logEntryId"`
+
+	// TransactionID optional transaction id if only log entries related to a
+	// transaction should be returned.
+	TransactionID string `json:"transactionId"`
+
+	// MaxResults max to be returned in a single page. Defaults to the system max
+	// of 250.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index for paged results. Defaults to zero.
+	StartIndex int `json:"startIndex"`
+
+	// Timeout is an optional timeout override.
+	Timeout int `json:"timeout,omitempty"`
+}
+
+// TermsAndConditionsLogResponse models a Terms and Conditions history
+// request.
+type TermsAndConditionsLogResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// TransactionID optional transaction id if only log entries related to a
+	// transaction should be returned.
+	TransactionID string `json:"transactionId"`
+
+	// MaxResults max to be returned in a single page. Defaults to the system max
+	// of 250.
+	MaxResults int `json:"maxResults"`
+
+	// StartIndex starting index for paged results. Defaults to zero.
+	StartIndex int `json:"startIndex"`
+
+	// ResultCount total number of results accessible through paging.
+	ResultCount int `json:"resultCount"`
+
+	// Results is the full result set responsive to the original request, subject
+	// to pagination limits.
+	Results []TermsAndConditionsLogEntry `json:"results"`
+}
+
+// TermsAndConditionsLogEntry models a Terms and Conditions log entry.
+type TermsAndConditionsLogEntry struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ID internal id for a Terms and Conditions entry.
+	ID string `json:"id"`
+
+	// TerminalID id of the terminal that captured this terms and conditions
+	// entry.
+	TerminalID string `json:"terminalId"`
+
+	// TerminalName name of the terminal that captured this terms and conditions
+	// entry.
+	TerminalName string `json:"terminalName"`
+
+	// Test is a flag indicating whether or not the terminal was a test terminal
+	Test bool `json:"test"`
+
+	// Timestamp date and time the terms and conditions acceptance occurred.
+	Timestamp string `json:"timestamp"`
+
+	// TransactionRef optional transaction ref if the terms and conditions was
+	// associated with a transaction.
+	TransactionRef string `json:"transactionRef"`
+
+	// TransactionID optional transaction id if only log entries related to a
+	// transaction should be returned.
+	TransactionID string `json:"transactionId"`
+
+	// Alias alias of the terms and conditions template used for this entry, if
+	// any.
+	Alias string `json:"alias"`
+
+	// Name title of the document displayed on the terminal at the time of
+	// capture.
+	Name string `json:"name"`
+
+	// Content full text of the document agreed to at the time of signature
+	// capture.
+	Content string `json:"content"`
+
+	// ContentLeader first 32 characters of the full text. Used to support user
+	// interfaces that show summaries.
+	ContentLeader string `json:"contentLeader"`
+
+	// HasSignature is a flag that indicates whether or not a signature has been
+	// captured.
+	HasSignature bool `json:"hasSignature"`
+
+	// SigFormat specifies the image format to be used for returning signatures.
+	SigFormat SignatureFormat `json:"sigFormat,omitempty"`
+
+	// Signature is the base 64 encoded signature image if the format requested.
+	Signature string `json:"signature"`
+}
+
+// SurveyQuestion models a survey question.
+type SurveyQuestion struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ID internal id for a survey question.
+	ID string `json:"id"`
+
+	// Ordinal ordinal number indicating the position of the survey question in
+	// the post transaction sequence.
+	Ordinal int `json:"ordinal"`
+
+	// Enabled determines whether or not the question will be presented post
+	// transaction.
+	Enabled bool `json:"enabled"`
+
+	// QuestionText is the full text of the transaction.
+	QuestionText string `json:"questionText"`
+
+	// QuestionType indicates the type of question. Valid values are 'yes_no' and
+	// 'scaled'.
+	QuestionType string `json:"questionType"`
+
+	// TransactionCount is the total number of transactions processed during the
+	// query period if results are requested.
+	TransactionCount int `json:"transactionCount,omitempty"`
+
+	// ResponseCount is the total number of responses during the query period if
+	// results are requested.
+	ResponseCount int `json:"responseCount,omitempty"`
+
+	// ResponseRate is the response rate, expressed as a ratio, if results are
+	// requested.
+	ResponseRate float64 `json:"responseRate,omitempty"`
+
+	// Responses is the set of response data points.
+	Responses []SurveyDataPoint `json:"responses"`
+
+	// Timeout is an optional timeout override for situations where this entity
+	// is used as a request body.
+	Timeout int `json:"timeout,omitempty"`
+}
+
+// SurveyQuestionRequest models a request to retrieve or manipulate survey
+// questions.
+type SurveyQuestionRequest struct {
+	// QuestionID id of a single question.
+	QuestionID string `json:"questionId"`
+
+	// Timeout is an optional timeout override.
+	Timeout int `json:"timeout"`
+}
+
+// SurveyQuestionResponse models a survey question response.
+type SurveyQuestionResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Results is the full result set responsive to the original request.
+	Results []SurveyQuestion `json:"results"`
+}
+
+// SurveyDataPoint models a request to retrieve or manipulate survey
+// questions.
+type SurveyDataPoint struct {
+	// AnswerKey is a unique identifier for a specific answer type.
+	AnswerKey string `json:"answerKey"`
+
+	// AnswerDescription is a narrative description of the answer.
+	AnswerDescription string `json:"answerDescription"`
+
+	// ResponseCount is the number of responses.
+	ResponseCount int `json:"responseCount"`
+
+	// ResponsePercentage is response rate as a percentage of total transactions
+	ResponsePercentage float64 `json:"responsePercentage"`
+
+	// AverageTransaction is the average transaction amount for a given answer.
+	AverageTransaction float64 `json:"averageTransaction"`
+}
+
+// SurveyResultsRequest models a request to retrieve survey results.
+type SurveyResultsRequest struct {
+	// QuestionID id of a single question.
+	QuestionID string `json:"questionId"`
+
+	// StartDate is an optional start date for filtering response data.
+	StartDate string `json:"startDate"`
+
+	// EndDate is an optional end date for filtering response data.
+	EndDate string `json:"endDate"`
+
+	// Timeout is an optional timeout override.
+	Timeout int `json:"timeout"`
+}
+
+// MediaMetadata models a request to retrieve survey results.
+type MediaMetadata struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ID id used to identify the media asset.
+	ID string `json:"id"`
+
+	// OriginalFile is the original filename assigned to the media asset.
+	OriginalFile string `json:"originalFile"`
+
+	// FileURL is the url for the full resolution versio of the media file.
+	FileURL string `json:"fileUrl"`
+
+	// ThumbnailURL is the url for to the thumbnail of an image.
+	ThumbnailURL string `json:"thumbnailUrl"`
+
+	// Video is an identifier used to flag video files
+	Video bool `json:"video"`
+}
+
+// UploadMetadata models information needed to process a fail upload.
+type UploadMetadata struct {
+	// UploadID optional id used to track status and progress of an upload while
+	// in progress.
+	UploadID string `json:"uploadId"`
+
+	// FileSize is the size of the file to be uploaded in bytes.
+	FileSize int64 `json:"fileSize"`
+
+	// FileName is the name of file to be uploaded.
+	FileName string `json:"fileName"`
+
+	// Timeout is an optional upload timeout override.
+	Timeout int `json:"timeout"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature

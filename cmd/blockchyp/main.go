@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -147,6 +148,17 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.Label, "label", "", "optional label for cryptocurrency transactions")
 	flag.StringVar(&args.DBAName, "dbaName", "", "dba name for merchant account commands")
 	flag.StringVar(&args.MerchantID, "merchantId", "", "merchant id for partner and org related apis")
+	flag.StringVar(&args.TerminalID, "terminalId", "", "terminal id for terminal related operations")
+	flag.StringVar(&args.Code, "code", "", "code for use with commands like terminal activation")
+	flag.StringVar(&args.TemplateID, "templateId", "", "template id for terms and conditions template operations")
+	flag.StringVar(&args.LogEntryID, "logEntryId", "", "log entry id for terms and conditions operations")
+	flag.StringVar(&args.QuestionID, "questionId", "", "question id for survey question related operations")
+	flag.StringVar(&args.QuestionType, "questionType", "", "question type for survey question related operations")
+	flag.StringVar(&args.QuestionText, "questionText", "", "question text for survey question related operations")
+	flag.BoolVar(&args.Enabled, "enabled", false, "enabled flag for various update operations")
+	flag.IntVar(&args.Ordinal, "ordinal", 0, "ordinal value used to specify sort order for certain update operations.")
+	flag.StringVar(&args.File, "file", "", "is a file name for file upload operations")
+	flag.StringVar(&args.UploadID, "uploadId", "", "upload id to be used for tracking upload progress")
 
 	flag.Parse()
 
@@ -254,8 +266,42 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processAddTestMerchant(client, args)
 	case "delete-test-merchant":
 		processDeleteTestMerchant(client, args)
+	case "invite-merchant-user":
+		processInviteMerchantUser(client, args)
 	case "get-merchants":
 		processGetMerchants(client, args)
+	case "merchant-users":
+		processMerchantUsers(client, args)
+	case "terminals":
+		processTerminals(client, args)
+	case "deactivate-terminal":
+		processDeactivateTerminal(client, args)
+	case "activate-terminal":
+		processActivateTerminal(client, args)
+	case "update-tc-template":
+		processUpdateTCTemplate(client, args)
+	case "tc-templates":
+		processTCTemplates(client, args)
+	case "tc-template":
+		processTCTemplate(client, args)
+	case "delete-tc-template":
+		processDeleteTCTemplate(client, args)
+	case "tc-log":
+		processTCLog(client, args)
+	case "tc-entry":
+		processTCEntry(client, args)
+	case "survey-questions":
+		processSurveyQuestions(client, args)
+	case "survey-question":
+		processSurveyQuestion(client, args)
+	case "survey-results":
+		processSurveyResults(client, args)
+	case "update-survey-question":
+		processUpdateSurveyQuestion(client, args)
+	case "delete-survey-question":
+		processDeleteSurveyQuestion(client, args)
+	case "upload-media":
+		processUploadMedia(client, args)
 	case "ping":
 		processPing(client, args)
 	case "locate":
@@ -1216,9 +1262,14 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 		req.Customer = populateCustomer(args)
 	}
 
+	cmd := args.Command
+	if cmd == "" {
+		cmd = args.Type
+	}
+
 	res := &blockchyp.AuthorizationResponse{}
 	var err error
-	switch args.Type {
+	switch cmd {
 	case "charge":
 		res, err = client.Charge(req)
 	case "preauth":
@@ -1244,6 +1295,224 @@ func processLocate(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	dumpResponse(&args, res)
 }
 
+func processDeleteSurveyQuestion(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.SurveyQuestionRequest{
+		Timeout:    args.Timeout,
+		QuestionID: args.QuestionID,
+	}
+	res, err := client.DeleteSurveyQuestion(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processSurveyQuestions(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.SurveyQuestionRequest{
+		Timeout: args.Timeout,
+	}
+	res, err := client.SurveyQuestions(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processSurveyQuestion(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.SurveyQuestionRequest{
+		Timeout:    args.Timeout,
+		QuestionID: args.QuestionID,
+	}
+	res, err := client.SurveyQuestion(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processUpdateSurveyQuestion(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.SurveyQuestion{
+		Timeout:      args.Timeout,
+		ID:           args.QuestionID,
+		QuestionText: args.QuestionText,
+		QuestionType: args.QuestionType,
+		Enabled:      args.Enabled,
+		Ordinal:      args.Ordinal,
+	}
+	res, err := client.UpdateSurveyQuestion(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processSurveyResults(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.SurveyResultsRequest{
+		Timeout:    args.Timeout,
+		QuestionID: args.QuestionID,
+		StartDate:  args.StartDate,
+		EndDate:    args.EndDate,
+	}
+	res, err := client.SurveyResults(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processTCEntry(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.TermsAndConditionsLogRequest{
+		Timeout:    args.Timeout,
+		LogEntryID: args.LogEntryID,
+	}
+	res, err := client.TCEntry(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processTCLog(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.TermsAndConditionsLogRequest{
+		Timeout:       args.Timeout,
+		TransactionID: args.TransactionID,
+		StartIndex:    args.StartIndex,
+		MaxResults:    args.MaxResults,
+	}
+	res, err := client.TCLog(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processDeleteTCTemplate(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.TermsAndConditionsTemplateRequest{
+		Timeout:    args.Timeout,
+		TemplateID: args.TemplateID,
+	}
+	res, err := client.TCDeleteTemplate(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processTCTemplate(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.TermsAndConditionsTemplateRequest{
+		Timeout:    args.Timeout,
+		TemplateID: args.TemplateID,
+	}
+	res, err := client.TCTemplate(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processTCTemplates(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.TermsAndConditionsTemplateRequest{
+		Timeout: args.Timeout,
+	}
+	res, err := client.TCTemplates(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processUpdateTCTemplate(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.TermsAndConditionsTemplate{
+		Timeout: args.Timeout,
+		Alias:   args.TCAlias,
+		Name:    args.TCName,
+		Content: args.TCContent,
+		ID:      args.TemplateID,
+	}
+	res, err := client.TCUpdateTemplate(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processActivateTerminal(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.TerminalActivationRequest{
+		Timeout:        args.Timeout,
+		TerminalName:   args.TerminalName,
+		ActivationCode: args.Code,
+	}
+	res, err := client.ActivateTerminal(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processDeactivateTerminal(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.TerminalDeactivationRequest{
+		Timeout:    args.Timeout,
+		TerminalID: args.TerminalID,
+	}
+	res, err := client.DeactivateTerminal(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processTerminals(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.TerminalProfileRequest{
+		Timeout: args.Timeout,
+	}
+	res, err := client.Terminals(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
+func processMerchantUsers(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.MerchantProfileRequest{
+		MerchantID: args.MerchantID,
+	}
+	res, err := client.MerchantUsers(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+
+}
+
 func processGetMerchants(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
 
 	req := blockchyp.GetMerchantsRequest{
@@ -1252,6 +1521,23 @@ func processGetMerchants(client *blockchyp.Client, args blockchyp.CommandLineArg
 		MaxResults: args.MaxResults,
 	}
 	res, err := client.GetMerchants(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processInviteMerchantUser(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.EMailAddress, "email")
+	validateRequired(args.FirstName, "firstName")
+	validateRequired(args.LastName, "lastName")
+	req := blockchyp.InviteMerchantUserRequest{
+		MerchantID: args.MerchantID,
+		Email:      args.EMailAddress,
+		FirstName:  args.FirstName,
+		LastName:   args.LastName,
+	}
+	res, err := client.InviteMerchantUser(req)
 	if err != nil {
 		handleError(&args, err)
 	}
@@ -1277,6 +1563,40 @@ func processAddTestMerchant(client *blockchyp.Client, args blockchyp.CommandLine
 		CompanyName: args.CompanyName,
 	}
 	res, err := client.AddTestMerchant(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processUploadMedia(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	validateRequired(args.File, "file")
+
+	info, err := os.Stat(args.File)
+	if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	_, fileName := filepath.Split(info.Name())
+
+	req := blockchyp.UploadMetadata{
+		Timeout:  args.Timeout,
+		UploadID: args.UploadID,
+		FileSize: info.Size(),
+		FileName: fileName,
+	}
+
+	file, err := os.Open(args.File)
+	if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	defer file.Close()
+
+	res, err := client.UploadMedia(req, file)
 	if err != nil {
 		handleError(&args, err)
 	}

@@ -9,12 +9,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"math"
 	"math/rand"
 	"net/http"
 	"net/http/httputil"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -115,6 +117,59 @@ func (client *Client) DashboardRequest(path, method string, request, response in
 
 	if err := addAPIRequestHeaders(req, client.Credentials); err != nil {
 		return err
+	}
+
+	timeout := getTimeout(requestTimeout, client.GatewayTimeout)
+	ctx, cancel := context.WithTimeout(req.Context(), timeout)
+	defer cancel()
+
+	req = req.WithContext(ctx)
+
+	if client.LogRequests {
+		b, err := httputil.DumpRequestOut(req, true)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintln(os.Stderr, "DASHBOARD REQUEST:")
+		fmt.Fprintln(os.Stderr, string(b))
+	}
+
+	res, err := client.gatewayHTTPClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode == http.StatusForbidden {
+		//on 403's we check time diffs in order to help troubleshoot time issues
+		if client.highClockDiff() {
+			return errors.New("high clock drift, reset time on client")
+		}
+	}
+
+	return consumeResponse(res, response)
+}
+
+// DashboardUpload performs a file upload
+func (client *Client) DashboardUpload(path string, request UploadMetadata, reader io.Reader, response interface{}, requestTimeout interface{}) error {
+
+	req, err := http.NewRequest(http.MethodPost, client.assembleDashboardURL(path), reader)
+	if err != nil {
+		return err
+	}
+
+	if err := addAPIRequestHeaders(req, client.Credentials); err != nil {
+		return err
+	}
+
+	if request.FileSize > 0 {
+		req.Header.Add("Content-Length", strconv.FormatInt(request.FileSize, 10))
+	}
+	if request.FileName != "" {
+		req.Header.Add("X-Upload-File-Name", request.FileName)
+	}
+	if request.UploadID != "" {
+		req.Header.Add("X-Upload-ID", request.UploadID)
 	}
 
 	timeout := getTimeout(requestTimeout, client.GatewayTimeout)

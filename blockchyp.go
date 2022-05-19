@@ -11,6 +11,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net"
@@ -1369,6 +1370,312 @@ func (client *Client) DeleteTestMerchant(request MerchantProfileRequest) (*Ackno
 	}
 
 	return &response, err
+}
+
+// InviteMerchantUser invites a user to join a merchant account.
+func (client *Client) InviteMerchantUser(request InviteMerchantUserRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/invite-merchant-user", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// MerchantUsers list all active users and pending invites for a merchant
+// account.
+func (client *Client) MerchantUsers(request MerchantProfileRequest) (*MerchantUsersResponse, error) {
+	var response MerchantUsersResponse
+
+	err := client.DashboardRequest("/api/merchant-users", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// MerchantPlatforms list all merchant platforms configured for a gateway
+// merchant.
+func (client *Client) MerchantPlatforms(request MerchantProfileRequest) (*MerchantPlatformsResponse, error) {
+	var response MerchantPlatformsResponse
+
+	err := client.DashboardRequest("/api/plugin-configs/"+request.MerchantID, "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// UpdateMerchantPlatforms list all merchant platforms configured for a
+// gateway merchant.
+func (client *Client) UpdateMerchantPlatforms(request MerchantPlatform) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/plugin-configs", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// DeleteMerchantPlatforms deletes a boarding platform configuration.
+func (client *Client) DeleteMerchantPlatforms(request MerchantPlatformRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/plugin-config/"+request.PlatformID, "DELETE", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// Terminals returns all terminals associated with the merchant account.
+func (client *Client) Terminals(request TerminalProfileRequest) (*TerminalProfileResponse, error) {
+	var response TerminalProfileResponse
+
+	err := client.DashboardRequest("/api/terminals", "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// DeactivateTerminal deactivates a terminal.
+func (client *Client) DeactivateTerminal(request TerminalDeactivationRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/terminal/"+request.TerminalID, "DELETE", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// ActivateTerminal activates a terminal.
+func (client *Client) ActivateTerminal(request TerminalActivationRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/terminal-activate", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TcUpdateTemplate updates or creates a terms and conditions template.
+func (client *Client) TCUpdateTemplate(request TermsAndConditionsTemplate) (*TermsAndConditionsTemplate, error) {
+	var response TermsAndConditionsTemplate
+
+	err := client.DashboardRequest("/api/tc-templates", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TcTemplates returns a list of terms and conditions templates associated
+// with a merchant account.
+func (client *Client) TCTemplates(request TermsAndConditionsTemplateRequest) (*TermsAndConditionsTemplateResponse, error) {
+	var response TermsAndConditionsTemplateResponse
+
+	err := client.DashboardRequest("/api/tc-templates", "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TcTemplate returns a single terms and conditions template.
+func (client *Client) TCTemplate(request TermsAndConditionsTemplateRequest) (*TermsAndConditionsTemplate, error) {
+	var response TermsAndConditionsTemplate
+
+	err := client.DashboardRequest("/api/tc-templates/"+request.TemplateID, "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TcDeleteTemplate deletes a single terms and conditions template.
+func (client *Client) TCDeleteTemplate(request TermsAndConditionsTemplateRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/tc-templates/"+request.TemplateID, "DELETE", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TcLog returns up to 250 entries from the Terms and Conditions log.
+func (client *Client) TCLog(request TermsAndConditionsLogRequest) (*TermsAndConditionsLogResponse, error) {
+	var response TermsAndConditionsLogResponse
+
+	err := client.DashboardRequest("/api/tc-log", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TcEntry returns a single detailed Terms and Conditions entry
+func (client *Client) TCEntry(request TermsAndConditionsLogRequest) (*TermsAndConditionsLogEntry, error) {
+	var response TermsAndConditionsLogEntry
+
+	err := client.DashboardRequest("/api/tc-entry/"+request.LogEntryID, "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// SurveyQuestions returns all survey questions for a given merchant.
+func (client *Client) SurveyQuestions(request SurveyQuestionRequest) (*SurveyQuestionResponse, error) {
+	var response SurveyQuestionResponse
+
+	err := client.DashboardRequest("/api/survey-questions", "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// SurveyQuestion returns a single survey question with response data.
+func (client *Client) SurveyQuestion(request SurveyQuestionRequest) (*SurveyQuestion, error) {
+	var response SurveyQuestion
+
+	err := client.DashboardRequest("/api/survey-questions/"+request.QuestionID, "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// SurveyResults returns results for a single survey question.
+func (client *Client) SurveyResults(request SurveyResultsRequest) (*SurveyQuestion, error) {
+	var response SurveyQuestion
+
+	err := client.DashboardRequest("/api/survey-results", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// UpdateSurveyQuestion updates or creates a survey question.
+func (client *Client) UpdateSurveyQuestion(request SurveyQuestion) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/survey-questions", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// DeleteSurveyQuestion deletes a survey question.
+func (client *Client) DeleteSurveyQuestion(request SurveyQuestionRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/survey-questions/"+request.QuestionID, "DELETE", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// UploadMedia uploads a media asset to the media library.
+func (client *Client) UploadMedia(request UploadMetadata, reader io.Reader) (*MediaMetadata, error) {
+
+	var response MediaMetadata
+
+	err := client.DashboardUpload("/api/upload-media", request, reader, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+
 }
 
 func getTimeout(requestTimeout interface{}, defaultTimeout time.Duration) time.Duration {

@@ -25,4 +25,4 @@ require (
 	github.com/olekukonko/tablewriter v0.0.0-20180912035003-be2c049b30cc // indirect
 )
 
-go 1.17
+go 1.18

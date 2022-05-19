@@ -26,7 +26,7 @@ type ConfigSettings struct {
 
 // CommandLineArguments contains arguments which are passed in at runtime.
 type CommandLineArguments struct {
-	Type                        string `arg:"type"`
+	Type                        string `arg:"type"` //deprecated - use cmd instead
 	Command                     string `arg:"cmd"`
 	ManualEntry                 bool   `arg:"manual"`
 	ConfigFile                  string `arg:"f"`
@@ -119,6 +119,18 @@ type CommandLineArguments struct {
 	Label                       string `args:"label"`
 	DBAName                     string `args:"dbaName"`
 	MerchantID                  string `args:"merchantId"`
+	TerminalID                  string `args:"terminalId"`
+	Code                        string `json:"code"`
+	TemplateID                  string `json:"templateId"`
+	LogEntryID                  string `json:"logEntryId"`
+	QuestionID                  string `json:"questionId"`
+	IncludeResponseData         bool   `json:"includeResponseData"`
+	QuestionType                string `json:"questionType"`
+	QuestionText                string `json:"questionText"`
+	Enabled                     bool   `json:"enabled"`
+	Ordinal                     int    `json:"ordinal"`
+	File                        string `json:"file"`
+	UploadID                    string `json:"uploadId"`
 }
 
 var defaultSettings = &ConfigSettings{
