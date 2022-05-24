@@ -21,7 +21,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestTerminalManualEBTCharge(t *testing.T) {
+func TestDeleteQueuedTransaction(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
@@ -36,7 +36,7 @@ func TestTerminalManualEBTCharge(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: config.DefaultTerminalName,
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestTerminalManualEBTCharge in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestDeleteQueuedTransaction in %v seconds...", testDelay),
 		}
 		if _, err := client.Message(messageRequest); err != nil {
 			t.Fatal(err)
@@ -45,17 +45,32 @@ func TestTerminalManualEBTCharge(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.AuthorizationRequest{
-		TerminalName: config.DefaultTerminalName,
-		Amount:       "27.00",
-		Test:         true,
-		CardType:     blockchyp.CardTypeEBT,
-		ManualEntry:  true,
+	setupRequest := blockchyp.AuthorizationRequest{
+		TerminalName:   config.DefaultTerminalName,
+		TransactionRef: randomID(),
+		Description:    "1060 West Addison",
+		Amount:         "25.15",
+		Test:           true,
+		Queue:          true,
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.Charge(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.DeleteQueuedTransactionRequest{
+		TerminalName:   config.DefaultTerminalName,
+		TransactionRef: "*",
 	}
 
 	logObj(t, "Request:", request)
 
-	response, err := client.Charge(request)
+	response, err := client.DeleteQueuedTransaction(request)
 
 	assert.NoError(err)
 
@@ -63,16 +78,4 @@ func TestTerminalManualEBTCharge(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
-	assert.True(response.Approved)
-	assert.True(response.Test)
-	assert.Len(response.AuthCode, 6)
-	assert.NotEmpty(response.TransactionID)
-	assert.NotEmpty(response.Timestamp)
-	assert.NotEmpty(response.TickBlock)
-	assert.Equal("approved", response.ResponseDescription)
-	assert.NotEmpty(response.PaymentType)
-	assert.NotEmpty(response.MaskedPAN)
-	assert.NotEmpty(response.EntryMethod)
-	assert.Equal("27.00", response.AuthorizedAmount)
-	assert.Equal("73.00", response.RemainingBalance)
 }

@@ -1,8 +1,8 @@
-// Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
-// governed by a license that can be found in the LICENSE file.
+// Copyright 2019-2022 BlockChyp, Inc. All rights reserved. Use of this code
+// is governed by a license that can be found in the LICENSE file.
 //
-// This file was generated automatically. Changes to this file will be lost
-// every time the code is regenerated.
+// This file was generated automatically by the BlockChyp SDK Generator.
+// Changes to this file will be lost every time the code is regenerated.
 
 package blockchyp
 
@@ -4733,6 +4733,12 @@ type TermsAndConditionsLogRequest struct {
 
 	// StartIndex starting index for paged results. Defaults to zero.
 	StartIndex int `json:"startIndex"`
+
+	// StartDate is an optional start date for filtering response data.
+	StartDate string `json:"startDate"`
+
+	// EndDate is an optional end date for filtering response data.
+	EndDate string `json:"endDate"`
 
 	// Timeout is an optional timeout override.
 	Timeout int `json:"timeout,omitempty"`

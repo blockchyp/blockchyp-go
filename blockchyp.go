@@ -1,8 +1,8 @@
-// Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
-// governed by a license that can be found in the LICENSE file.
+// Copyright 2019-2022 BlockChyp, Inc. All rights reserved. Use of this code
+// is governed by a license that can be found in the LICENSE file.
 //
-// This file was generated automatically. Changes to this file will be lost
-// every time the code is regenerated.
+// This file was generated automatically by the BlockChyp SDK Generator.
+// Changes to this file will be lost every time the code is regenerated.
 
 package blockchyp
 
@@ -1249,21 +1249,6 @@ func (client *Client) DeleteCustomer(request DeleteCustomerRequest) (*DeleteCust
 	return &response, err
 }
 
-// DeleteToken deletes a payment token.
-func (client *Client) DeleteToken(request DeleteTokenRequest) (*DeleteTokenResponse, error) {
-	var response DeleteTokenResponse
-
-	err := client.GatewayRequest("/api/token/"+request.Token, "DELETE", request, &response, request.Test, request.Timeout)
-
-	if err, ok := err.(net.Error); ok && err.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	return &response, err
-}
-
 // TokenMetadata retrieves payment token metadata.
 func (client *Client) TokenMetadata(request TokenMetadataRequest) (*TokenMetadataResponse, error) {
 	var response TokenMetadataResponse
@@ -1299,6 +1284,21 @@ func (client *Client) UnlinkToken(request UnlinkTokenRequest) (*Acknowledgement,
 	var response Acknowledgement
 
 	err := client.GatewayRequest("/api/unlink-token", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// DeleteToken deletes a payment token.
+func (client *Client) DeleteToken(request DeleteTokenRequest) (*DeleteTokenResponse, error) {
+	var response DeleteTokenResponse
+
+	err := client.GatewayRequest("/api/token/"+request.Token, "DELETE", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -1495,21 +1495,6 @@ func (client *Client) ActivateTerminal(request TerminalActivationRequest) (*Ackn
 	return &response, err
 }
 
-// TcUpdateTemplate updates or creates a terms and conditions template.
-func (client *Client) TCUpdateTemplate(request TermsAndConditionsTemplate) (*TermsAndConditionsTemplate, error) {
-	var response TermsAndConditionsTemplate
-
-	err := client.DashboardRequest("/api/tc-templates", "POST", request, &response, request.Timeout)
-
-	if err, ok := err.(net.Error); ok && err.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	return &response, err
-}
-
 // TcTemplates returns a list of terms and conditions templates associated
 // with a merchant account.
 func (client *Client) TCTemplates(request TermsAndConditionsTemplateRequest) (*TermsAndConditionsTemplateResponse, error) {
@@ -1531,6 +1516,21 @@ func (client *Client) TCTemplate(request TermsAndConditionsTemplateRequest) (*Te
 	var response TermsAndConditionsTemplate
 
 	err := client.DashboardRequest("/api/tc-templates/"+request.TemplateID, "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TcUpdateTemplate updates or creates a terms and conditions template.
+func (client *Client) TCUpdateTemplate(request TermsAndConditionsTemplate) (*TermsAndConditionsTemplate, error) {
+	var response TermsAndConditionsTemplate
+
+	err := client.DashboardRequest("/api/tc-templates", "POST", request, &response, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut

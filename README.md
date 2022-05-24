@@ -117,119 +117,12 @@ You can also view a number of long form demos and learn more about us on our [Yo
 You don't want to read words. You want examples. Here's a quick rundown of the
 stuff you can do with the BlockChyp Go SDK and a few basic examples.
 
-#### Terminal Ping
+### Payment Endpoints
 
 
-This simple test transaction helps ensure you have good communication with a payment terminal and is usually the first one you'll run in development.
-
-It tests communication with the terminal and returns a positive response if everything
-is okay.  It works the same way in local or cloud relay mode.
-
-If you get a positive response, you've successfully verified all of the following:
-
-* The terminal is online.
-* There is a valid route to the terminal.
-* The API Credentials are valid.
+These are the core payment APIs used to execute and work with payment transaction in BlockChyp.
 
 
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func pingExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.PingRequest{
-        TerminalName: "Test Terminal",
-    }
-
-    response, err := client.Ping(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Terminal Locate
-
-
-This endpoint returns routing and location information for a terminal.
-
-The result will indicate whether or not the terminal is in cloud relay mode and will
-return the local IP address if the terminal is in local mode.
-
-The terminal will also return the public key for the terminal.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func locateExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.LocateRequest{
-        TerminalName: "Test Terminal",
-    }
-
-    response, err := client.Locate(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
 
 #### Charge
 
@@ -266,7 +159,7 @@ might be maliciously running on the point-of-sale system.
 * **Inline Tokenization**: You can enroll the payment method in the token vault inline with a charge transaction by setting the `Enroll` field. You'll get a token back in the response. You can even bind the token to a customer record if you also pass in customer data.
 * **Prompting for Tips**: Set the `PromptForTip` field if you'd like to prompt the customer for a tip before authorization. Good for pay-at-the-table and other service related scenarios.
 * **Cash Discounting and Surcharging**:  The `Surcharge` and `CashDiscount` fields can be used together to support cash discounting or surcharge problems. Consult the Cash Discount documentation for more details.
-
+* **Cryptocurrency** The `Cryptocurrency` field can be used to switch the standard present card screen to a cryptocurrency screen.  The field value can be `ANY` to enable any supported cryptocurrency or a single currency code such as `BTC` for Bitcoin.
 
 
 
@@ -342,6 +235,10 @@ You can also pass in PANs and Mag Stripes, but you probably shouldn't.  This wil
 put you in PCI scope and the most common vector for POS breaches is key logging.
 If you use terminals for manual card entry, you'll bypass any key loggers that
 might be maliciously running on the point-of-sale system.
+
+**Cryptocurrency**
+
+Note that preauths are not supported for cryptocurrency.
 
 **Common Variations**
 
@@ -504,6 +401,11 @@ If a refund referencing a previous transaction is executed for the full amount
 before the original transaction's batch is closed, the refund is automatically
 converted to a void.  This saves the merchant a little bit of money.
 
+**Cryptocurrency**
+
+Note that refunds are not supported for cryptocurrency.  You must refund crypto transactions
+manually from your cryptocurrency wallet.
+
 
 
 
@@ -552,71 +454,6 @@ func refundExample() {
 
 ```
 
-#### Enroll
-
-
-This API allows you to tokenize and enroll a payment method in the token
-vault.  You can also pass in customer information and associate the
-payment method with a customer record.
-
-A token is returned in the response that can be used in subsequent charge,
-preauth, and refund transactions.
-
-**Gift Cards and EBT**
-
-Gift Cards and EBT cards cannot be tokenized.
-
-**E-Commerce Tokens**
-
-The tokens returned by the enroll API and the e-commerce web tokenizer
-are the same tokens and can be used interchangeably.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func enrollExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.EnrollRequest{
-        Test:         true,
-        TerminalName: "Test Terminal",
-    }
-
-    response, err := client.Enroll(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Approved {
-        fmt.Println("approved")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
 #### Void
 
 
@@ -626,6 +463,11 @@ with this API.  All that's needed is to pass in a Transaction ID and execute
 the void before the original transaction's batch closes.
 
 Voids work with EBT and gift card transactions with no additional parameters.
+
+**Cryptocurrency**
+
+Note that voids are not supported for cryptocurrency.  You must refund crypto transactions
+manually from your cryptocurrency wallet.
 
 
 
@@ -693,6 +535,11 @@ The reason for this requirement is that if a system never receives a definitive
 response for a transaction, the system would never have received the BlockChyp
 generated Transaction ID.  We have to fallback to Transaction Ref to identify
 a transaction.
+
+**Cryptocurrency**
+
+Note that refunds are not supported for cryptocurrency.  You must refund crypto transactions
+manually from your cryptocurrency wallet.
 
 
 
@@ -1024,6 +871,11 @@ a safeguard to prevent real emails from going out when you may not expect it.
 If you want BlockChyp to send the email for you, just add the `autoSend` flag with
 all requests.
 
+**Cryptocurrency**
+
+If the merchant is configured to support cryptocurrency transactions, the payment page will
+display additional UI widgets that will allow the customers to switch to a crypto payment method.
+
 **Tokenization**
 
 Add the `enroll` flag to a send link request to enroll the payment method
@@ -1038,6 +890,8 @@ have a terminal.
 If you pass in the `cashier` flag, no email will be sent and you'll be be able to
 load the link in a browser or iframe for payment entry.  When the `cashier` flag
 is used, the `autoSend` flag will be ignored.
+
+Note that cryptocurrency is not supported for cashier facing payment entry.
 
 **Payment Notifications**
 
@@ -1239,6 +1093,518 @@ func transactionStatusExample() {
 
 ```
 
+#### Cash Discount
+
+
+
+Calculates the surcharge, cash discount, and total amounts for cash transactions.
+
+If you're using BlockChyp's cash discounting features, you can use this endpoint
+to make sure the numbers and receipts for true cash transactions are consistent
+with transactions processed by BlockChyp.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func cashDiscountExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.CashDiscountRequest{
+        Amount:       "100.00",
+        CashDiscount: true,
+        Surcharge:    true,
+    }
+
+    response, err := client.CashDiscount(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Batch History
+
+
+
+This endpoint allows developers to query the gateway for the merchant's batch history.
+The data will be returned in descending order of open date with the most recent
+batch returned first.  The results will include basic information about the batch.
+For more detail about a specific batch, consider using the Batch Details API.
+
+**Limiting Results**
+
+This API will return a maximum of 250 results.  Use the `maxResults` property to
+limit maximum results even further and use the `startIndex` property to
+page through results that span multiple queries.
+
+For example, if you want the ten most recent batches, just pass in a value of
+`10` for `maxResults`.  Also note that `startIndex` is zero based. Use a value of `0` to
+get the first batch in the dataset.
+
+**Filtering By Date Range**
+
+You can also filter results by date.  Use the `startDate` and `endDate`
+properties to return only those batches opened between those dates.
+You can use either `startDate` and `endDate` and you can use date filters
+in conjunction with `maxResults` and `startIndex`
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func batchHistoryExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.BatchHistoryRequest{
+        MaxResults: 250,
+        StartIndex: 1,
+    }
+
+    response, err := client.BatchHistory(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Batch Details
+
+
+
+This endpoint allows developers to pull down details for a specific batch,
+including captured volume, gift card activity, expected deposit, and
+captured volume broken down by terminal.
+
+The only required request parameter is `batchId`.  Batch IDs are returned
+with every transaction response and can also be discovered using the Batch
+History API.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func batchDetailsExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.BatchDetailsRequest{
+        BatchID: "BATCHID",
+    }
+
+    response, err := client.BatchDetails(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Transaction History
+
+
+
+This endpoint provides a number of different methods to sift through
+transaction history.
+
+By default with no filtering properties, this endpoint will return the 250
+most recent transactions.
+
+**Limiting Results**
+
+This API will return a maximum of 50 results in a single query.  Use the `maxResults` property
+to limit maximum results even further and use the `startIndex` property to
+page through results that span multiple queries.
+
+For example, if you want the ten most recent batches, just pass in a value of
+`10` for `maxResults`.  Also note that `startIndex` is zero based. Use a value of `0` to
+get the first transaction in the dataset.
+
+**Filtering By Date Range**
+
+You can also filter results by date.  Use the `startDate` and `endDate`
+properties to return only transactions run between those dates.
+You can use either `startDate` or `endDate` and you can use date filters
+in conjunction with `maxResults` and `startIndex`
+
+**Filtering By Batch**
+
+To restrict results to a single batch, pass in the `batchId` parameter.
+
+**Filtering By Terminal**
+
+To restrict results to those executed on a single terminal, just
+pass in the terminal name.
+
+**Combining Filters**
+
+None of the above filters are mutually exclusive.  You can combine any of the
+above properties in a single request to restrict transaction results to a
+narrower set of results.
+
+**Searching Transaction History**
+
+You can search transaction history by passing in search criteria with the 
+`query` option.  The search system will match on amount (requested and authorized),
+last four of the card number, cardholder name, and the auth code.
+
+Note that when search queries are used, terminalName or 
+batch id filters are not supported.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func transactionHistoryExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TransactionHistoryRequest{
+        MaxResults: 10,
+    }
+
+    response, err := client.TransactionHistory(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### List Queued Transactions
+
+
+
+Returns a list of transaction refs of transactions queued on a terminal.
+Details about the transactions can be retrieved using the Transaction Status
+API.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func listQueuedTransactionsExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.ListQueuedTransactionsRequest{
+        TerminalName: "Test Terminal",
+    }
+
+    response, err := client.ListQueuedTransactions(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Delete Queued Transaction
+
+
+
+Deletes one or all queued transactions from a terminal. If `*` is passed as
+a transaction ref, then the entire terminal queue will be cleared. An error is
+returned if the passed transaction ref is not queued on the terminal.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func deleteQueuedTransactionExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.DeleteQueuedTransactionRequest{
+        TerminalName:   "Test Terminal",
+        TransactionRef: "*",
+    }
+
+    response, err := client.DeleteQueuedTransaction(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+### Terminal Management Endpoints
+
+
+These APIs support terminal management functions and additional terminal 
+features such as line item display, messages, and prompts that can be used
+to extend the functionality of a point of sale systems.
+
+
+
+#### Terminal Ping
+
+
+This simple test transaction helps ensure you have good communication with a payment terminal and is usually the first one you'll run in development.
+
+It tests communication with the terminal and returns a positive response if everything
+is okay.  It works the same way in local or cloud relay mode.
+
+If you get a positive response, you've successfully verified all of the following:
+
+* The terminal is online.
+* There is a valid route to the terminal.
+* The API Credentials are valid.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func pingExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.PingRequest{
+        TerminalName: "Test Terminal",
+    }
+
+    response, err := client.Ping(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Terminal Locate
+
+
+This endpoint returns routing and location information for a terminal.
+
+The result will indicate whether or not the terminal is in cloud relay mode and will
+return the local IP address if the terminal is in local mode.
+
+The terminal will also return the public key for the terminal.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func locateExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.LocateRequest{
+        TerminalName: "Test Terminal",
+    }
+
+    response, err := client.Locate(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
 #### Terminal Clear
 
 
@@ -1338,112 +1704,6 @@ func terminalStatusExample() {
     }
 
     response, err := client.TerminalStatus(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Terms & Conditions Capture
-
-
-
-This API allows you to prompt a customer to accept a legal agreement on the terminal
-and (usually) capture their signature.
-
-Content for the agreement can be specified in two ways.  You can reference a
-previously configured T&C template or pass in the full agreement text with every request.
-
-**Using Templates**
-
-If your application doesn't keep track of agreements you can leverage BlockChyp's
-template system.  You can create any number of T&C Templates in the merchant dashboard
-and pass in the `tcAlias` flag to specify which one to display.
-
-**Raw Content**
-
-If your system keeps track of the agreement language or executes complicated merging
-and rendering logic, you can bypass our template system and pass in the full text with
-every transaction.  Use the `tcName` to pass in the agreement name and `tcContent` to
-pass in the contract text.  Note that only plain text is supported.
-
-**Bypassing Signatures**
-
-Signature images are captured by default.  If for some reason this doesn't fit your
-use case and you'd like to capture acceptance without actually capturing a signature image, set
-the `disableSignature` flag in the request.
-
-**Terms & Conditions Log**
-
-Every time a user accepts an agreement on the terminal, the signature image (if captured),
-will be uploaded to the gateway and added to the log along with the full text of the
-agreement.  This preserves the historical record in the event that standard agreements
-or templates change over time.
-
-**Associating Agreements with Transactions**
-
-To associate a Terms & Conditions log entry with a transaction, just pass in the
-Transaction ID or Transaction Ref for the associated transaction.
-
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func termsAndConditionsExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.TermsAndConditionsRequest{
-        Test:         true,
-        TerminalName: "Test Terminal",
-
-        // Alias for a Terms and Conditions template configured in the BlockChyp dashboard.
-        TCAlias: "hippa",
-
-        // Name of the contract or document if not using an alias.
-        TCName: "HIPPA Disclosure",
-
-        // Full text of the contract or disclosure if not using an alias.
-        TCContent: "Full contract text",
-
-        // file format for the signature image.
-        SigFormat: blockchyp.SignatureFormatPNG,
-
-        // width of the signature image in pixels.
-        SigWidth: 200,
-
-        // Whether or not a signature is required. Defaults to true.
-        SigRequired: true,
-    }
-
-    response, err := client.TermsAndConditions(request)
 
     if err != nil {
         log.Fatal(err)
@@ -1915,6 +2175,946 @@ func textPromptExample() {
 
 ```
 
+#### List Terminals
+
+
+
+This API returns details about terminals associated with a merchant account.
+
+Status and resource information is returned for all terminals along with a preview of the 
+current branding image displayed on the terminal
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func terminalsExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TerminalProfileRequest{
+        Timeout: 120,
+    }
+
+    response, err := client.Terminals(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Deactivate Terminal
+
+
+
+This API deactivates a payment terminal.
+
+If the terminal exists and is currently online, the terminal will be removed from the merchant's 
+terminal inventory and the terminal will be remotely cleared and factory reset.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func deactivateTerminalExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TerminalDeactivationRequest{
+        TerminalID: randomID(),
+        Timeout:    120,
+    }
+
+    response, err := client.DeactivateTerminal(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Activate Terminal
+
+
+
+This API activates a payment terminal.
+
+If successful, the payment terminal will restart, generate new encryption keys, and download any active
+branding assets for the merchant account it's been added to.
+
+Activation requests require an activation code and a unique terminal name.  Terminal names must be unique across
+a merchant account.
+
+Optional Parameters
+
+* **merchantId:** For partner scoped API credentials, a merchant ID is required.  For merchant scoped API credentials, the merchant ID is implicit and cannot be overriden.
+* **cloudRelay:** Activates the terminal in cloud relay mode.
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func activateTerminalExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TerminalActivationRequest{
+        TerminalName: "Test Terminal",
+        Timeout:      120,
+    }
+
+    response, err := client.ActivateTerminal(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+### Terms & Conditions Endpoints
+
+
+Developers can use BlockChyp to display and capture acceptance of contracts or agreements related to transactions.
+These agreements can be any long form contract ranging from rental agreements to HIPPA disclosures.
+
+There are two basic approaches to terms and conditions capture.  Merchants can store contract templates in 
+BlockChyp or they can send the full agreement text as part of every API call.  The right approach will largely 
+depend on whether or not the system being integrated with BlockChyp already has a mechanism for organizing 
+and managing agreements.  For systems that already have this feature built in, it's probably not necessary 
+to use Terms and Conditions.
+
+When agreements are displayed on a terminal, the consumer can scroll through and read the entire agreement,
+and provide a signature.  Results are returned as part of the API response, but BlockChyp also stores a 
+record of the agreement including the signature image, timestamp, and the full text of the agreement that was 
+agreed to.
+
+The Terms and Conditions Log APIs can be used to search and retrieve acceptance records and acceptance records
+can also be linked to a transaction if a transaction id is provided with the original API request.
+
+
+
+#### Terms & Conditions Capture
+
+
+
+This API allows you to prompt a customer to accept a legal agreement on the terminal
+and (usually) capture their signature.
+
+Content for the agreement can be specified in two ways.  You can reference a
+previously configured T&C template or pass in the full agreement text with every request.
+
+**Using Templates**
+
+If your application doesn't keep track of agreements you can leverage BlockChyp's
+template system.  You can create any number of T&C Templates in the merchant dashboard
+and pass in the `tcAlias` flag to specify which one to display.
+
+**Raw Content**
+
+If your system keeps track of the agreement language or executes complicated merging
+and rendering logic, you can bypass our template system and pass in the full text with
+every transaction.  Use the `tcName` to pass in the agreement name and `tcContent` to
+pass in the contract text.  Note that only plain text is supported.
+
+**Bypassing Signatures**
+
+Signature images are captured by default.  If for some reason this doesn't fit your
+use case and you'd like to capture acceptance without actually capturing a signature image, set
+the `disableSignature` flag in the request.
+
+**Terms & Conditions Log**
+
+Every time a user accepts an agreement on the terminal, the signature image (if captured),
+will be uploaded to the gateway and added to the log along with the full text of the
+agreement.  This preserves the historical record in the event that standard agreements
+or templates change over time.
+
+**Associating Agreements with Transactions**
+
+To associate a Terms & Conditions log entry with a transaction, just pass in the
+Transaction ID or Transaction Ref for the associated transaction.
+
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func termsAndConditionsExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TermsAndConditionsRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+
+        // Alias for a Terms and Conditions template configured in the BlockChyp dashboard.
+        TCAlias: "hippa",
+
+        // Name of the contract or document if not using an alias.
+        TCName: "HIPPA Disclosure",
+
+        // Full text of the contract or disclosure if not using an alias.
+        TCContent: "Full contract text",
+
+        // file format for the signature image.
+        SigFormat: blockchyp.SignatureFormatPNG,
+
+        // width of the signature image in pixels.
+        SigWidth: 200,
+
+        // Whether or not a signature is required. Defaults to true.
+        SigRequired: true,
+    }
+
+    response, err := client.TermsAndConditions(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### List Templates
+
+
+
+This API returns all terms and conditions templates associated with a merchant account.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func tcTemplatesExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TermsAndConditionsTemplateRequest{
+        Timeout: 120,
+    }
+
+    response, err := client.TCTemplates(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Get Template
+
+
+
+This API returns as single terms and conditions template.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func tcTemplateExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TermsAndConditionsTemplateRequest{
+        Timeout: 120,
+    }
+
+    response, err := client.TCTemplate(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Update Template
+
+
+
+This API updates or creates a terms and conditions template.
+
+Terms and conditions templates are fairly simple and essentially consist of a name, content, and alias.
+
+The name is the caption that will be display at the top of the screen.  The alias is a code or short
+description that will be used in subsequence API calls to refere to the template.
+
+Content is the full text of the contract or agreement.  As of this writing, no special formatting or
+merge behavior is supported.  Only plain text is supported.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func tcUpdateTemplateExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TermsAndConditionsTemplate{
+        Alias:   "HIPPA",
+        Name:    "HIPPA Disclosure",
+        Content: "Lorem ipsum dolor sit amet.",
+        Timeout: 120,
+    }
+
+    response, err := client.TCUpdateTemplate(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Delete Template
+
+
+
+This API deletes a terms and conditions template.
+
+If a template is deleted, its alias can be reused and any previous Terms & Conditions log entry
+derived from the template being deleted is fully preserved since log entries always include
+a complete independent copy of the agreement text.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func tcDeleteTemplateExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TermsAndConditionsTemplateRequest{
+        Timeout: 120,
+    }
+
+    response, err := client.TCDeleteTemplate(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Terms & Conditions Log
+
+
+
+This API allows developers to search and sort through terms and conditions log entries.
+
+The default API call with no parameters will return the last 250 log entries in descending order.
+
+Optional parameters can be used to filter and query the data set.
+
+* **transactionId:** If provided, returns only those log entries associated with a specific transactions.  Paging and date filters are ignored if this parameter is used.
+* **maxResults:** The max number of results to return in a single page.  Defaults to 250 and 250 is the maximum value.
+* **startIndex** The zero based start index of results within the full result set to return.  Used to advance pages.  For example, if the page size is 10 and you wish to return the second page of results, send a startIndex of 10. 
+* **startDate**: An optional start date for results provided as an ISO 8601 timestamp. (e.g. 2022-05-24T13:51:38+00:00)
+* **endDate**: An optional end date for results provided as an ISO 8601 timestamp. (e.g. 2022-05-24T13:51:38+00:00)
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func tcLogExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TermsAndConditionsLogRequest{
+        Timeout: 120,
+    }
+
+    response, err := client.TCLog(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Terms & Conditions Details
+
+
+
+This API returns details for a single terms and conditions log entry.  The `logEntryId` of the record to be returned is the only required parameter.
+
+The signature image is returned as Base 64 encoded binary in the image format specified by the `sigFormat` field. 
+The default format is PNG.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func tcEntryExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TermsAndConditionsLogRequest{
+        Timeout: 120,
+    }
+
+    response, err := client.TCEntry(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+### Token Management
+
+
+BlockChyp supports saved payments and recurring payments through the use of tokens.  Tokens can be created
+via the Enroll API or the web tokenizer.  Once created, these tokens can be used for subsequent payments 
+or associated with customer records as saved payment methods.
+
+Tokens are limited to a single merchant by default, but can be shared across an organization for multi-location 
+merchants by special arrangement with BlockChyp.  Contact your BlockChyp rep to setup token sharing.
+
+
+
+#### Enroll
+
+
+This API allows you to tokenize and enroll a payment method in the token
+vault.  You can also pass in customer information and associate the
+payment method with a customer record.
+
+A token is returned in the response that can be used in subsequent charge,
+preauth, and refund transactions.
+
+**Gift Cards and EBT**
+
+Gift Cards and EBT cards cannot be tokenized.
+
+**E-Commerce Tokens**
+
+The tokens returned by the enroll API and the e-commerce web tokenizer
+are the same tokens and can be used interchangeably.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func enrollExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.EnrollRequest{
+        Test:         true,
+        TerminalName: "Test Terminal",
+    }
+
+    response, err := client.Enroll(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Approved {
+        fmt.Println("approved")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Token Metadata
+
+
+
+Retrieves status and metadata information about a token, 
+including any links to customer records.  
+
+This will also return any customer records related to the card
+behind the token.  If the underlying card has been tokenized
+multiple times, all customers related to the card will be returned,
+even if those customer associations are related to other tokens.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func tokenMetadataExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TokenMetadataRequest{
+        Token: "Token to retrieve",
+    }
+
+    response, err := client.TokenMetadata(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Link Token
+
+
+
+Links a payment token with a customer record.  Usually this would only be used
+to reverse a previous unlink operation.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func linkTokenExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.LinkTokenRequest{
+        Token:      "Token to link",
+        CustomerID: "Customer to link",
+    }
+
+    response, err := client.LinkToken(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Unlink Token
+
+
+
+Removes a payment token link from a customer record.
+
+This will remove links between the customer record and all tokens
+for the same underlying card.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func unlinkTokenExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.UnlinkTokenRequest{
+        Token:      "Token to unlink",
+        CustomerID: "Customer to unlink",
+    }
+
+    response, err := client.UnlinkToken(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Delete Token
+
+
+
+Deletes a payment token from the gateway.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func deleteTokenExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.DeleteTokenRequest{
+        Token: "Token to delete",
+    }
+
+    response, err := client.DeleteToken(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+### Customer Endpoints
+
+
+These APIs allow developers to create and manage customer records in BlockChyp.  Developers who wish to use
+BlockChyp for tokenized recurring payments can use tokens directly if they have their own customer management
+system, but BlockChyp provides additional tools for managing customer and keeping track of a customer's saved
+payment tokens.
+
+In addition, if customer features are used, BlockChyp can detect a payment method associated with an existing
+customer, and return customer data with payment transactions.  This can be used as a passive method to detect
+repeat customers.
+
+
+
 #### Update Customer
 
 
@@ -2104,446 +3304,6 @@ func customerSearchExample() {
 
 ```
 
-#### Cash Discount
-
-
-
-Calculates the surcharge, cash discount, and total amounts for cash transactions.
-
-If you're using BlockChyp's cash discounting features, you can use this endpoint
-to make sure the numbers and receipts for true cash transactions are consistent
-with transactions processed by BlockChyp.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func cashDiscountExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.CashDiscountRequest{
-        Amount:       "100.00",
-        CashDiscount: true,
-        Surcharge:    true,
-    }
-
-    response, err := client.CashDiscount(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Batch History
-
-
-
-This endpoint allows developers to query the gateway for the merchant's batch history.
-The data will be returned in descending order of open date with the most recent
-batch returned first.  The results will include basic information about the batch.
-For more detail about a specific batch, consider using the Batch Details API.
-
-**Limiting Results**
-
-This API will return a maximum of 250 results.  Use the `maxResults` property to
-limit maximum results even further and use the `startIndex` property to
-page through results that span multiple queries.
-
-For example, if you want the ten most recent batches, just pass in a value of
-`10` for `maxResults`.  Also note that `startIndex` is zero based. Use a value of `0` to
-get the first batch in the dataset.
-
-**Filtering By Date Range**
-
-You can also filter results by date.  Use the `startDate` and `endDate`
-properties to return only those batches opened between those dates.
-You can use either `startDate` and `endDate` and you can use date filters
-in conjunction with `maxResults` and `startIndex`
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func batchHistoryExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.BatchHistoryRequest{
-        MaxResults: 250,
-        StartIndex: 1,
-    }
-
-    response, err := client.BatchHistory(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Batch Details
-
-
-
-This endpoint allows developers to pull down details for a specific batch,
-including captured volume, gift card activity, expected deposit, and
-captured volume broken down by terminal.
-
-The only required request parameter is `batchId`.  Batch IDs are returned
-with every transaction response and can also be discovered using the Batch
-History API.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func batchDetailsExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.BatchDetailsRequest{
-        BatchID: "BATCHID",
-    }
-
-    response, err := client.BatchDetails(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Transaction History
-
-
-
-This endpoint provides a number of different methods to sift through
-transaction history.
-
-By default with no filtering properties, this endpoint will return the 250
-most recent transactions.
-
-**Limiting Results**
-
-This API will return a maximum of 50 results in a single query.  Use the `maxResults` property
-to limit maximum results even further and use the `startIndex` property to
-page through results that span multiple queries.
-
-For example, if you want the ten most recent batches, just pass in a value of
-`10` for `maxResults`.  Also note that `startIndex` is zero based. Use a value of `0` to
-get the first transaction in the dataset.
-
-**Filtering By Date Range**
-
-You can also filter results by date.  Use the `startDate` and `endDate`
-properties to return only transactions run between those dates.
-You can use either `startDate` or `endDate` and you can use date filters
-in conjunction with `maxResults` and `startIndex`
-
-**Filtering By Batch**
-
-To restrict results to a single batch, pass in the `batchId` parameter.
-
-**Filtering By Terminal**
-
-To restrict results to those executed on a single terminal, just
-pass in the terminal name.
-
-**Combining Filters**
-
-None of the above filters are mutually exclusive.  You can combine any of the
-above properties in a single request to restrict transaction results to a
-narrower set of results.
-
-**Searching Transaction History**
-
-You can search transaction history by passing in search criteria with the 
-`query` option.  The search system will match on amount (requested and authorized),
-last four of the card number, cardholder name, and the auth code.
-
-Note that when search queries are used, terminalName or 
-batch id filters are not supported.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func transactionHistoryExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.TransactionHistoryRequest{
-        MaxResults: 10,
-    }
-
-    response, err := client.TransactionHistory(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Merchant Profile
-
-
-
-Returns detailed metadata about the merchant's configuraton, including
-basic identity information, terminal settings, store and forward settings,
-and bank account information for merchants that support split settlement.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func merchantProfileExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.MerchantProfileRequest{}
-
-    response, err := client.MerchantProfile(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### List Queued Transactions
-
-
-
-Returns a list of transaction refs of transactions queued on a terminal.
-Details about the transactions can be retrieved using the Transaction Status
-API.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func listQueuedTransactionsExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.ListQueuedTransactionsRequest{
-        TerminalName: "Test Terminal",
-    }
-
-    response, err := client.ListQueuedTransactions(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Delete Queued Transaction
-
-
-
-Deletes one or all queued transactions from a terminal. If `*` is passed as
-a transaction ref, then the entire terminal queue will be cleared. An error is
-returned if the passed transaction ref is not queued on the terminal.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func deleteQueuedTransactionExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.DeleteQueuedTransactionRequest{
-        TerminalName:   "Test Terminal",
-        TransactionRef: "*",
-    }
-
-    response, err := client.DeleteQueuedTransaction(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
 #### Delete Customer
 
 
@@ -2595,1150 +3355,19 @@ func deleteCustomerExample() {
 
 ```
 
-#### Delete Token
+### Survey Reference
 
 
+These APIs are used to work with post transaction surveys and survey data.
 
-Deletes a payment token from the gateway.
+Merchants can optionally configure scaled (1-5) or yes/no questions that can be presented to consumers
+after every approved Charge and Preauth transactions.  Surveys do not require any custom programming and
+can simply be configured by a merchant without the point-of-sale system needing any additional customization.
 
+However, these APIs allow point-of-sale or third party system developers to integrate survey question configuration
+or result visualization into their own systems.
 
 
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func deleteTokenExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.DeleteTokenRequest{
-        Token: "Token to delete",
-    }
-
-    response, err := client.DeleteToken(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Token Metadata
-
-
-
-Retrieves status and metadata information about a token, 
-including any links to customer records.  
-
-This will also return any customer records related to the card
-behind the token.  If the underlying card has been tokenized
-multiple times, all customers related to the card will be returned,
-even if those customer associations are related to other tokens.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func tokenMetadataExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.TokenMetadataRequest{
-        Token: "Token to retrieve",
-    }
-
-    response, err := client.TokenMetadata(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Link Token
-
-
-
-Links a payment token with a customer record.  Usually this would only be used
-to reverse a previous unlink operation.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func linkTokenExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.LinkTokenRequest{
-        Token:      "Token to link",
-        CustomerID: "Customer to link",
-    }
-
-    response, err := client.LinkToken(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Unlink Token
-
-
-
-Removes a payment token link from a customer record.
-
-This will remove links between the customer record and all tokens
-for the same underlying card.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func unlinkTokenExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.UnlinkTokenRequest{
-        Token:      "Token to unlink",
-        CustomerID: "Customer to unlink",
-    }
-
-    response, err := client.UnlinkToken(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Add Test Merchant
-
-
-
-This is a partner level API that can be used to create test merchant accounts.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func addTestMerchantExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.AddTestMerchantRequest{
-        DbaName:     "DBA name.",
-        CompanyName: "test merchant customer name.",
-    }
-
-    response, err := client.AddTestMerchant(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Get Merchants
-
-
-
-This is a partner or organization level API that can be used to return the merchant portfolio.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func getMerchantsExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.GetMerchantsRequest{
-        Test: true,
-    }
-
-    response, err := client.GetMerchants(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Update Or Create Merchant
-
-
-
-This API can be used to update or create merchant accounts.
-
-Merchant scoped API credentials can be used to update merchant account settings.
-
-Partner scoped API credentials can be used to update merchants, create new test 
-merchants or board new gateway merchants. 
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func updateMerchantExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.MerchantProfile{
-        Test: true,
-    }
-
-    response, err := client.UpdateMerchant(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Delete Test Merchant
-
-
-
-This partner API can be used to deleted unused test merchant accounts.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func deleteTestMerchantExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.MerchantProfileRequest{
-        MerchantID: "ID for the test merchant being deleted.",
-    }
-
-    response, err := client.DeleteTestMerchant(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Invite Merchant User
-
-
-
-Invites a new user to join a merchant account.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func inviteMerchantUserExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.InviteMerchantUserRequest{
-        Email: "Email address for the invite",
-    }
-
-    response, err := client.InviteMerchantUser(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Merchant Users
-
-
-
-This API returns all users and pending invites associated with a merchant account.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func merchantUsersExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.MerchantProfileRequest{
-        MerchantID: "XXXXXXXXXXXXX",
-    }
-
-    response, err := client.MerchantUsers(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Merchant Platforms
-
-
-
-This API is available to Gateway Partners only and can be used to pull down current boarding platform configurations for a given merchant.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func merchantPlatformsExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.MerchantProfileRequest{
-        MerchantID: "XXXXXXXXXXXXX",
-    }
-
-    response, err := client.MerchantPlatforms(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Update Merchant Platform
-
-
-
-This API allows Gateway Partners to board merchants.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func updateMerchantPlatformsExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.MerchantPlatform{
-        MerchantID: "XXXXXXXXXXXXX",
-    }
-
-    response, err := client.UpdateMerchantPlatforms(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Delete Merchant Platform
-
-
-
-This is a partner level API that can be used to delete merchant platforms.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func deleteMerchantPlatformsExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.MerchantPlatformRequest{
-        PlatformID: "XXXXXXXXXXXXX",
-    }
-
-    response, err := client.DeleteMerchantPlatforms(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### List Terminals
-
-
-
-This API returns details about terminals associated with a merchant account.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func terminalsExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.TerminalProfileRequest{
-        Timeout: 120,
-    }
-
-    response, err := client.Terminals(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Deactivate Terminal
-
-
-
-This API deactivates a payment terminal.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func deactivateTerminalExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.TerminalDeactivationRequest{
-        TerminalID: "XXXXXXX",
-        Timeout:    120,
-    }
-
-    response, err := client.DeactivateTerminal(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Activate Terminal
-
-
-
-This API activates payment terminals.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func activateTerminalExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.TerminalActivationRequest{
-        TerminalName: "Test Terminal",
-        Timeout:      120,
-    }
-
-    response, err := client.ActivateTerminal(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Update Terms and Conditions Template
-
-
-
-This API updates or creates terms and conditions templates.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func tcUpdateTemplateExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.TermsAndConditionsTemplate{
-        Alias:   "HIPPA",
-        Name:    "HIPPA Disclosure",
-        Content: "Lorem ipsum dolor sit amet.",
-        Timeout: 120,
-    }
-
-    response, err := client.TCUpdateTemplate(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### List Terms and Conditions Templates
-
-
-
-This API returns all terms and conditions templates associated with a merchant account.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func tcTemplatesExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.TermsAndConditionsTemplateRequest{
-        Timeout: 120,
-    }
-
-    response, err := client.TCTemplates(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Get Terms and Conditions Template
-
-
-
-This API returns as single terms and conditions template.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func tcTemplateExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.TermsAndConditionsTemplateRequest{
-        Timeout: 120,
-    }
-
-    response, err := client.TCTemplate(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Delete Terms and Conditions Template
-
-
-
-This API deletes a terms and conditions template.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func tcDeleteTemplateExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.TermsAndConditionsTemplateRequest{
-        Timeout: 120,
-    }
-
-    response, err := client.TCDeleteTemplate(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Terms and Conditions Log
-
-
-
-This API pulls down Terms and Conditions log entries.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func tcLogExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.TermsAndConditionsLogRequest{
-        Timeout: 120,
-    }
-
-    response, err := client.TCLog(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
-
-#### Terms and Conditions Details
-
-
-
-This API returns details for a terms and conditions log entry.
-
-
-
-
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-
-    blockchyp "github.com/blockchyp/blockchyp-go"
-)
-
-func tcEntryExample() {
-    // sample credentials
-    creds := blockchyp.APICredentials{
-        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
-        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
-        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
-    }
-
-    // instantiate the client
-    client := blockchyp.NewClient(creds)
-
-    // setup request object
-    request := blockchyp.TermsAndConditionsLogRequest{
-        Timeout: 120,
-    }
-
-    response, err := client.TCEntry(request)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    //process the result
-    if response.Success {
-        fmt.Println("Success")
-    }
-
-    fmt.Printf("Response: %+v\n", response)
-}
-
-```
 
 #### Survey Questions
 
@@ -3994,6 +3623,15 @@ func deleteSurveyQuestionExample() {
 }
 
 ```
+
+### Media and Branding Control
+
+
+BlockChyp has a sophisticated terminal media and branding control platform.  Terminals can be configured to
+display logos, images, videos, and slide shows when a terminal is idle.  Branding assets can be configured
+at the partner, organization, and merchant level with fine-grained hour by hour schedules, if desired. 
+
+
 
 #### Upload Media
 
@@ -4606,6 +4244,380 @@ func deleteBrandingAssetExample() {
 }
 
 ```
+
+### Merchant Management
+
+
+These APIs allow partners to manage and configure their merchant portfolios.
+
+
+
+#### Merchant Profile
+
+
+
+Returns detailed metadata about the merchant's configuraton, including
+basic identity information, terminal settings, store and forward settings,
+and bank account information for merchants that support split settlement.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func merchantProfileExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.MerchantProfileRequest{}
+
+    response, err := client.MerchantProfile(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Add Test Merchant
+
+
+
+This is a partner level API that can be used to create test merchant accounts.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func addTestMerchantExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.AddTestMerchantRequest{
+        DbaName:     "DBA name.",
+        CompanyName: "test merchant customer name.",
+    }
+
+    response, err := client.AddTestMerchant(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Get Merchants
+
+
+
+This is a partner or organization level API that can be used to return the merchant portfolio.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func getMerchantsExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.GetMerchantsRequest{
+        Test: true,
+    }
+
+    response, err := client.GetMerchants(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Update Or Create Merchant
+
+
+
+This API can be used to update or create merchant accounts.
+
+Merchant scoped API credentials can be used to update merchant account settings.
+
+Partner scoped API credentials can be used to update merchants, create new test 
+merchants or board new gateway merchants. 
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func updateMerchantExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.MerchantProfile{
+        Test: true,
+    }
+
+    response, err := client.UpdateMerchant(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Delete Test Merchant
+
+
+
+This partner API can be used to deleted unused test merchant accounts.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func deleteTestMerchantExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.MerchantProfileRequest{
+        MerchantID: "ID for the test merchant being deleted.",
+    }
+
+    response, err := client.DeleteTestMerchant(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Invite Merchant User
+
+
+
+Invites a new user to join a merchant account.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func inviteMerchantUserExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.InviteMerchantUserRequest{
+        Email: "Email address for the invite",
+    }
+
+    response, err := client.InviteMerchantUser(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Merchant Users
+
+
+
+This API returns all users and pending invites associated with a merchant account.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go"
+)
+
+func merchantUsersExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.MerchantProfileRequest{
+        MerchantID: "XXXXXXXXXXXXX",
+    }
+
+    response, err := client.MerchantUsers(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+
+
+
 
 ## Running Integration Tests
 

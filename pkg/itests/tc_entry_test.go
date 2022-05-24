@@ -1,11 +1,11 @@
 //go:build integration
 // +build integration
 
-// Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
-// governed by a license that can be found in the LICENSE file.
+// Copyright 2019-2022 BlockChyp, Inc. All rights reserved. Use of this code
+// is governed by a license that can be found in the LICENSE file.
 //
-// This file was generated automatically. Changes to this file will be lost
-// every time the code is regenerated.
+// This file was generated automatically by the BlockChyp SDK Generator.
+// Changes to this file will be lost every time the code is regenerated.
 
 package itests
 
@@ -45,7 +45,20 @@ func TestTCEntry(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.TermsAndConditionsLogRequest{}
+	setupRequest := blockchyp.TermsAndConditionsLogRequest{}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.TCLog(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.TermsAndConditionsLogRequest{
+		LogEntryID: setupResponse.Results[0].ID,
+	}
 
 	logObj(t, "Request:", request)
 
@@ -57,4 +70,12 @@ func TestTCEntry(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
+	assert.NotEmpty(response.ID)
+	assert.NotEmpty(response.TerminalID)
+	assert.NotEmpty(response.TerminalName)
+	assert.NotEmpty(response.Timestamp)
+	assert.NotEmpty(response.Name)
+	assert.NotEmpty(response.Content)
+	assert.True(response.HasSignature)
+	assert.NotEmpty(response.Signature)
 }
