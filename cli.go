@@ -16,6 +16,7 @@ type ConfigSettings struct {
 	BearerToken     string `json:"bearerToken"`
 	SigningKey      string `json:"signingKey"`
 	GatewayHost     string `json:"gatewayHost"`
+	DashboardHost   string `json:"dashboardHost"`
 	TestGatewayHost string `json:"testGatewayHost"`
 	Secure          bool   `json:"https"`
 	RouteCacheTTL   int    `json:"routeCacheTTL"`
@@ -25,11 +26,14 @@ type ConfigSettings struct {
 
 // CommandLineArguments contains arguments which are passed in at runtime.
 type CommandLineArguments struct {
-	Type                        string `arg:"type"`
+	Type                        string `args:"type"` //deprecated - use cmd instead
+	Command                     string `args:"cmd"`
 	ManualEntry                 bool   `arg:"manual"`
 	ConfigFile                  string `arg:"f"`
 	GatewayHost                 string `arg:"gateway"`
+	DashboardHost               string `arg:"dashboard"`
 	TestGatewayHost             string `arg:"testGateway"`
+	Dashboard                   string `arg:"dashboard"`
 	Test                        bool   `arg:"test"`
 	APIKey                      string `arg:"apiKey"`
 	BearerToken                 string `arg:"bearerToken"`
@@ -73,9 +77,12 @@ type CommandLineArguments struct {
 	TCName                      string `arg:"tcName"`
 	TCContent                   string `arg:"tcContent"`
 	Timeout                     int    `arg:"timeout"`
+	WaitForRemovedCard          bool   `arg:"waitForRemovedCard"`
+	Force                       bool   `arg:"force"`
 	SigRequired                 bool   `arg:"sigRequired"`
 	CashBackEnabled             bool   `arg:"cashback"`
 	Enroll                      bool   `arg:"enroll"`
+	EnrollOnly                  bool   `arg:"enrollOnly"`
 	DisableSignature            bool   `arg:"disableSignature"`
 	CustomerID                  string `arg:"customerId"`
 	CustomerRef                 string `arg:"customerRef"`
@@ -87,9 +94,9 @@ type CommandLineArguments struct {
 	PAN                         string `arg:"pan"`
 	ExpiryMonth                 string `arg:"expMonth"`
 	ExpiryYear                  string `arg:"expYear"`
-	Subject                     string `args:"subject"`
-	AutoSend                    bool   `args:"autoSend"`
-	OrderRef                    string `args:"orderRef"`
+	Subject                     string `arg:"subject"`
+	AutoSend                    bool   `arg:"autoSend"`
+	OrderRef                    string `arg:"orderRef"`
 	Query                       string `arg:"query"`
 	CallbackURL                 string `arg:"callbackUrl"`
 	Surcharge                   bool   `arg:"surcharge"`
@@ -97,11 +104,44 @@ type CommandLineArguments struct {
 	PostalCode                  string `arg:"postalCode"`
 	Address                     string `arg:"address"`
 	Cashier                     bool   `arg:"cashier"`
+	StartDate                   string `arg:"startDate"`
+	EndDate                     string `arg:"endDate"`
+	BatchID                     string `arg:"batchId"`
+	MaxResults                  int    `arg:"maxResults"`
+	StartIndex                  int    `arg:"startIndex"`
+	Queue                       bool   `arg:"queue"`
+	Async                       bool   `arg:"async"`
+	LogRequests                 bool   `arg:"logRequests"`
+	LinkCode                    string `arg:"linkCode"`
+	Cryptocurrency              string `arg:"crypto"`
+	CryptoNetwork               string `arg:"cryptoNetwork"`
+	CryptoReceiveAddress        string `arg:"receiveAddress"`
+	Label                       string `arg:"label"`
+	DBAName                     string `arg:"dbaName"`
+	MerchantID                  string `arg:"merchantId"`
+	TerminalID                  string `arg:"terminalId"`
+	Code                        string `arg:"code"`
+	TemplateID                  string `arg:"templateId"`
+	LogEntryID                  string `arg:"logEntryId"`
+	QuestionID                  string `arg:"questionId"`
+	IncludeResponseData         bool   `arg:"includeResponseData"`
+	QuestionType                string `arg:"questionType"`
+	QuestionText                string `arg:"questionText"`
+	Enabled                     bool   `arg:"enabled"`
+	Ordinal                     int    `arg:"ordinal"`
+	File                        string `arg:"file"`
+	UploadID                    string `arg:"uploadId"`
+	MediaID                     string `arg:"mediaId"`
+	Name                        string `arg:"name"`
+	Delay                       int    `arg:"delay"`
+	SlideShowID                 string `arg:"slideShowId"`
+	AssetID                     string `arg:"assetId"`
 }
 
 var defaultSettings = &ConfigSettings{
 	GatewayHost:     "https://api.blockchyp.com",
 	TestGatewayHost: "https://test.blockchyp.com",
+	DashboardHost:   "https://dashboard.blockchyp.com",
 	Secure:          true,
 }
 

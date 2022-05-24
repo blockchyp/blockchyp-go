@@ -34,6 +34,7 @@ var (
 type TestConfiguration struct {
 	GatewayHost            string `json:"gatewayHost"`
 	TestGatewayHost        string `json:"testGatewayHost"`
+	DashboardHost          string `json:"dashboardHost"`
 	DefaultTerminalName    string `json:"defaultTerminalName"`
 	DefaultTerminalAddress string `json:"defaultTerminalAddress"`
 	APIKey                 string `json:"apiKey"`
@@ -87,25 +88,22 @@ func updateLastTransaction(response interface{}) string {
 	return ""
 }
 
-func newTestClient(t *testing.T) blockchyp.Client {
-
-	config := loadTestConfiguration(t)
-
+func (c *TestConfiguration) newTestClient(t *testing.T) blockchyp.Client {
 	creds := blockchyp.APICredentials{
-		APIKey:      config.APIKey,
-		BearerToken: config.BearerToken,
-		SigningKey:  config.SigningKey,
+		APIKey:      c.APIKey,
+		BearerToken: c.BearerToken,
+		SigningKey:  c.SigningKey,
 	}
 
 	client := blockchyp.NewClient(creds)
 	client.HTTPS = false
-	client.GatewayHost = config.GatewayHost
-	client.TestGatewayHost = config.TestGatewayHost
+	client.GatewayHost = c.GatewayHost
+	client.DashboardHost = c.DashboardHost
+	client.TestGatewayHost = c.TestGatewayHost
 
-	log.Printf("%+v\n", client)
+	logObj(t, "Client:", client)
 
 	return client
-
 }
 
 func randomID() string {
@@ -118,13 +116,19 @@ func randomID() string {
 
 }
 
-func logRequest(request interface{}) {
-	content, _ := json.Marshal(request)
-	log.Println("Request:", string(content))
-}
+func logObj(t *testing.T, args ...interface{}) {
+	var fmtStr string
+	var content []byte
+	for _, arg := range args {
+		switch v := arg.(type) {
+		case string:
+			fmtStr += v + " "
+		default:
+			content, _ = json.MarshalIndent(arg, "", " ")
+		}
+	}
 
-func logResponse(response interface{}) {
-	updateLastTransaction(response)
-	content, _ := json.Marshal(response)
-	log.Println("Response:", string(content))
+	fmtStr += "%s"
+
+	t.Logf(fmtStr, string(content))
 }

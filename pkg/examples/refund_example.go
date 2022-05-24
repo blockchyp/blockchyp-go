@@ -20,7 +20,6 @@ func refundExample() {
 
 	// setup request object
 	request := blockchyp.RefundRequest{
-		TerminalName:  "Test Terminal",
 		TransactionID: "<PREVIOUS TRANSACTION ID>",
 
 		// Optional amount for partial refunds.

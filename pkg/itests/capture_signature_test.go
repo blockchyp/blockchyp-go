@@ -1,4 +1,6 @@
+//go:build integration
 // +build integration
+
 // Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
 // governed by a license that can be found in the LICENSE file.
 //
@@ -22,7 +24,8 @@ import (
 func TestCaptureSignature(t *testing.T) {
 	assert := assert.New(t)
 
-	client := newTestClient(t)
+	config := loadTestConfiguration(t)
+	client := config.newTestClient(t)
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -31,7 +34,7 @@ func TestCaptureSignature(t *testing.T) {
 			t.Fatal(err)
 		}
 		messageRequest := blockchyp.MessageRequest{
-			TerminalName: "Test Terminal",
+			TerminalName: config.DefaultTerminalName,
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestCaptureSignature in %v seconds...", testDelay),
 		}
@@ -43,18 +46,18 @@ func TestCaptureSignature(t *testing.T) {
 
 	// setup request object
 	request := blockchyp.CaptureSignatureRequest{
-		TerminalName: "Test Terminal",
+		TerminalName: config.DefaultTerminalName,
 		SigFormat:    blockchyp.SignatureFormatPNG,
 		SigWidth:     200,
 	}
 
-	logRequest(request)
+	logObj(t, "Request:", request)
 
 	response, err := client.CaptureSignature(request)
 
 	assert.NoError(err)
 
-	logResponse(response)
+	logObj(t, "Response:", response)
 
 	// response assertions
 	assert.True(response.Success)

@@ -1,4 +1,6 @@
+//go:build integration
 // +build integration
+
 // Copyright 2019 BlockChyp, Inc. All rights reserved. Use of this code is
 // governed by a license that can be found in the LICENSE file.
 //
@@ -22,7 +24,8 @@ import (
 func TestSimpleVoid(t *testing.T) {
 	assert := assert.New(t)
 
-	client := newTestClient(t)
+	config := loadTestConfiguration(t)
+	client := config.newTestClient(t)
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -31,7 +34,7 @@ func TestSimpleVoid(t *testing.T) {
 			t.Fatal(err)
 		}
 		messageRequest := blockchyp.MessageRequest{
-			TerminalName: "Test Terminal",
+			TerminalName: config.DefaultTerminalName,
 			Test:         true,
 			Message:      fmt.Sprintf("Running TestSimpleVoid in %v seconds...", testDelay),
 		}
@@ -44,18 +47,20 @@ func TestSimpleVoid(t *testing.T) {
 	// setup request object
 	setupRequest := blockchyp.AuthorizationRequest{
 		PAN:            "4111111111111111",
+		ExpMonth:       "12",
+		ExpYear:        "2025",
 		Amount:         "25.55",
 		Test:           true,
 		TransactionRef: randomID(),
 	}
 
-	logRequest(setupRequest)
+	logObj(t, "Request:", setupRequest)
 
 	setupResponse, err := client.Charge(setupRequest)
 
 	assert.NoError(err)
 
-	logResponse(setupResponse)
+	logObj(t, "Response:", setupResponse)
 
 	// setup request object
 	request := blockchyp.VoidRequest{
@@ -63,13 +68,13 @@ func TestSimpleVoid(t *testing.T) {
 		Test:          true,
 	}
 
-	logRequest(request)
+	logObj(t, "Request:", request)
 
 	response, err := client.Void(request)
 
 	assert.NoError(err)
 
-	logResponse(response)
+	logObj(t, "Response:", response)
 
 	// response assertions
 	assert.True(response.Success)
