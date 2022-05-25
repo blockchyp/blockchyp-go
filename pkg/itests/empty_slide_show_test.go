@@ -21,7 +21,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestSlideShows(t *testing.T) {
+func TestEmptySlideShow(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
@@ -36,7 +36,7 @@ func TestSlideShows(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: config.DefaultTerminalName,
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestSlideShows in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestEmptySlideShow in %v seconds...", testDelay),
 		}
 		if _, err := client.Message(messageRequest); err != nil {
 			t.Fatal(err)
@@ -45,25 +45,14 @@ func TestSlideShows(t *testing.T) {
 	}
 
 	// setup request object
-	setupRequest := blockchyp.SlideShow{
+	request := blockchyp.SlideShow{
 		Name:  "Test Slide Show",
 		Delay: 5,
 	}
 
-	logObj(t, "Request:", setupRequest)
-
-	setupResponse, err := client.UpdateSlideShow(setupRequest)
-
-	assert.NoError(err)
-
-	logObj(t, "Response:", setupResponse)
-
-	// setup request object
-	request := blockchyp.SlideShowRequest{}
-
 	logObj(t, "Request:", request)
 
-	response, err := client.SlideShows(request)
+	response, err := client.UpdateSlideShow(request)
 
 	assert.NoError(err)
 
@@ -71,5 +60,4 @@ func TestSlideShows(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
-	assert.True(len(response.Results) >= 0)
 }

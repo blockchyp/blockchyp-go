@@ -19,9 +19,7 @@ func slideShowsExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.SlideShowRequest{
-		Timeout: 120,
-	}
+	request := blockchyp.SlideShowRequest{}
 
 	response, err := client.SlideShows(request)
 

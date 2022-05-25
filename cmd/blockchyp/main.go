@@ -1683,14 +1683,13 @@ func processUpdateSlideShow(client *blockchyp.Client, args blockchyp.CommandLine
 		ID:      args.SlideShowID,
 		Timeout: args.Timeout,
 		Delay:   args.Delay,
-		Enabled: args.Enabled,
 		Name:    args.Name,
 	}
 
-	slides := make([]blockchyp.Slide, len(slideIds))
+	slides := make([]*blockchyp.Slide, len(slideIds))
 
 	for idx, id := range slideIds {
-		slides[idx] = blockchyp.Slide{
+		slides[idx] = &blockchyp.Slide{
 			MediaID: id,
 			Ordinal: idx,
 		}
