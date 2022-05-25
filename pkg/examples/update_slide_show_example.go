@@ -20,7 +20,13 @@ func updateSlideShowExample() {
 
 	// setup request object
 	request := blockchyp.SlideShow{
-		Timeout: 120,
+		Name:  "Test Slide Show",
+		Delay: 5,
+		Slides: []*blockchyp.Slide{
+			&blockchyp.Slide{
+				MediaID: setupResponse.ID,
+			},
+		},
 	}
 
 	response, err := client.UpdateSlideShow(request)

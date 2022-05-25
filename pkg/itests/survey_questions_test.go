@@ -45,6 +45,21 @@ func TestSurveyQuestions(t *testing.T) {
 	}
 
 	// setup request object
+	setupRequest := blockchyp.SurveyQuestion{
+		Ordinal:      1,
+		QuestionText: "Would you shop here again?",
+		QuestionType: "yes_no",
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.UpdateSurveyQuestion(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
 	request := blockchyp.SurveyQuestionRequest{}
 
 	logObj(t, "Request:", request)
@@ -57,4 +72,5 @@ func TestSurveyQuestions(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
+	assert.True(len(response.Results) >= 0)
 }

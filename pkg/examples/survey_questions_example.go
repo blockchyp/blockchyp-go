@@ -19,9 +19,7 @@ func surveyQuestionsExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.SurveyQuestionRequest{
-		Timeout: 120,
-	}
+	request := blockchyp.SurveyQuestionRequest{}
 
 	response, err := client.SurveyQuestions(request)
 

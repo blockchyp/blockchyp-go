@@ -1616,24 +1616,9 @@ func (client *Client) SurveyQuestion(request SurveyQuestionRequest) (*SurveyQues
 	return &response, err
 }
 
-// SurveyResults returns results for a single survey question.
-func (client *Client) SurveyResults(request SurveyResultsRequest) (*SurveyQuestion, error) {
-	var response SurveyQuestion
-
-	err := client.DashboardRequest("/api/survey-results", "POST", request, &response, request.Timeout)
-
-	if err, ok := err.(net.Error); ok && err.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	return &response, err
-}
-
 // UpdateSurveyQuestion updates or creates a survey question.
-func (client *Client) UpdateSurveyQuestion(request SurveyQuestion) (*Acknowledgement, error) {
-	var response Acknowledgement
+func (client *Client) UpdateSurveyQuestion(request SurveyQuestion) (*SurveyQuestion, error) {
+	var response SurveyQuestion
 
 	err := client.DashboardRequest("/api/survey-questions", "POST", request, &response, request.Timeout)
 
@@ -1651,6 +1636,37 @@ func (client *Client) DeleteSurveyQuestion(request SurveyQuestionRequest) (*Ackn
 	var response Acknowledgement
 
 	err := client.DashboardRequest("/api/survey-questions/"+request.QuestionID, "DELETE", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// SurveyResults returns results for a single survey question.
+func (client *Client) SurveyResults(request SurveyResultsRequest) (*SurveyQuestion, error) {
+	var response SurveyQuestion
+
+	err := client.DashboardRequest("/api/survey-results", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// Media returns the media library for a given partner, merchant, or
+// organization.
+func (client *Client) Media(request MediaRequest) (*MediaLibraryResponse, error) {
+	var response MediaLibraryResponse
+
+	err := client.DashboardRequest("/api/media", "GET", request, &response, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
@@ -1693,22 +1709,6 @@ func (client *Client) UploadStatus(request UploadStatusRequest) (*UploadStatus, 
 	return &response, err
 }
 
-// Media returns the media library for a given partner, merchant, or
-// organization.
-func (client *Client) Media(request MediaRequest) (*MediaLibraryResponse, error) {
-	var response MediaLibraryResponse
-
-	err := client.DashboardRequest("/api/media", "GET", request, &response, request.Timeout)
-
-	if err, ok := err.(net.Error); ok && err.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	return &response, err
-}
-
 // MediaAsset returns the media details for a single media asset.
 func (client *Client) MediaAsset(request MediaRequest) (*MediaMetadata, error) {
 	var response MediaMetadata
@@ -1739,21 +1739,6 @@ func (client *Client) DeleteMediaAsset(request MediaRequest) (*Acknowledgement, 
 	return &response, err
 }
 
-// UpdateSlideShow updates or creates a slide show.
-func (client *Client) UpdateSlideShow(request SlideShow) (*SlideShow, error) {
-	var response SlideShow
-
-	err := client.DashboardRequest("/api/slide-shows", "POST", request, &response, request.Timeout)
-
-	if err, ok := err.(net.Error); ok && err.Timeout() {
-		response.ResponseDescription = ResponseTimedOut
-	} else if err != nil {
-		response.ResponseDescription = err.Error()
-	}
-
-	return &response, err
-}
-
 // SlideShows returns a collection of slide shows.
 func (client *Client) SlideShows(request SlideShowRequest) (*SlideShowResponse, error) {
 	var response SlideShowResponse
@@ -1774,6 +1759,21 @@ func (client *Client) SlideShow(request SlideShowRequest) (*SlideShow, error) {
 	var response SlideShow
 
 	err := client.DashboardRequest("/api/slide-shows/"+request.SlideShowID, "GET", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// UpdateSlideShow updates or creates a slide show.
+func (client *Client) UpdateSlideShow(request SlideShow) (*SlideShow, error) {
+	var response SlideShow
+
+	err := client.DashboardRequest("/api/slide-shows", "POST", request, &response, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut

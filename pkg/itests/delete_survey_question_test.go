@@ -45,7 +45,24 @@ func TestDeleteSurveyQuestion(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.SurveyQuestionRequest{}
+	setupRequest := blockchyp.SurveyQuestion{
+		Ordinal:      1,
+		QuestionText: "Would you shop here again?",
+		QuestionType: "yes_no",
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.UpdateSurveyQuestion(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.SurveyQuestionRequest{
+		QuestionID: setupResponse.ID,
+	}
 
 	logObj(t, "Request:", request)
 

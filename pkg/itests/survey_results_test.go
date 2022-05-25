@@ -45,6 +45,17 @@ func TestSurveyResults(t *testing.T) {
 	}
 
 	// setup request object
+	setupRequest := blockchyp.SurveyQuestionRequest{}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.SurveyQuestions(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
 	request := blockchyp.SurveyResultsRequest{}
 
 	logObj(t, "Request:", request)

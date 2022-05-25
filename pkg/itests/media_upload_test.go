@@ -45,7 +45,11 @@ func TestMediaUpload(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.UploadMetadata{}
+	request := blockchyp.UploadMetadata{
+		FileName: "aviato.png",
+		FileSize: 18843,
+		UploadID: randomID(),
+	}
 
 	logObj(t, "Request:", request)
 
@@ -59,4 +63,8 @@ func TestMediaUpload(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
+	assert.NotEmpty(response.ID)
+	assert.Equal("aviato.png", response.OriginalFile)
+	assert.NotEmpty(response.FileURL)
+	assert.NotEmpty(response.ThumbnailURL)
 }

@@ -20,7 +20,7 @@ func surveyResultsExample() {
 
 	// setup request object
 	request := blockchyp.SurveyResultsRequest{
-		Timeout: 120,
+		QuestionID: "<SURVEY QUESTION ID>",
 	}
 
 	response, err := client.SurveyResults(request)

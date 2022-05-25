@@ -20,7 +20,10 @@ func updateSurveyQuestionExample() {
 
 	// setup request object
 	request := blockchyp.SurveyQuestion{
-		Timeout: 120,
+		Ordinal:      1,
+		QuestionText: "Would you shop here again?",
+		QuestionType: "yes_no",
+		Enabled:      true,
 	}
 
 	response, err := client.UpdateSurveyQuestion(request)

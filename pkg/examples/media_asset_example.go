@@ -20,7 +20,7 @@ func mediaAssetExample() {
 
 	// setup request object
 	request := blockchyp.MediaRequest{
-		Timeout: 120,
+		MediaID: "<MEDIA ASSET ID>",
 	}
 
 	response, err := client.MediaAsset(request)

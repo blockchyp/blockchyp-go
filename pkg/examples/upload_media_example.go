@@ -20,7 +20,9 @@ func uploadMediaExample() {
 
 	// setup request object
 	request := blockchyp.UploadMetadata{
-		Timeout: 120,
+		FileName: "aviato.png",
+		FileSize: 18843,
+		UploadID: "<RANDOM ID>",
 	}
 
 	response, err := client.UploadMedia(request)

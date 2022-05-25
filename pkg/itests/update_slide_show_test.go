@@ -45,7 +45,32 @@ func TestUpdateSlideShow(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.SlideShow{}
+	setupRequest := blockchyp.UploadMetadata{
+		FileName: "aviato.png",
+		FileSize: 18843,
+		UploadID: randomID(),
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	file, err := os.Open("testdata/aviato.png")
+	assert.NoError(err)
+	setupResponse, err := client.UploadMedia(setupRequest, file)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.SlideShow{
+		Name:  "Test Slide Show",
+		Delay: 5,
+		Slides: []*blockchyp.Slide{
+			&blockchyp.Slide{
+				MediaID: setupResponse.ID,
+			},
+		},
+	}
 
 	logObj(t, "Request:", request)
 

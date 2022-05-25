@@ -45,7 +45,26 @@ func TestUploadStatus(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.UploadStatusRequest{}
+	setupRequest := blockchyp.UploadMetadata{
+		FileName: "aviato.png",
+		FileSize: 18843,
+		UploadID: randomID(),
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	file, err := os.Open("testdata/aviato.png")
+	assert.NoError(err)
+	setupResponse, err := client.UploadMedia(setupRequest, file)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.UploadStatusRequest{
+		UploadID: setupRequest.UploadID,
+	}
 
 	logObj(t, "Request:", request)
 

@@ -45,7 +45,11 @@ func TestUpdateSurveyQuestion(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.SurveyQuestion{}
+	request := blockchyp.SurveyQuestion{
+		Ordinal:      1,
+		QuestionText: "Would you shop here again?",
+		QuestionType: "yes_no",
+	}
 
 	logObj(t, "Request:", request)
 
@@ -57,4 +61,6 @@ func TestUpdateSurveyQuestion(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
+	assert.Equal("Would you shop here again?", response.QuestionText)
+	assert.Equal("yes_no", response.QuestionType)
 }

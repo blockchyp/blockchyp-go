@@ -45,7 +45,26 @@ func TestMediaAsset(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.MediaRequest{}
+	setupRequest := blockchyp.UploadMetadata{
+		FileName: "aviato.png",
+		FileSize: 18843,
+		UploadID: randomID(),
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	file, err := os.Open("testdata/aviato.png")
+	assert.NoError(err)
+	setupResponse, err := client.UploadMedia(setupRequest, file)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.MediaRequest{
+		MediaID: setupResponse.ID,
+	}
 
 	logObj(t, "Request:", request)
 
@@ -57,4 +76,8 @@ func TestMediaAsset(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
+	assert.NotEmpty(response.ID)
+	assert.Equal("aviato.png", response.OriginalFile)
+	assert.NotEmpty(response.FileURL)
+	assert.NotEmpty(response.ThumbnailURL)
 }

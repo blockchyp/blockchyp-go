@@ -5115,12 +5115,8 @@ type SlideShow struct {
 	// Delay time between slides in seconds.
 	Delay int `json:"delay"`
 
-	// Enabled indicates whether or not the slide show is enabled and can be
-	// included in the terminal branding stack.
-	Enabled bool `json:"enabled"`
-
 	// Slides enumerates all slides in the display sequence.
-	Slides []Slide `json:"slides"`
+	Slides []*Slide `json:"slides"`
 
 	// Timeout is an optional timeout override.
 	Timeout int `json:"timeout"`
