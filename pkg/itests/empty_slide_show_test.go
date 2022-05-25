@@ -60,4 +60,5 @@ func TestEmptySlideShow(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
+	assert.Equal("Test Slide Show", response.Name)
 }

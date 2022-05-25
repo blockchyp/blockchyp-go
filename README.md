@@ -4042,7 +4042,10 @@ func slideShowsExample() {
 
 
 
-This API returns a single slide show.
+This API returns a single slide show.  Slide level detail is returned with the fully qualified thumbnail URL
+for each slide.
+
+`slideShowId` is the only required parameter.
 
 
 
@@ -4070,7 +4073,7 @@ func slideShowExample() {
 
     // setup request object
     request := blockchyp.SlideShowRequest{
-        Timeout: 120,
+        SlideShowID: "<SLIDE SHOW ID>",
     }
 
     response, err := client.SlideShow(request)
@@ -4157,7 +4160,7 @@ func updateSlideShowExample() {
 
 
 
-This API deletes a single slide show.
+This API deletes a slide show  `slideShowId` is the only required parameter.
 
 
 
@@ -4185,7 +4188,7 @@ func deleteSlideShowExample() {
 
     // setup request object
     request := blockchyp.SlideShowRequest{
-        Timeout: 120,
+        SlideShowID: "<SLIDE SHOW ID>",
     }
 
     response, err := client.DeleteSlideShow(request)

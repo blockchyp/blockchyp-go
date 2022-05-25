@@ -45,7 +45,23 @@ func TestSlideShow(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.SlideShowRequest{}
+	setupRequest := blockchyp.SlideShow{
+		Name:  "Test Slide Show",
+		Delay: 5,
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.UpdateSlideShow(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.SlideShowRequest{
+		SlideShowID: setupResponse.ID,
+	}
 
 	logObj(t, "Request:", request)
 
@@ -57,4 +73,5 @@ func TestSlideShow(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
+	assert.Equal("Test Slide Show", response.Name)
 }

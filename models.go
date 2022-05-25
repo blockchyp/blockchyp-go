@@ -5216,7 +5216,7 @@ type BrandingAsset struct {
 	// DaysOfWeek is an array of days of the week during which a branding asset
 	// should be enabled. Days of the week are coded as integers starting with
 	// Sunday (0) and ending with Saturday (6).
-	DaysOfWeek []int `json:"daysOfWeek"`
+	DaysOfWeek []time.Weekday `json:"daysOfWeek"`
 
 	// StartTime is the start date if this asset should be displayed based on a
 	// schedule. Format: MM/DD/YYYY

@@ -45,7 +45,23 @@ func TestDeleteSlideShow(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.SlideShowRequest{}
+	setupRequest := blockchyp.SlideShow{
+		Name:  "Test Slide Show",
+		Delay: 5,
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.UpdateSlideShow(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.SlideShowRequest{
+		SlideShowID: setupResponse.ID,
+	}
 
 	logObj(t, "Request:", request)
 
