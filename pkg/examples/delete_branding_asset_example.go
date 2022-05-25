@@ -20,7 +20,7 @@ func deleteBrandingAssetExample() {
 
 	// setup request object
 	request := blockchyp.BrandingAssetRequest{
-		Timeout: 120,
+		AssetID: "<BRANDING ASSET ID>",
 	}
 
 	response, err := client.DeleteBrandingAsset(request)

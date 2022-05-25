@@ -57,4 +57,5 @@ func TestTerminalBranding(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
+	assert.True(len(response.Results) >= 0)
 }

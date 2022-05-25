@@ -19,9 +19,7 @@ func terminalBrandingExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.BrandingAssetRequest{
-		Timeout: 120,
-	}
+	request := blockchyp.BrandingAssetRequest{}
 
 	response, err := client.TerminalBranding(request)
 

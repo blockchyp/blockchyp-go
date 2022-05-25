@@ -21,7 +21,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
 
-func TestDeleteBrandingAsset(t *testing.T) {
+func TestEmptyBrandingAsset(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
@@ -36,7 +36,7 @@ func TestDeleteBrandingAsset(t *testing.T) {
 		messageRequest := blockchyp.MessageRequest{
 			TerminalName: config.DefaultTerminalName,
 			Test:         true,
-			Message:      fmt.Sprintf("Running TestDeleteBrandingAsset in %v seconds...", testDelay),
+			Message:      fmt.Sprintf("Running TestEmptyBrandingAsset in %v seconds...", testDelay),
 		}
 		if _, err := client.Message(messageRequest); err != nil {
 			t.Fatal(err)
@@ -45,27 +45,14 @@ func TestDeleteBrandingAsset(t *testing.T) {
 	}
 
 	// setup request object
-	setupRequest := blockchyp.BrandingAsset{
+	request := blockchyp.BrandingAsset{
 		Notes:   "Empty Asset",
 		Enabled: false,
 	}
 
-	logObj(t, "Request:", setupRequest)
-
-	setupResponse, err := client.UpdateBrandingAsset(setupRequest)
-
-	assert.NoError(err)
-
-	logObj(t, "Response:", setupResponse)
-
-	// setup request object
-	request := blockchyp.BrandingAssetRequest{
-		AssetID: setupResponse.ID,
-	}
-
 	logObj(t, "Request:", request)
 
-	response, err := client.DeleteBrandingAsset(request)
+	response, err := client.UpdateBrandingAsset(request)
 
 	assert.NoError(err)
 

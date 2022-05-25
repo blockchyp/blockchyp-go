@@ -5170,6 +5170,16 @@ type BrandingAssetRequest struct {
 
 // BrandingAsset models the priority and display settings for terminal media.
 type BrandingAsset struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
 	// ID id used to track a branding asset.
 	ID string `json:"id"`
 

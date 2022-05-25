@@ -45,7 +45,35 @@ func TestUpdateBrandingAsset(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.BrandingAsset{}
+	setupRequest := blockchyp.UploadMetadata{
+		FileName: "aviato.png",
+		FileSize: 18843,
+		UploadID: randomID(),
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	file, err := os.Open("testdata/aviato.png")
+	assert.NoError(err)
+	setupResponse, err := client.UploadMedia(setupRequest, file)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.BrandingAsset{
+		MediaID:   setupResponse.ID,
+		Padded:    true,
+		Ordinal:   10,
+		StartDate: "01/06/2021",
+		StartTime: "14:00",
+		EndDate:   "11/05/2024",
+		EndTime:   "16:00",
+		Notes:     "Test Branding Asset",
+		Preview:   false,
+		Enabled:   true,
+	}
 
 	logObj(t, "Request:", request)
 
