@@ -25,7 +25,7 @@ func TestAddTestMerchant(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
-	client := config.newTestClient(t)
+	client := config.newTestClient(t, "partner")
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -60,4 +60,7 @@ func TestAddTestMerchant(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
+	assert.Equal("Test Merchant", response.DbaName)
+	assert.Equal("Test Merchant", response.CompanyName)
+	assert.True(response.Visa)
 }

@@ -25,7 +25,7 @@ func TestInviteMerchantUser(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
-	client := config.newTestClient(t)
+	client := config.newTestClient(t, "")
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -45,7 +45,11 @@ func TestInviteMerchantUser(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.InviteMerchantUserRequest{}
+	request := blockchyp.InviteMerchantUserRequest{
+		Email:     "doublea@blockchypteam.m8r.co",
+		FirstName: "Aaron",
+		LastName:  "Anderson",
+	}
 
 	logObj(t, "Request:", request)
 

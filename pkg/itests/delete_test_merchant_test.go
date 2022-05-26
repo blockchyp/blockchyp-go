@@ -25,7 +25,7 @@ func TestDeleteTestMerchant(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
-	client := config.newTestClient(t)
+	client := config.newTestClient(t, "partner")
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
@@ -45,7 +45,23 @@ func TestDeleteTestMerchant(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.MerchantProfileRequest{}
+	setupRequest := blockchyp.AddTestMerchantRequest{
+		DbaName:     "Test Merchant",
+		CompanyName: "Test Merchant",
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.AddTestMerchant(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.MerchantProfileRequest{
+		MerchantID: setupResponse.MerchantID,
+	}
 
 	logObj(t, "Request:", request)
 

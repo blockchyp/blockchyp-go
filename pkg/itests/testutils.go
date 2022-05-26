@@ -32,14 +32,22 @@ var (
 
 //TestConfiguration models test configuration
 type TestConfiguration struct {
-	GatewayHost            string `json:"gatewayHost"`
-	TestGatewayHost        string `json:"testGatewayHost"`
-	DashboardHost          string `json:"dashboardHost"`
-	DefaultTerminalName    string `json:"defaultTerminalName"`
-	DefaultTerminalAddress string `json:"defaultTerminalAddress"`
-	APIKey                 string `json:"apiKey"`
-	BearerToken            string `json:"bearerToken"`
-	SigningKey             string `json:"signingKey"`
+	GatewayHost            string                        `json:"gatewayHost"`
+	TestGatewayHost        string                        `json:"testGatewayHost"`
+	DashboardHost          string                        `json:"dashboardHost"`
+	DefaultTerminalName    string                        `json:"defaultTerminalName"`
+	DefaultTerminalAddress string                        `json:"defaultTerminalAddress"`
+	APIKey                 string                        `json:"apiKey"`
+	BearerToken            string                        `json:"bearerToken"`
+	SigningKey             string                        `json:"signingKey"`
+	Profiles               map[string]ProfileCredentials `json:"profiles"`
+}
+
+// ProfileCredentials model alternate test credentials
+type ProfileCredentials struct {
+	APIKey      string `json:"apiKey"`
+	BearerToken string `json:"bearerToken"`
+	SigningKey  string `json:"signingKey"`
 }
 
 func loadTestConfiguration(t *testing.T) *TestConfiguration {
@@ -88,11 +96,18 @@ func updateLastTransaction(response interface{}) string {
 	return ""
 }
 
-func (c *TestConfiguration) newTestClient(t *testing.T) blockchyp.Client {
+func (c *TestConfiguration) newTestClient(t *testing.T, profile string) blockchyp.Client {
 	creds := blockchyp.APICredentials{
 		APIKey:      c.APIKey,
 		BearerToken: c.BearerToken,
 		SigningKey:  c.SigningKey,
+	}
+
+	altCreds, ok := c.Profiles[profile]
+	if ok {
+		creds.APIKey = altCreds.APIKey
+		creds.BearerToken = altCreds.BearerToken
+		creds.SigningKey = altCreds.SigningKey
 	}
 
 	client := blockchyp.NewClient(creds)

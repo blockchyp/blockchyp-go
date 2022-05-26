@@ -25,7 +25,7 @@ func TestTerminalTimeout(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
-	client := config.newTestClient(t)
+	client := config.newTestClient(t, "")
 
 	testDelay := os.Getenv(TestDelay)
 	if testDelay != "" {
