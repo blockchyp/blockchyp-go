@@ -45,7 +45,25 @@ func TestUpdateMerchantPlatforms(t *testing.T) {
 	}
 
 	// setup request object
-	request := blockchyp.MerchantPlatform{}
+	setupRequest := blockchyp.AddTestMerchantRequest{
+		DbaName:     "Test Merchant",
+		CompanyName: "Test Merchant",
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.AddTestMerchant(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
+
+	// setup request object
+	request := blockchyp.MerchantPlatform{
+		MerchantID:   setupResponse.MerchantID,
+		PlatformCode: "SIM",
+		Notes:        "platform simulator",
+	}
 
 	logObj(t, "Request:", request)
 
