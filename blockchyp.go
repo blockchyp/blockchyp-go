@@ -102,7 +102,6 @@ func NewClient(creds APICredentials) Client {
 			),
 		}, // Timeout is set per request
 		terminalHTTPClient: &http.Client{
-			Timeout: DefaultTerminalTimeout,
 			Transport: AddUserAgent(
 				&http.Transport{
 					Dial: (&net.Dialer{
