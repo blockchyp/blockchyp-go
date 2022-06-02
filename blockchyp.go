@@ -1570,7 +1570,7 @@ func (client *Client) TCLog(request TermsAndConditionsLogRequest) (*TermsAndCond
 	return &response, err
 }
 
-// TcEntry returns a single detailed Terms and Conditions entry
+// TcEntry returns a single detailed Terms and Conditions entry.
 func (client *Client) TCEntry(request TermsAndConditionsLogRequest) (*TermsAndConditionsLogEntry, error) {
 	var response TermsAndConditionsLogEntry
 

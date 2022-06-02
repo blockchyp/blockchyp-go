@@ -24,7 +24,7 @@ func updateSlideShowExample() {
 		Delay: 5,
 		Slides: []*blockchyp.Slide{
 			&blockchyp.Slide{
-				MediaID: setupResponse.ID,
+				MediaID: "<MEDIA ID>",
 			},
 		},
 	}

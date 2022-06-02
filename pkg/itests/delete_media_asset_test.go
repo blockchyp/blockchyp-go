@@ -10,11 +10,9 @@
 package itests
 
 import (
-	"fmt"
-	"os"
-	"strconv"
 	"testing"
-	"time"
+
+	"os"
 
 	"github.com/stretchr/testify/assert"
 
@@ -26,23 +24,6 @@ func TestDeleteMediaAsset(t *testing.T) {
 
 	config := loadTestConfiguration(t)
 	client := config.newTestClient(t, "")
-
-	testDelay := os.Getenv(TestDelay)
-	if testDelay != "" {
-		testDelayInt, err := strconv.Atoi(testDelay)
-		if err != nil {
-			t.Fatal(err)
-		}
-		messageRequest := blockchyp.MessageRequest{
-			TerminalName: config.DefaultTerminalName,
-			Test:         true,
-			Message:      fmt.Sprintf("Running TestDeleteMediaAsset in %v seconds...", testDelay),
-		}
-		if _, err := client.Message(messageRequest); err != nil {
-			t.Fatal(err)
-		}
-		time.Sleep(time.Duration(testDelayInt) * time.Second)
-	}
 
 	// setup request object
 	setupRequest := blockchyp.UploadMetadata{

@@ -10,11 +10,7 @@
 package itests
 
 import (
-	"fmt"
-	"os"
-	"strconv"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 
@@ -26,23 +22,6 @@ func TestSurveyResults(t *testing.T) {
 
 	config := loadTestConfiguration(t)
 	client := config.newTestClient(t, "")
-
-	testDelay := os.Getenv(TestDelay)
-	if testDelay != "" {
-		testDelayInt, err := strconv.Atoi(testDelay)
-		if err != nil {
-			t.Fatal(err)
-		}
-		messageRequest := blockchyp.MessageRequest{
-			TerminalName: config.DefaultTerminalName,
-			Test:         true,
-			Message:      fmt.Sprintf("Running TestSurveyResults in %v seconds...", testDelay),
-		}
-		if _, err := client.Message(messageRequest); err != nil {
-			t.Fatal(err)
-		}
-		time.Sleep(time.Duration(testDelayInt) * time.Second)
-	}
 
 	// setup request object
 	setupRequest := blockchyp.SurveyQuestionRequest{}
@@ -56,7 +35,9 @@ func TestSurveyResults(t *testing.T) {
 	logObj(t, "Response:", setupResponse)
 
 	// setup request object
-	request := blockchyp.SurveyResultsRequest{}
+	request := blockchyp.SurveyResultsRequest{
+		QuestionID: setupResponse.Results[0].ID,
+	}
 
 	logObj(t, "Request:", request)
 

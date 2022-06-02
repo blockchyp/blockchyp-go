@@ -2,13 +2,16 @@ package itests
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"reflect"
 	"runtime"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/gofrs/uuid"
 	"github.com/stretchr/testify/assert"
@@ -48,6 +51,28 @@ type ProfileCredentials struct {
 	APIKey      string `json:"apiKey"`
 	BearerToken string `json:"bearerToken"`
 	SigningKey  string `json:"signingKey"`
+}
+
+func processTestDelay(t *testing.T, config *TestConfiguration, testName string) {
+
+	testDelay := os.Getenv(TestDelay)
+	if testDelay != "" {
+		testDelayInt, err := strconv.Atoi(testDelay)
+		if err != nil {
+			t.Fatal(err)
+		}
+		messageRequest := blockchyp.MessageRequest{
+			TerminalName: config.DefaultTerminalName,
+			Test:         true,
+			Message:      fmt.Sprintf("Running Test %v in %v seconds...", testName, testDelay),
+		}
+		delayClient := config.newTestClient(t, "")
+		if _, err := delayClient.Message(messageRequest); err != nil {
+			t.Fatal(err)
+		}
+		time.Sleep(time.Duration(testDelayInt) * time.Second)
+	}
+
 }
 
 func loadTestConfiguration(t *testing.T) *TestConfiguration {

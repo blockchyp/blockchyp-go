@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	blockchyp "github.com/blockchyp/blockchyp-go"
 )
@@ -25,7 +26,11 @@ func uploadMediaExample() {
 		UploadID: "<RANDOM ID>",
 	}
 
-	response, err := client.UploadMedia(request)
+	file, err := os.Open("filename.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	response, err := client.UploadMedia(request, file)
 
 	if err != nil {
 		log.Fatal(err)

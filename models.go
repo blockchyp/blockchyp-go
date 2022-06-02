@@ -182,6 +182,12 @@ type Acknowledgement struct {
 
 // CaptureSignatureRequest contains a request for customer signature data.
 type CaptureSignatureRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -208,12 +214,6 @@ type CaptureSignatureRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// SigFile is a location on the filesystem which a customer signature should
 	// be written to.
@@ -255,6 +255,12 @@ type CaptureSignatureResponse struct {
 // PingRequest contains information needed to test connectivity with a
 // terminal.
 type PingRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -281,12 +287,6 @@ type PingRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -339,6 +339,12 @@ type PingResponse struct {
 // LocateRequest contains information needed to retrieve location information
 // for a terminal.
 type LocateRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -365,12 +371,6 @@ type LocateRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -435,6 +435,12 @@ type LocateResponse struct {
 
 // MessageRequest contains a message to be displayed on the terminal screen.
 type MessageRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -461,12 +467,6 @@ type MessageRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -477,6 +477,12 @@ type MessageRequest struct {
 
 // BooleanPromptRequest contains a simple yes no prompt request.
 type BooleanPromptRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -503,12 +509,6 @@ type BooleanPromptRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -525,6 +525,12 @@ type BooleanPromptRequest struct {
 
 // TextPromptRequest contains a text prompt request.
 type TextPromptRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -551,12 +557,6 @@ type TextPromptRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -567,6 +567,12 @@ type TextPromptRequest struct {
 
 // CustomerRequest models a customer data request.
 type CustomerRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -593,12 +599,6 @@ type CustomerRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// CustomerID BlockChyp assigned customer id.
 	CustomerID string `json:"customerId"`
@@ -626,6 +626,12 @@ type CustomerResponse struct {
 
 // CustomerSearchRequest models a customer data search request.
 type CustomerSearchRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -652,12 +658,6 @@ type CustomerSearchRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// Query search query for customer searches.
 	Query string `json:"query"`
@@ -665,6 +665,12 @@ type CustomerSearchRequest struct {
 
 // UpdateCustomerRequest models a customer data search request.
 type UpdateCustomerRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -691,12 +697,6 @@ type UpdateCustomerRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// Customer models a customer update request.
 	Customer Customer `json:"customer"`
@@ -748,6 +748,12 @@ type Customer struct {
 
 // TokenMetadataRequest retrieves token metadata.
 type TokenMetadataRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -774,12 +780,6 @@ type TokenMetadataRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// Token the token to retrieve.
 	Token string `json:"token"`
@@ -872,6 +872,12 @@ type WhiteListedCard struct {
 // AuthorizationRequest contains an authorization request for a charge,
 // preauth, or reverse transaction.
 type AuthorizationRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -898,12 +904,6 @@ type AuthorizationRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// Token is the payment token to be used for this transaction. This should be
 	// used for recurring transactions.
@@ -1075,6 +1075,12 @@ type AuthorizationRequest struct {
 // BalanceRequest contains a request for the remaining balance on a payment
 // type.
 type BalanceRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -1101,12 +1107,6 @@ type BalanceRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// Token is the payment token to be used for this transaction. This should be
 	// used for recurring transactions.
@@ -1259,6 +1259,12 @@ type BalanceResponse struct {
 
 // RefundRequest contains a refund request.
 type RefundRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -1285,12 +1291,6 @@ type RefundRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// Token is the payment token to be used for this transaction. This should be
 	// used for recurring transactions.
@@ -1411,6 +1411,12 @@ type RefundRequest struct {
 
 // CaptureRequest contains the information needed to capture a preauth.
 type CaptureRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -1437,12 +1443,6 @@ type CaptureRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TransactionID is the ID of the previous transaction being referenced.
 	TransactionID string `json:"transactionId"`
@@ -1624,6 +1624,12 @@ type CaptureResponse struct {
 
 // VoidRequest contains a void request.
 type VoidRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -1650,12 +1656,6 @@ type VoidRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TransactionID is the ID of the previous transaction being referenced.
 	TransactionID string `json:"transactionId"`
@@ -1765,6 +1765,12 @@ type VoidResponse struct {
 // EnrollRequest contains the information needed to enroll a new payment
 // method in the token vault.
 type EnrollRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -1791,12 +1797,6 @@ type EnrollRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// Token is the payment token to be used for this transaction. This should be
 	// used for recurring transactions.
@@ -1967,6 +1967,12 @@ type EnrollResponse struct {
 // ClearTerminalRequest contains the information needed to enroll a new
 // payment method in the token vault.
 type ClearTerminalRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -1993,12 +1999,6 @@ type ClearTerminalRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -2007,6 +2007,12 @@ type ClearTerminalRequest struct {
 // GiftActivateRequest contains the information needed to activate or recharge
 // a gift card.
 type GiftActivateRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -2033,12 +2039,6 @@ type GiftActivateRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// CurrencyCode indicates the transaction currency code.
 	CurrencyCode string `json:"currencyCode"`
@@ -2127,6 +2127,12 @@ type GiftActivateResponse struct {
 // CloseBatchRequest contains the information needed to manually close a
 // credit card batch.
 type CloseBatchRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -2153,12 +2159,6 @@ type CloseBatchRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// BatchID optional batch id.
 	BatchID string `json:"batchId"`
@@ -2215,6 +2215,12 @@ type CloseBatchResponse struct {
 // TermsAndConditionsRequest contains the fields needed for custom Terms and
 // Conditions prompts.
 type TermsAndConditionsRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -2241,12 +2247,6 @@ type TermsAndConditionsRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TransactionID is the ID of the previous transaction being referenced.
 	TransactionID string `json:"transactionId"`
@@ -2530,6 +2530,12 @@ type AuthorizationResponse struct {
 // TransactionStatusRequest models the request for updated information about a
 // transaction.
 type TransactionStatusRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -2556,12 +2562,6 @@ type TransactionStatusRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TransactionID is the BlockChyp assigned transaction id.
 	TransactionID string `json:"transactionId,omitempty"`
@@ -2776,6 +2776,12 @@ type TransactionDisplayTransaction struct {
 // TransactionDisplayRequest is used to start or update a transaction line
 // item display on a terminal.
 type TransactionDisplayRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -2802,12 +2808,6 @@ type TransactionDisplayRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -2848,6 +2848,12 @@ type HeartbeatResponse struct {
 
 // TerminalStatusRequest contains a request for the status of a terminal.
 type TerminalStatusRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -2874,12 +2880,6 @@ type TerminalStatusRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -2913,6 +2913,12 @@ type TerminalStatusResponse struct {
 
 // PaymentLinkRequest creates a payment link.
 type PaymentLinkRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -2939,12 +2945,6 @@ type PaymentLinkRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// CurrencyCode indicates the transaction currency code.
 	CurrencyCode string `json:"currencyCode"`
@@ -3060,6 +3060,12 @@ type PaymentLinkResponse struct {
 // CancelPaymentLinkRequest cancels a pending payment link. Payment links that
 // have already been used cannot be canceled and the request will be rejected.
 type CancelPaymentLinkRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -3086,12 +3092,6 @@ type CancelPaymentLinkRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// LinkCode is the payment link code to cancel.
 	LinkCode string `json:"linkCode"`
@@ -3114,6 +3114,12 @@ type CancelPaymentLinkResponse struct {
 // CashDiscountRequest computes the cash discount for a cash discount if
 // enabled.
 type CashDiscountRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -3140,12 +3146,6 @@ type CashDiscountRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// CurrencyCode indicates the transaction currency code.
 	CurrencyCode string `json:"currencyCode"`
@@ -3199,6 +3199,12 @@ type CashDiscountResponse struct {
 
 // TransactionHistoryRequest models a batch history request.
 type TransactionHistoryRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -3225,12 +3231,6 @@ type TransactionHistoryRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// Query optional search query. Will match amount, last 4 and customer name.
 	// batchId and terminalName are not supported with this option.
@@ -3298,6 +3298,12 @@ type TransactionHistoryResponse struct {
 
 // BatchHistoryRequest models a batch history request.
 type BatchHistoryRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -3324,12 +3330,6 @@ type BatchHistoryRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// StartDate optional start date filter for batch history.
 	StartDate time.Time `json:"startDate"`
@@ -3413,6 +3413,12 @@ type BatchSummary struct {
 
 // BatchDetailsRequest models a request for details about a single batch.
 type BatchDetailsRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -3439,12 +3445,6 @@ type BatchDetailsRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// BatchID id for the batch to be retrieved.
 	BatchID string `json:"batchId"`
@@ -3531,6 +3531,9 @@ type TerminalVolume struct {
 // AddTestMerchantRequest models basic information needed to create a test
 // merchant.
 type AddTestMerchantRequest struct {
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// DbaName the DBA name for the test merchant.
 	DbaName string `json:"dbaName"`
 
@@ -3544,6 +3547,12 @@ type AddTestMerchantRequest struct {
 // MerchantProfileRequest models a request for information about the merchant
 // profile.
 type MerchantProfileRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -3570,12 +3579,6 @@ type MerchantProfileRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// MerchantID is the merchant id. Optional for merchant scoped requests.
 	MerchantID string `json:"merchantId"`
@@ -3584,6 +3587,12 @@ type MerchantProfileRequest struct {
 // MerchantPlatformRequest models a request related to a platform
 // configuration.
 type MerchantPlatformRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -3610,12 +3619,6 @@ type MerchantPlatformRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// PlatformID is the platform configuration id.
 	PlatformID string `json:"platformId"`
@@ -3624,6 +3627,12 @@ type MerchantPlatformRequest struct {
 // InviteMerchantUserRequest models a request for adding a new user to a
 // merchant account.
 type InviteMerchantUserRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -3651,22 +3660,16 @@ type InviteMerchantUserRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
-
 	// MerchantID is the merchant id. Optional for merchant scoped requests.
 	MerchantID string `json:"merchantId"`
 
 	// Email is the email address of the user.
 	Email string `json:"email"`
 
-	// FirstName is the first name of the new user
+	// FirstName is the first name of the new user.
 	FirstName string `json:"firstName"`
 
-	// LastName is the last name of the new user
+	// LastName is the last name of the new user.
 	LastName string `json:"lastName"`
 
 	// Roles an optional array of role codes that will be assigned to the user.
@@ -3704,7 +3707,7 @@ type Address struct {
 
 // MerchantProfile models a merchant profile.
 type MerchantProfile struct {
-	// Timeout overrides the default timeout for merchant profile updates.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// Test indicates that the response came from the test gateway.
@@ -3884,9 +3887,6 @@ type MerchantProfileResponse struct {
 	// ResponseDescription contains a narrative description of the transaction
 	// result.
 	ResponseDescription string `json:"responseDescription"`
-
-	// Timeout overrides the default timeout for merchant profile updates.
-	Timeout int `json:"timeout"`
 
 	// Test indicates that the response came from the test gateway.
 	Test bool `json:"test"`
@@ -4072,6 +4072,12 @@ type BankAccount struct {
 // ListQueuedTransactionsRequest returns a list of queued transactions on a
 // terminal.
 type ListQueuedTransactionsRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -4098,12 +4104,6 @@ type ListQueuedTransactionsRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -4129,6 +4129,12 @@ type ListQueuedTransactionsResponse struct {
 // DeleteQueuedTransactionRequest deletes one or all transactions from a
 // terminal queue.
 type DeleteQueuedTransactionRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// Async defers the response to the transaction and returns immediately.
 	// Callers should retrive the transaction result using the Transaction Status
 	// API.
@@ -4151,12 +4157,6 @@ type DeleteQueuedTransactionRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -4182,6 +4182,12 @@ type DeleteQueuedTransactionResponse struct {
 
 // DeleteCustomerRequest deletes a customer record.
 type DeleteCustomerRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -4208,12 +4214,6 @@ type DeleteCustomerRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// CustomerID the ID of the customer to delete.
 	CustomerID string `json:"customerId"`
@@ -4234,6 +4234,12 @@ type DeleteCustomerResponse struct {
 
 // DeleteTokenRequest deletes a payment token.
 type DeleteTokenRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -4260,12 +4266,6 @@ type DeleteTokenRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// Token the token to delete.
 	Token string `json:"token"`
@@ -4286,6 +4286,12 @@ type DeleteTokenResponse struct {
 
 // LinkTokenRequest links a payment token with a customer record.
 type LinkTokenRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -4312,12 +4318,6 @@ type LinkTokenRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
 
 	// Token the token to delete.
 	Token string `json:"token"`
@@ -4329,6 +4329,12 @@ type LinkTokenRequest struct {
 // UnlinkTokenRequest removes a link between a payment token with a customer
 // record, if one exists.
 type UnlinkTokenRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TransactionRef contains a user-assigned reference that can be used to
 	// recall or reverse transactions.
 	TransactionRef string `json:"transactionRef,omitempty"`
@@ -4356,12 +4362,6 @@ type UnlinkTokenRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool `json:"test"`
-
-	// Timeout is the request timeout in seconds.
-	Timeout int `json:"timeout"`
-
 	// Token the token to delete.
 	Token string `json:"token"`
 
@@ -4371,7 +4371,7 @@ type UnlinkTokenRequest struct {
 
 // GetMerchantsRequest models a request for merchant information.
 type GetMerchantsRequest struct {
-	// Timeout allows developers to override the default timeout.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// Test indicates whether or not to return test or live merchants.
@@ -4490,7 +4490,13 @@ type MerchantPlatformsResponse struct {
 // MerchantPlatform contains details about a merchant board platform
 // configuration.
 type MerchantPlatform struct {
-	// ID primary identifier for a given platform configuration
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// ID primary identifier for a given platform configuration.
 	ID string `json:"id"`
 
 	// Disabled indicates that a platform configuration is disabled.
@@ -4526,22 +4532,22 @@ type MerchantPlatform struct {
 	// LastChange is the date the platform configuration was last modified.
 	LastChange string `json:"lastChange"`
 
-	// Timeout is an optional timeout override in seconds.
-	Timeout int `json:"timeout"`
-
 	// ConfigMap is a map of configuration values specific to the boarding
 	// platform. These are not published. Contact your BlockChyp rep for
 	// supported values.
 	ConfigMap map[string]string `json:"configMap,omitempty"`
 }
 
-// TerminalProfileRequest
+// TerminalProfileRequest models a terminal profile request.
 type TerminalProfileRequest struct {
-	// Timeout is the optional timeout override for a terminal profile request.
+	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
 }
 
-// TerminalProfileResponse
+// TerminalProfileResponse models a terminal profile response.
 type TerminalProfileResponse struct {
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
@@ -4557,24 +4563,33 @@ type TerminalProfileResponse struct {
 	Results []TerminalProfile `json:"results"`
 }
 
-// TerminalDeactivationRequest
+// TerminalDeactivationRequest models a terminal deactivation request.
 type TerminalDeactivationRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TerminalName is the terminal name assigned to the terminal.
 	TerminalName string `json:"terminalName"`
 
 	// TerminalID is the id assigned by BlockChyp to the terminal.
 	TerminalID string `json:"terminalId"`
-
-	// Timeout is the optional timeout override for a terminal profile request.
-	Timeout int `json:"timeout"`
 }
 
-// TerminalActivationRequest
+// TerminalActivationRequest models a terminal activation request.
 type TerminalActivationRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// MerchantID is the optional merchant id.
 	MerchantID string `json:"merchantId"`
 
-	// ActivationCode is the terminal activation code displayed on the terminal
+	// ActivationCode is the terminal activation code displayed on the terminal.
 	ActivationCode string `json:"activationCode"`
 
 	// TerminalName is the name to be assigned to the terminal. Must be unique
@@ -4584,9 +4599,6 @@ type TerminalActivationRequest struct {
 	// CloudRelay indicates that the terminal should be activated in cloud relay
 	// mode.
 	CloudRelay bool `json:"cloudRelay"`
-
-	// Timeout is the optional timeout override for a terminal profile request.
-	Timeout int `json:"timeout,omitempty"`
 }
 
 // TerminalProfile contains details about a merchant board platform
@@ -4621,7 +4633,7 @@ type TerminalProfile struct {
 	// SerialNumber is the manufacturer's serial number.
 	SerialNumber string `json:"serialNumber"`
 
-	// Online indicates whether or not the terminal is currently online
+	// Online indicates whether or not the terminal is currently online.
 	Online bool `json:"online"`
 
 	// Since the date and time the terminal was first brought online.
@@ -4659,6 +4671,12 @@ type TerminalProfile struct {
 
 // TermsAndConditionsTemplate models a full terms and conditions template.
 type TermsAndConditionsTemplate struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
 
@@ -4681,20 +4699,19 @@ type TermsAndConditionsTemplate struct {
 
 	// Content is the full text of the agreement template.
 	Content string `json:"content"`
-
-	// Timeout is an optional timeout override for endpoints where this type is
-	// used as a request.
-	Timeout int `json:"timeout,omitempty"`
 }
 
 // TermsAndConditionsTemplateRequest models a request to retrieve or
 // manipulate terms and conditions data.
 type TermsAndConditionsTemplateRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// TemplateID id of a single template.
 	TemplateID string `json:"templateId"`
-
-	// Timeout is an optional timeout override.
-	Timeout int `json:"timeout,omitempty"`
 }
 
 // TermsAndConditionsTemplateResponse models a set of templates responsive to
@@ -4719,6 +4736,12 @@ type TermsAndConditionsTemplateResponse struct {
 
 // TermsAndConditionsLogRequest models a Terms and Conditions history request.
 type TermsAndConditionsLogRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// LogEntryID is the identifier of the log entry to be returned for single
 	// result requests.
 	LogEntryID string `json:"logEntryId"`
@@ -4739,9 +4762,6 @@ type TermsAndConditionsLogRequest struct {
 
 	// EndDate is an optional end date for filtering response data.
 	EndDate string `json:"endDate"`
-
-	// Timeout is an optional timeout override.
-	Timeout int `json:"timeout,omitempty"`
 }
 
 // TermsAndConditionsLogResponse models a Terms and Conditions history
@@ -4799,7 +4819,7 @@ type TermsAndConditionsLogEntry struct {
 	// entry.
 	TerminalName string `json:"terminalName"`
 
-	// Test is a flag indicating whether or not the terminal was a test terminal
+	// Test is a flag indicating whether or not the terminal was a test terminal.
 	Test bool `json:"test"`
 
 	// Timestamp date and time the terms and conditions acceptance occurred.
@@ -4842,6 +4862,12 @@ type TermsAndConditionsLogEntry struct {
 
 // SurveyQuestion models a survey question.
 type SurveyQuestion struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
 
@@ -4884,15 +4910,14 @@ type SurveyQuestion struct {
 
 	// Responses is the set of response data points.
 	Responses []SurveyDataPoint `json:"responses"`
-
-	// Timeout is an optional timeout override for situations where this entity
-	// is used as a request body.
-	Timeout int `json:"timeout,omitempty"`
 }
 
 // SurveyQuestionRequest models a request to retrieve or manipulate survey
 // questions.
 type SurveyQuestionRequest struct {
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// QuestionID id of a single question.
 	QuestionID string `json:"questionId"`
 
@@ -4928,7 +4953,7 @@ type SurveyDataPoint struct {
 	// ResponseCount is the number of responses.
 	ResponseCount int `json:"responseCount"`
 
-	// ResponsePercentage is response rate as a percentage of total transactions
+	// ResponsePercentage is response rate as a percentage of total transactions.
 	ResponsePercentage float64 `json:"responsePercentage"`
 
 	// AverageTransaction is the average transaction amount for a given answer.
@@ -4937,6 +4962,12 @@ type SurveyDataPoint struct {
 
 // SurveyResultsRequest models a request to retrieve survey results.
 type SurveyResultsRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// QuestionID id of a single question.
 	QuestionID string `json:"questionId"`
 
@@ -4945,9 +4976,6 @@ type SurveyResultsRequest struct {
 
 	// EndDate is an optional end date for filtering response data.
 	EndDate string `json:"endDate"`
-
-	// Timeout is an optional timeout override.
-	Timeout int `json:"timeout"`
 }
 
 // MediaMetadata models a request to retrieve survey results.
@@ -4974,12 +5002,18 @@ type MediaMetadata struct {
 	// ThumbnailURL is the url for to the thumbnail of an image.
 	ThumbnailURL string `json:"thumbnailUrl"`
 
-	// Video is an identifier used to flag video files
+	// Video is an identifier used to flag video files.
 	Video bool `json:"video"`
 }
 
 // UploadMetadata models information needed to process a file upload.
 type UploadMetadata struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// UploadID optional id used to track status and progress of an upload while
 	// in progress.
 	UploadID string `json:"uploadId"`
@@ -4989,9 +5023,6 @@ type UploadMetadata struct {
 
 	// FileName is the name of file to be uploaded.
 	FileName string `json:"fileName"`
-
-	// Timeout is an optional upload timeout override.
-	Timeout int `json:"timeout"`
 }
 
 // UploadStatus models the current status of a file upload.
@@ -5038,21 +5069,27 @@ type UploadStatus struct {
 
 // UploadStatusRequest is used to request the status of a file upload.
 type UploadStatusRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// UploadID id used to track status and progress of an upload while in
 	// progress.
 	UploadID string `json:"uploadId"`
-
-	// Timeout is an optional timeout override.
-	Timeout int `json:"timeout"`
 }
 
 // MediaRequest models a request to retrieve or manipulate media assets.
 type MediaRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// MediaID id used to track a media asset.
 	MediaID string `json:"mediaId"`
-
-	// Timeout is an optional timeout override.
-	Timeout int `json:"timeout"`
 }
 
 // MediaLibraryResponse models a media library response.
@@ -5096,6 +5133,12 @@ type Slide struct {
 
 // SlideShow models a media library response.
 type SlideShow struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
 
@@ -5117,9 +5160,6 @@ type SlideShow struct {
 
 	// Slides enumerates all slides in the display sequence.
 	Slides []*Slide `json:"slides"`
-
-	// Timeout is an optional timeout override.
-	Timeout int `json:"timeout"`
 }
 
 // SlideShowResponse models a slide show response.
@@ -5151,25 +5191,37 @@ type SlideShowResponse struct {
 // SlideShowRequest models a request to retrieve or manipulate terminal slide
 // shows.
 type SlideShowRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// SlideShowID id used to track a slide show.
 	SlideShowID string `json:"slideShowId"`
-
-	// Timeout is an optional timeout override.
-	Timeout int `json:"timeout"`
 }
 
 // BrandingAssetRequest models a request to retrieve or manipulate terminal
 // slide shows.
 type BrandingAssetRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// AssetID id used to track a branding asset.
 	AssetID string `json:"assetId"`
-
-	// Timeout is an optional timeout override.
-	Timeout int `json:"timeout"`
 }
 
 // BrandingAsset models the priority and display settings for terminal media.
 type BrandingAsset struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
 
@@ -5216,11 +5268,11 @@ type BrandingAsset struct {
 	Padded bool `json:"padded"`
 
 	// StartDate is the start date if this asset should be displayed based on a
-	// schedule. Format: MM/DD/YYYY
+	// schedule. Format: MM/DD/YYYY.
 	StartDate string `json:"startDate"`
 
 	// EndDate is the end date if this asset should be displayed based on a
-	// schedule. Format: MM/DD/YYYY
+	// schedule. Format: MM/DD/YYYY.
 	EndDate string `json:"endDate"`
 
 	// DaysOfWeek is an array of days of the week during which a branding asset
@@ -5229,11 +5281,11 @@ type BrandingAsset struct {
 	DaysOfWeek []time.Weekday `json:"daysOfWeek"`
 
 	// StartTime is the start date if this asset should be displayed based on a
-	// schedule. Format: MM/DD/YYYY
+	// schedule. Format: MM/DD/YYYY.
 	StartTime string `json:"startTime"`
 
 	// EndTime is the end date if this asset should be displayed based on a
-	// schedule. Format: MM/DD/YYYY
+	// schedule. Format: MM/DD/YYYY.
 	EndTime string `json:"endTime"`
 
 	// Ordinal is the ordinal number marking the position of this asset within
@@ -5293,9 +5345,6 @@ type BrandingAsset struct {
 	// NarrativeDisplayPeriod is a compact narrative string explaining the
 	// display period for a branding asset.
 	NarrativeDisplayPeriod string `json:"narrativeDisplayPeriod"`
-
-	// Timeout is an optional timeout override.
-	Timeout int `json:"timeout"`
 }
 
 // BrandingAssetResponse models a branding asset response.
@@ -5550,6 +5599,22 @@ func (r ApprovalResponse) From(raw interface{}) (result ApprovalResponse, ok boo
 	return r, ok
 }
 
+// TimeoutRequest models a low level request with a timeout and test flag.
+type TimeoutRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool
+}
+
+// From creates an instance of TimeoutRequest with values
+// from a generic type.
+func (r TimeoutRequest) From(raw interface{}) (result TimeoutRequest, ok bool) {
+	ok = copyTo(raw, &r)
+	return r, ok
+}
+
 // CoreRequest contains core request fields for a transaction.
 type CoreRequest struct {
 	// TransactionRef contains a user-assigned reference that can be used to
@@ -5578,12 +5643,6 @@ type CoreRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string
-
-	// Test specifies whether or not to route transaction to the test gateway.
-	Test bool
-
-	// Timeout is the request timeout in seconds.
-	Timeout int
 }
 
 // From creates an instance of CoreRequest with values

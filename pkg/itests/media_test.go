@@ -10,11 +10,7 @@
 package itests
 
 import (
-	"fmt"
-	"os"
-	"strconv"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 
@@ -26,23 +22,6 @@ func TestMedia(t *testing.T) {
 
 	config := loadTestConfiguration(t)
 	client := config.newTestClient(t, "")
-
-	testDelay := os.Getenv(TestDelay)
-	if testDelay != "" {
-		testDelayInt, err := strconv.Atoi(testDelay)
-		if err != nil {
-			t.Fatal(err)
-		}
-		messageRequest := blockchyp.MessageRequest{
-			TerminalName: config.DefaultTerminalName,
-			Test:         true,
-			Message:      fmt.Sprintf("Running TestMedia in %v seconds...", testDelay),
-		}
-		if _, err := client.Message(messageRequest); err != nil {
-			t.Fatal(err)
-		}
-		time.Sleep(time.Duration(testDelayInt) * time.Second)
-	}
 
 	// setup request object
 	request := blockchyp.MediaRequest{}

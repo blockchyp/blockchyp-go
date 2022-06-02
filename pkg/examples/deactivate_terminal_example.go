@@ -20,8 +20,7 @@ func deactivateTerminalExample() {
 
 	// setup request object
 	request := blockchyp.TerminalDeactivationRequest{
-		TerminalID: randomID(),
-		Timeout:    120,
+		TerminalID: "<TERMINAL ID>",
 	}
 
 	response, err := client.DeactivateTerminal(request)

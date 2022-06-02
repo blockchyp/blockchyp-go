@@ -2264,8 +2264,7 @@ func deactivateTerminalExample() {
 
     // setup request object
     request := blockchyp.TerminalDeactivationRequest{
-        TerminalID: randomID(),
-        Timeout:    120,
+        TerminalID: "<TERMINAL ID>",
     }
 
     response, err := client.DeactivateTerminal(request)
@@ -3786,6 +3785,7 @@ package main
 import (
     "fmt"
     "log"
+    "os"
 
     blockchyp "github.com/blockchyp/blockchyp-go"
 )
@@ -3808,7 +3808,11 @@ func uploadMediaExample() {
         UploadID: "<RANDOM ID>",
     }
 
-    response, err := client.UploadMedia(request)
+    file, err := os.Open("filename.png")
+    if err != nil {
+        log.Fatal(err)
+    }
+    response, err := client.UploadMedia(request, file)
 
     if err != nil {
         log.Fatal(err)
@@ -4135,7 +4139,7 @@ func updateSlideShowExample() {
         Delay: 5,
         Slides: []*blockchyp.Slide{
             &blockchyp.Slide{
-                MediaID: setupResponse.ID,
+                MediaID: "<MEDIA ID>",
             },
         },
     }
