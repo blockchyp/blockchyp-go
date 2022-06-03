@@ -1050,7 +1050,7 @@ type AuthorizationRequest struct {
 	// Cryptocurrency indicates that the transaction should be a cryptocurrency
 	// transaction. Value should be a crypto currency code (ETH, BTC) or ANY to
 	// prompt the user to choose from supported cryptocurrencies.
-	Cryptocurrency *string `json:"cryptocurrency"`
+	Cryptocurrency *string `json:"cryptocurrency,omitempty"`
 
 	// CryptoNetwork is an optional parameter that can be used to force a crypto
 	// transaction onto a level one or level two network. Valid values are L1 and
