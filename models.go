@@ -1055,21 +1055,21 @@ type AuthorizationRequest struct {
 	// CryptoNetwork is an optional parameter that can be used to force a crypto
 	// transaction onto a level one or level two network. Valid values are L1 and
 	// L2. Defaults to L1.
-	CryptoNetwork *string `json:"cryptoNetwork"`
+	CryptoNetwork *string `json:"cryptoNetwork,omitempty"`
 
 	// CryptoReceiveAddress can be used to specify a specific receive address for
 	// a crypto transaction. Disabled by default. This should only be used by
 	// sophisticated users with access to properly configured hot wallets.
-	CryptoReceiveAddress *string `json:"cryptoReceiveAddress"`
+	CryptoReceiveAddress *string `json:"cryptoReceiveAddress,omitempty"`
 
 	// PaymentRequestLabel can optionally add a label to the payment request if
 	// the target cryptocurrency supports labels. Defaults to the merchant's DBA
 	// Name.
-	PaymentRequestLabel *string `json:"paymentRequestLabel"`
+	PaymentRequestLabel *string `json:"paymentRequestLabel,omitempty"`
 
 	// PaymentRequestMessage can optionally add a message to the payment request
 	// if the target cryptocurrency supports labels. Defaults to empty.
-	PaymentRequestMessage *string `json:"paymentRequestMessage"`
+	PaymentRequestMessage *string `json:"paymentRequestMessage,omitempty"`
 }
 
 // BalanceRequest contains a request for the remaining balance on a payment
