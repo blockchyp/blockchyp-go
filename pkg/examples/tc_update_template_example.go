@@ -23,7 +23,6 @@ func tcUpdateTemplateExample() {
 		Alias:   "HIPPA",
 		Name:    "HIPPA Disclosure",
 		Content: "Lorem ipsum dolor sit amet.",
-		Timeout: 120,
 	}
 
 	response, err := client.TCUpdateTemplate(request)

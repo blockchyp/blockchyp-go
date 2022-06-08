@@ -20,7 +20,7 @@ func deleteSurveyQuestionExample() {
 
 	// setup request object
 	request := blockchyp.SurveyQuestionRequest{
-		QuestionID: "XXXXXXXX",
+		QuestionID: "<QUESTION ID>",
 	}
 
 	response, err := client.DeleteSurveyQuestion(request)

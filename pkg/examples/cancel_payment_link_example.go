@@ -20,7 +20,7 @@ func cancelPaymentLinkExample() {
 
 	// setup request object
 	request := blockchyp.CancelPaymentLinkRequest{
-		LinkCode: "Payment link code to cancel",
+		LinkCode: "<PAYMENT LINK CODE>",
 	}
 
 	response, err := client.CancelPaymentLink(request)

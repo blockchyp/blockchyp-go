@@ -136,6 +136,8 @@ type CommandLineArguments struct {
 	Delay                       int    `arg:"delay"`
 	SlideShowID                 string `arg:"slideShowId"`
 	AssetID                     string `arg:"assetId"`
+	JSON                        string `args:"json"`
+	JSONFile                    string `args:"jsonFile"`
 }
 
 var defaultSettings = &ConfigSettings{

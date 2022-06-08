@@ -21,7 +21,7 @@ func batchHistoryExample() {
 	// setup request object
 	request := blockchyp.BatchHistoryRequest{
 		MaxResults: 250,
-		StartIndex: 1,
+		StartIndex: 0,
 	}
 
 	response, err := client.BatchHistory(request)

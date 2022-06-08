@@ -21,7 +21,7 @@ func updateCustomerExample() {
 	// setup request object
 	request := blockchyp.UpdateCustomerRequest{
 		Customer: blockchyp.Customer{
-			ID:           "ID of the customer to update",
+			ID:           "<CUSTOMER ID>",
 			CustomerRef:  "Customer reference string",
 			FirstName:    "FirstName",
 			LastName:     "LastName",

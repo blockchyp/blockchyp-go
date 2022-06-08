@@ -20,6 +20,7 @@ func updateSurveyQuestionExample() {
 
 	// setup request object
 	request := blockchyp.SurveyQuestion{
+		ID:           "<QUESTION ID>",
 		Ordinal:      1,
 		QuestionText: "Would you shop here again?",
 		QuestionType: "yes_no",

@@ -20,7 +20,7 @@ func batchDetailsExample() {
 
 	// setup request object
 	request := blockchyp.BatchDetailsRequest{
-		BatchID: "BATCHID",
+		BatchID: "<BATCH ID>",
 	}
 
 	response, err := client.BatchDetails(request)

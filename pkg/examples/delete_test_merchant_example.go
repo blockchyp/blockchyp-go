@@ -20,7 +20,7 @@ func deleteTestMerchantExample() {
 
 	// setup request object
 	request := blockchyp.MerchantProfileRequest{
-		MerchantID: "ID for the test merchant being deleted.",
+		MerchantID: "<MERCHANT ID>",
 	}
 
 	response, err := client.DeleteTestMerchant(request)

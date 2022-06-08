@@ -20,7 +20,7 @@ func deleteMediaAssetExample() {
 
 	// setup request object
 	request := blockchyp.MediaRequest{
-		Timeout: 120,
+		MediaID: "<MEDIA ASSET ID>",
 	}
 
 	response, err := client.DeleteMediaAsset(request)

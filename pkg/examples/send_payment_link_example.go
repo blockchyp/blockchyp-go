@@ -20,9 +20,10 @@ func sendPaymentLinkExample() {
 
 	// setup request object
 	request := blockchyp.PaymentLinkRequest{
-		Amount:      "199.99",
-		Description: "Widget",
-		Subject:     "Widget invoice",
+		TransactionRef: "<TX REF>",
+		Amount:         "199.99",
+		Description:    "Widget",
+		Subject:        "Widget invoice",
 		Transaction: &blockchyp.TransactionDisplayTransaction{
 			Subtotal: "195.00",
 			Tax:      "4.99",

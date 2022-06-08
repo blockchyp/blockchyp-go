@@ -21,6 +21,7 @@ func transactionHistoryExample() {
 	// setup request object
 	request := blockchyp.TransactionHistoryRequest{
 		MaxResults: 10,
+		BatchID:    "<BATCH ID>",
 	}
 
 	response, err := client.TransactionHistory(request)

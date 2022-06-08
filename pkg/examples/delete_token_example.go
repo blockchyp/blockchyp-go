@@ -20,7 +20,7 @@ func deleteTokenExample() {
 
 	// setup request object
 	request := blockchyp.DeleteTokenRequest{
-		Token: "Token to delete",
+		Token: "<TOKEN>",
 	}
 
 	response, err := client.DeleteToken(request)

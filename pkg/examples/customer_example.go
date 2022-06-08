@@ -20,7 +20,7 @@ func customerExample() {
 
 	// setup request object
 	request := blockchyp.CustomerRequest{
-		CustomerID: "ID of the customer to retrieve",
+		CustomerID: "<CUSTOMER ID>",
 	}
 
 	response, err := client.Customer(request)

@@ -19,9 +19,7 @@ func mediaExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.MediaRequest{
-		Timeout: 120,
-	}
+	request := blockchyp.MediaRequest{}
 
 	response, err := client.Media(request)
 

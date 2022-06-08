@@ -19,9 +19,7 @@ func terminalsExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.TerminalProfileRequest{
-		Timeout: 120,
-	}
+	request := blockchyp.TerminalProfileRequest{}
 
 	response, err := client.Terminals(request)
 

@@ -20,7 +20,7 @@ func tokenMetadataExample() {
 
 	// setup request object
 	request := blockchyp.TokenMetadataRequest{
-		Token: "Token to retrieve",
+		Token: "<TOKEN>",
 	}
 
 	response, err := client.TokenMetadata(request)

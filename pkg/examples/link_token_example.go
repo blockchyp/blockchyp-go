@@ -20,8 +20,8 @@ func linkTokenExample() {
 
 	// setup request object
 	request := blockchyp.LinkTokenRequest{
-		Token:      "Token to link",
-		CustomerID: "Customer to link",
+		Token:      "<TOKEN>",
+		CustomerID: "<CUSTOMER ID>",
 	}
 
 	response, err := client.LinkToken(request)

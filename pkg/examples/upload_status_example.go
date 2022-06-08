@@ -20,7 +20,7 @@ func uploadStatusExample() {
 
 	// setup request object
 	request := blockchyp.UploadStatusRequest{
-		Timeout: 120,
+		UploadID: "<UPLOAD ID>",
 	}
 
 	response, err := client.UploadStatus(request)

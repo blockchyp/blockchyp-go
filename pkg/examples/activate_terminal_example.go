@@ -20,8 +20,8 @@ func activateTerminalExample() {
 
 	// setup request object
 	request := blockchyp.TerminalActivationRequest{
-		TerminalName: "Test Terminal",
-		Timeout:      120,
+		TerminalName:   "Test Terminal",
+		ActivationCode: "<ACTIVATION CODE>",
 	}
 
 	response, err := client.ActivateTerminal(request)

@@ -20,7 +20,16 @@ func updateMerchantExample() {
 
 	// setup request object
 	request := blockchyp.MerchantProfile{
-		Test: true,
+		MerchantID:  "<MERCHANT ID>",
+		Test:        true,
+		DBAName:     "Test Merchant",
+		CompanyName: "Test Merchant",
+		BillingAddress: blockchyp.Address{
+			Address1:        "1060 West Addison",
+			City:            "Chicago",
+			StateOrProvince: "IL",
+			PostalCode:      "60613",
+		},
 	}
 
 	response, err := client.UpdateMerchant(request)

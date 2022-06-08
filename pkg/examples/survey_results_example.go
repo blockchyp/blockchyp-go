@@ -20,7 +20,7 @@ func surveyResultsExample() {
 
 	// setup request object
 	request := blockchyp.SurveyResultsRequest{
-		QuestionID: "<SURVEY QUESTION ID>",
+		QuestionID: "<QUESTION ID>",
 	}
 
 	response, err := client.SurveyResults(request)

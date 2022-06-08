@@ -20,8 +20,8 @@ func unlinkTokenExample() {
 
 	// setup request object
 	request := blockchyp.UnlinkTokenRequest{
-		Token:      "Token to unlink",
-		CustomerID: "Customer to unlink",
+		Token:      "<TOKEN>",
+		CustomerID: "<CUSTOMER ID>",
 	}
 
 	response, err := client.UnlinkToken(request)

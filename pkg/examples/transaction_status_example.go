@@ -20,7 +20,7 @@ func transactionStatusExample() {
 
 	// setup request object
 	request := blockchyp.TransactionStatusRequest{
-		TransactionID: "ID of transaction to retrieve",
+		TransactionID: "<TRANSACTION ID>",
 	}
 
 	response, err := client.TransactionStatus(request)

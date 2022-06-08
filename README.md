@@ -333,7 +333,8 @@ func captureExample() {
     // setup request object
     request := blockchyp.CaptureRequest{
         Test:          true,
-        TransactionID: "<PREAUTH TRANSACTION ID>",
+        TransactionID: "<ORIGINAL TRANSACTION ID>",
+        Amount:        "32.00",
     }
 
     response, err := client.Capture(request)
@@ -944,9 +945,10 @@ func sendPaymentLinkExample() {
 
     // setup request object
     request := blockchyp.PaymentLinkRequest{
-        Amount:      "199.99",
-        Description: "Widget",
-        Subject:     "Widget invoice",
+        TransactionRef: "<TX REF>",
+        Amount:         "199.99",
+        Description:    "Widget",
+        Subject:        "Widget invoice",
         Transaction: &blockchyp.TransactionDisplayTransaction{
             Subtotal: "195.00",
             Tax:      "4.99",
@@ -1018,7 +1020,7 @@ func cancelPaymentLinkExample() {
 
     // setup request object
     request := blockchyp.CancelPaymentLinkRequest{
-        LinkCode: "Payment link code to cancel",
+        LinkCode: "<PAYMENT LINK CODE>",
     }
 
     response, err := client.CancelPaymentLink(request)
@@ -1074,7 +1076,7 @@ func transactionStatusExample() {
 
     // setup request object
     request := blockchyp.TransactionStatusRequest{
-        TransactionID: "ID of transaction to retrieve",
+        TransactionID: "<TRANSACTION ID>",
     }
 
     response, err := client.TransactionStatus(request)
@@ -1203,7 +1205,7 @@ func batchHistoryExample() {
     // setup request object
     request := blockchyp.BatchHistoryRequest{
         MaxResults: 250,
-        StartIndex: 1,
+        StartIndex: 0,
     }
 
     response, err := client.BatchHistory(request)
@@ -1260,7 +1262,7 @@ func batchDetailsExample() {
 
     // setup request object
     request := blockchyp.BatchDetailsRequest{
-        BatchID: "BATCHID",
+        BatchID: "<BATCH ID>",
     }
 
     response, err := client.BatchDetails(request)
@@ -1357,6 +1359,7 @@ func transactionHistoryExample() {
     // setup request object
     request := blockchyp.TransactionHistoryRequest{
         MaxResults: 10,
+        BatchID:    "<BATCH ID>",
     }
 
     response, err := client.TransactionHistory(request)
@@ -2209,9 +2212,7 @@ func terminalsExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.TerminalProfileRequest{
-        Timeout: 120,
-    }
+    request := blockchyp.TerminalProfileRequest{}
 
     response, err := client.Terminals(request)
 
@@ -2325,8 +2326,8 @@ func activateTerminalExample() {
 
     // setup request object
     request := blockchyp.TerminalActivationRequest{
-        TerminalName: "Test Terminal",
-        Timeout:      120,
+        TerminalName:   "Test Terminal",
+        ActivationCode: "<ACTIVATION CODE>",
     }
 
     response, err := client.ActivateTerminal(request)
@@ -2504,9 +2505,7 @@ func tcTemplatesExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.TermsAndConditionsTemplateRequest{
-        Timeout: 120,
-    }
+    request := blockchyp.TermsAndConditionsTemplateRequest{}
 
     response, err := client.TCTemplates(request)
 
@@ -2556,7 +2555,7 @@ func tcTemplateExample() {
 
     // setup request object
     request := blockchyp.TermsAndConditionsTemplateRequest{
-        Timeout: 120,
+        TemplateID: "<TEMPLATE ID>",
     }
 
     response, err := client.TCTemplate(request)
@@ -2618,7 +2617,6 @@ func tcUpdateTemplateExample() {
         Alias:   "HIPPA",
         Name:    "HIPPA Disclosure",
         Content: "Lorem ipsum dolor sit amet.",
-        Timeout: 120,
     }
 
     response, err := client.TCUpdateTemplate(request)
@@ -2673,7 +2671,7 @@ func tcDeleteTemplateExample() {
 
     // setup request object
     request := blockchyp.TermsAndConditionsTemplateRequest{
-        Timeout: 120,
+        TemplateID: "<TEMPLATE ID>",
     }
 
     response, err := client.TCDeleteTemplate(request)
@@ -2734,7 +2732,7 @@ func tcLogExample() {
 
     // setup request object
     request := blockchyp.TermsAndConditionsLogRequest{
-        Timeout: 120,
+        LogEntryID: "<LOG ENTRY ID>",
     }
 
     response, err := client.TCLog(request)
@@ -2788,7 +2786,7 @@ func tcEntryExample() {
 
     // setup request object
     request := blockchyp.TermsAndConditionsLogRequest{
-        Timeout: 120,
+        LogEntryID: "<ENTRY ID>",
     }
 
     response, err := client.TCEntry(request)
@@ -2922,7 +2920,7 @@ func tokenMetadataExample() {
 
     // setup request object
     request := blockchyp.TokenMetadataRequest{
-        Token: "Token to retrieve",
+        Token: "<TOKEN>",
     }
 
     response, err := client.TokenMetadata(request)
@@ -2974,8 +2972,8 @@ func linkTokenExample() {
 
     // setup request object
     request := blockchyp.LinkTokenRequest{
-        Token:      "Token to link",
-        CustomerID: "Customer to link",
+        Token:      "<TOKEN>",
+        CustomerID: "<CUSTOMER ID>",
     }
 
     response, err := client.LinkToken(request)
@@ -3029,8 +3027,8 @@ func unlinkTokenExample() {
 
     // setup request object
     request := blockchyp.UnlinkTokenRequest{
-        Token:      "Token to unlink",
-        CustomerID: "Customer to unlink",
+        Token:      "<TOKEN>",
+        CustomerID: "<CUSTOMER ID>",
     }
 
     response, err := client.UnlinkToken(request)
@@ -3082,7 +3080,7 @@ func deleteTokenExample() {
 
     // setup request object
     request := blockchyp.DeleteTokenRequest{
-        Token: "Token to delete",
+        Token: "<TOKEN>",
     }
 
     response, err := client.DeleteToken(request)
@@ -3170,7 +3168,7 @@ func updateCustomerExample() {
     // setup request object
     request := blockchyp.UpdateCustomerRequest{
         Customer: blockchyp.Customer{
-            ID:           "ID of the customer to update",
+            ID:           "<CUSTOMER ID>",
             CustomerRef:  "Customer reference string",
             FirstName:    "FirstName",
             LastName:     "LastName",
@@ -3231,7 +3229,7 @@ func customerExample() {
 
     // setup request object
     request := blockchyp.CustomerRequest{
-        CustomerID: "ID of the customer to retrieve",
+        CustomerID: "<CUSTOMER ID>",
     }
 
     response, err := client.Customer(request)
@@ -3336,7 +3334,7 @@ func deleteCustomerExample() {
 
     // setup request object
     request := blockchyp.DeleteCustomerRequest{
-        CustomerID: "ID of the customer to delete",
+        CustomerID: "<CUSTOMER ID>",
     }
 
     response, err := client.DeleteCustomer(request)
@@ -3452,7 +3450,7 @@ func surveyQuestionExample() {
 
     // setup request object
     request := blockchyp.SurveyQuestionRequest{
-        QuestionID: "XXXXXXXX",
+        QuestionID: "<QUESTION ID>",
     }
 
     response, err := client.SurveyQuestion(request)
@@ -3512,6 +3510,7 @@ func updateSurveyQuestionExample() {
 
     // setup request object
     request := blockchyp.SurveyQuestion{
+        ID:           "<QUESTION ID>",
         Ordinal:      1,
         QuestionText: "Would you shop here again?",
         QuestionType: "yes_no",
@@ -3566,7 +3565,7 @@ func deleteSurveyQuestionExample() {
 
     // setup request object
     request := blockchyp.SurveyQuestionRequest{
-        QuestionID: "XXXXXXXX",
+        QuestionID: "<QUESTION ID>",
     }
 
     response, err := client.DeleteSurveyQuestion(request)
@@ -3629,7 +3628,7 @@ func surveyResultsExample() {
 
     // setup request object
     request := blockchyp.SurveyResultsRequest{
-        QuestionID: "<SURVEY QUESTION ID>",
+        QuestionID: "<QUESTION ID>",
     }
 
     response, err := client.SurveyResults(request)
@@ -3719,9 +3718,7 @@ func mediaExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.MediaRequest{
-        Timeout: 120,
-    }
+    request := blockchyp.MediaRequest{}
 
     response, err := client.Media(request)
 
@@ -3867,7 +3864,7 @@ func uploadStatusExample() {
 
     // setup request object
     request := blockchyp.UploadStatusRequest{
-        Timeout: 120,
+        UploadID: "<UPLOAD ID>",
     }
 
     response, err := client.UploadStatus(request)
@@ -3972,7 +3969,7 @@ func deleteMediaAssetExample() {
 
     // setup request object
     request := blockchyp.MediaRequest{
-        Timeout: 120,
+        MediaID: "<MEDIA ASSET ID>",
     }
 
     response, err := client.DeleteMediaAsset(request)
@@ -4364,7 +4361,16 @@ func updateBrandingAssetExample() {
 
     // setup request object
     request := blockchyp.BrandingAsset{
-        Timeout: 120,
+        MediaID:   "<MEDIA ID>",
+        Padded:    true,
+        Ordinal:   10,
+        StartDate: "01/06/2021",
+        StartTime: "14:00",
+        EndDate:   "11/05/2024",
+        EndTime:   "16:00",
+        Notes:     "Test Branding Asset",
+        Preview:   false,
+        Enabled:   true,
     }
 
     response, err := client.UpdateBrandingAsset(request)
@@ -4715,7 +4721,16 @@ func updateMerchantExample() {
 
     // setup request object
     request := blockchyp.MerchantProfile{
-        Test: true,
+        MerchantID:  "<MERCHANT ID>",
+        Test:        true,
+        DBAName:     "Test Merchant",
+        CompanyName: "Test Merchant",
+        BillingAddress: blockchyp.Address{
+            Address1:        "1060 West Addison",
+            City:            "Chicago",
+            StateOrProvince: "IL",
+            PostalCode:      "60613",
+        },
     }
 
     response, err := client.UpdateMerchant(request)
@@ -4766,7 +4781,7 @@ func merchantUsersExample() {
 
     // setup request object
     request := blockchyp.MerchantProfileRequest{
-        MerchantID: "XXXXXXXXXXXXX",
+        MerchantID: "<MERCHANT ID>",
     }
 
     response, err := client.MerchantUsers(request)
@@ -4878,8 +4893,8 @@ func addTestMerchantExample() {
 
     // setup request object
     request := blockchyp.AddTestMerchantRequest{
-        DBAName:     "DBA name.",
-        CompanyName: "test merchant customer name.",
+        DBAName:     "DBA Name",
+        CompanyName: "Corporate Entity Name",
     }
 
     response, err := client.AddTestMerchant(request)
@@ -4930,7 +4945,7 @@ func deleteTestMerchantExample() {
 
     // setup request object
     request := blockchyp.MerchantProfileRequest{
-        MerchantID: "ID for the test merchant being deleted.",
+        MerchantID: "<MERCHANT ID>",
     }
 
     response, err := client.DeleteTestMerchant(request)

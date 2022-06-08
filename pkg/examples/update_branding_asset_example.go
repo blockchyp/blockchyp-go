@@ -20,7 +20,16 @@ func updateBrandingAssetExample() {
 
 	// setup request object
 	request := blockchyp.BrandingAsset{
-		Timeout: 120,
+		MediaID:   "<MEDIA ID>",
+		Padded:    true,
+		Ordinal:   10,
+		StartDate: "01/06/2021",
+		StartTime: "14:00",
+		EndDate:   "11/05/2024",
+		EndTime:   "16:00",
+		Notes:     "Test Branding Asset",
+		Preview:   false,
+		Enabled:   true,
 	}
 
 	response, err := client.UpdateBrandingAsset(request)

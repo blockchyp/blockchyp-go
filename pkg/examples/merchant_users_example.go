@@ -20,7 +20,7 @@ func merchantUsersExample() {
 
 	// setup request object
 	request := blockchyp.MerchantProfileRequest{
-		MerchantID: "XXXXXXXXXXXXX",
+		MerchantID: "<MERCHANT ID>",
 	}
 
 	response, err := client.MerchantUsers(request)

@@ -20,7 +20,7 @@ func tcTemplateExample() {
 
 	// setup request object
 	request := blockchyp.TermsAndConditionsTemplateRequest{
-		Timeout: 120,
+		TemplateID: "<TEMPLATE ID>",
 	}
 
 	response, err := client.TCTemplate(request)

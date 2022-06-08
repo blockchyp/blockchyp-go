@@ -20,7 +20,7 @@ func deleteCustomerExample() {
 
 	// setup request object
 	request := blockchyp.DeleteCustomerRequest{
-		CustomerID: "ID of the customer to delete",
+		CustomerID: "<CUSTOMER ID>",
 	}
 
 	response, err := client.DeleteCustomer(request)

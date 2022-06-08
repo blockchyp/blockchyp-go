@@ -20,7 +20,7 @@ func tcEntryExample() {
 
 	// setup request object
 	request := blockchyp.TermsAndConditionsLogRequest{
-		Timeout: 120,
+		LogEntryID: "<ENTRY ID>",
 	}
 
 	response, err := client.TCEntry(request)

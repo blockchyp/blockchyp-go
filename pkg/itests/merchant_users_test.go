@@ -24,9 +24,7 @@ func TestMerchantUsers(t *testing.T) {
 	client := config.newTestClient(t, "")
 
 	// setup request object
-	request := blockchyp.MerchantProfileRequest{
-		Timeout: 120,
-	}
+	request := blockchyp.MerchantProfileRequest{}
 
 	logObj(t, "Request:", request)
 
