@@ -1494,7 +1494,7 @@ func (client *Client) ActivateTerminal(request TerminalActivationRequest) (*Ackn
 	return &response, err
 }
 
-// TcTemplates returns a list of terms and conditions templates associated
+// TCTemplates returns a list of terms and conditions templates associated
 // with a merchant account.
 func (client *Client) TCTemplates(request TermsAndConditionsTemplateRequest) (*TermsAndConditionsTemplateResponse, error) {
 	var response TermsAndConditionsTemplateResponse
@@ -1510,7 +1510,7 @@ func (client *Client) TCTemplates(request TermsAndConditionsTemplateRequest) (*T
 	return &response, err
 }
 
-// TcTemplate returns a single terms and conditions template.
+// TCTemplate returns a single terms and conditions template.
 func (client *Client) TCTemplate(request TermsAndConditionsTemplateRequest) (*TermsAndConditionsTemplate, error) {
 	var response TermsAndConditionsTemplate
 
@@ -1525,7 +1525,7 @@ func (client *Client) TCTemplate(request TermsAndConditionsTemplateRequest) (*Te
 	return &response, err
 }
 
-// TcUpdateTemplate updates or creates a terms and conditions template.
+// TCUpdateTemplate updates or creates a terms and conditions template.
 func (client *Client) TCUpdateTemplate(request TermsAndConditionsTemplate) (*TermsAndConditionsTemplate, error) {
 	var response TermsAndConditionsTemplate
 
@@ -1540,7 +1540,7 @@ func (client *Client) TCUpdateTemplate(request TermsAndConditionsTemplate) (*Ter
 	return &response, err
 }
 
-// TcDeleteTemplate deletes a single terms and conditions template.
+// TCDeleteTemplate deletes a single terms and conditions template.
 func (client *Client) TCDeleteTemplate(request TermsAndConditionsTemplateRequest) (*Acknowledgement, error) {
 	var response Acknowledgement
 
@@ -1555,7 +1555,7 @@ func (client *Client) TCDeleteTemplate(request TermsAndConditionsTemplateRequest
 	return &response, err
 }
 
-// TcLog returns up to 250 entries from the Terms and Conditions log.
+// TCLog returns up to 250 entries from the Terms and Conditions log.
 func (client *Client) TCLog(request TermsAndConditionsLogRequest) (*TermsAndConditionsLogResponse, error) {
 	var response TermsAndConditionsLogResponse
 
@@ -1570,7 +1570,7 @@ func (client *Client) TCLog(request TermsAndConditionsLogRequest) (*TermsAndCond
 	return &response, err
 }
 
-// TcEntry returns a single detailed Terms and Conditions entry.
+// TCEntry returns a single detailed Terms and Conditions entry.
 func (client *Client) TCEntry(request TermsAndConditionsLogRequest) (*TermsAndConditionsLogEntry, error) {
 	var response TermsAndConditionsLogEntry
 
