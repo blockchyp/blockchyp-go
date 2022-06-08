@@ -25,7 +25,7 @@ func TestMerchantPlatforms(t *testing.T) {
 
 	// setup request object
 	setupRequest := blockchyp.AddTestMerchantRequest{
-		DbaName:     "Test Merchant",
+		DBAName:     "Test Merchant",
 		CompanyName: "Test Merchant",
 	}
 

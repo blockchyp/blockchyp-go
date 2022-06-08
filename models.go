@@ -27,6 +27,7 @@ const (
 	CardTypeDebit
 	CardTypeEBT
 	CardTypeBlockchainGift
+	CardTypeHealthcare
 )
 
 // SignatureFormat is used to specify the output format for customer
@@ -80,6 +81,18 @@ const (
 	AVSResponseAddressMatch                          = "address_match"
 	AVSResponsePostalCodeMatch                       = "zip_match"
 	AVSResponseAddressAndPostalCodeMatch             = "match"
+)
+
+// HealthcareType is a category of healthcare.
+type HealthcareType string
+
+// HealthcareTypes.
+const (
+	HealthcareTypeHealthcare   = "healthcare"
+	HealthcareTypePrescription = "prescription"
+	HealthcareTypeVision       = "vision"
+	HealthcareTypeClinic       = "clinic"
+	HealthcareTypeDental       = "dental"
 )
 
 // ReceiptSuggestions contains EMV fields we recommend developers put on their
@@ -1003,21 +1016,6 @@ type AuthorizationRequest struct {
 	// TaxAmount is the tax amount.
 	TaxAmount string `json:"taxAmount,omitempty"`
 
-	// FSAEligibleAmount is the amount of the transaction that should be charged
-	// to an FSA card. This amount may be less than the transaction total, in
-	// which case only this amount will be charged if an FSA card is presented.
-	// If the FSA amount is paid on an FSA card, then the FSA amount authorized
-	// will be indicated on the response.
-	FSAEligibleAmount string `json:"fsaEligibleAmount,omitempty"`
-
-	// HSAEligibleAmount is the amount of the transaction that should be charged
-	// to an HSA card.
-	HSAEligibleAmount string `json:"hsaEligibleAmount,omitempty"`
-
-	// EBTEligibleAmount is the amount of the transaction that should be charged
-	// to an EBT card.
-	EBTEligibleAmount string `json:"ebtEligibleAmount,omitempty"`
-
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
@@ -1044,8 +1042,11 @@ type AuthorizationRequest struct {
 	// transaction.
 	AltPrices map[string]string `json:"altPrices,omitempty"`
 
-	// Customer contains suggested receipt fields.
+	// Customer contains customer information.
 	Customer *Customer `json:"customer"`
+
+	// Healthcare contains details for HSA/FSA transactions.
+	Healthcare *Healthcare `json:"healthcare,omitempty"`
 
 	// Cryptocurrency indicates that the transaction should be a cryptocurrency
 	// transaction. Value should be a crypto currency code (ETH, BTC) or ANY to
@@ -1390,23 +1391,11 @@ type RefundRequest struct {
 	// TaxAmount is the tax amount.
 	TaxAmount string `json:"taxAmount,omitempty"`
 
-	// FSAEligibleAmount is the amount of the transaction that should be charged
-	// to an FSA card. This amount may be less than the transaction total, in
-	// which case only this amount will be charged if an FSA card is presented.
-	// If the FSA amount is paid on an FSA card, then the FSA amount authorized
-	// will be indicated on the response.
-	FSAEligibleAmount string `json:"fsaEligibleAmount,omitempty"`
-
-	// HSAEligibleAmount is the amount of the transaction that should be charged
-	// to an HSA card.
-	HSAEligibleAmount string `json:"hsaEligibleAmount,omitempty"`
-
-	// EBTEligibleAmount is the amount of the transaction that should be charged
-	// to an EBT card.
-	EBTEligibleAmount string `json:"ebtEligibleAmount,omitempty"`
-
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// Healthcare contains details for HSA/FSA transactions.
+	Healthcare *Healthcare `json:"healthcare,omitempty"`
 }
 
 // CaptureRequest contains the information needed to capture a preauth.
@@ -1470,21 +1459,6 @@ type CaptureRequest struct {
 
 	// TaxAmount is the tax amount.
 	TaxAmount string `json:"taxAmount,omitempty"`
-
-	// FSAEligibleAmount is the amount of the transaction that should be charged
-	// to an FSA card. This amount may be less than the transaction total, in
-	// which case only this amount will be charged if an FSA card is presented.
-	// If the FSA amount is paid on an FSA card, then the FSA amount authorized
-	// will be indicated on the response.
-	FSAEligibleAmount string `json:"fsaEligibleAmount,omitempty"`
-
-	// HSAEligibleAmount is the amount of the transaction that should be charged
-	// to an HSA card.
-	HSAEligibleAmount string `json:"hsaEligibleAmount,omitempty"`
-
-	// EBTEligibleAmount is the amount of the transaction that should be charged
-	// to an EBT card.
-	EBTEligibleAmount string `json:"ebtEligibleAmount,omitempty"`
 }
 
 // CaptureResponse contains the response to a capture request.
@@ -3534,8 +3508,8 @@ type AddTestMerchantRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// DbaName the DBA name for the test merchant.
-	DbaName string `json:"dbaName"`
+	// DBAName the DBA name for the test merchant.
+	DBAName string `json:"dbaName"`
 
 	// CompanyName is the corporate name for the test merchant.
 	CompanyName string `json:"companyName"`
@@ -3719,8 +3693,8 @@ type MerchantProfile struct {
 	// CompanyName is the merchant's company name.
 	CompanyName string `json:"companyName"`
 
-	// DbaName is the dba name of the merchant.
-	DbaName string `json:"dbaName"`
+	// DBAName is the dba name of the merchant.
+	DBAName string `json:"dbaName"`
 
 	// ContactName is the contact name for the merchant.
 	ContactName string `json:"contactName"`
@@ -3842,20 +3816,20 @@ type MerchantProfile struct {
 	// MasterCard indicates that MasterCard is supported.
 	MasterCard bool `json:"masterCard"`
 
-	// Amex indicates that American Express is supported.
-	Amex bool `json:"amex"`
+	// AMEX indicates that American Express is supported.
+	AMEX bool `json:"amex"`
 
 	// Discover indicates that Discover cards are supported.
 	Discover bool `json:"discover"`
 
-	// Jcb indicates that JCB (Japan Card Bureau) cards are supported.
-	Jcb bool `json:"jcb"`
+	// JCB indicates that JCB (Japan Card Bureau) cards are supported.
+	JCB bool `json:"jcb"`
 
 	// UnionPay indicates that China Union Pay cards are supported.
 	UnionPay bool `json:"unionPay"`
 
-	// ContactlessEmv indicates that contactless EMV cards are supported.
-	ContactlessEmv bool `json:"contactlessEmv"`
+	// ContactlessEMV indicates that contactless EMV cards are supported.
+	ContactlessEMV bool `json:"contactlessEmv"`
 
 	// ManualEntryEnabled indicates that manual card entry is enabled.
 	ManualEntryEnabled bool `json:"manualEntryEnabled"`
@@ -3897,8 +3871,8 @@ type MerchantProfileResponse struct {
 	// CompanyName is the merchant's company name.
 	CompanyName string `json:"companyName"`
 
-	// DbaName is the dba name of the merchant.
-	DbaName string `json:"dbaName"`
+	// DBAName is the dba name of the merchant.
+	DBAName string `json:"dbaName"`
 
 	// ContactName is the contact name for the merchant.
 	ContactName string `json:"contactName"`
@@ -4020,20 +3994,20 @@ type MerchantProfileResponse struct {
 	// MasterCard indicates that MasterCard is supported.
 	MasterCard bool `json:"masterCard"`
 
-	// Amex indicates that American Express is supported.
-	Amex bool `json:"amex"`
+	// AMEX indicates that American Express is supported.
+	AMEX bool `json:"amex"`
 
 	// Discover indicates that Discover cards are supported.
 	Discover bool `json:"discover"`
 
-	// Jcb indicates that JCB (Japan Card Bureau) cards are supported.
-	Jcb bool `json:"jcb"`
+	// JCB indicates that JCB (Japan Card Bureau) cards are supported.
+	JCB bool `json:"jcb"`
 
 	// UnionPay indicates that China Union Pay cards are supported.
 	UnionPay bool `json:"unionPay"`
 
-	// ContactlessEmv indicates that contactless EMV cards are supported.
-	ContactlessEmv bool `json:"contactlessEmv"`
+	// ContactlessEMV indicates that contactless EMV cards are supported.
+	ContactlessEMV bool `json:"contactlessEmv"`
 
 	// ManualEntryEnabled indicates that manual card entry is enabled.
 	ManualEntryEnabled bool `json:"manualEntryEnabled"`
@@ -4367,6 +4341,44 @@ type UnlinkTokenRequest struct {
 
 	// CustomerID BlockChyp assigned customer id.
 	CustomerID string `json:"customerId"`
+}
+
+// Healthcare contains fields for HSA/FSA transactions.
+type Healthcare struct {
+	// Types is a list of healthcare categories in the transaction.
+	Types []HealthcareGroup `json:"types"`
+
+	// IIASVerified indicates that the purchased items were verified against an
+	// Inventory Information Approval System (IIAS).
+	IIASVerified bool `json:"iiasVerified"`
+
+	// IIASExempt indicates that the transaction is exempt from IIAS
+	// verification.
+	IIASExempt bool `json:"iiasExempt"`
+}
+
+// HealthcareGroup is a group of fields for a specific type of healthcare.
+type HealthcareGroup struct {
+	// Type the type of healthcare cost.
+	Type HealthcareType `json:"type"`
+
+	// Amount is the amount of this type.
+	Amount string `json:"amount"`
+
+	// ProviderID the provider ID used for Mastercard and Discover IIAS requests.
+	ProviderID string `json:"providerId"`
+
+	// ServiceTypeCode the service type code used for Mastercard and Discover
+	// IIAS requests.
+	ServiceTypeCode string `json:"serviceTypeCode"`
+
+	// PayerOrCarrierID thr payer ID/carrier ID used for Mastercard and Discover
+	// IIAS requests.
+	PayerOrCarrierID string `json:"payerOrCarrierId"`
+
+	// ApprovalRejectReasonCode the approval or reject reason code used for
+	// Mastercard and Discover IIAS requests.
+	ApprovalRejectReasonCode string `json:"approvalRejectReasonCode"`
 }
 
 // GetMerchantsRequest models a request for merchant information.
@@ -5904,21 +5916,6 @@ type Subtotals struct {
 
 	// TaxAmount is the tax amount.
 	TaxAmount string
-
-	// FSAEligibleAmount is the amount of the transaction that should be charged
-	// to an FSA card. This amount may be less than the transaction total, in
-	// which case only this amount will be charged if an FSA card is presented.
-	// If the FSA amount is paid on an FSA card, then the FSA amount authorized
-	// will be indicated on the response.
-	FSAEligibleAmount string
-
-	// HSAEligibleAmount is the amount of the transaction that should be charged
-	// to an HSA card.
-	HSAEligibleAmount string
-
-	// EBTEligibleAmount is the amount of the transaction that should be charged
-	// to an EBT card.
-	EBTEligibleAmount string
 }
 
 // From creates an instance of Subtotals with values

@@ -25,7 +25,7 @@ func TestAddTestMerchant(t *testing.T) {
 
 	// setup request object
 	request := blockchyp.AddTestMerchantRequest{
-		DbaName:     "Test Merchant",
+		DBAName:     "Test Merchant",
 		CompanyName: "Test Merchant",
 	}
 
@@ -39,7 +39,7 @@ func TestAddTestMerchant(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
-	assert.Equal("Test Merchant", response.DbaName)
+	assert.Equal("Test Merchant", response.DBAName)
 	assert.Equal("Test Merchant", response.CompanyName)
 	assert.True(response.Visa)
 }

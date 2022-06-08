@@ -4878,7 +4878,7 @@ func addTestMerchantExample() {
 
     // setup request object
     request := blockchyp.AddTestMerchantRequest{
-        DbaName:     "DBA name.",
+        DBAName:     "DBA name.",
         CompanyName: "test merchant customer name.",
     }
 

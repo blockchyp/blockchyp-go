@@ -26,7 +26,7 @@ func TestUpdateMerchant(t *testing.T) {
 	// setup request object
 	request := blockchyp.MerchantProfile{
 		Test:        true,
-		DbaName:     "Test Merchant",
+		DBAName:     "Test Merchant",
 		CompanyName: "Test Merchant",
 		BillingAddress: blockchyp.Address{
 			Address1:        "1060 West Addison",
