@@ -331,6 +331,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processDeleteBrandingAsset(client, args)
 	case "ping":
 		processPing(client, args)
+	case "reboot":
+		processReboot(client, args)
 	case "locate":
 		processLocate(client, args)
 	case "enroll":
@@ -2164,6 +2166,24 @@ func processPing(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 		}
 	}
 	res, err := client.Ping(*req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processReboot(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := &blockchyp.PingRequest{}
+
+	if !parseJSONInput(args, req) {
+		validateRequired(args.TerminalName, "terminal")
+		req = &blockchyp.PingRequest{
+			TerminalName: args.TerminalName,
+			Timeout:      args.Timeout,
+		}
+	}
+	res, err := client.Reboot(*req)
 	if err != nil {
 		handleError(&args, err)
 	}
