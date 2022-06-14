@@ -41,18 +41,12 @@ type APIRequestHeaders struct {
 }
 
 func (client *Client) assembleDashboardURL(path string) string {
-
-	buffer := bytes.Buffer{}
-
-	if len(client.GatewayHost) > 0 {
-		buffer.WriteString(client.DashboardHost)
-	} else {
-		buffer.WriteString(DefaultDashboardHost)
+	uri := client.DashboardHost
+	if uri == "" {
+		uri = DefaultDashboardHost
 	}
 
-	buffer.WriteString(path)
-	return buffer.String()
-
+	return uri + path
 }
 
 func (client *Client) assembleGatewayURL(path string, testTx bool) string {

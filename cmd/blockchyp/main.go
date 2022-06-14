@@ -279,7 +279,7 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processGetMerchants(client, args)
 	case "merchant-users":
 		processMerchantUsers(client, args)
-	case "terminals":
+	case "terminals", "list-terminals":
 		processTerminals(client, args)
 	case "deactivate-terminal":
 		processDeactivateTerminal(client, args)
