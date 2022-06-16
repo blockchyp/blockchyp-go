@@ -1371,8 +1371,7 @@ func (client *Client) GetMerchants(request GetMerchantsRequest) (*GetMerchantsRe
 }
 
 // UpdateMerchant adds or updates a merchant account. Can be used to create or
-// update test merchants. Only gateway only partners may create new live
-// merchants.
+// update test merchants. Only gateway partners may create new live merchants.
 func (client *Client) UpdateMerchant(request MerchantProfile) (*MerchantProfileResponse, error) {
 	var response MerchantProfileResponse
 

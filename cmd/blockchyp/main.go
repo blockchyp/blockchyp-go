@@ -395,6 +395,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processTransactionHistory(client, args)
 	case "merchant-profile":
 		processMerchantProfile(client, args)
+	case "update-merchant":
+		processUpdateMerchant(client, args)
 	case "list-queue":
 		processQueueList(client, args)
 	case "delete-queue":
@@ -528,6 +530,25 @@ func processBatchHistory(client *blockchyp.Client, args blockchyp.CommandLineArg
 	}
 
 	ack, err := client.BatchHistory(*request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
+
+}
+
+func processUpdateMerchant(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := &blockchyp.MerchantProfile{}
+
+	if !parseJSONInput(args, request) {
+
+		handleError(&args, errors.New("json input required"))
+
+	}
+
+	ack, err := client.UpdateMerchant(*request)
 	if err != nil {
 		handleError(&args, err)
 	}
