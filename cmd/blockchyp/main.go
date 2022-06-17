@@ -6,6 +6,8 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"net"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -411,8 +413,10 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processLinkToken(client, args)
 	case "unlink-token":
 		processUnlinkToken(client, args)
+	case "drop-terminal-socket":
+		processDropSocket(client, args)
 	default:
-		fatalErrorf("unknown transaction type: %s", args.Type)
+		fatalErrorf("unknown command: %s", cmd)
 	}
 
 }
@@ -435,6 +439,32 @@ func processUnlinkToken(client *blockchyp.Client, args blockchyp.CommandLineArgu
 
 	dumpResponse(&args, ack)
 
+}
+
+func processDropSocket(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	validateRequired(args.TerminalName, "terminal")
+
+	var req blockchyp.TerminalDeactivationRequest
+	if !parseJSONInput(args, &req) {
+		req = blockchyp.TerminalDeactivationRequest{
+			TerminalName: args.TerminalName,
+			TerminalID:   args.TerminalID,
+			Test:         args.Test,
+			Timeout:      args.Timeout,
+		}
+	}
+
+	var res blockchyp.Acknowledgement
+	err := client.GatewayRequest("/api/drop-terminal-socket", http.MethodPost, req, &res, req.Test, req.Timeout)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
 }
 
 func processLinkToken(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
