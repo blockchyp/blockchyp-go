@@ -1248,7 +1248,7 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 	req := &blockchyp.RefundRequest{}
 
 	if !parseJSONInput(args, req) {
-		req := &blockchyp.RefundRequest{
+		req = &blockchyp.RefundRequest{
 			Address:            args.Address,
 			Amount:             args.Amount,
 			DisableSignature:   args.DisableSignature,
