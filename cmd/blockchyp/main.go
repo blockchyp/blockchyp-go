@@ -168,6 +168,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.AssetID, "assetId", "", "id of a branding asset")
 	flag.StringVar(&args.JSON, "json", "", "raw json request, will override any other command line parameters if used")
 	flag.StringVar(&args.JSONFile, "jsonFile", "", "path to a json file to be used for raw json input, will override any other command line parameters if used")
+	flag.StringVar(&args.Profile, "profile", "", "profile to source configuration from in blockchyp.json")
 
 	flag.Parse()
 

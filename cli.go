@@ -3,6 +3,7 @@ package blockchyp
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/user"
@@ -138,6 +139,7 @@ type CommandLineArguments struct {
 	AssetID                     string `arg:"assetId"`
 	JSON                        string `args:"json"`
 	JSONFile                    string `args:"jsonFile"`
+	Profile                     string `args:"profile"`
 }
 
 var defaultSettings = &ConfigSettings{
@@ -183,8 +185,24 @@ func LoadConfigSettings(args CommandLineArguments) (*ConfigSettings, error) {
 		return nil, err
 	}
 
-	config := &ConfigSettings{}
-	err = json.Unmarshal(b, config)
+	var profiles map[string]ConfigSettings
+	if err = json.Unmarshal(b, &profiles); err != nil {
+		if args.Profile != "" {
+			return nil, fmt.Errorf("profile `%s` does not exist", args.Profile)
+		}
 
-	return config, err
+		config := &ConfigSettings{}
+		err = json.Unmarshal(b, config)
+		return config, err
+	}
+
+	if args.Profile == "" {
+		args.Profile = "default"
+	}
+
+	v, ok := profiles[args.Profile]
+	if !ok {
+		return nil, errors.New("default profile must be set")
+	}
+	return &v, nil
 }
