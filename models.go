@@ -2500,7 +2500,7 @@ type AuthorizationResponse struct {
 	// forward due to network problems.
 	StoreAndForward bool `json:"storeAndForward"`
 
-	// Status indicates the current status of a transaction
+	// Status indicates the current status of a transaction.
 	Status string `json:"status"`
 }
 
