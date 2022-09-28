@@ -2499,6 +2499,9 @@ type AuthorizationResponse struct {
 	// StoreAndForward indicates that the transaction was flagged for store and
 	// forward due to network problems.
 	StoreAndForward bool `json:"storeAndForward"`
+
+	// Status indicates the current status of a transaction
+	Status string `json:"status"`
 }
 
 // TransactionStatusRequest models the request for updated information about a
