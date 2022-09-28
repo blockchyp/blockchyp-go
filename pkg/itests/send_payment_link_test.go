@@ -46,7 +46,7 @@ func TestSendPaymentLink(t *testing.T) {
 			FirstName:    "FirstName",
 			LastName:     "LastName",
 			CompanyName:  "Company Name",
-			EmailAddress: "support@blockchyp.com",
+			EmailAddress: "notifications@blockchypteam.m8r.co",
 			SmsNumber:    "(123) 123-1231",
 		},
 	}
