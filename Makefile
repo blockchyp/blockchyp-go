@@ -4,6 +4,7 @@ LASTTAG := $(or $(shell git tag -l | sort -r -V | head -n 1),0.1.0)
 SNAPINFO := $(shell date +%Y%m%d%H%M%S)git$(shell git log -1 --pretty=%h)
 RELEASE := $(or $(BUILD_NUMBER), 1)
 VERSION := $(or $(TAG:v%=%),$(LASTTAG:v%=%))-$(or $(BUILD_NUMBER), 1)$(if $(TAG),,.$(SNAPINFO))
+FULL_VERSION := $(or $(TAG:%=%),$(LASTTAG:%=%))$(if $(TAG),,.$(SNAPINFO))
 
 # Build config
 TESTFLAGS := -v -race -count=1
@@ -17,8 +18,8 @@ PKGS := $(shell go list ./... | grep -v /vendor/)
 LINUX_BUILDENV := GOOS=linux GOARCH=amd64
 WIN_BUILDENV := GOOS=windows GOARCH=386
 SOURCES := $(shell find . -name '*.go')
-TAR_ARCHIVE := blockchyp-cli-$(VERSION).tar.gz
-ZIP_ARCHIVE := blockchyp-cli-$(VERSION).zip
+TAR_ARCHIVE := blockchyp-cli-$(FULL_VERSION).tar.gz
+ZIP_ARCHIVE := blockchyp-cli-$(FULL_VERSION).zip
 ICON := assets/blockchyp.ico
 LDFLAGS := -s -w -extldflags '-static' \
 	-X github.com/blockchyp/blockchyp-go.Version=$(VERSION)
