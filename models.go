@@ -5011,6 +5011,15 @@ type MediaMetadata struct {
 	// OriginalFile is the original filename assigned to the media asset.
 	OriginalFile string `json:"originalFile"`
 
+	// Name is the descriptive name of the media asset.
+	Name string `json:"name"`
+
+	// Description is a description of the media asset and its purpose.
+	Description string `json:"description"`
+
+	// Tags is an array of tags associated with a media asset.
+	Tags []string `json:"tags"`
+
 	// FileURL is the url for the full resolution versio of the media file.
 	FileURL string `json:"fileUrl"`
 
