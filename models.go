@@ -2877,6 +2877,9 @@ type TerminalStatusResponse struct {
 	// Idle indicates that the terminal is idle.
 	Idle bool `json:"idle"`
 
+	// CardInSlot indicates whether or not a card is currently in the card slot
+	CardInSlot bool `json:"cardInSlot"`
+
 	// Status contains the operation that the terminal is performing.
 	Status string `json:"status"`
 
