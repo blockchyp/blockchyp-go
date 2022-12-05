@@ -2958,6 +2958,15 @@ type PaymentLinkRequest struct {
 	// Can only be used in cashier mode.
 	EnrollOnly bool `json:"enrollOnly,omitempty"`
 
+	// QrcodeBinary indicates that the QR Code binary should be returned.
+	QrcodeBinary bool `json:"qrcodeBinary,omitempty"`
+
+	// QrcodeSize determines the size of the qr code to be returned.
+	QrcodeSize int `json:"qrcodeSize,omitempty"`
+
+	// DaysToExpiration number of days until the payment link expires.
+	DaysToExpiration int `json:"daysToExpiration,omitempty"`
+
 	// Cashier flags the payment link as cashier facing.
 	Cashier bool `json:"cashier"`
 
@@ -3032,6 +3041,13 @@ type PaymentLinkResponse struct {
 
 	// URL is the url for the payment link.
 	URL string `json:"url"`
+
+	// QrcodeURL is the url for a QR Code associated with this link.
+	QrcodeURL string `json:"qrcodeUrl"`
+
+	// QrcodeBinary is the hex encoded binary for the QR Code, if requested.
+	// Encoded in PNG format.
+	QrcodeBinary string `json:"qrcodeBinary"`
 
 	// CustomerID is the customer id created or used for the payment.
 	CustomerID string `json:"customerId"`
@@ -3702,6 +3718,9 @@ type MerchantProfile struct {
 	// DBAName is the dba name of the merchant.
 	DBAName string `json:"dbaName"`
 
+	// InvoiceName is the name the merchant prefers on payment link invoices.
+	InvoiceName string `json:"invoiceName"`
+
 	// ContactName is the contact name for the merchant.
 	ContactName string `json:"contactName"`
 
@@ -3879,6 +3898,9 @@ type MerchantProfileResponse struct {
 
 	// DBAName is the dba name of the merchant.
 	DBAName string `json:"dbaName"`
+
+	// InvoiceName is the name the merchant prefers on payment link invoices.
+	InvoiceName string `json:"invoiceName"`
 
 	// ContactName is the contact name for the merchant.
 	ContactName string `json:"contactName"`
