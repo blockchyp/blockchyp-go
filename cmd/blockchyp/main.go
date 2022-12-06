@@ -169,7 +169,9 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.JSON, "json", "", "raw json request, will override any other command line parameters if used")
 	flag.StringVar(&args.JSONFile, "jsonFile", "", "path to a json file to be used for raw json input, will override any other command line parameters if used")
 	flag.StringVar(&args.Profile, "profile", "", "profile to source configuration from in blockchyp.json")
-
+	flag.IntVar(&args.QRCodeSize, "qrcodeSize", 256, "default size of the qrcode in pixels if binary for the qr code is requested")
+	flag.BoolVar(&args.QRCodeBinary, "qrcodeBinary", false, "if true, a payment link response should also return the image binary")
+	flag.IntVar(&args.DaysToExpiration, "daysToExpiration", 0, "days until the payment link should expire")
 	flag.Parse()
 
 	if args.Version {
@@ -698,24 +700,27 @@ func processSendLink(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 		}
 
 		request = &blockchyp.PaymentLinkRequest{
-			TransactionRef: args.TransactionRef,
-			Description:    args.Description,
-			Subject:        args.Subject,
-			Amount:         args.Amount,
-			OrderRef:       args.OrderRef,
-			Test:           args.Test,
-			Timeout:        args.Timeout,
-			TaxExempt:      args.TaxExempt,
-			Transaction:    assembleDisplayTransaction(args),
-			Customer:       *populateCustomer(args),
-			AutoSend:       args.AutoSend,
-			CallbackURL:    args.CallbackURL,
-			TCAlias:        args.TCAlias,
-			TCName:         args.TCName,
-			TCContent:      args.TCContent,
-			Cashier:        args.Cashier,
-			Enroll:         args.Enroll,
-			EnrollOnly:     args.EnrollOnly,
+			TransactionRef:   args.TransactionRef,
+			Description:      args.Description,
+			Subject:          args.Subject,
+			Amount:           args.Amount,
+			OrderRef:         args.OrderRef,
+			Test:             args.Test,
+			Timeout:          args.Timeout,
+			TaxExempt:        args.TaxExempt,
+			Transaction:      assembleDisplayTransaction(args),
+			Customer:         *populateCustomer(args),
+			AutoSend:         args.AutoSend,
+			CallbackURL:      args.CallbackURL,
+			TCAlias:          args.TCAlias,
+			TCName:           args.TCName,
+			TCContent:        args.TCContent,
+			Cashier:          args.Cashier,
+			Enroll:           args.Enroll,
+			EnrollOnly:       args.EnrollOnly,
+			QrcodeBinary:     args.QRCodeBinary,
+			QrcodeSize:       args.QRCodeSize,
+			DaysToExpiration: args.DaysToExpiration,
 		}
 
 		if args.Cryptocurrency != "" {
