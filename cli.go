@@ -143,6 +143,7 @@ type CommandLineArguments struct {
 	QRCodeBinary                bool   `args:"qrcodeBinary"`
 	QRCodeSize                  int    `args:"qrcodeSize"`
 	DaysToExpiration            int    `args:"daysToExpiration"`
+	ResetConnection             bool   `args:"resetConnection"`
 }
 
 var defaultSettings = &ConfigSettings{

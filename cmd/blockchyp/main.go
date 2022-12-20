@@ -172,6 +172,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.IntVar(&args.QRCodeSize, "qrcodeSize", 256, "default size of the qrcode in pixels if binary for the qr code is requested")
 	flag.BoolVar(&args.QRCodeBinary, "qrcodeBinary", false, "if true, a payment link response should also return the image binary")
 	flag.IntVar(&args.DaysToExpiration, "daysToExpiration", 0, "days until the payment link should expire")
+	flag.BoolVar(&args.ResetConnection, "resetConnection", false, "resets the terminal websocket connection")
 	flag.Parse()
 
 	if args.Version {
@@ -1271,6 +1272,7 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			Token:              args.Token,
 			TransactionID:      args.TransactionID,
 			TransactionRef:     args.TransactionRef,
+			ResetConnection:    args.ResetConnection,
 		}
 
 		if args.Debit {
@@ -1479,6 +1481,7 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			WaitForRemovedCard: args.WaitForRemovedCard,
 			Force:              args.Force,
 			TransactionRef:     args.TransactionRef,
+			ResetConnection:    args.ResetConnection,
 		}
 		if hasCustomerFields(args) {
 			req.Customer = populateCustomer(args)
@@ -1541,6 +1544,7 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			TipAmount:          args.TipAmount,
 			Token:              args.Token,
 			TransactionRef:     args.TransactionRef,
+			ResetConnection:    args.ResetConnection,
 		}
 
 		if args.Cryptocurrency != "" {

@@ -247,6 +247,11 @@ type CaptureSignatureRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 }
 
 // CaptureSignatureResponse contains customer signature data.
@@ -303,6 +308,11 @@ type PingRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 }
 
 // PingResponse contains the response to a ping request.
@@ -387,6 +397,11 @@ type LocateRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 }
 
 // LocateResponse contains the response to a locate request.
@@ -484,6 +499,11 @@ type MessageRequest struct {
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
+
 	// Message is the message to be displayed on the terminal.
 	Message string `json:"message"`
 }
@@ -525,6 +545,11 @@ type BooleanPromptRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 
 	// YesCaption is the preferred caption for the 'yes' button.
 	YesCaption string `json:"yesCaption"`
@@ -573,6 +598,11 @@ type TextPromptRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 
 	// PromptType is the prompt type (email, phone, etc).
 	PromptType PromptType `json:"promptType"`
@@ -1019,6 +1049,11 @@ type AuthorizationRequest struct {
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
+
 	// OnlineAuthCode is used to validate online gift card authorizations.
 	OnlineAuthCode string `json:"onlineAuthCode,omitempty"`
 
@@ -1165,6 +1200,11 @@ type BalanceRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 }
 
 // BalanceResponse contains the response to a balance request.
@@ -1393,6 +1433,11 @@ type RefundRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 
 	// Healthcare contains details for HSA/FSA transactions.
 	Healthcare *Healthcare `json:"healthcare,omitempty"`
@@ -1829,6 +1874,11 @@ type EnrollRequest struct {
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
+
 	// EntryMethod is the method by which the payment card was entered (MSR,
 	// CHIP, KEYED, etc.).
 	EntryMethod string `json:"entryMethod,omitempty"`
@@ -1976,6 +2026,11 @@ type ClearTerminalRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 }
 
 // GiftActivateRequest contains the information needed to activate or recharge
@@ -2034,6 +2089,11 @@ type GiftActivateRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 }
 
 // GiftActivateResponse contains the response to a gift activate request.
@@ -2244,6 +2304,11 @@ type TermsAndConditionsRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 
 	// TCAlias is an alias for a Terms and Conditions template configured in the
 	// BlockChyp dashboard.
@@ -2789,6 +2854,11 @@ type TransactionDisplayRequest struct {
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
+
 	// Transaction transaction to display on the terminal.
 	Transaction *TransactionDisplayTransaction `json:"transaction"`
 }
@@ -2860,6 +2930,11 @@ type TerminalStatusRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 }
 
 // TerminalStatusResponse contains the current status of a terminal.
@@ -2946,6 +3021,11 @@ type PaymentLinkRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 
 	// AutoSend automatically send the link via an email.
 	AutoSend bool `json:"autoSend"`
@@ -4109,6 +4189,11 @@ type ListQueuedTransactionsRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 }
 
 // ListQueuedTransactionsResponse contains a list of queued transactions on a
@@ -4162,6 +4247,11 @@ type DeleteQueuedTransactionRequest struct {
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
 
 	// TransactionRef contains a transaction reference string of the transaction
 	// to delete. Passing `*` will clear all queued transactions.
@@ -5579,6 +5669,11 @@ func (r AbstractAcknowledgement) From(raw interface{}) (result AbstractAcknowled
 type TerminalReference struct {
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool
 }
 
 // From creates an instance of TerminalReference with values
