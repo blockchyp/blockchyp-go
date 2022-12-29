@@ -140,6 +140,10 @@ type CommandLineArguments struct {
 	JSON                        string `args:"json"`
 	JSONFile                    string `args:"jsonFile"`
 	Profile                     string `args:"profile"`
+	QRCodeBinary                bool   `args:"qrcodeBinary"`
+	QRCodeSize                  int    `args:"qrcodeSize"`
+	DaysToExpiration            int    `args:"daysToExpiration"`
+	ResetConnection             bool   `args:"resetConnection"`
 }
 
 var defaultSettings = &ConfigSettings{
