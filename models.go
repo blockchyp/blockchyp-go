@@ -95,6 +95,16 @@ const (
 	HealthcareTypeDental       = "dental"
 )
 
+// RoundingMode indicates how partial penny rounding operations should work
+type RoundingMode string
+
+// RoundingMode types
+const (
+	RoundingModeUp      = "up"
+	RoundingModeNearest = "nearest"
+	RoundingModeDown    = "down"
+)
+
 // ReceiptSuggestions contains EMV fields we recommend developers put on their
 // receipts.
 type ReceiptSuggestions struct {
@@ -1079,6 +1089,10 @@ type AuthorizationRequest struct {
 
 	// Customer contains customer information.
 	Customer *Customer `json:"customer"`
+
+	// RoundingMode indicates how partial pennies should be rounded for
+	// calculated values like surcharges. Rounding up is the default behavior.
+	RoundingMode *RoundingMode `json:"roundingMode"`
 
 	// Healthcare contains details for HSA/FSA transactions.
 	Healthcare *Healthcare `json:"healthcare,omitempty"`
