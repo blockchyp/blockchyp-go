@@ -3254,6 +3254,10 @@ type CashDiscountRequest struct {
 	// CashDiscount is a flag that applies a discount to negate the surcharge for
 	// debit transactions or other surcharge ineligible payment methods.
 	CashDiscount bool `json:"cashDiscount"`
+
+	// RoundingMode indicates how partial pennies should be rounded for
+	// calculated values like surcharges. Rounding up is the default behavior.
+	RoundingMode *RoundingMode `json:"roundingMode"`
 }
 
 // CashDiscountResponse models the results of a cash discount calculation.
