@@ -173,6 +173,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.QRCodeBinary, "qrcodeBinary", false, "if true, a payment link response should also return the image binary")
 	flag.IntVar(&args.DaysToExpiration, "daysToExpiration", 0, "days until the payment link should expire")
 	flag.BoolVar(&args.ResetConnection, "resetConnection", false, "resets the terminal websocket connection")
+	flag.StringVar(&args.RoundingMode, "roundingMode", "", "optional rounding mode for use in surcharge calculation")
 	flag.Parse()
 
 	if args.Version {
@@ -1570,6 +1571,11 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 		}
 		if hasCustomerFields(args) {
 			req.Customer = populateCustomer(args)
+		}
+
+		if args.RoundingMode != "" {
+			mode := blockchyp.RoundingMode(args.RoundingMode)
+			req.RoundingMode = &mode
 		}
 
 	}
