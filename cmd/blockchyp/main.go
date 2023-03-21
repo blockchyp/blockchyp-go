@@ -1,10 +1,12 @@
 package main
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -174,6 +176,11 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.IntVar(&args.DaysToExpiration, "daysToExpiration", 0, "days until the payment link should expire")
 	flag.BoolVar(&args.ResetConnection, "resetConnection", false, "resets the terminal websocket connection")
 	flag.StringVar(&args.RoundingMode, "roundingMode", "", "optional rounding mode for use in surcharge calculation")
+	flag.StringVar(&args.Channel, "channel", "stable", "firmware release channel")
+	flag.BoolVar(&args.Full, "full", false, "perform full firmware install with transitive dependencies")
+	flag.BoolVar(&args.HTTPS, "https", true, "use https for all communication")
+	flag.StringVar(&args.Archive, "archive", "", "firmware archive for manual package installation")
+	flag.StringVar(&args.Dist, "dist", "", "terminal model distribution")
 	flag.Parse()
 
 	if args.Version {
@@ -276,6 +283,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 	}
 
 	switch cmd {
+	case "sideload":
+		processSideLoad(client, args)
 	case "add-test-merchant":
 		processAddTestMerchant(client, args)
 	case "delete-test-merchant":
@@ -443,6 +452,44 @@ func processUnlinkToken(client *blockchyp.Client, args blockchyp.CommandLineArgu
 	}
 
 	dumpResponse(&args, ack)
+
+}
+
+func processSideLoad(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	validateRequired(args.TerminalName, "terminal")
+
+	request := blockchyp.SideLoadRequest{
+		Terminal:        args.TerminalName,
+		Channel:         args.Channel,
+		Dist:            args.Dist,
+		Archive:         args.Archive,
+		Full:            args.Full,
+		HTTPS:           args.HTTPS,
+		TempDir:         os.TempDir(),
+		BlockChypClient: client,
+		HTTPClient: &http.Client{
+			Timeout: 10 * time.Minute,
+			Transport: &http.Transport{
+				Dial: (&net.Dialer{
+					Timeout: 5 * time.Second,
+				}).Dial,
+				TLSHandshakeTimeout: 5 * time.Second,
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: true,
+				},
+			},
+		},
+	}
+
+	baseLogger := logrus.New()
+
+	err := blockchyp.SideLoad(request, baseLogger)
+
+	if err != nil {
+		handleError(&args, err)
+		return
+	}
 
 }
 
