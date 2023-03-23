@@ -181,6 +181,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.HTTPS, "https", true, "use https for all communication")
 	flag.StringVar(&args.Archive, "archive", "", "firmware archive for manual package installation")
 	flag.StringVar(&args.Dist, "dist", "", "terminal model distribution")
+	flag.BoolVar(&args.Incremental, "incremental", false, "force incremental firmware downloads")
 	flag.Parse()
 
 	if args.Version {
@@ -466,6 +467,7 @@ func processSideLoad(client *blockchyp.Client, args blockchyp.CommandLineArgumen
 		Archive:         args.Archive,
 		Full:            args.Full,
 		HTTPS:           args.HTTPS,
+		Incremental:     args.Incremental,
 		TempDir:         os.TempDir(),
 		BlockChypClient: client,
 		HTTPClient: &http.Client{

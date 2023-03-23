@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 )
 
 // SideLoadRequest models a request to sideload software onto a terminal
@@ -21,6 +22,7 @@ type SideLoadRequest struct {
 	Channel         string
 	Full            bool
 	HTTPS           bool
+	Incremental     bool
 	Archive         string
 	TempDir         string
 	Dist            string
@@ -34,6 +36,7 @@ type Archive struct {
 	ArchiveIdentifier string   `json:"archiveIdentifier"`
 	DownloadURL       string   `json:"downloadUrl"`
 	Packages          []string `json:"packages"`
+	IncrementalURLs   []string `json:"incrementalUrls"`
 }
 
 func (r *SideLoadRequest) terminalURL() string {
@@ -60,8 +63,9 @@ type FirmwareMetadata struct {
 
 // DownloadMetaData contains data required to download and install an archive.
 type DownloadMetaData struct {
-	URL      string   `json:"url"`
-	Packages []string `json:"packages"`
+	URL             string   `json:"url"`
+	Packages        []string `json:"packages"`
+	IncrementalURLs []string `json:"incrementalUrls"`
 
 	Acknowledgement
 }
@@ -164,25 +168,38 @@ func sideloadArchiveWithURL(request SideLoadRequest, archive Archive, logger Sid
 		return err
 	}
 
-	stagingArea := filepath.Join(request.TempDir, "packages", request.Dist, archive.ArchiveIdentifier+".tar.gz")
+	if len(archive.IncrementalURLs) > 0 {
 
-	if err := os.MkdirAll(filepath.Dir(stagingArea), 0755); err != nil {
-		return err
-	}
+		for _, url := range archive.IncrementalURLs {
+			err = stageIncrementalFile(request, url, logger)
+			if err != nil {
+				return err
+			}
+		}
 
-	logger.Infoln("Downloading Archive: " + archive.ArchiveIdentifier + "...")
+	} else {
 
-	err = downloadFromURL(request, archive.DownloadURL, stagingArea)
+		stagingArea := filepath.Join(request.TempDir, "packages", request.Dist, archive.ArchiveIdentifier+".tar.gz")
 
-	if err != nil {
-		return err
-	}
+		if err := os.MkdirAll(filepath.Dir(stagingArea), 0755); err != nil {
+			return err
+		}
 
-	defer os.RemoveAll(stagingArea)
+		logger.Infoln("Downloading Archive: " + archive.ArchiveIdentifier + "...")
 
-	err = stageArchive(stagingArea, request, logger)
-	if err != nil {
-		return err
+		err = downloadFromURL(request, archive.DownloadURL, stagingArea)
+
+		if err != nil {
+			return err
+		}
+
+		defer os.RemoveAll(stagingArea)
+
+		err = stageArchive(stagingArea, request, logger)
+		if err != nil {
+			return err
+		}
+
 	}
 
 	err = installPackages(request, logger)
@@ -202,18 +219,26 @@ func sideloadArchive(request SideLoadRequest, archive string, logger SideLogger)
 		return err
 	}
 
-	stagingFile, err := downloadArchive(request, archive, logger)
-	if err != nil {
-		return err
-	}
+	if request.Incremental {
 
-	defer os.RemoveAll(stagingFile)
+		err = downloadAndStageIncremental(request, archive, logger)
 
-	logger.Infoln(stagingFile)
+		if err != nil {
+			return err
+		}
 
-	err = stageArchive(stagingFile, request, logger)
-	if err != nil {
-		return err
+	} else {
+		stagingFile, err := downloadArchive(request, archive, logger)
+		if err != nil {
+			return err
+		}
+
+		defer os.RemoveAll(stagingFile)
+
+		logger.Infoln(stagingFile)
+
+		err = stageArchive(stagingFile, request, logger)
+
 	}
 
 	err = installPackages(request, logger)
@@ -347,6 +372,85 @@ func clearPackages(request SideLoadRequest, logger SideLogger) error {
 
 }
 
+func downloadAndStageIncremental(request SideLoadRequest, archive string, logger SideLogger) error {
+
+	path := fmt.Sprintf("/api/firmware-repo/download?repo=%v&channel=%v&download=%v&incremental=true", request.Dist, request.Channel, archive)
+
+	md := &DownloadMetaData{}
+
+	logger.Infoln("Downloading Archive Metadata: " + archive + "...")
+
+	err := request.BlockChypClient.GatewayRequest(path, http.MethodGet, nil, md, false, 30)
+
+	if err != nil {
+		return err
+	}
+
+	time.Sleep(10 * time.Second)
+
+	for _, url := range md.IncrementalURLs {
+		err = stageIncrementalFile(request, url, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+
+}
+
+func stageIncrementalFile(request SideLoadRequest, url string, logger SideLogger) error {
+	fileName := filepath.Base(url)
+	logger.Infoln("Downloading " + fileName)
+
+	stagingArea := filepath.Join(request.TempDir, "packages", request.Dist, fileName)
+
+	if err := os.MkdirAll(filepath.Dir(stagingArea), 0755); err != nil {
+		return err
+	}
+
+	defer os.RemoveAll(stagingArea)
+
+	// add five retries
+
+	var err error
+
+	for i := 0; i < 10; i++ {
+
+		err := downloadFromURL(request, url, stagingArea)
+
+		if err == nil {
+			break
+		}
+
+		logger.Infoln(err.Error())
+
+		time.Sleep(5 * time.Second)
+
+	}
+
+	// try one last time
+	if err != nil {
+		err = downloadFromURL(request, url, stagingArea)
+	}
+
+	if err != nil {
+		return err
+	}
+
+	f, err := os.Open(stagingArea)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if err := stage(request, f, fileName, logger); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func downloadArchive(request SideLoadRequest, archive string, logger SideLogger) (string, error) {
 
 	stagingArea := filepath.Join(request.TempDir, "packages", request.Dist, archive+".tar.gz")
@@ -355,7 +459,7 @@ func downloadArchive(request SideLoadRequest, archive string, logger SideLogger)
 		return "", err
 	}
 
-	path := fmt.Sprintf("/api/firmware-repo/download?repo=%v&channel=%v&download=%v", request.Dist, request.Channel, archive)
+	path := fmt.Sprintf("/api/firmware-repo/download?repo=%v&channel=%v&download=%v&incremental=%v", request.Dist, request.Channel, archive, request.Incremental)
 
 	md := &DownloadMetaData{}
 
@@ -379,6 +483,7 @@ func downloadArchive(request SideLoadRequest, archive string, logger SideLogger)
 }
 
 func downloadFromURL(request SideLoadRequest, u, p string) error {
+
 	req, err := http.NewRequest(http.MethodGet, u, nil)
 	if err != nil {
 		return err

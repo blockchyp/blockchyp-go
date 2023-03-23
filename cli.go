@@ -149,6 +149,7 @@ type CommandLineArguments struct {
 	Full                        bool   `args:"full"`
 	Archive                     string `args:"archive"`
 	Dist                        string `args:"dist"`
+	Incremental                 bool   `args:"incremental"`
 }
 
 var defaultSettings = &ConfigSettings{
