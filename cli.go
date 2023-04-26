@@ -144,12 +144,6 @@ type CommandLineArguments struct {
 	QRCodeSize                  int    `args:"qrcodeSize"`
 	DaysToExpiration            int    `args:"daysToExpiration"`
 	ResetConnection             bool   `args:"resetConnection"`
-	RoundingMode                string `args:"roundingMode"`
-	Channel                     string `args:"channel"`
-	Full                        bool   `args:"full"`
-	Archive                     string `args:"archive"`
-	Dist                        string `args:"dist"`
-	Incremental                 bool   `args:"incremental"`
 }
 
 var defaultSettings = &ConfigSettings{

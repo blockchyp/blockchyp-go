@@ -14,7 +14,6 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"os"
-	"strings"
 	"time"
 )
 
@@ -49,7 +48,6 @@ type TerminalRoute struct {
 	PublicKey            string         `json:"publicKey"`
 	RawKey               RawPublicKey   `json:"rawKey"`
 	Timestamp            time.Time      `json:"timestamp"`
-	HTTPS                bool           `json:"https"`
 }
 
 /*
@@ -116,21 +114,9 @@ resolveTerminalRoute returns the route to the given terminal along with
 transient credentials mapped to the given API credentials.
 */
 func (client *Client) resolveTerminalRoute(terminalName string) (TerminalRoute, error) {
-
 	route := client.routeCacheGet(terminalName, false)
 	if route == nil {
 		var err error
-		//bypass route cache lookup for IP addresses
-		if strings.Count(terminalName, ".") == 3 {
-			route := TerminalRoute{
-				TerminalName:      terminalName,
-				IPAddress:         terminalName,
-				CloudRelayEnabled: false,
-				Exists:            true,
-				HTTPS:             false,
-			}
-			return route, nil
-		}
 		route, err = client.requestRouteFromGateway(terminalName)
 		if err != nil {
 			route = client.routeCacheGet(terminalName, true)
@@ -159,7 +145,6 @@ func (client *Client) requestRouteFromGateway(terminalName string) (*TerminalRou
 	if res.Success && res.IPAddress != "" {
 		route := &res.TerminalRoute
 		route.Exists = true
-		route.HTTPS = true
 
 		return route, nil
 	}
@@ -281,13 +266,13 @@ func (client *Client) routeCacheGet(terminalName string, stale bool) *TerminalRo
 func (client *Client) assembleTerminalURL(route TerminalRoute, path string) string {
 
 	buffer := bytes.Buffer{}
-	if client.HTTPS && route.HTTPS {
+	if client.HTTPS {
 		buffer.WriteString("https://")
 	} else {
 		buffer.WriteString("http://")
 	}
 	buffer.WriteString(route.IPAddress)
-	if client.HTTPS && route.HTTPS {
+	if client.HTTPS {
 		buffer.WriteString(":8443")
 	} else {
 		buffer.WriteString(":8080")
