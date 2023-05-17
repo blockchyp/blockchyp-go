@@ -150,6 +150,8 @@ type CommandLineArguments struct {
 	Archive                     string `args:"archive"`
 	Dist                        string `args:"dist"`
 	Incremental                 bool   `args:"incremental"`
+	ChipRejection               bool   `args:"chipRejection"`
+	OutOfOrderReversal          bool   `args:"outOfOrderReversal"`
 }
 
 var defaultSettings = &ConfigSettings{

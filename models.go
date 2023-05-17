@@ -1175,6 +1175,14 @@ type AuthorizationRequest struct {
 	// PaymentRequestMessage can optionally add a message to the payment request
 	// if the target cryptocurrency supports labels. Defaults to empty.
 	PaymentRequestMessage *string `json:"paymentRequestMessage,omitempty"`
+
+	// SimulateChipRejection instructs the terminal to simulate a post auth chip
+	// rejection that would trigger an automatic reversal.
+	SimulateChipRejection bool `json:"simulateChipRejection,omitempty"`
+
+	// SimulateOutOfOrderReversal instructs the terminal to simulate an out of
+	// order automatic reversal.
+	SimulateOutOfOrderReversal bool `json:"simulateOutOfOrderReversal,omitempty"`
 }
 
 // BalanceRequest contains a request for the remaining balance on a payment
@@ -1520,6 +1528,14 @@ type RefundRequest struct {
 
 	// Healthcare contains details for HSA/FSA transactions.
 	Healthcare *Healthcare `json:"healthcare,omitempty"`
+
+	// SimulateChipRejection instructs the terminal to simulate a post auth chip
+	// rejection that would trigger an automatic reversal.
+	SimulateChipRejection bool `json:"simulateChipRejection,omitempty"`
+
+	// SimulateOutOfOrderReversal instructs the terminal to simulate an out of
+	// order automatic reversal.
+	SimulateOutOfOrderReversal bool `json:"simulateOutOfOrderReversal,omitempty"`
 }
 
 // CaptureRequest contains the information needed to capture a preauth.
