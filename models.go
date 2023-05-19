@@ -1183,6 +1183,11 @@ type AuthorizationRequest struct {
 	// SimulateOutOfOrderReversal instructs the terminal to simulate an out of
 	// order automatic reversal.
 	SimulateOutOfOrderReversal bool `json:"simulateOutOfOrderReversal,omitempty"`
+
+	// AsyncReversals causes auto-reversals on the terminal to be executed
+	// asyncronously. Use with caution and in conjunction with the transaction
+	// status API.
+	AsyncReversals bool `json:"asyncReversals,omitempty"`
 }
 
 // BalanceRequest contains a request for the remaining balance on a payment
@@ -1536,6 +1541,11 @@ type RefundRequest struct {
 	// SimulateOutOfOrderReversal instructs the terminal to simulate an out of
 	// order automatic reversal.
 	SimulateOutOfOrderReversal bool `json:"simulateOutOfOrderReversal,omitempty"`
+
+	// AsyncReversals causes auto-reversals on the terminal to be executed
+	// asyncronously. Use with caution and in conjunction with the transaction
+	// status API.
+	AsyncReversals bool `json:"asyncReversals,omitempty"`
 }
 
 // CaptureRequest contains the information needed to capture a preauth.
