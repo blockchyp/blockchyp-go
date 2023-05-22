@@ -152,6 +152,7 @@ type CommandLineArguments struct {
 	Incremental                 bool   `args:"incremental"`
 	ChipRejection               bool   `args:"chipRejection"`
 	OutOfOrderReversal          bool   `args:"outOfOrderReversal"`
+	AsyncReversals              bool   `args:"asyncReversals"`
 }
 
 var defaultSettings = &ConfigSettings{

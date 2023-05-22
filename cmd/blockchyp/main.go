@@ -184,6 +184,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.Incremental, "incremental", false, "force incremental firmware downloads")
 	flag.BoolVar(&args.ChipRejection, "chipRejection", false, "simulates a chip rejection")
 	flag.BoolVar(&args.OutOfOrderReversal, "outOfOrderReversal", false, "simulates an out of order auto reversal")
+	flag.BoolVar(&args.AsyncReversals, "asyncReversals", false, "causes auto-reversals to run asynchronously")
 	flag.Parse()
 
 	if args.Version {
@@ -1327,6 +1328,7 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			ResetConnection:            args.ResetConnection,
 			SimulateChipRejection:      args.ChipRejection,
 			SimulateOutOfOrderReversal: args.OutOfOrderReversal,
+			AsyncReversals:             args.AsyncReversals,
 		}
 
 		if args.Debit {
@@ -1601,6 +1603,7 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			ResetConnection:            args.ResetConnection,
 			SimulateChipRejection:      args.ChipRejection,
 			SimulateOutOfOrderReversal: args.OutOfOrderReversal,
+			AsyncReversals:             args.AsyncReversals,
 		}
 
 		if args.Cryptocurrency != "" {
