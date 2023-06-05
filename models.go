@@ -1351,6 +1351,11 @@ type BalanceResponse struct {
 	// especially for debit transactions.
 	Network string `json:"network,omitempty"`
 
+	// Logo identifies the card association based on bin number. Used primarily
+	// used to indicate the major logo on a card, even when debit transactions
+	// are routed on a different network.
+	Logo string `json:"logo,omitempty"`
+
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string `json:"maskedPan,omitempty"`
 
@@ -1724,6 +1729,11 @@ type CaptureResponse struct {
 	// especially for debit transactions.
 	Network string `json:"network,omitempty"`
 
+	// Logo identifies the card association based on bin number. Used primarily
+	// used to indicate the major logo on a card, even when debit transactions
+	// are routed on a different network.
+	Logo string `json:"logo,omitempty"`
+
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string `json:"maskedPan,omitempty"`
 
@@ -1869,6 +1879,11 @@ type VoidResponse struct {
 	// Network provides network level detail on how a transaction was routed,
 	// especially for debit transactions.
 	Network string `json:"network,omitempty"`
+
+	// Logo identifies the card association based on bin number. Used primarily
+	// used to indicate the major logo on a card, even when debit transactions
+	// are routed on a different network.
+	Logo string `json:"logo,omitempty"`
 
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string `json:"maskedPan,omitempty"`
@@ -2085,6 +2100,11 @@ type EnrollResponse struct {
 	// Network provides network level detail on how a transaction was routed,
 	// especially for debit transactions.
 	Network string `json:"network,omitempty"`
+
+	// Logo identifies the card association based on bin number. Used primarily
+	// used to indicate the major logo on a card, even when debit transactions
+	// are routed on a different network.
+	Logo string `json:"logo,omitempty"`
 
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string `json:"maskedPan,omitempty"`
@@ -2679,6 +2699,11 @@ type AuthorizationResponse struct {
 	// especially for debit transactions.
 	Network string `json:"network,omitempty"`
 
+	// Logo identifies the card association based on bin number. Used primarily
+	// used to indicate the major logo on a card, even when debit transactions
+	// are routed on a different network.
+	Logo string `json:"logo,omitempty"`
+
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string `json:"maskedPan,omitempty"`
 
@@ -2877,6 +2902,11 @@ type TransactionStatus struct {
 	// Network provides network level detail on how a transaction was routed,
 	// especially for debit transactions.
 	Network string `json:"network,omitempty"`
+
+	// Logo identifies the card association based on bin number. Used primarily
+	// used to indicate the major logo on a card, even when debit transactions
+	// are routed on a different network.
+	Logo string `json:"logo,omitempty"`
 
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string `json:"maskedPan,omitempty"`
@@ -6074,6 +6104,11 @@ type PaymentMethodResponse struct {
 	// Network provides network level detail on how a transaction was routed,
 	// especially for debit transactions.
 	Network string
+
+	// Logo identifies the card association based on bin number. Used primarily
+	// used to indicate the major logo on a card, even when debit transactions
+	// are routed on a different network.
+	Logo string
 
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string
