@@ -1344,8 +1344,12 @@ type BalanceResponse struct {
 	// etc).
 	EntryMethod string `json:"entryMethod,omitempty"`
 
-	// PaymentType is the card brand (VISA, MC, AMEX, etc).
+	// PaymentType is the card brand (VISA, MC, AMEX, DEBIT, etc).
 	PaymentType string `json:"paymentType,omitempty"`
+
+	// Network provides network level detail on how a transaction was routed,
+	// especially for debit transactions.
+	Network string `json:"network,omitempty"`
 
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string `json:"maskedPan,omitempty"`
@@ -1713,8 +1717,12 @@ type CaptureResponse struct {
 	// etc).
 	EntryMethod string `json:"entryMethod,omitempty"`
 
-	// PaymentType is the card brand (VISA, MC, AMEX, etc).
+	// PaymentType is the card brand (VISA, MC, AMEX, DEBIT, etc).
 	PaymentType string `json:"paymentType,omitempty"`
+
+	// Network provides network level detail on how a transaction was routed,
+	// especially for debit transactions.
+	Network string `json:"network,omitempty"`
 
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string `json:"maskedPan,omitempty"`
@@ -1855,8 +1863,12 @@ type VoidResponse struct {
 	// etc).
 	EntryMethod string `json:"entryMethod,omitempty"`
 
-	// PaymentType is the card brand (VISA, MC, AMEX, etc).
+	// PaymentType is the card brand (VISA, MC, AMEX, DEBIT, etc).
 	PaymentType string `json:"paymentType,omitempty"`
+
+	// Network provides network level detail on how a transaction was routed,
+	// especially for debit transactions.
+	Network string `json:"network,omitempty"`
 
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string `json:"maskedPan,omitempty"`
@@ -2067,8 +2079,12 @@ type EnrollResponse struct {
 	// etc).
 	EntryMethod string `json:"entryMethod,omitempty"`
 
-	// PaymentType is the card brand (VISA, MC, AMEX, etc).
+	// PaymentType is the card brand (VISA, MC, AMEX, DEBIT, etc).
 	PaymentType string `json:"paymentType,omitempty"`
+
+	// Network provides network level detail on how a transaction was routed,
+	// especially for debit transactions.
+	Network string `json:"network,omitempty"`
 
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string `json:"maskedPan,omitempty"`
@@ -2656,8 +2672,12 @@ type AuthorizationResponse struct {
 	// etc).
 	EntryMethod string `json:"entryMethod,omitempty"`
 
-	// PaymentType is the card brand (VISA, MC, AMEX, etc).
+	// PaymentType is the card brand (VISA, MC, AMEX, DEBIT, etc).
 	PaymentType string `json:"paymentType,omitempty"`
+
+	// Network provides network level detail on how a transaction was routed,
+	// especially for debit transactions.
+	Network string `json:"network,omitempty"`
 
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string `json:"maskedPan,omitempty"`
@@ -2851,8 +2871,12 @@ type TransactionStatus struct {
 	// etc).
 	EntryMethod string `json:"entryMethod,omitempty"`
 
-	// PaymentType is the card brand (VISA, MC, AMEX, etc).
+	// PaymentType is the card brand (VISA, MC, AMEX, DEBIT, etc).
 	PaymentType string `json:"paymentType,omitempty"`
+
+	// Network provides network level detail on how a transaction was routed,
+	// especially for debit transactions.
+	Network string `json:"network,omitempty"`
 
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string `json:"maskedPan,omitempty"`
@@ -6044,8 +6068,12 @@ type PaymentMethodResponse struct {
 	// etc).
 	EntryMethod string
 
-	// PaymentType is the card brand (VISA, MC, AMEX, etc).
+	// PaymentType is the card brand (VISA, MC, AMEX, DEBIT, etc).
 	PaymentType string
+
+	// Network provides network level detail on how a transaction was routed,
+	// especially for debit transactions.
+	Network string
 
 	// MaskedPAN is the masked primary account number.
 	MaskedPAN string
