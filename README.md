@@ -1,6 +1,6 @@
 # BlockChyp Go SDK
 
-[![Build Status](https://circleci.com/gh/blockchyp/blockchyp-go/tree/master.svg?style=shield)](https://circleci.com/gh/blockchyp/blockchyp-go/tree/master)
+[![Build Status](https://github.com/blockchyp/blockchyp-go/actions/workflows/main.yml/badge.svg)](https://github.com/blockchyp/blockchyp-go/actions/workflows/main.yml)
 [![Release](https://img.shields.io/github/release/blockchyp/blockchyp-go/all.svg?style=shield)](https://github.com/blockchyp/blockchyp-go/releases/latest)
 [![Go Report Card](https://goreportcard.com/badge/github.com/blockchyp/blockchyp-go)](https://goreportcard.com/report/github.com/blockchyp/blockchyp-go)
 [![GoDoc](https://godoc.org/github.com/blockchyp/blockchyp-go?status.svg)](https://godoc.org/github.com/blockchyp/blockchyp-go)
