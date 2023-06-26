@@ -132,8 +132,6 @@ cli-windows:
 # Builds distribution archives
 .PHONY: dist
 dist: $(DISTDIR)/$(TAR_ARCHIVE) $(DISTDIR)/$(ZIP_ARCHIVE)
-	@echo $(TAG)
-	@echo $(FULL_VERSION)
 
 .PHONY: clean
 clean:
