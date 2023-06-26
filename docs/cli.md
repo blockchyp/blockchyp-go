@@ -15,7 +15,7 @@ these days like RPG, COBOL, etc.
 In order to address the needs of developers whose platforms lack SDK support,
 we created the BlockChyp Command Line Interface.  The CLI ships as a set of Linux
 and Windows executables. Developers working in any language can invoke the CLI as
-a shell command.  Parameters get bassed into the CLI as command line arguments
+a shell command.  Parameters get passed into the CLI as command line arguments
 and the response is returned to standard out (or an optional file)
 in hipster friendly JSON.
 
