@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/blockchyp/blockchyp-go/pkg/regression"
+	"github.com/blockchyp/blockchyp-go/v2/pkg/regression"
 )
 
 func main() {

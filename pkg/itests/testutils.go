@@ -16,7 +16,7 @@ import (
 	"github.com/gofrs/uuid"
 	"github.com/stretchr/testify/assert"
 
-	blockchyp "github.com/blockchyp/blockchyp-go"
+	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 // TestDelay is an environment variable constant for integration test delays
@@ -33,7 +33,7 @@ var (
 	lastTransactionRef string
 )
 
-//TestConfiguration models test configuration
+// TestConfiguration models test configuration
 type TestConfiguration struct {
 	GatewayHost            string                        `json:"gatewayHost"`
 	TestGatewayHost        string                        `json:"testGatewayHost"`

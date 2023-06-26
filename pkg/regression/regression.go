@@ -18,8 +18,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-
-	"github.com/blockchyp/blockchyp-go"
 )
 
 // TestRunner runs the regression test suite.

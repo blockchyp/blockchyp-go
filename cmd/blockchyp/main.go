@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	blockchyp "github.com/blockchyp/blockchyp-go"
+	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 var validSignatureFormats = []string{

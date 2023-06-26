@@ -1,7 +1,7 @@
 package regression
 
 import (
-	"github.com/blockchyp/blockchyp-go"
+	"github.com/blockchyp/blockchyp-go/v2"
 )
 
 var chargeTests = testCases{

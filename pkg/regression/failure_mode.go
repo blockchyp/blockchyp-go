@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/blockchyp/blockchyp-go"
+	"github.com/blockchyp/blockchyp-go/v2"
 )
 
 var failureModeTests = testCases{

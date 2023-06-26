@@ -44,7 +44,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func main() {
@@ -174,7 +174,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func chargeExample() {
@@ -265,7 +265,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func preauthExample() {
@@ -329,7 +329,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func captureExample() {
@@ -434,7 +434,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func refundExample() {
@@ -500,7 +500,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func voidExample() {
@@ -575,7 +575,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func reverseExample() {
@@ -678,7 +678,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func giftActivateExample() {
@@ -759,7 +759,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func balanceExample() {
@@ -821,7 +821,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func closeBatchExample() {
@@ -966,7 +966,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func sendPaymentLinkExample() {
@@ -1044,7 +1044,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func cancelPaymentLinkExample() {
@@ -1103,7 +1103,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func transactionStatusExample() {
@@ -1161,7 +1161,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func cashDiscountExample() {
@@ -1237,7 +1237,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func batchHistoryExample() {
@@ -1298,7 +1298,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func batchDetailsExample() {
@@ -1396,7 +1396,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func transactionHistoryExample() {
@@ -1453,7 +1453,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func listQueuedTransactionsExample() {
@@ -1509,7 +1509,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteQueuedTransactionExample() {
@@ -1583,7 +1583,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func pingExample() {
@@ -1642,7 +1642,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func locateExample() {
@@ -1698,7 +1698,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func clearExample() {
@@ -1785,7 +1785,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func terminalStatusExample() {
@@ -1856,7 +1856,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func captureSignatureExample() {
@@ -1934,7 +1934,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func newTransactionDisplayExample() {
@@ -2034,7 +2034,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func updateTransactionDisplayExample() {
@@ -2110,7 +2110,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func messageExample() {
@@ -2177,7 +2177,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func booleanPromptExample() {
@@ -2255,7 +2255,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func textPromptExample() {
@@ -2316,7 +2316,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func terminalsExample() {
@@ -2371,7 +2371,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deactivateTerminalExample() {
@@ -2435,7 +2435,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func activateTerminalExample() {
@@ -2490,7 +2490,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func rebootExample() {
@@ -2602,7 +2602,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func termsAndConditionsExample() {
@@ -2675,7 +2675,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tcTemplatesExample() {
@@ -2727,7 +2727,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tcTemplateExample() {
@@ -2789,7 +2789,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tcUpdateTemplateExample() {
@@ -2849,7 +2849,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tcDeleteTemplateExample() {
@@ -2913,7 +2913,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tcLogExample() {
@@ -2970,7 +2970,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tcEntryExample() {
@@ -3050,7 +3050,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func enrollExample() {
@@ -3111,7 +3111,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tokenMetadataExample() {
@@ -3166,7 +3166,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func linkTokenExample() {
@@ -3224,7 +3224,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func unlinkTokenExample() {
@@ -3280,7 +3280,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteTokenExample() {
@@ -3370,7 +3370,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func updateCustomerExample() {
@@ -3435,7 +3435,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func customerExample() {
@@ -3492,7 +3492,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func customerSearchExample() {
@@ -3546,7 +3546,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteCustomerExample() {
@@ -3616,7 +3616,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func surveyQuestionsExample() {
@@ -3668,7 +3668,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func surveyQuestionExample() {
@@ -3731,7 +3731,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func updateSurveyQuestionExample() {
@@ -3789,7 +3789,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteSurveyQuestionExample() {
@@ -3855,7 +3855,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func surveyResultsExample() {
@@ -3949,7 +3949,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func mediaExample() {
@@ -4033,7 +4033,7 @@ import (
     "log"
     "os"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func uploadMediaExample() {
@@ -4100,7 +4100,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func uploadStatusExample() {
@@ -4156,7 +4156,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func mediaAssetExample() {
@@ -4211,7 +4211,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteMediaAssetExample() {
@@ -4267,7 +4267,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func slideShowsExample() {
@@ -4322,7 +4322,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func slideShowExample() {
@@ -4383,7 +4383,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func updateSlideShowExample() {
@@ -4443,7 +4443,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteSlideShowExample() {
@@ -4506,7 +4506,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func terminalBrandingExample() {
@@ -4621,7 +4621,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func updateBrandingAssetExample() {
@@ -4687,7 +4687,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteBrandingAssetExample() {
@@ -4818,7 +4818,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func merchantProfileExample() {
@@ -4876,7 +4876,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func getMerchantsExample() {
@@ -4993,7 +4993,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func updateMerchantExample() {
@@ -5056,7 +5056,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func merchantUsersExample() {
@@ -5117,7 +5117,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func inviteMerchantUserExample() {
@@ -5174,7 +5174,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func addTestMerchantExample() {
@@ -5229,7 +5229,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteTestMerchantExample() {

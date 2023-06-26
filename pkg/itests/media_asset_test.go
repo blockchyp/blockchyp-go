@@ -16,7 +16,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	blockchyp "github.com/blockchyp/blockchyp-go"
+	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func TestMediaAsset(t *testing.T) {
