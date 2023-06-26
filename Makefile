@@ -37,7 +37,7 @@ ZIP := zip
 
 # Integration test config
 export BC_TEST_DELAY := 5
-IMAGE := golang:1.14-buster
+IMAGE := golang:1.20-buster
 SCMROOT := $(shell git rev-parse --show-toplevel)
 PWD := $(shell pwd)
 CACHE := $(HOME)/.local/share/blockchyp/itest-cache
@@ -132,6 +132,8 @@ cli-windows:
 # Builds distribution archives
 .PHONY: dist
 dist: $(DISTDIR)/$(TAR_ARCHIVE) $(DISTDIR)/$(ZIP_ARCHIVE)
+	@echo $(TAG)
+	@echo $(FULL_VERSION)
 
 .PHONY: clean
 clean:
