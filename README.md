@@ -28,7 +28,7 @@ Check out the [CLI Reference](docs/cli.md) for more information.
 For Go developers, you can install BlockChyp in the usual way with `go get`.
 
 ```
-go get github.com/blockchyp/blockchyp-go
+go get github.com/blockchyp/blockchyp-go/v2
 ```
 
 ## A Simple Example
