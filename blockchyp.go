@@ -1145,6 +1145,21 @@ func (client *Client) CancelPaymentLink(request CancelPaymentLinkRequest) (*Canc
 	return &response, err
 }
 
+// PaymentLinkStatus retrieves the status of a payment link.
+func (client *Client) PaymentLinkStatus(request PaymentLinkStatusRequest) (*PaymentLinkStatusResponse, error) {
+	var response PaymentLinkStatusResponse
+
+	err := client.GatewayRequest("/api/payment-link-status", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // TransactionStatus retrieves the current status of a transaction.
 func (client *Client) TransactionStatus(request TransactionStatusRequest) (*AuthorizationResponse, error) {
 	var response AuthorizationResponse

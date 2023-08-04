@@ -1137,6 +1137,14 @@ type AuthorizationRequest struct {
 	// cards.
 	CashBackEnabled bool `json:"cashBackEnabled,omitempty"`
 
+	// CardOnFile indicates that this transaction should be treated as MOTO with
+	// a card on file.
+	CardOnFile bool `json:"cardOnFile,omitempty"`
+
+	// Recurring indicates that this transaction should be treated as a recurring
+	// transaction.
+	Recurring bool `json:"recurring,omitempty"`
+
 	// AltPrices is a map of alternate currencies and the price in each currency.
 	// Use only if you want to set your own exchange rate for a crypto
 	// transaction.
@@ -2797,6 +2805,109 @@ type TransactionStatusRequest struct {
 
 	// TransactionID is the BlockChyp assigned transaction id.
 	TransactionID string `json:"transactionId,omitempty"`
+}
+
+// PaymentLinkStatusRequest models the request for updated information about a
+// payment link.
+type PaymentLinkStatusRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// LinkCode is the link code assigned to the payment link.
+	LinkCode string `json:"linkCode"`
+}
+
+// PaymentLinkStatusResponse models the status of a payment link.
+type PaymentLinkStatusResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// LinkCode is the code used to retrieve the payment link.
+	LinkCode string `json:"linkCode"`
+
+	// MerchantID is the BlockChyp merchant id associated with a payment link.
+	MerchantID string `json:"merchantId"`
+
+	// CustomerID is the customer id associated with a payment link.
+	CustomerID string `json:"customerId,omitempty"`
+
+	// TransactionRef is the user's internal reference for any transaction that
+	// may occur
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// OrderRef is the user's internal reference for an order.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// TaxExempt indicates that the order is tax exempt.
+	TaxExempt bool `json:"taxExempt,omitempty"`
+
+	// Amount indicates that the amount to collect via the payment link.
+	Amount string `json:"amount,omitempty"`
+
+	// TaxAmount indicates the sales tax to be collected via the payment link.
+	TaxAmount string `json:"taxAmount,omitempty"`
+
+	// Subject subject for email notifications.
+	Subject string `json:"subject,omitempty"`
+
+	// TransactionID id of the most recent transaction associated with the link.
+	TransactionID string `json:"transactionId,omitempty"`
+
+	// Description description associated with the payment link.
+	Description string `json:"description,omitempty"`
+
+	// Expiration date and time the link will expire.
+	Expiration *time.Time `json:"expiration,omitempty"`
+
+	// DateCreated date and time the link was created.
+	DateCreated time.Time `json:"dateCreated,omitempty"`
+
+	// TransactionDetails line item level data if provided.
+	TransactionDetails *TransactionDisplayTransaction `json:"transactionDetails,omitempty"`
+
+	// Status is the current status of the payment link.
+	Status string `json:"status,omitempty"`
+
+	// TCAlias alias for any terms and conditions language associated with the
+	// link.
+	TCAlias string `json:"tcAlias,omitempty"`
+
+	// TCName name of any terms and conditions agreements associated with the
+	// payment link.
+	TCName string `json:"tcName,omitempty"`
+
+	// TCContent full text of any terms and conditions language associated with
+	// the agreement.
+	TCContent string `json:"tcContent,omitempty"`
+
+	// CashierFacing indicates that the link is intended for internal use by the
+	// merchant.
+	CashierFacing bool `json:"cashierFacing,omitempty"`
+
+	// Enroll indicates that the payment method should be enrolled in the token
+	// vault.
+	Enroll bool `json:"enroll,omitempty"`
+
+	// EnrollOnly indicates that the link should only be used for enrollment in
+	// the token vault without any underlying payment transaction.
+	EnrollOnly bool `json:"enrollOnly,omitempty"`
+
+	// LastTransaction returns details about the last transaction status
+	LastTransaction *AuthorizationResponse `json:"lastTransaction,omitempty"`
+
+	// TransactionHistory returns a list of transactions associated with the
+	// link, including any declines.
+	TransactionHistory []AuthorizationResponse `json:"transactionHistory,omitempty"`
 }
 
 // TransactionStatus models the status of a transaction.
