@@ -243,6 +243,11 @@ type CaptureSignatureRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// SigFile is a location on the filesystem which a customer signature should
 	// be written to.
 	SigFile string `json:"sigFile,omitempty"`
@@ -325,6 +330,11 @@ type PingRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -419,6 +429,11 @@ type LocateRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -526,6 +541,11 @@ type MessageRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
@@ -577,6 +597,11 @@ type BooleanPromptRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -636,6 +661,11 @@ type TextPromptRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
@@ -687,6 +717,11 @@ type CustomerRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// CustomerID BlockChyp assigned customer id.
 	CustomerID string `json:"customerId"`
@@ -752,6 +787,11 @@ type CustomerSearchRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// Query search query for customer searches.
 	Query string `json:"query"`
 }
@@ -795,6 +835,11 @@ type UpdateCustomerRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// Customer models a customer update request.
 	Customer Customer `json:"customer"`
@@ -883,6 +928,11 @@ type TokenMetadataRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// Token the token to retrieve.
 	Token string `json:"token"`
@@ -1013,6 +1063,11 @@ type AuthorizationRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// Token is the payment token to be used for this transaction. This should be
 	// used for recurring transactions.
 	Token string `json:"token,omitempty"`
@@ -1067,9 +1122,6 @@ type AuthorizationRequest struct {
 	// PaymentType designates brands of payment methods: Visa, Discover, etc.
 	PaymentType string `json:"paymentType,omitempty"`
 
-	// TransactionID is the ID of the previous transaction being referenced.
-	TransactionID string `json:"transactionId"`
-
 	// CurrencyCode indicates the transaction currency code.
 	CurrencyCode string `json:"currencyCode"`
 
@@ -1118,6 +1170,10 @@ type AuthorizationRequest struct {
 	// transactions is in flight. This is a diagnostic settings that can be used
 	// only for test transactions.
 	ResetConnection bool `json:"resetConnection"`
+
+	// TransactionID can be used to update a pre-auth to a new amount, sometimes
+	// called incremental auth.
+	TransactionID string `json:"transactionId,omitempty"`
 
 	// OnlineAuthCode is used to validate online gift card authorizations.
 	OnlineAuthCode string `json:"onlineAuthCode,omitempty"`
@@ -1238,6 +1294,11 @@ type BalanceRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// Token is the payment token to be used for this transaction. This should be
 	// used for recurring transactions.
@@ -1442,6 +1503,11 @@ type RefundRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// Token is the payment token to be used for this transaction. This should be
 	// used for recurring transactions.
 	Token string `json:"token,omitempty"`
@@ -1604,6 +1670,11 @@ type CaptureRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// TransactionID is the ID of the previous transaction being referenced.
 	TransactionID string `json:"transactionId"`
@@ -1817,6 +1888,11 @@ type VoidRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// TransactionID is the ID of the previous transaction being referenced.
 	TransactionID string `json:"transactionId"`
 }
@@ -1971,6 +2047,11 @@ type EnrollRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// Token is the payment token to be used for this transaction. This should be
 	// used for recurring transactions.
@@ -2193,6 +2274,11 @@ type ClearTerminalRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
@@ -2242,6 +2328,11 @@ type GiftActivateRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// CurrencyCode indicates the transaction currency code.
 	CurrencyCode string `json:"currencyCode"`
@@ -2373,6 +2464,11 @@ type CloseBatchRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// BatchID optional batch id.
 	BatchID string `json:"batchId"`
 }
@@ -2465,6 +2561,11 @@ type TermsAndConditionsRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// TransactionID is the ID of the previous transaction being referenced.
 	TransactionID string `json:"transactionId"`
@@ -2803,6 +2904,11 @@ type TransactionStatusRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// TransactionID is the BlockChyp assigned transaction id.
 	TransactionID string `json:"transactionId,omitempty"`
 }
@@ -2842,7 +2948,7 @@ type PaymentLinkStatusResponse struct {
 	CustomerID string `json:"customerId,omitempty"`
 
 	// TransactionRef is the user's internal reference for any transaction that
-	// may occur
+	// may occur.
 	TransactionRef string `json:"transactionRef,omitempty"`
 
 	// OrderRef is the user's internal reference for an order.
@@ -3166,6 +3272,11 @@ type TransactionDisplayRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
@@ -3248,6 +3359,11 @@ type TerminalStatusRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
@@ -3325,6 +3441,11 @@ type PaymentLinkRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// CurrencyCode indicates the transaction currency code.
 	CurrencyCode string `json:"currencyCode"`
@@ -3499,6 +3620,11 @@ type CancelPaymentLinkRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// LinkCode is the payment link code to cancel.
 	LinkCode string `json:"linkCode"`
 }
@@ -3506,6 +3632,71 @@ type CancelPaymentLinkRequest struct {
 // CancelPaymentLinkResponse indicates success or failure of a payment link
 // cancellation.
 type CancelPaymentLinkResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+}
+
+// ResendPaymentLinkRequest resends a pending payment link. Payment links that
+// have already been used or cancelled cannot be resent and the request will
+// be rejected.
+type ResendPaymentLinkRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// TransactionRef contains a user-assigned reference that can be used to
+	// recall or reverse transactions.
+	TransactionRef string `json:"transactionRef,omitempty"`
+
+	// AutogeneratedRef indicates that the transaction reference was
+	// autogenerated and should be ignored for the purposes of duplicate
+	// detection.
+	AutogeneratedRef bool `json:"autogeneratedRef"`
+
+	// Async defers the response to the transaction and returns immediately.
+	// Callers should retrive the transaction result using the Transaction Status
+	// API.
+	Async bool `json:"async"`
+
+	// Queue adds the transaction to the queue and returns immediately. Callers
+	// should retrive the transaction result using the Transaction Status API.
+	Queue bool `json:"queue"`
+
+	// WaitForRemovedCard specifies whether or not the request should block until
+	// all cards have been removed from the card reader.
+	WaitForRemovedCard bool `json:"waitForRemovedCard,omitempty"`
+
+	// Force causes a transaction to override any in-progress transactions.
+	Force bool `json:"force,omitempty"`
+
+	// OrderRef is an identifier from an external point of sale system.
+	OrderRef string `json:"orderRef,omitempty"`
+
+	// DestinationAccount is the settlement account for merchants with split
+	// settlements.
+	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
+	// LinkCode is the payment link code to cancel.
+	LinkCode string `json:"linkCode"`
+}
+
+// ResendPaymentLinkResponse indicates success or failure of a payment link
+// resend operation.
+type ResendPaymentLinkResponse struct {
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
 
@@ -3557,6 +3748,11 @@ type CashDiscountRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// CurrencyCode indicates the transaction currency code.
 	CurrencyCode string `json:"currencyCode"`
@@ -3651,6 +3847,11 @@ type TransactionHistoryRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// Query optional search query. Will match amount, last 4 and customer name.
 	// batchId and terminalName are not supported with this option.
@@ -3755,6 +3956,11 @@ type BatchHistoryRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// StartDate optional start date filter for batch history.
 	StartDate time.Time `json:"startDate"`
@@ -3875,6 +4081,11 @@ type BatchDetailsRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// BatchID id for the batch to be retrieved.
 	BatchID string `json:"batchId"`
@@ -4015,6 +4226,11 @@ type MerchantProfileRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// MerchantID is the merchant id. Optional for merchant scoped requests.
 	MerchantID string `json:"merchantId"`
 }
@@ -4060,6 +4276,11 @@ type MerchantPlatformRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// PlatformID is the platform configuration id.
 	PlatformID string `json:"platformId"`
 }
@@ -4104,6 +4325,11 @@ type InviteMerchantUserRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// MerchantID is the merchant id. Optional for merchant scoped requests.
 	MerchantID string `json:"merchantId"`
@@ -4561,6 +4787,11 @@ type ListQueuedTransactionsRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
 
@@ -4623,6 +4854,11 @@ type DeleteQueuedTransactionRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// TerminalName is the name of the target payment terminal.
 	TerminalName string `json:"terminalName,omitempty"`
@@ -4691,6 +4927,11 @@ type DeleteCustomerRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// CustomerID the ID of the customer to delete.
 	CustomerID string `json:"customerId"`
 }
@@ -4747,6 +4988,11 @@ type DeleteTokenRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// Token the token to delete.
 	Token string `json:"token"`
@@ -4805,6 +5051,11 @@ type LinkTokenRequest struct {
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
 
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
+
 	// Token the token to delete.
 	Token string `json:"token"`
 
@@ -4852,6 +5103,11 @@ type UnlinkTokenRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string `json:"destinationAccount,omitempty"`
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string `json:"testCase,omitempty"`
 
 	// Token the token to delete.
 	Token string `json:"token"`
@@ -6191,6 +6447,11 @@ type CoreRequest struct {
 	// DestinationAccount is the settlement account for merchants with split
 	// settlements.
 	DestinationAccount string
+
+	// TestCase can include a code used to trigger simulated conditions for the
+	// purposes of testing and certification. Valid for test merchant accounts
+	// only.
+	TestCase string
 }
 
 // From creates an instance of CoreRequest with values

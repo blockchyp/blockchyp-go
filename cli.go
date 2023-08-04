@@ -153,6 +153,9 @@ type CommandLineArguments struct {
 	ChipRejection               bool   `args:"chipRejection"`
 	OutOfOrderReversal          bool   `args:"outOfOrderReversal"`
 	AsyncReversals              bool   `args:"asyncReversals"`
+	CardOnFile                  bool   `args:"cardOnFile"`
+	Recurring                   bool   `args:"recurring"`
+	TestCase                    string `args:"testCase"`
 }
 
 var defaultSettings = &ConfigSettings{

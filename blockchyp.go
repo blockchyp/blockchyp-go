@@ -1130,6 +1130,21 @@ func (client *Client) SendPaymentLink(request PaymentLinkRequest) (*PaymentLinkR
 	return &response, err
 }
 
+// ResendPaymentLink resends payment link.
+func (client *Client) ResendPaymentLink(request ResendPaymentLinkRequest) (*ResendPaymentLinkResponse, error) {
+	var response ResendPaymentLinkResponse
+
+	err := client.GatewayRequest("/api/resend-payment-link", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // CancelPaymentLink cancels a payment link.
 func (client *Client) CancelPaymentLink(request CancelPaymentLinkRequest) (*CancelPaymentLinkResponse, error) {
 	var response CancelPaymentLinkResponse

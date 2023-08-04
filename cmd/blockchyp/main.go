@@ -181,10 +181,13 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.HTTPS, "https", true, "use https for all communication")
 	flag.StringVar(&args.Archive, "archive", "", "firmware archive for manual package installation")
 	flag.StringVar(&args.Dist, "dist", "", "terminal model distribution")
+	flag.StringVar(&args.TestCase, "testCase", "", "test case code for testing and certification")
 	flag.BoolVar(&args.Incremental, "incremental", false, "force incremental firmware downloads")
 	flag.BoolVar(&args.ChipRejection, "chipRejection", false, "simulates a chip rejection")
 	flag.BoolVar(&args.OutOfOrderReversal, "outOfOrderReversal", false, "simulates an out of order auto reversal")
 	flag.BoolVar(&args.AsyncReversals, "asyncReversals", false, "causes auto-reversals to run asynchronously")
+	flag.BoolVar(&args.CardOnFile, "cardOnFile", false, "flags a transaction as MOTO / card on file.")
+	flag.BoolVar(&args.Recurring, "recurring", false, "flags a transaction as recurring.")
 	flag.Parse()
 
 	if args.Version {
@@ -1329,6 +1332,7 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			SimulateChipRejection:      args.ChipRejection,
 			SimulateOutOfOrderReversal: args.OutOfOrderReversal,
 			AsyncReversals:             args.AsyncReversals,
+			TestCase:                   args.TestCase,
 		}
 
 		if args.Debit {
@@ -1362,6 +1366,7 @@ func processReverse(client *blockchyp.Client, args blockchyp.CommandLineArgument
 			WaitForRemovedCard: args.WaitForRemovedCard,
 			Force:              args.Force,
 			TransactionRef:     args.TransactionRef,
+			TestCase:           args.TestCase,
 		}
 
 		if args.Debit {
@@ -1414,6 +1419,7 @@ func processVoid(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			Force:              args.Force,
 			TransactionID:      args.TransactionID,
 			TransactionRef:     args.TransactionRef,
+			TestCase:           args.TestCase,
 		}
 	}
 
@@ -1442,6 +1448,7 @@ func processCapture(client *blockchyp.Client, args blockchyp.CommandLineArgument
 			TipAmount:          args.TipAmount,
 			TransactionID:      args.TransactionID,
 			TransactionRef:     args.TransactionRef,
+			TestCase:           args.TestCase,
 		}
 	}
 
@@ -1604,6 +1611,13 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			SimulateChipRejection:      args.ChipRejection,
 			SimulateOutOfOrderReversal: args.OutOfOrderReversal,
 			AsyncReversals:             args.AsyncReversals,
+			CardOnFile:                 args.CardOnFile,
+			Recurring:                  args.Recurring,
+			TestCase:                   args.TestCase,
+		}
+
+		if args.TransactionID != "" {
+			req.TransactionID = args.TransactionID
 		}
 
 		if args.Cryptocurrency != "" {
