@@ -6,7 +6,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -15,6 +14,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/sirupsen/logrus"
 
 	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
@@ -400,6 +401,10 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processSendLink(client, args)
 	case "cancel-link":
 		processCancelLink(client, args)
+	case "payment-link-status":
+		processLinkStatus(client, args)
+	case "resend-link":
+		processResendLink(client, args)
 	case "get-customer":
 		getCustomer(client, args)
 	case "search-customer":
@@ -827,6 +832,53 @@ func processCancelLink(client *blockchyp.Client, args blockchyp.CommandLineArgum
 	}
 
 	res, err := client.CancelPaymentLink(*request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, res)
+}
+
+func processLinkStatus(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := &blockchyp.PaymentLinkStatusRequest{}
+
+	if !parseJSONInput(args, request) {
+
+		validateRequired(args.LinkCode, "linkCode")
+
+		request = &blockchyp.PaymentLinkStatusRequest{
+			Test:     args.Test,
+			Timeout:  args.Timeout,
+			LinkCode: args.LinkCode,
+		}
+
+	}
+
+	res, err := client.PaymentLinkStatus(*request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, res)
+}
+
+func processResendLink(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	request := &blockchyp.ResendPaymentLinkRequest{}
+
+	if !parseJSONInput(args, request) {
+
+		validateRequired(args.LinkCode, "linkCode")
+
+		request = &blockchyp.ResendPaymentLinkRequest{
+			Test:     args.Test,
+			Timeout:  args.Timeout,
+			LinkCode: args.LinkCode,
+		}
+
+	}
+
+	res, err := client.ResendPaymentLink(*request)
 	if err != nil {
 		handleError(&args, err)
 	}
