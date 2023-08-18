@@ -1452,9 +1452,9 @@ to poll for status updates on the transaction.
 ## Transaction Status Checks
 
 This API allows you to check on the status of any transaction.  It's especially
-useful for determining the final disposition of a store and forward transaction
-or a payment link.  You can lookup transactions by `-tx` or `-txRef`, but txRef
-is the only method that can be used to resolve store and forward or payment link status.
+useful for determining the final disposition of a store and forward transaction.
+You can lookup transactions by `-tx` or `-txRef`, but txRef
+is the only method that can be used to resolve store and forward.
 
 The API returns an AuthorizationResponse, the same response data structure that would
 be returned for a conventional terminal transaction.
