@@ -3008,7 +3008,7 @@ type PaymentLinkStatusResponse struct {
 	// the token vault without any underlying payment transaction.
 	EnrollOnly bool `json:"enrollOnly,omitempty"`
 
-	// LastTransaction returns details about the last transaction status
+	// LastTransaction returns details about the last transaction status.
 	LastTransaction *AuthorizationResponse `json:"lastTransaction,omitempty"`
 
 	// TransactionHistory returns a list of transactions associated with the
