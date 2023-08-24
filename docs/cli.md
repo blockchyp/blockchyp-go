@@ -15,7 +15,7 @@ these days like RPG, COBOL, etc.
 In order to address the needs of developers whose platforms lack SDK support,
 we created the BlockChyp Command Line Interface.  The CLI ships as a set of Linux
 and Windows executables. Developers working in any language can invoke the CLI as
-a shell command.  Parameters get bassed into the CLI as command line arguments
+a shell command.  Parameters get passed into the CLI as command line arguments
 and the response is returned to standard out (or an optional file)
 in hipster friendly JSON.
 
@@ -1452,9 +1452,9 @@ to poll for status updates on the transaction.
 ## Transaction Status Checks
 
 This API allows you to check on the status of any transaction.  It's especially
-useful for determining the final disposition of a store and forward transaction
-or a payment link.  You can lookup transactions by `-tx` or `-txRef`, but txRef
-is the only method that can be used to resolve store and forward or payment link status.
+useful for determining the final disposition of a store and forward transaction.
+You can lookup transactions by `-tx` or `-txRef`, but txRef
+is the only method that can be used to resolve store and forward.
 
 The API returns an AuthorizationResponse, the same response data structure that would
 be returned for a conventional terminal transaction.

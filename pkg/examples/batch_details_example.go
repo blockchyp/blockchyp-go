@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	blockchyp "github.com/blockchyp/blockchyp-go"
+	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func batchDetailsExample() {

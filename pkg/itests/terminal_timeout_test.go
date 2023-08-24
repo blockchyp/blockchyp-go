@@ -1,7 +1,7 @@
 //go:build integration
 // +build integration
 
-// Copyright 2019-2022 BlockChyp, Inc. All rights reserved. Use of this code
+// Copyright 2019-2023 BlockChyp, Inc. All rights reserved. Use of this code
 // is governed by a license that can be found in the LICENSE file.
 //
 // This file was generated automatically by the BlockChyp SDK Generator.
@@ -14,7 +14,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	blockchyp "github.com/blockchyp/blockchyp-go"
+	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func TestTerminalTimeout(t *testing.T) {

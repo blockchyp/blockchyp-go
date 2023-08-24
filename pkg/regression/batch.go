@@ -3,7 +3,7 @@ package regression
 import (
 	"time"
 
-	"github.com/blockchyp/blockchyp-go"
+	"github.com/blockchyp/blockchyp-go/v2"
 )
 
 var batchTests = testCases{

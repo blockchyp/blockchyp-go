@@ -1,6 +1,6 @@
 # BlockChyp Go SDK
 
-[![Build Status](https://circleci.com/gh/blockchyp/blockchyp-go/tree/master.svg?style=shield)](https://circleci.com/gh/blockchyp/blockchyp-go/tree/master)
+[![Build Status](https://github.com/blockchyp/blockchyp-go/actions/workflows/main.yml/badge.svg)](https://github.com/blockchyp/blockchyp-go/actions/workflows/main.yml)
 [![Release](https://img.shields.io/github/release/blockchyp/blockchyp-go/all.svg?style=shield)](https://github.com/blockchyp/blockchyp-go/releases/latest)
 [![Go Report Card](https://goreportcard.com/badge/github.com/blockchyp/blockchyp-go)](https://goreportcard.com/report/github.com/blockchyp/blockchyp-go)
 [![GoDoc](https://godoc.org/github.com/blockchyp/blockchyp-go?status.svg)](https://godoc.org/github.com/blockchyp/blockchyp-go)
@@ -28,7 +28,7 @@ Check out the [CLI Reference](docs/cli.md) for more information.
 For Go developers, you can install BlockChyp in the usual way with `go get`.
 
 ```
-go get github.com/blockchyp/blockchyp-go
+go get github.com/blockchyp/blockchyp-go/v2
 ```
 
 ## A Simple Example
@@ -44,7 +44,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func main() {
@@ -174,7 +174,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func chargeExample() {
@@ -265,7 +265,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func preauthExample() {
@@ -329,7 +329,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func captureExample() {
@@ -434,7 +434,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func refundExample() {
@@ -500,7 +500,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func voidExample() {
@@ -575,7 +575,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func reverseExample() {
@@ -678,7 +678,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func giftActivateExample() {
@@ -759,7 +759,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func balanceExample() {
@@ -821,7 +821,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func closeBatchExample() {
@@ -919,6 +919,8 @@ display additional UI widgets that allowing customers to switch to a crypto paym
 Add the `enroll` flag to a send link request to enroll the payment method
 in the token vault.
 
+Add the `enrollOnly` flag to enroll the payment method in the token vault without any immediate payment taking place. The payment link will ask the user for their payment information and inform them that they will not be charged immediately, but that their payment may be used for future transactions.
+
 **Cashier Facing Card Entry**
 
 BlockChyp can be used to generate internal/cashier facing card entry pages as well.  This is
@@ -949,10 +951,10 @@ same format as all BlockChyp charge and preauth transaction responses.
 **Status Polling**
 
 If real time callbacks aren't practical or necessary in your environment, you can
-always use the Transaction Status API described below.
+always use the Payment Link Status API described futher on.
 
 A common use case for the send link API with status polling is curbside pickup.
-You could have your system check the Transaction Status when a customer arrives to
+You could have your system check the Payment Link Status when a customer arrives to
 ensure it's been paid without necessarily needing to create background threads
 to constantly poll for status updates.
 
@@ -966,7 +968,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func sendPaymentLinkExample() {
@@ -1025,6 +1027,61 @@ func sendPaymentLinkExample() {
 
 ```
 
+#### Resend Payment Link
+
+
+
+* **API Credential Types:** Merchant
+* **Required Role:** Payment API Access
+
+This API will resend a previously created payment link.  An error is returned if the payment link is expired, has been
+cancelled, or has already been paid.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func resendPaymentLinkExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.ResendPaymentLinkRequest{
+        LinkCode: "<PAYMENT LINK CODE>",
+    }
+
+    response, err := client.ResendPaymentLink(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
 #### Cancel Payment Link
 
 
@@ -1044,7 +1101,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func cancelPaymentLinkExample() {
@@ -1079,6 +1136,70 @@ func cancelPaymentLinkExample() {
 
 ```
 
+#### Payment Link Status
+
+
+
+* **API Credential Types:** Merchant
+* **Required Role:** Payment API Access
+
+This API allows you to check on the status of a payment link, including transaction data
+and the full history of attempted transactions.
+
+This API is the preferred source of truth and best practice when you want to check on the 
+status of a payment link (as opposed to Transaction Status). The Transaction Status API is not 
+ideal because of ambiguity when there are multiple transactions associated with a single 
+payment link.
+
+You must pass the `linkCode` value associated with the payment link. It is included in the response from BlockChyp when the payment link is originally created.
+
+
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func paymentLinkStatusExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.PaymentLinkStatusRequest{
+        LinkCode: setupResponse.LinkCode,
+    }
+
+    response, err := client.PaymentLinkStatus(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
 #### Transaction Status
 
 
@@ -1089,7 +1210,7 @@ func cancelPaymentLinkExample() {
 This API returns the current status for any transaction.  You can lookup a transaction
 by its BlockChyp assigned Transaction ID or your own Transaction Ref.
 
-You should alway use globally unique Transaction Ref values, but in the event
+You should always use globally unique Transaction Ref values, but in the event
 that you duplicate Transaction Refs, the most recent transaction matching your
 Transaction Ref is returned.
 
@@ -1103,7 +1224,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func transactionStatusExample() {
@@ -1161,7 +1282,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func cashDiscountExample() {
@@ -1237,7 +1358,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func batchHistoryExample() {
@@ -1298,7 +1419,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func batchDetailsExample() {
@@ -1396,7 +1517,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func transactionHistoryExample() {
@@ -1453,7 +1574,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func listQueuedTransactionsExample() {
@@ -1509,7 +1630,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteQueuedTransactionExample() {
@@ -1583,7 +1704,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func pingExample() {
@@ -1642,7 +1763,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func locateExample() {
@@ -1698,7 +1819,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func clearExample() {
@@ -1785,7 +1906,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func terminalStatusExample() {
@@ -1856,7 +1977,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func captureSignatureExample() {
@@ -1934,7 +2055,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func newTransactionDisplayExample() {
@@ -2034,7 +2155,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func updateTransactionDisplayExample() {
@@ -2110,7 +2231,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func messageExample() {
@@ -2154,7 +2275,7 @@ func messageExample() {
 * **API Credential Types:** Merchant
 * **Required Role:** Payment API Access
 
-This API Pprompts the customer to answer a yes or no question.
+This API prompts the customer to answer a yes or no question.
 
 You can specify the question or prompt with the `prompt` parameter and
 the response is returned in the `response` field.
@@ -2177,7 +2298,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func booleanPromptExample() {
@@ -2255,7 +2376,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func textPromptExample() {
@@ -2316,7 +2437,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func terminalsExample() {
@@ -2371,7 +2492,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deactivateTerminalExample() {
@@ -2435,7 +2556,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func activateTerminalExample() {
@@ -2490,7 +2611,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func rebootExample() {
@@ -2602,7 +2723,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func termsAndConditionsExample() {
@@ -2675,7 +2796,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tcTemplatesExample() {
@@ -2727,7 +2848,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tcTemplateExample() {
@@ -2789,7 +2910,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tcUpdateTemplateExample() {
@@ -2849,7 +2970,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tcDeleteTemplateExample() {
@@ -2913,7 +3034,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tcLogExample() {
@@ -2970,7 +3091,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tcEntryExample() {
@@ -3050,7 +3171,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func enrollExample() {
@@ -3111,7 +3232,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func tokenMetadataExample() {
@@ -3166,7 +3287,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func linkTokenExample() {
@@ -3224,7 +3345,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func unlinkTokenExample() {
@@ -3280,7 +3401,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteTokenExample() {
@@ -3370,7 +3491,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func updateCustomerExample() {
@@ -3435,7 +3556,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func customerExample() {
@@ -3492,7 +3613,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func customerSearchExample() {
@@ -3546,7 +3667,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteCustomerExample() {
@@ -3616,7 +3737,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func surveyQuestionsExample() {
@@ -3668,7 +3789,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func surveyQuestionExample() {
@@ -3731,7 +3852,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func updateSurveyQuestionExample() {
@@ -3789,7 +3910,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteSurveyQuestionExample() {
@@ -3855,7 +3976,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func surveyResultsExample() {
@@ -3949,7 +4070,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func mediaExample() {
@@ -4033,7 +4154,7 @@ import (
     "log"
     "os"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func uploadMediaExample() {
@@ -4100,7 +4221,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func uploadStatusExample() {
@@ -4156,7 +4277,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func mediaAssetExample() {
@@ -4211,7 +4332,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteMediaAssetExample() {
@@ -4267,7 +4388,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func slideShowsExample() {
@@ -4322,7 +4443,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func slideShowExample() {
@@ -4383,7 +4504,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func updateSlideShowExample() {
@@ -4443,7 +4564,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteSlideShowExample() {
@@ -4506,7 +4627,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func terminalBrandingExample() {
@@ -4621,7 +4742,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func updateBrandingAssetExample() {
@@ -4687,7 +4808,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteBrandingAssetExample() {
@@ -4818,7 +4939,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func merchantProfileExample() {
@@ -4876,7 +4997,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func getMerchantsExample() {
@@ -4993,7 +5114,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func updateMerchantExample() {
@@ -5056,7 +5177,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func merchantUsersExample() {
@@ -5117,7 +5238,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func inviteMerchantUserExample() {
@@ -5174,7 +5295,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func addTestMerchantExample() {
@@ -5229,7 +5350,7 @@ import (
     "fmt"
     "log"
 
-    blockchyp "github.com/blockchyp/blockchyp-go"
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 func deleteTestMerchantExample() {

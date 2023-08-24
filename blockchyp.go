@@ -1,4 +1,4 @@
-// Copyright 2019-2022 BlockChyp, Inc. All rights reserved. Use of this code
+// Copyright 2019-2023 BlockChyp, Inc. All rights reserved. Use of this code
 // is governed by a license that can be found in the LICENSE file.
 //
 // This file was generated automatically by the BlockChyp SDK Generator.
@@ -1130,11 +1130,41 @@ func (client *Client) SendPaymentLink(request PaymentLinkRequest) (*PaymentLinkR
 	return &response, err
 }
 
+// ResendPaymentLink resends payment link.
+func (client *Client) ResendPaymentLink(request ResendPaymentLinkRequest) (*ResendPaymentLinkResponse, error) {
+	var response ResendPaymentLinkResponse
+
+	err := client.GatewayRequest("/api/resend-payment-link", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // CancelPaymentLink cancels a payment link.
 func (client *Client) CancelPaymentLink(request CancelPaymentLinkRequest) (*CancelPaymentLinkResponse, error) {
 	var response CancelPaymentLinkResponse
 
 	err := client.GatewayRequest("/api/cancel-payment-link", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// PaymentLinkStatus retrieves the status of a payment link.
+func (client *Client) PaymentLinkStatus(request PaymentLinkStatusRequest) (*PaymentLinkStatusResponse, error) {
+	var response PaymentLinkStatusResponse
+
+	err := client.GatewayRequest("/api/payment-link-status", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut

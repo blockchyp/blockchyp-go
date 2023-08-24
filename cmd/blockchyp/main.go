@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"flag"
@@ -14,7 +15,9 @@ import (
 	"strings"
 	"time"
 
-	blockchyp "github.com/blockchyp/blockchyp-go"
+	"github.com/sirupsen/logrus"
+
+	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
 var validSignatureFormats = []string{
@@ -173,6 +176,19 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.QRCodeBinary, "qrcodeBinary", false, "if true, a payment link response should also return the image binary")
 	flag.IntVar(&args.DaysToExpiration, "daysToExpiration", 0, "days until the payment link should expire")
 	flag.BoolVar(&args.ResetConnection, "resetConnection", false, "resets the terminal websocket connection")
+	flag.StringVar(&args.RoundingMode, "roundingMode", "", "optional rounding mode for use in surcharge calculation")
+	flag.StringVar(&args.Channel, "channel", "stable", "firmware release channel")
+	flag.BoolVar(&args.Full, "full", false, "perform full firmware install with transitive dependencies")
+	flag.BoolVar(&args.HTTPS, "https", true, "use https for all communication")
+	flag.StringVar(&args.Archive, "archive", "", "firmware archive for manual package installation")
+	flag.StringVar(&args.Dist, "dist", "", "terminal model distribution")
+	flag.StringVar(&args.TestCase, "testCase", "", "test case code for testing and certification")
+	flag.BoolVar(&args.Incremental, "incremental", false, "force incremental firmware downloads")
+	flag.BoolVar(&args.ChipRejection, "chipRejection", false, "simulates a chip rejection")
+	flag.BoolVar(&args.OutOfOrderReversal, "outOfOrderReversal", false, "simulates an out of order auto reversal")
+	flag.BoolVar(&args.AsyncReversals, "asyncReversals", false, "causes auto-reversals to run asynchronously")
+	flag.BoolVar(&args.CardOnFile, "cardOnFile", false, "flags a transaction as MOTO / card on file.")
+	flag.BoolVar(&args.Recurring, "recurring", false, "flags a transaction as recurring.")
 	flag.Parse()
 
 	if args.Version {
@@ -275,6 +291,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 	}
 
 	switch cmd {
+	case "sideload":
+		processSideLoad(client, args)
 	case "add-test-merchant":
 		processAddTestMerchant(client, args)
 	case "delete-test-merchant":
@@ -383,6 +401,10 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processSendLink(client, args)
 	case "cancel-link":
 		processCancelLink(client, args)
+	case "payment-link-status":
+		processLinkStatus(client, args)
+	case "resend-link":
+		processResendLink(client, args)
 	case "get-customer":
 		getCustomer(client, args)
 	case "search-customer":
@@ -442,6 +464,45 @@ func processUnlinkToken(client *blockchyp.Client, args blockchyp.CommandLineArgu
 	}
 
 	dumpResponse(&args, ack)
+
+}
+
+func processSideLoad(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	validateRequired(args.TerminalName, "terminal")
+
+	request := blockchyp.SideLoadRequest{
+		Terminal:        args.TerminalName,
+		Channel:         args.Channel,
+		Dist:            args.Dist,
+		Archive:         args.Archive,
+		Full:            args.Full,
+		HTTPS:           args.HTTPS,
+		Incremental:     args.Incremental,
+		TempDir:         os.TempDir(),
+		BlockChypClient: client,
+		HTTPClient: &http.Client{
+			Timeout: 10 * time.Minute,
+			Transport: &http.Transport{
+				Dial: (&net.Dialer{
+					Timeout: 5 * time.Second,
+				}).Dial,
+				TLSHandshakeTimeout: 5 * time.Second,
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: true,
+				},
+			},
+		},
+	}
+
+	baseLogger := logrus.New()
+
+	err := blockchyp.SideLoad(request, baseLogger)
+
+	if err != nil {
+		handleError(&args, err)
+		return
+	}
 
 }
 
@@ -771,6 +832,53 @@ func processCancelLink(client *blockchyp.Client, args blockchyp.CommandLineArgum
 	}
 
 	res, err := client.CancelPaymentLink(*request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, res)
+}
+
+func processLinkStatus(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := &blockchyp.PaymentLinkStatusRequest{}
+
+	if !parseJSONInput(args, request) {
+
+		validateRequired(args.LinkCode, "linkCode")
+
+		request = &blockchyp.PaymentLinkStatusRequest{
+			Test:     args.Test,
+			Timeout:  args.Timeout,
+			LinkCode: args.LinkCode,
+		}
+
+	}
+
+	res, err := client.PaymentLinkStatus(*request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, res)
+}
+
+func processResendLink(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+	request := &blockchyp.ResendPaymentLinkRequest{}
+
+	if !parseJSONInput(args, request) {
+
+		validateRequired(args.LinkCode, "linkCode")
+
+		request = &blockchyp.ResendPaymentLinkRequest{
+			Test:     args.Test,
+			Timeout:  args.Timeout,
+			LinkCode: args.LinkCode,
+		}
+
+	}
+
+	res, err := client.ResendPaymentLink(*request)
 	if err != nil {
 		handleError(&args, err)
 	}
@@ -1256,23 +1364,27 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 
 	if !parseJSONInput(args, req) {
 		req = &blockchyp.RefundRequest{
-			Address:            args.Address,
-			Amount:             args.Amount,
-			DisableSignature:   args.DisableSignature,
-			ManualEntry:        args.ManualEntry,
-			PostalCode:         args.PostalCode,
-			SigFile:            args.SigFile,
-			SigFormat:          blockchyp.SignatureFormat(args.SigFormat),
-			SigWidth:           args.SigWidth,
-			TerminalName:       args.TerminalName,
-			Test:               args.Test,
-			Timeout:            args.Timeout,
-			WaitForRemovedCard: args.WaitForRemovedCard,
-			Force:              args.Force,
-			Token:              args.Token,
-			TransactionID:      args.TransactionID,
-			TransactionRef:     args.TransactionRef,
-			ResetConnection:    args.ResetConnection,
+			Address:                    args.Address,
+			Amount:                     args.Amount,
+			DisableSignature:           args.DisableSignature,
+			ManualEntry:                args.ManualEntry,
+			PostalCode:                 args.PostalCode,
+			SigFile:                    args.SigFile,
+			SigFormat:                  blockchyp.SignatureFormat(args.SigFormat),
+			SigWidth:                   args.SigWidth,
+			TerminalName:               args.TerminalName,
+			Test:                       args.Test,
+			Timeout:                    args.Timeout,
+			WaitForRemovedCard:         args.WaitForRemovedCard,
+			Force:                      args.Force,
+			Token:                      args.Token,
+			TransactionID:              args.TransactionID,
+			TransactionRef:             args.TransactionRef,
+			ResetConnection:            args.ResetConnection,
+			SimulateChipRejection:      args.ChipRejection,
+			SimulateOutOfOrderReversal: args.OutOfOrderReversal,
+			AsyncReversals:             args.AsyncReversals,
+			TestCase:                   args.TestCase,
 		}
 
 		if args.Debit {
@@ -1306,6 +1418,7 @@ func processReverse(client *blockchyp.Client, args blockchyp.CommandLineArgument
 			WaitForRemovedCard: args.WaitForRemovedCard,
 			Force:              args.Force,
 			TransactionRef:     args.TransactionRef,
+			TestCase:           args.TestCase,
 		}
 
 		if args.Debit {
@@ -1358,6 +1471,7 @@ func processVoid(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			Force:              args.Force,
 			TransactionID:      args.TransactionID,
 			TransactionRef:     args.TransactionRef,
+			TestCase:           args.TestCase,
 		}
 	}
 
@@ -1386,6 +1500,7 @@ func processCapture(client *blockchyp.Client, args blockchyp.CommandLineArgument
 			TipAmount:          args.TipAmount,
 			TransactionID:      args.TransactionID,
 			TransactionRef:     args.TransactionRef,
+			TestCase:           args.TestCase,
 		}
 	}
 
@@ -1515,36 +1630,46 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 		}
 
 		req = &blockchyp.AuthorizationRequest{
-			Address:            args.Address,
-			Amount:             args.Amount,
-			Async:              args.Async,
-			CashBackEnabled:    args.CashBackEnabled,
-			CashDiscount:       args.CashDiscount,
-			Description:        args.Description,
-			DisableSignature:   args.DisableSignature,
-			Enroll:             args.Enroll,
-			ExpMonth:           args.ExpiryMonth,
-			ExpYear:            args.ExpiryYear,
-			ManualEntry:        args.ManualEntry,
-			OrderRef:           args.OrderRef,
-			PAN:                args.PAN,
-			PostalCode:         args.PostalCode,
-			PromptForTip:       args.PromptForTip,
-			Queue:              args.Queue,
-			SigFile:            args.SigFile,
-			SigFormat:          blockchyp.SignatureFormat(args.SigFormat),
-			SigWidth:           args.SigWidth,
-			Surcharge:          args.Surcharge,
-			TaxAmount:          args.TaxAmount,
-			TerminalName:       args.TerminalName,
-			Test:               args.Test,
-			Timeout:            args.Timeout,
-			WaitForRemovedCard: args.WaitForRemovedCard,
-			Force:              args.Force,
-			TipAmount:          args.TipAmount,
-			Token:              args.Token,
-			TransactionRef:     args.TransactionRef,
-			ResetConnection:    args.ResetConnection,
+			Address:                    args.Address,
+			Amount:                     args.Amount,
+			Async:                      args.Async,
+			CashBackEnabled:            args.CashBackEnabled,
+			CashDiscount:               args.CashDiscount,
+			Description:                args.Description,
+			DisableSignature:           args.DisableSignature,
+			Enroll:                     args.Enroll,
+			ExpMonth:                   args.ExpiryMonth,
+			ExpYear:                    args.ExpiryYear,
+			ManualEntry:                args.ManualEntry,
+			OrderRef:                   args.OrderRef,
+			PAN:                        args.PAN,
+			PostalCode:                 args.PostalCode,
+			PromptForTip:               args.PromptForTip,
+			Queue:                      args.Queue,
+			SigFile:                    args.SigFile,
+			SigFormat:                  blockchyp.SignatureFormat(args.SigFormat),
+			SigWidth:                   args.SigWidth,
+			Surcharge:                  args.Surcharge,
+			TaxAmount:                  args.TaxAmount,
+			TerminalName:               args.TerminalName,
+			Test:                       args.Test,
+			Timeout:                    args.Timeout,
+			WaitForRemovedCard:         args.WaitForRemovedCard,
+			Force:                      args.Force,
+			TipAmount:                  args.TipAmount,
+			Token:                      args.Token,
+			TransactionRef:             args.TransactionRef,
+			ResetConnection:            args.ResetConnection,
+			SimulateChipRejection:      args.ChipRejection,
+			SimulateOutOfOrderReversal: args.OutOfOrderReversal,
+			AsyncReversals:             args.AsyncReversals,
+			CardOnFile:                 args.CardOnFile,
+			Recurring:                  args.Recurring,
+			TestCase:                   args.TestCase,
+		}
+
+		if args.TransactionID != "" {
+			req.TransactionID = args.TransactionID
 		}
 
 		if args.Cryptocurrency != "" {
@@ -1570,6 +1695,11 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 		}
 		if hasCustomerFields(args) {
 			req.Customer = populateCustomer(args)
+		}
+
+		if args.RoundingMode != "" {
+			mode := blockchyp.RoundingMode(args.RoundingMode)
+			req.RoundingMode = &mode
 		}
 
 	}
