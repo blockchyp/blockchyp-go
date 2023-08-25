@@ -28,6 +28,10 @@ jobs:
         run: git config --global url."https://${{ secrets.SDK_GEN_REPO_TOKEN }}:x-oauth-basic@github.com/blockchyp".insteadOf "https://github.com/blockchyp"
       - name: Temporary Git Workaround
         run: git config --global --add safe.directory /__w/blockchyp-go/blockchyp-go
+        if: github.repository == 'blockchyp/blockchyp-go'
+      - name: Temporary Git Workaround (internal repo)
+        run: git config --global --add safe.directory /__w/blockchyp-go-internal/blockchyp-go-internal
+        if: github.repository == 'blockchyp/blockchyp-go-internal'
       - name: Lint
         run: make lint
       - name: Run Tests
@@ -61,6 +65,10 @@ jobs:
         run: git config --global url."https://${{ secrets.SDK_GEN_REPO_TOKEN }}:x-oauth-basic@github.com/blockchyp".insteadOf "https://github.com/blockchyp"
       - name: Temporary Git Workaround
         run: git config --global --add safe.directory /__w/blockchyp-go/blockchyp-go
+        if: github.repository == 'blockchyp/blockchyp-go'
+      - name: Temporary Git Workaround (internal repo)
+        run: git config --global --add safe.directory /__w/blockchyp-go-internal/blockchyp-go-internal
+        if: github.repository == 'blockchyp/blockchyp-go-internal'
       - name: Run Build
         run: make build
       - name: Create Release
