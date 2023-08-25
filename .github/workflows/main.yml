@@ -101,3 +101,4 @@ jobs:
           status: ${{ job.status }}
           channel: '#gitactivity'
         if: always()
+      - run: echo 'test'
