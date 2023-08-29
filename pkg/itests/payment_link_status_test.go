@@ -61,7 +61,7 @@ func TestPaymentLinkStatus(t *testing.T) {
 
 	// setup request object
 	request := blockchyp.PaymentLinkStatusRequest{
-		TransactionRef: setupResponse.TransactionRef,
+		LinkCode: setupResponse.LinkCode,
 	}
 
 	logObj(t, "Request:", request)

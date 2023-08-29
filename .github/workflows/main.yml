@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: golang:1.20-buster
-    if: ${{ always() && contains(join(needs.*.result, ','), 'success') && contains(github.ref_name, 'preview') }}
+    if: ${{ always() && contains(join(needs.*.result, ','), 'success') && (contains(github.ref_name, 'preview') || contains(github.ref_name, 'develop')) }}
     needs: [ test ]
     steps:
       - uses: act10ns/slack@v1

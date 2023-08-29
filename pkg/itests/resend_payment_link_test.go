@@ -24,13 +24,36 @@ func TestResendPaymentLink(t *testing.T) {
 	client := config.newTestClient(t, "")
 
 	// setup request object
-	setupRequest := blockchyp.ResendPaymentLinkRequest{
-		LinkCode: setupResponse.LinkCode,
+	setupRequest := blockchyp.PaymentLinkRequest{
+		Amount:      "199.99",
+		Description: "Widget",
+		Subject:     "Widget invoice",
+		Transaction: &blockchyp.TransactionDisplayTransaction{
+			Subtotal: "195.00",
+			Tax:      "4.99",
+			Total:    "199.99",
+			Items: []*blockchyp.TransactionDisplayItem{
+				&blockchyp.TransactionDisplayItem{
+					Description: "Widget",
+					Price:       "195.00",
+					Quantity:    1,
+				},
+			},
+		},
+		AutoSend: true,
+		Customer: blockchyp.Customer{
+			CustomerRef:  "Customer reference string",
+			FirstName:    "FirstName",
+			LastName:     "LastName",
+			CompanyName:  "Company Name",
+			EmailAddress: "notifications@blockchypteam.m8r.co",
+			SmsNumber:    "(123) 123-1231",
+		},
 	}
 
 	logObj(t, "Request:", setupRequest)
 
-	setupResponse, err := client.ResendPaymentLink(setupRequest)
+	setupResponse, err := client.SendPaymentLink(setupRequest)
 
 	assert.NoError(err)
 
