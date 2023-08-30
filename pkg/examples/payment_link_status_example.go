@@ -20,7 +20,7 @@ func paymentLinkStatusExample() {
 
 	// setup request object
 	request := blockchyp.PaymentLinkStatusRequest{
-		LinkCode: setupResponse.LinkCode,
+		LinkCode: "<PAYMENT LINK CODE>",
 	}
 
 	response, err := client.PaymentLinkStatus(request)
