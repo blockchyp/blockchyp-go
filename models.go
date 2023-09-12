@@ -1201,6 +1201,16 @@ type AuthorizationRequest struct {
 	// transaction.
 	Recurring bool `json:"recurring,omitempty"`
 
+	// Cit manually sets the CIT (Customer Initiated Transaction) flag
+	Cit bool `json:"cit,omitempty"`
+
+	// Mit manually sets the MIT (Merchant Initiated Transaction) flag
+	Mit bool `json:"mit,omitempty"`
+
+	// LineItems is an item to display. Can be overwritten or appended, based on
+	// the request type.
+	LineItems []*TransactionDisplayItem `json:"lineItems"`
+
 	// AltPrices is a map of alternate currencies and the price in each currency.
 	// Use only if you want to set your own exchange rate for a crypto
 	// transaction.
@@ -1629,6 +1639,12 @@ type RefundRequest struct {
 	// asyncronously. Use with caution and in conjunction with the transaction
 	// status API.
 	AsyncReversals bool `json:"asyncReversals,omitempty"`
+
+	// Cit manually sets the CIT (Customer Initiated Transaction) flag
+	Cit bool `json:"cit,omitempty"`
+
+	// Mit manually sets the MIT (Merchant Initiated Transaction) flag
+	Mit bool `json:"mit,omitempty"`
 }
 
 // CaptureRequest contains the information needed to capture a preauth.
