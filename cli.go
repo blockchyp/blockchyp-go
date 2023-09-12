@@ -156,6 +156,8 @@ type CommandLineArguments struct {
 	CardOnFile                  bool   `args:"cardOnFile"`
 	Recurring                   bool   `args:"recurring"`
 	TestCase                    string `args:"testCase"`
+	CIT                         bool   `args:"cit"`
+	MIT                         bool   `args:"mit"`
 }
 
 var defaultSettings = &ConfigSettings{

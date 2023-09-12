@@ -189,6 +189,8 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.AsyncReversals, "asyncReversals", false, "causes auto-reversals to run asynchronously")
 	flag.BoolVar(&args.CardOnFile, "cardOnFile", false, "flags a transaction as MOTO / card on file.")
 	flag.BoolVar(&args.Recurring, "recurring", false, "flags a transaction as recurring.")
+	flag.BoolVar(&args.MIT, "mit", false, "manually sets the MIT flag.")
+	flag.BoolVar(&args.CIT, "cit", false, "manually sets the CIT flag.")
 	flag.Parse()
 
 	if args.Version {
@@ -1385,6 +1387,8 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			SimulateOutOfOrderReversal: args.OutOfOrderReversal,
 			AsyncReversals:             args.AsyncReversals,
 			TestCase:                   args.TestCase,
+			Mit:                        args.MIT,
+			Cit:                        args.CIT,
 		}
 
 		if args.Debit {
@@ -1666,6 +1670,14 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			CardOnFile:                 args.CardOnFile,
 			Recurring:                  args.Recurring,
 			TestCase:                   args.TestCase,
+			Mit:                        args.MIT,
+			Cit:                        args.CIT,
+		}
+
+		displayTx := assembleDisplayTransaction(args)
+
+		if displayTx != nil && displayTx.Items != nil {
+			req.LineItems = displayTx.Items
 		}
 
 		if args.TransactionID != "" {
