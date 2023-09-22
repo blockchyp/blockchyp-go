@@ -1201,10 +1201,10 @@ type AuthorizationRequest struct {
 	// transaction.
 	Recurring bool `json:"recurring,omitempty"`
 
-	// Cit manually sets the CIT (Customer Initiated Transaction) flag
+	// Cit manually sets the CIT (Customer Initiated Transaction) flag.
 	Cit bool `json:"cit,omitempty"`
 
-	// Mit manually sets the MIT (Merchant Initiated Transaction) flag
+	// Mit manually sets the MIT (Merchant Initiated Transaction) flag.
 	Mit bool `json:"mit,omitempty"`
 
 	// LineItems is an item to display. Can be overwritten or appended, based on
@@ -1640,10 +1640,10 @@ type RefundRequest struct {
 	// status API.
 	AsyncReversals bool `json:"asyncReversals,omitempty"`
 
-	// Cit manually sets the CIT (Customer Initiated Transaction) flag
+	// Cit manually sets the CIT (Customer Initiated Transaction) flag.
 	Cit bool `json:"cit,omitempty"`
 
-	// Mit manually sets the MIT (Merchant Initiated Transaction) flag
+	// Mit manually sets the MIT (Merchant Initiated Transaction) flag.
 	Mit bool `json:"mit,omitempty"`
 }
 
