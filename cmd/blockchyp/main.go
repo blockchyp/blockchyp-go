@@ -1389,6 +1389,9 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			TestCase:                   args.TestCase,
 			Mit:                        args.MIT,
 			Cit:                        args.CIT,
+			PAN:                        args.PAN,
+			ExpMonth:                   args.ExpiryMonth,
+			ExpYear:                    args.ExpiryYear,
 		}
 
 		if args.Debit {
@@ -1629,8 +1632,8 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	if !parseJSONInput(args, req) {
 
 		validateRequired(args.Amount, "amount")
-		if (args.TerminalName == "") && (args.Token == "") && (args.PAN == "") {
-			fatalError("-terminal or -token requred")
+		if (args.TerminalName == "") && (args.Token == "") && (args.PAN == "") && (args.TransactionID == "") {
+			fatalError("-terminal, -token, or -txId required")
 		}
 
 		req = &blockchyp.AuthorizationRequest{
@@ -1672,6 +1675,7 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			TestCase:                   args.TestCase,
 			Mit:                        args.MIT,
 			Cit:                        args.CIT,
+			TransactionID:              args.TransactionID,
 		}
 
 		displayTx := assembleDisplayTransaction(args)
