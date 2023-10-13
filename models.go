@@ -1207,6 +1207,12 @@ type AuthorizationRequest struct {
 	// Mit manually sets the MIT (Merchant Initiated Transaction) flag.
 	Mit bool `json:"mit,omitempty"`
 
+	// PurchaseOrderNumber is the purchase order number, if known.
+	PurchaseOrderNumber string `json:"purchaseOrderNumber,omitempty"`
+
+	// SupplierReferenceNumber is the supplier reference number, if known.
+	SupplierReferenceNumber string `json:"supplierReferenceNumber,omitempty"`
+
 	// LineItems is an item to display. Can be overwritten or appended, based on
 	// the request type.
 	LineItems []*TransactionDisplayItem `json:"lineItems"`

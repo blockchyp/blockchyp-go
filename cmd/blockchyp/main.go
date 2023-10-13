@@ -191,6 +191,8 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.Recurring, "recurring", false, "flags a transaction as recurring.")
 	flag.BoolVar(&args.MIT, "mit", false, "manually sets the MIT flag.")
 	flag.BoolVar(&args.CIT, "cit", false, "manually sets the CIT flag.")
+	flag.StringVar(&args.PONumber, "po", "", "purchase order for L2 transactions")
+	flag.StringVar(&args.SupplierReferenceNumber, "srn", "", "supplier reference number for L2 transactions")
 	flag.Parse()
 
 	if args.Version {
@@ -1676,6 +1678,8 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			Mit:                        args.MIT,
 			Cit:                        args.CIT,
 			TransactionID:              args.TransactionID,
+			PurchaseOrderNumber:        args.PONumber,
+			SupplierReferenceNumber:    args.SupplierReferenceNumber,
 		}
 
 		displayTx := assembleDisplayTransaction(args)

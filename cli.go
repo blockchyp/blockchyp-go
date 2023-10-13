@@ -158,6 +158,8 @@ type CommandLineArguments struct {
 	TestCase                    string `args:"testCase"`
 	CIT                         bool   `args:"cit"`
 	MIT                         bool   `args:"mit"`
+	PONumber                    string `args:"po"`
+	SupplierReferenceNumber     string `args:"srn"`
 }
 
 var defaultSettings = &ConfigSettings{
