@@ -119,6 +119,7 @@ type CommandLineArguments struct {
 	CryptoReceiveAddress        string `arg:"receiveAddress"`
 	Label                       string `arg:"label"`
 	DBAName                     string `arg:"dbaName"`
+	PolicyID                    string `arg:"policyId"`
 	MerchantID                  string `arg:"merchantId"`
 	TerminalID                  string `arg:"terminalId"`
 	Code                        string `arg:"code"`

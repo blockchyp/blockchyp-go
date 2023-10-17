@@ -4856,6 +4856,60 @@ the standard underwriting process via offer codes and invitations.
 
 
 
+#### Retrieve Pricing Policy
+
+
+
+* **API Credential Types:** Partner
+* **Required Role:** Read Pricing API
+
+The API returns the current pricing policy for a merchant.  This API is valid for partner scoped API credentials
+and `merchantId` is a required parameter.  By default this API returns the currently in-force pricing policy for a merchant,
+but other inactive policies can be returned by providing the `id` parameter.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func pricingPolicyExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.PricingPolicyRequest{}
+
+    response, err := client.PricingPolicy(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
 #### Merchant Profile
 
 

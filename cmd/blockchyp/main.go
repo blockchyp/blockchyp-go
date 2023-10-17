@@ -193,6 +193,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.CIT, "cit", false, "manually sets the CIT flag.")
 	flag.StringVar(&args.PONumber, "po", "", "purchase order for L2 transactions")
 	flag.StringVar(&args.SupplierReferenceNumber, "srn", "", "supplier reference number for L2 transactions")
+	flag.StringVar(&args.PolicyID, "policy", "", "policy id for pricing policy related operations")
 	flag.Parse()
 
 	if args.Version {
@@ -295,6 +296,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 	}
 
 	switch cmd {
+	case "pricing":
+		processPricing(client, args)
 	case "sideload":
 		processSideLoad(client, args)
 	case "add-test-merchant":
@@ -468,6 +471,28 @@ func processUnlinkToken(client *blockchyp.Client, args blockchyp.CommandLineArgu
 	}
 
 	dumpResponse(&args, ack)
+
+}
+
+func processPricing(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	validateRequired(args.MerchantID, "merchantId")
+
+	request := blockchyp.PricingPolicyRequest{
+		MerchantID: args.MerchantID,
+		ID:         args.PolicyID,
+	}
+
+	res, err := client.PricingPolicy(request)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
 
 }
 

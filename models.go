@@ -6198,6 +6198,152 @@ type BrandingAssetResponse struct {
 	Results []BrandingAsset `json:"results"`
 }
 
+// PricingPolicyRequest models a request to retrieve pricing policy
+// information. The default policy for the merchant is returned if no idea is
+// provided.
+type PricingPolicyRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// ID is an optional id used to retrieve a specific pricing policy.
+	ID string `json:"id"`
+
+	// MerchantID is an optional merchant id if this request is submitted via
+	// partner credentials.
+	MerchantID string `json:"merchantId"`
+}
+
+// PricePoint models a single set of pricing values for a pricing policy.
+type PricePoint struct {
+	// BuyRate is the string representation of a per transaction minimum.
+	BuyRate string `json:"buyRate"`
+
+	// Current is the string representation of the current fee per transaction.
+	Current string `json:"current"`
+
+	// Limit is the string representation of a per transaction gouge limit.
+	Limit string `json:"limit"`
+}
+
+// PricingPolicyResponse models a the response to a pricing policy request.
+type PricingPolicyResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ID is the id owner of the pricing policy.
+	ID string `json:"id"`
+
+	// PartnerID is the id of the partner associated with this pricing policy.
+	PartnerID string `json:"partnerId"`
+
+	// MerchantID is the id of the merchant associated with this pricing policy.
+	MerchantID string `json:"merchantId"`
+
+	// Enabled indicates whether or not a pricing policy is enabled.
+	Enabled bool `json:"enabled"`
+
+	// Timestamp is the date and time when the pricing policy was created.
+	Timestamp string `json:"timestamp"`
+
+	// Description is the description of the pricing policy.
+	Description string `json:"description"`
+
+	// PolicyType is type of pricing policy (flat vs interchange).
+	PolicyType string `json:"policyType"`
+
+	// PartnerMarkupSplit is the percentage split of the of buy rate markup with
+	// BlockChyp.
+	PartnerMarkupSplit string `json:"partnerMarkupSplit"`
+
+	// StandardFlatRate is the flat rate percentage for standard card present
+	// transactions.
+	StandardFlatRate PricePoint `json:"standardFlatRate"`
+
+	// DebitFlatRate is the flat rate percentage for debit card transactions.
+	DebitFlatRate PricePoint `json:"debitFlatRate"`
+
+	// EcommerceFlatRate is the flat rate percentage for ecommerce transactions.
+	EcommerceFlatRate PricePoint `json:"ecommerceFlatRate"`
+
+	// KeyedFlatRate is the flat rate percentage for keyed/manual transactions.
+	KeyedFlatRate PricePoint `json:"keyedFlatRate"`
+
+	// PremiumFlatRate is the flat rate percentage for premium (high rewards)
+	// card transactions.
+	PremiumFlatRate PricePoint `json:"premiumFlatRate"`
+
+	// StandardInterchangeMarkup is the interchange markup percentage for
+	// standard card present transactions.
+	StandardInterchangeMarkup PricePoint `json:"standardInterchangeMarkup"`
+
+	// DebitInterchangeMarkup is the interchange markup percentage for debit card
+	// transactions.
+	DebitInterchangeMarkup PricePoint `json:"debitInterchangeMarkup"`
+
+	// EcommerceInterchangeMarkup is the interchange markup percentage for
+	// ecommerce transactions.
+	EcommerceInterchangeMarkup PricePoint `json:"ecommerceInterchangeMarkup"`
+
+	// KeyedInterchangeMarkup is the interchange markup percentage for
+	// keyed/manual transactions.
+	KeyedInterchangeMarkup PricePoint `json:"keyedInterchangeMarkup"`
+
+	// PremiumInterchangeMarkup is the interchange markup percentage for premium
+	// (high rewards) card transactions.
+	PremiumInterchangeMarkup PricePoint `json:"premiumInterchangeMarkup"`
+
+	// StandardTransactionFee is the transaction fee for standard card present
+	// transactions.
+	StandardTransactionFee PricePoint `json:"standardTransactionFee"`
+
+	// DebitTransactionFee is the transaction fee for debit card transactions.
+	DebitTransactionFee PricePoint `json:"debitTransactionFee"`
+
+	// EcommerceTransactionFee is the transaction fee for ecommerce transactions.
+	EcommerceTransactionFee PricePoint `json:"ecommerceTransactionFee"`
+
+	// KeyedTransactionFee is the transaction fee for keyed/manual transactions.
+	KeyedTransactionFee PricePoint `json:"keyedTransactionFee"`
+
+	// PremiumTransactionFee is the transaction fee for premium (high rewards)
+	// card transactions.
+	PremiumTransactionFee PricePoint `json:"premiumTransactionFee"`
+
+	// EBTTransactionFee is the transaction fee for EBT card transactions.
+	EBTTransactionFee PricePoint `json:"ebtTransactionFee"`
+
+	// MonthlyFee is a flat fee charged per month.
+	MonthlyFee PricePoint `json:"monthlyFee"`
+
+	// AnnualFee is a flat fee charged per year.
+	AnnualFee PricePoint `json:"annualFee"`
+
+	// ChargebackFee is the fee per dispute or chargeback.
+	ChargebackFee PricePoint `json:"chargebackFee"`
+
+	// AVSFee is the fee per address verification operation.
+	AVSFee PricePoint `json:"avsFee"`
+
+	// BatchFee is the fee per batch.
+	BatchFee PricePoint `json:"batchFee"`
+
+	// VoiceAuthFee is the voice authorization fee.
+	VoiceAuthFee PricePoint `json:"voiceAuthFee"`
+
+	// AccountSetupFee is the one time account setup fee.
+	AccountSetupFee PricePoint `json:"accountSetupFee"`
+}
+
 // TerminalCaptureSignatureRequest contains a request for customer signature
 // data.
 type TerminalCaptureSignatureRequest struct {
