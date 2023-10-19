@@ -194,6 +194,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.PONumber, "po", "", "purchase order for L2 transactions")
 	flag.StringVar(&args.SupplierReferenceNumber, "srn", "", "supplier reference number for L2 transactions")
 	flag.StringVar(&args.PolicyID, "policy", "", "policy id for pricing policy related operations")
+	flag.StringVar(&args.StatementID, "statementId", "", "statement id for partner or merchant statement operations")
 	flag.Parse()
 
 	if args.Version {
@@ -296,6 +297,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 	}
 
 	switch cmd {
+	case "partner-statement-detail":
+		processPartnerStatementDetail(client, args)
 	case "partner-statements":
 		processPartnerStatements(client, args)
 	case "pricing":
@@ -473,6 +476,27 @@ func processUnlinkToken(client *blockchyp.Client, args blockchyp.CommandLineArgu
 	}
 
 	dumpResponse(&args, ack)
+
+}
+
+func processPartnerStatementDetail(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	validateRequired(args.StatementID, "statementId")
+
+	request := blockchyp.PartnerStatementDetailRequest{
+		ID: args.StatementID,
+	}
+
+	res, err := client.PartnerStatementDetail(request)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
 
 }
 

@@ -161,6 +161,7 @@ type CommandLineArguments struct {
 	MIT                         bool   `args:"mit"`
 	PONumber                    string `args:"po"`
 	SupplierReferenceNumber     string `args:"srn"`
+	StatementID                 string `json:"statementId"`
 }
 
 var defaultSettings = &ConfigSettings{

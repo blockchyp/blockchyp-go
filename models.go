@@ -6406,6 +6406,53 @@ type PartnerStatementListResponse struct {
 	Statements []PartnerStatementSummary `json:"statements"`
 }
 
+// PartnerStatementDetailRequest models a request to retrieve detailed partner
+// statement information.
+type PartnerStatementDetailRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// ID optional start date filter for batch history.
+	ID string `json:"id"`
+
+	// IncludeMerchantStatement indicates that the full merchant statement should
+	// be included in the response.
+	IncludeMerchantStatement bool `json:"includeMerchantStatement"`
+
+	// IncludeInterchange indicates that interchange and all other related cost
+	// details should be returned.
+	IncludeInterchange bool `json:"includeInterchange"`
+}
+
+// PartnerStatementDetailResponse models a response to retrieve detailed
+// partner statement information.
+type PartnerStatementDetailResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ID optional start date filter for batch history.
+	ID string `json:"id"`
+
+	// PartnerID is the id of the partner associated with the statement.
+	PartnerID string `json:"partnerId"`
+
+	// PartnerName is the name of the partner associated with the statement.
+	PartnerName string `json:"partnerName"`
+
+	// StatementDate is the date the statement was generated.
+	StatementDate time.Time `json:"statementDate"`
+}
+
 // TerminalCaptureSignatureRequest contains a request for customer signature
 // data.
 type TerminalCaptureSignatureRequest struct {

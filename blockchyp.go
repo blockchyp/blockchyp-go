@@ -1295,11 +1295,26 @@ func (client *Client) TransactionHistory(request TransactionHistoryRequest) (*Tr
 	return &response, err
 }
 
-// PartnerStatements returns pricing policy for a merchant.
+// PartnerStatements returns a list of partner statements.
 func (client *Client) PartnerStatements(request PartnerStatementListRequest) (*PartnerStatementListResponse, error) {
 	var response PartnerStatementListResponse
 
 	err := client.GatewayRequest("/api/partner-statement-list", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// PartnerStatementDetail returns detail for a single partner statement.
+func (client *Client) PartnerStatementDetail(request PartnerStatementDetailRequest) (*PartnerStatementDetailResponse, error) {
+	var response PartnerStatementDetailResponse
+
+	err := client.GatewayRequest("/api/partner-statement-detail", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
