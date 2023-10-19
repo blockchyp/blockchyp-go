@@ -6344,6 +6344,68 @@ type PricingPolicyResponse struct {
 	AccountSetupFee PricePoint `json:"accountSetupFee"`
 }
 
+// PartnerStatementListRequest models a request to retrieve a list of partner
+// statements.
+type PartnerStatementListRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// StartDate optional start date filter for batch history.
+	StartDate *time.Time `json:"startDate"`
+
+	// EndDate optional end date filter for batch history.
+	EndDate *time.Time `json:"endDate"`
+}
+
+// PartnerStatementSummary
+type PartnerStatementSummary struct {
+	// ID is the id owner of the pricing policy.
+	ID string `json:"id"`
+
+	// StatementDate is the date the statement was generated.
+	StatementDate time.Time `json:"statementDate"`
+
+	// TotalVolume is total volume in numeric format.
+	TotalVolume float64 `json:"totalVolume"`
+
+	// TotalVolumeFormatted is the string formatted total volume on the
+	// statement.
+	TotalVolumeFormatted string `json:"totalVolumeFormatted"`
+
+	// TransactionCount is the total volume on the statement.
+	TransactionCount int64 `json:"transactionCount"`
+
+	// PartnerCommission is the commission earned on the portfolio during the
+	// statement period.
+	PartnerCommission float64 `json:"partnerCommission"`
+
+	// PartnerCommissionFormatted is the string formatted total volume on the
+	// statement.
+	PartnerCommissionFormatted string `json:"partnerCommissionFormatted"`
+
+	// Status is the status of the statement.
+	Status string `json:"status"`
+}
+
+// PartnerStatementListResponse
+type PartnerStatementListResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Statements
+	Statements []PartnerStatementSummary `json:"statements"`
+}
+
 // TerminalCaptureSignatureRequest contains a request for customer signature
 // data.
 type TerminalCaptureSignatureRequest struct {

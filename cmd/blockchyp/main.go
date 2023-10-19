@@ -296,6 +296,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 	}
 
 	switch cmd {
+	case "partner-statements":
+		processPartnerStatements(client, args)
 	case "pricing":
 		processPricing(client, args)
 	case "sideload":
@@ -471,6 +473,40 @@ func processUnlinkToken(client *blockchyp.Client, args blockchyp.CommandLineArgu
 	}
 
 	dumpResponse(&args, ack)
+
+}
+
+func processPartnerStatements(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := blockchyp.PartnerStatementListRequest{}
+
+	if args.StartDate != "" {
+		ts, err := parseTimestamp(args.StartDate)
+		if err != nil {
+			handleError(&args, err)
+			return
+		}
+		request.StartDate = &ts
+	}
+	if args.EndDate != "" {
+		ts, err := parseTimestamp(args.EndDate)
+		if err != nil {
+			handleError(&args, err)
+			return
+		}
+		request.EndDate = &ts
+	}
+
+	res, err := client.PartnerStatements(request)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
 
 }
 
