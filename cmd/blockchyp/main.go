@@ -297,6 +297,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 	}
 
 	switch cmd {
+	case "merchant-invoices":
+		processMerchantInvoices(client, args)
 	case "partner-statement-detail":
 		processPartnerStatementDetail(client, args)
 	case "partner-statements":
@@ -488,6 +490,44 @@ func processPartnerStatementDetail(client *blockchyp.Client, args blockchyp.Comm
 	}
 
 	res, err := client.PartnerStatementDetail(request)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
+
+}
+
+func processMerchantInvoices(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := blockchyp.MerchantInvoiceListRequest{}
+
+	if args.MerchantID != "" {
+		request.MerchantID = &args.MerchantID
+	}
+
+	if args.StartDate != "" {
+		ts, err := parseTimestamp(args.StartDate)
+		if err != nil {
+			handleError(&args, err)
+			return
+		}
+		request.StartDate = &ts
+	}
+	if args.EndDate != "" {
+		ts, err := parseTimestamp(args.EndDate)
+		if err != nil {
+			handleError(&args, err)
+			return
+		}
+		request.EndDate = &ts
+	}
+
+	res, err := client.MerchantInvoices(request)
 
 	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
 		res.ResponseDescription = blockchyp.ResponseTimedOut

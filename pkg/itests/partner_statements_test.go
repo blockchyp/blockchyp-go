@@ -24,13 +24,13 @@ func TestPartnerStatements(t *testing.T) {
 	client := config.newTestClient(t, "")
 
 	// setup request object
-	request := blockchyp.PartnerStatementListRequest{
+	request := blockchyp.MerchantInvoiceListRequest{
 		Test: true,
 	}
 
 	logObj(t, "Request:", request)
 
-	response, err := client.PartnerStatements(request)
+	response, err := client.MerchantInvoices(request)
 
 	assert.NoError(err)
 

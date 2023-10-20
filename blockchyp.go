@@ -1310,6 +1310,21 @@ func (client *Client) PartnerStatements(request PartnerStatementListRequest) (*P
 	return &response, err
 }
 
+// MerchantInvoices returns a list of merchant invoices.
+func (client *Client) MerchantInvoices(request MerchantInvoiceListRequest) (*MerchantInvoiceListResponse, error) {
+	var response MerchantInvoiceListResponse
+
+	err := client.GatewayRequest("/api/merchant-invoice-list", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // PartnerStatementDetail returns detail for a single partner statement.
 func (client *Client) PartnerStatementDetail(request PartnerStatementDetailRequest) (*PartnerStatementDetailResponse, error) {
 	var response PartnerStatementDetailResponse

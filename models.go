@@ -6417,14 +6417,6 @@ type PartnerStatementDetailRequest struct {
 
 	// ID optional start date filter for batch history.
 	ID string `json:"id"`
-
-	// IncludeMerchantStatement indicates that the full merchant statement should
-	// be included in the response.
-	IncludeMerchantStatement bool `json:"includeMerchantStatement"`
-
-	// IncludeInterchange indicates that interchange and all other related cost
-	// details should be returned.
-	IncludeInterchange bool `json:"includeInterchange"`
 }
 
 // PartnerStatementDetailResponse models a response to retrieve detailed
@@ -6633,6 +6625,81 @@ type PartnerStatementAdjustment struct {
 
 	// AmountFormatted is the currency formatted form of amount.
 	AmountFormatted string `json:"amountFormatted"`
+}
+
+// MerchantInvoiceListRequest models a request to retrieve a list of partner
+// statements.
+type MerchantInvoiceListRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// MerchantID optional merchant id for partner scoped requests.
+	MerchantID *string `json:"merchantId"`
+
+	// InvoiceType optional type to filter normal invoices vs statements.
+	InvoiceType *string `json:"invoiceType"`
+
+	// StartDate optional start date filter for batch history.
+	StartDate *time.Time `json:"startDate"`
+
+	// EndDate optional end date filter for batch history.
+	EndDate *time.Time `json:"endDate"`
+}
+
+// MerchantInvoiceListResponse
+type MerchantInvoiceListResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Invoices
+	Invoices []MerchantInvoiceSummary `json:"invoices"`
+}
+
+// MerchantInvoiceSummary
+type MerchantInvoiceSummary struct {
+	// ID is the id owner of the invoice.
+	ID string `json:"id"`
+
+	// DateCreated is the date the statement was generated.
+	DateCreated time.Time `json:"dateCreated"`
+
+	// GrandTotal is the grand total.
+	GrandTotal float64 `json:"grandTotal"`
+
+	// GrandTotalFormatted is the string formatted grand total.
+	GrandTotalFormatted string `json:"grandTotalFormatted"`
+
+	// Status is the status of the statement.
+	Status string `json:"status"`
+
+	// InvoiceType identifies the invoice type.
+	InvoiceType string `json:"invoiceType"`
+
+	// Paid indicates whether or not the invoice had been paid.
+	Paid bool `json:"paid"`
+}
+
+// MerchantInvoiceDetailRequest models a request to retrieve detailed merchant
+// invoice information.
+type MerchantInvoiceDetailRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// ID is the invoice id.
+	ID string `json:"id"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature
