@@ -6451,6 +6451,188 @@ type PartnerStatementDetailResponse struct {
 
 	// StatementDate is the date the statement was generated.
 	StatementDate time.Time `json:"statementDate"`
+
+	// TotalVolume is total volume in numeric format.
+	TotalVolume float64 `json:"totalVolume"`
+
+	// TotalVolumeFormatted is the string formatted total volume on the
+	// statement.
+	TotalVolumeFormatted string `json:"totalVolumeFormatted"`
+
+	// TransactionCount is the total volume on the statement.
+	TransactionCount int64 `json:"transactionCount"`
+
+	// PartnerCommission is the commission earned on the portfolio during the
+	// statement period.
+	PartnerCommission float64 `json:"partnerCommission"`
+
+	// PartnerCommissionFormatted is the string formatted partner commission on
+	// the statement.
+	PartnerCommissionFormatted string `json:"partnerCommissionFormatted"`
+
+	// PartnerCommissionsOnVolume is the partner commission earned on the
+	// portfolio during the statement period as a ratio against volume.
+	PartnerCommissionsOnVolume float64 `json:"partnerCommissionsOnVolume"`
+
+	// PartnerCommissionsOnVolumeFormatted is the string formatted version of
+	// partner commissions as a percentage of volume.
+	PartnerCommissionsOnVolumeFormatted string `json:"partnerCommissionsOnVolumeFormatted"`
+
+	// Status is the status of the statement.
+	Status string `json:"status"`
+
+	// LineItems
+	LineItems []PartnerStatementLineItem `json:"lineItems"`
+
+	// Adjustments
+	Adjustments []PartnerStatementAdjustment `json:"adjustments"`
+
+	// Disbursements
+	Disbursements []PartnerStatementDisbursement `json:"disbursements"`
+}
+
+// PartnerStatementLineItem
+type PartnerStatementLineItem struct {
+	// ID is the line item id.
+	ID string `json:"id"`
+
+	// TotalFees is the total fees charged to the merchant.
+	TotalFees float64 `json:"totalFees"`
+
+	// TotalFeesFormatted is the total fees charge formatted as a currency
+	// string.
+	TotalFeesFormatted string `json:"totalFeesFormatted"`
+
+	// TotalFeesOnVolume is the total fees charged to the merchant as ratio of
+	// volume.
+	TotalFeesOnVolume float64 `json:"totalFeesOnVolume"`
+
+	// TotalFeesOnVolumeFormatted is the total fees charged to the merchant as
+	// percentage of volume.
+	TotalFeesOnVolumeFormatted string `json:"totalFeesOnVolumeFormatted"`
+
+	// MerchantID is the id of the merchant.
+	MerchantID string `json:"merchantId"`
+
+	// MerchantName is the corporate name of the merchant.
+	MerchantName string `json:"merchantName"`
+
+	// DBAName is the dba name of the merchant
+	DBAName string `json:"dbaName"`
+
+	// StatementDate is the date the statement was generated.
+	StatementDate time.Time `json:"statementDate"`
+
+	// Volume is volume in numeric format.
+	Volume float64 `json:"volume"`
+
+	// VolumeFormatted is the string formatted total volume on the statement.
+	VolumeFormatted string `json:"volumeFormatted"`
+
+	// TransactionCount is the total volume on the statement.
+	TransactionCount int64 `json:"transactionCount"`
+
+	// Interchange is the total interchange fees incurred this period.
+	Interchange float64 `json:"interchange"`
+
+	// InterchangeFormatted is the currency formatted form of interchange.
+	InterchangeFormatted string `json:"interchangeFormatted"`
+
+	// InterchangeOnVolume is the total interchange as a ratio on volume incurred
+	// this period.
+	InterchangeOnVolume float64 `json:"interchangeOnVolume"`
+
+	// InterchangeOnVolumeFormatted is the total interchange as a percentage of
+	// volume.
+	InterchangeOnVolumeFormatted string `json:"interchangeOnVolumeFormatted"`
+
+	// Assessments is the total card brand assessments fees incurred this period.
+	Assessments float64 `json:"assessments"`
+
+	// AssessmentsFormatted is the currency formatted form of card brand
+	// assessments.
+	AssessmentsFormatted string `json:"assessmentsFormatted"`
+
+	// AssessmentsOnVolume is the total card brand assessments as a ratio on
+	// volume incurred this period.
+	AssessmentsOnVolume float64 `json:"assessmentsOnVolume"`
+
+	// AssessmentsOnVolumeFormatted is the total card brand assessments as a
+	// percentage of volume.
+	AssessmentsOnVolumeFormatted string `json:"assessmentsOnVolumeFormatted"`
+
+	// PartnerCommission is the commission earned on the portfolio during the
+	// statement period.
+	PartnerCommission float64 `json:"partnerCommission"`
+
+	// PartnerCommissionFormatted is the string formatted total volume on the
+	// statement.
+	PartnerCommissionFormatted string `json:"partnerCommissionFormatted"`
+
+	// BuyRate is the total fees charge to the partner due to buy rates.
+	BuyRate float64 `json:"buyRate"`
+
+	// BuyRateFormatted is the currency formatted form of partner buy rate.
+	BuyRateFormatted string `json:"buyRateFormatted"`
+
+	// HardCosts refers to card brand fees shared between BlockChyp and the
+	// partner.
+	HardCosts float64 `json:"hardCosts"`
+
+	// HardCostsFormatted is the currency formatted form of hard costs.
+	HardCostsFormatted string `json:"hardCostsFormatted"`
+}
+
+// PartnerStatementDisbursement
+type PartnerStatementDisbursement struct {
+	// ID is the disbursement id.
+	ID string `json:"id"`
+
+	// Timestamp is date and time the disbursement was processed.
+	Timestamp time.Time `json:"timestamp"`
+
+	// TransactionType is the type of disbursement transaction.
+	TransactionType string `json:"transactionType"`
+
+	// PaymentType is the payment method used to fund the disbursement.
+	PaymentType string `json:"paymentType"`
+
+	// MaskedPAN is the masked account number into which funds were deposited.
+	MaskedPAN string `json:"maskedPan"`
+
+	// Pending indicates that payment is still pending.
+	Pending bool `json:"pending"`
+
+	// Approved indicates that payment is approved.
+	Approved bool `json:"approved"`
+
+	// ResponseDescription is a response description from the disbursement
+	// payment platform, in any.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Amount is the amount disbursed in floating point format.
+	Amount float64 `json:"amount"`
+
+	// AmountFormatted is the currency formatted form of amount.
+	AmountFormatted string `json:"amountFormatted"`
+}
+
+// PartnerStatementAdjustment
+type PartnerStatementAdjustment struct {
+	// ID is the adjustment id.
+	ID string `json:"id"`
+
+	// Timestamp is the date and time the disbursement was posted to the account.
+	Timestamp time.Time `json:"timestamp"`
+
+	// Description is a description of the adjustment.
+	Description string `json:"description"`
+
+	// Amount is the amount in floating point format.
+	Amount float64 `json:"amount"`
+
+	// AmountFormatted is the currency formatted form of amount.
+	AmountFormatted string `json:"amountFormatted"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature
