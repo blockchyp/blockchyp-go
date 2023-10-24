@@ -162,6 +162,7 @@ type CommandLineArguments struct {
 	PONumber                    string `args:"po"`
 	SupplierReferenceNumber     string `args:"srn"`
 	StatementID                 string `json:"statementId"`
+	InvoiceID                   string `json:"invoiceId"`
 }
 
 var defaultSettings = &ConfigSettings{

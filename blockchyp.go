@@ -1325,6 +1325,22 @@ func (client *Client) MerchantInvoices(request MerchantInvoiceListRequest) (*Mer
 	return &response, err
 }
 
+// MerchantInvoiceDetail returns detail for a single merchant-invoice
+// statement.
+func (client *Client) MerchantInvoiceDetail(request MerchantInvoiceDetailRequest) (*MerchantInvoiceDetailResponse, error) {
+	var response MerchantInvoiceDetailResponse
+
+	err := client.GatewayRequest("/api/merchant-invoice-detail", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // PartnerStatementDetail returns detail for a single partner statement.
 func (client *Client) PartnerStatementDetail(request PartnerStatementDetailRequest) (*PartnerStatementDetailResponse, error) {
 	var response PartnerStatementDetailResponse

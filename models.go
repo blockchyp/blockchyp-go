@@ -6702,6 +6702,232 @@ type MerchantInvoiceDetailRequest struct {
 	ID string `json:"id"`
 }
 
+// MerchantInvoiceDetailResponse
+type MerchantInvoiceDetailResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ID optional start date filter for batch history.
+	ID string `json:"id"`
+
+	// MerchantID is the id of the merchant associated with the statement.
+	MerchantID string `json:"merchantId"`
+
+	// CorporateName is the corporate name of the merchant associated with the
+	// statement.
+	CorporateName string `json:"corporateName"`
+
+	// DBAName is the dba name of the merchant associated with the statement.
+	DBAName string `json:"dbaName"`
+
+	// DateCreated is the date the statement was generated.
+	DateCreated time.Time `json:"dateCreated"`
+
+	// Status is the current status of the invoice.
+	Status string `json:"status"`
+
+	// InvoiceType is the type of invoice (statement or invoice).
+	InvoiceType string `json:"invoiceType"`
+
+	// PricingType is the type of pricing used for the invoice (typically flat
+	// rate or or interchange plus).
+	PricingType string `json:"pricingType"`
+
+	// Paid indicates whether or not the invoice has been paid.
+	Paid bool `json:"paid"`
+
+	// GrandTotal is the grand total.
+	GrandTotal float64 `json:"grandTotal"`
+
+	// GrandTotalFormatted is the string formatted grand total.
+	GrandTotalFormatted string `json:"grandTotalFormatted"`
+
+	// Subtotal is the subtotal before shipping and tax.
+	Subtotal float64 `json:"subtotal"`
+
+	// SubotalFormatted is the string formatted subtotal before shipping and tax.
+	SubotalFormatted string `json:"subotalFormatted"`
+
+	// TaxTotal is the total sales tax.
+	TaxTotal float64 `json:"taxTotal"`
+
+	// TaxTotalFormatted is the string formatted total sales tax.
+	TaxTotalFormatted string `json:"taxTotalFormatted"`
+
+	// ShippingCost is the total cost of shipping.
+	ShippingCost float64 `json:"shippingCost"`
+
+	// ShippingCostFormatted is the string formatted total cost of shipping.
+	ShippingCostFormatted string `json:"shippingCostFormatted"`
+
+	// BalanceDue is the total unpaid balance on the invoice.
+	BalanceDue float64 `json:"balanceDue"`
+
+	// BalanceDueFormatted is the string formatted unpaid balance on the invoice.
+	BalanceDueFormatted string `json:"balanceDueFormatted"`
+
+	// ShippingAddress is the shipping or physical address associated with the
+	// invoice.
+	ShippingAddress *Address `json:"shippingAddress"`
+
+	// BillingAddress is the billing or mailing address associated with the
+	// invoice.
+	BillingAddress *Address `json:"billingAddress"`
+
+	// LineItems
+	LineItems []InvoiceLineItem `json:"lineItems"`
+
+	// Payments
+	Payments []InvoicePayment `json:"payments"`
+
+	// Deposits
+	Deposits []StatementDeposit `json:"deposits"`
+}
+
+// InvoiceLineItem
+type InvoiceLineItem struct {
+	// ID is the line item id.
+	ID string `json:"id"`
+
+	// LineType is the type of line item.
+	LineType string `json:"lineType"`
+
+	// ProductID is the product id for standard invoices.
+	ProductID string `json:"productId"`
+
+	// Quantity is the quantity associated with the line item.
+	Quantity int64 `json:"quantity"`
+
+	// Description is the description associated with the line item.
+	Description string `json:"description"`
+
+	// Explanation is an alternate explanation.
+	Explanation string `json:"explanation"`
+
+	// TransactionCount is the transaction count associated with any transaction
+	// based fees.
+	TransactionCount int64 `json:"transactionCount"`
+
+	// Volume is the transaction volume associated with any fees.
+	Volume float64 `json:"volume"`
+
+	// VolumeFormatted is the string formatted volume.
+	VolumeFormatted string `json:"volumeFormatted"`
+
+	// PerTransactionFee is the per transaction fee.
+	PerTransactionFee float64 `json:"perTransactionFee"`
+
+	// PerTransactionFeeFormatted is the string formatted per transaction fee.
+	PerTransactionFeeFormatted string `json:"perTransactionFeeFormatted"`
+
+	// TransactionPercentage is the percentage (as floating point ratio) fee
+	// assessed on volume.
+	TransactionPercentage float64 `json:"transactionPercentage"`
+
+	// TransactionPercentageFormatted is the string formatted transaction fee
+	// percentage.
+	TransactionPercentageFormatted string `json:"transactionPercentageFormatted"`
+
+	// Price is the quantity price associated.
+	Price float64 `json:"price"`
+
+	// PriceFormatted is the string formatted price associated with a
+	// conventional line item.
+	PriceFormatted string `json:"priceFormatted"`
+
+	// PriceExtended is the extended price .
+	PriceExtended float64 `json:"priceExtended"`
+
+	// PriceExtendedFormatted is the string formatted extended price.
+	PriceExtendedFormatted string `json:"priceExtendedFormatted"`
+
+	// LineItems
+	LineItems []InvoiceLineItem `json:"lineItems"`
+}
+
+// InvoicePayment
+type InvoicePayment struct {
+	// ID is the line item id.
+	ID string `json:"id"`
+
+	// Timestamp is timestamp the payment was authorized.
+	Timestamp time.Time `json:"timestamp"`
+
+	// TransactionType is the type of disbursement transaction.
+	TransactionType string `json:"transactionType"`
+
+	// PaymentType is the payment method used to fund the disbursement.
+	PaymentType string `json:"paymentType"`
+
+	// AuthCode is the auth code associated with credit card payment methods.
+	AuthCode string `json:"authCode"`
+
+	// MaskedPAN is the masked account number into which funds were deposited.
+	MaskedPAN string `json:"maskedPan"`
+
+	// Pending indicates that payment is still pending.
+	Pending bool `json:"pending"`
+
+	// Approved indicates that payment is approved.
+	Approved bool `json:"approved"`
+
+	// ResponseDescription is a response description from the disbursement
+	// payment platform, in any.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Amount is the amount disbursed in floating point format.
+	Amount float64 `json:"amount"`
+
+	// AmountFormatted is the currency formatted form of amount.
+	AmountFormatted string `json:"amountFormatted"`
+}
+
+// StatementDeposit
+type StatementDeposit struct {
+	// ID is the line item id.
+	ID string `json:"id"`
+
+	// TransactionCount is the number of transactions in the batch for which
+	// funds were deposited.
+	TransactionCount int64 `json:"transactionCount"`
+
+	// BatchID is batch id associated with the deposit.
+	BatchID string `json:"batchId"`
+
+	// FeesPaid are the prepaid fees associated with the batch.
+	FeesPaid float64 `json:"feesPaid"`
+
+	// FeesPaidFormatted is the currency formatted form of prepaid fees.
+	FeesPaidFormatted string `json:"feesPaidFormatted"`
+
+	// NetDeposit is the net deposit released to the merchant.
+	NetDeposit float64 `json:"netDeposit"`
+
+	// NetDepositFormatted is the currency formatted net deposit released to the
+	// merchant.
+	NetDepositFormatted string `json:"netDepositFormatted"`
+
+	// TotalSales is the total sales in the batch.
+	TotalSales float64 `json:"totalSales"`
+
+	// TotalSalesFormatted is the currency formatted total sales in the batch.
+	TotalSalesFormatted string `json:"totalSalesFormatted"`
+
+	// TotalRefunds is the total refunds in the batch.
+	TotalRefunds float64 `json:"totalRefunds"`
+
+	// TotalRefundsFormatted is the currency formatted total refunds in the
+	// batch.
+	TotalRefundsFormatted string `json:"totalRefundsFormatted"`
+}
+
 // TerminalCaptureSignatureRequest contains a request for customer signature
 // data.
 type TerminalCaptureSignatureRequest struct {
