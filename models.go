@@ -6360,7 +6360,8 @@ type PartnerStatementListRequest struct {
 	EndDate *time.Time `json:"endDate"`
 }
 
-// PartnerStatementSummary
+// PartnerStatementSummary models a basic information about partner statements
+// for use in list or search results.
 type PartnerStatementSummary struct {
 	// ID is the id owner of the pricing policy.
 	ID string `json:"id"`
@@ -6390,7 +6391,8 @@ type PartnerStatementSummary struct {
 	Status string `json:"status"`
 }
 
-// PartnerStatementListResponse
+// PartnerStatementListResponse models results to a partner statement list
+// inquiry.
 type PartnerStatementListResponse struct {
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
@@ -6483,7 +6485,8 @@ type PartnerStatementDetailResponse struct {
 	Disbursements []PartnerStatementDisbursement `json:"disbursements"`
 }
 
-// PartnerStatementLineItem
+// PartnerStatementLineItem models line item level data for a partner
+// statement.
 type PartnerStatementLineItem struct {
 	// ID is the line item id.
 	ID string `json:"id"`
@@ -6575,7 +6578,8 @@ type PartnerStatementLineItem struct {
 	HardCostsFormatted string `json:"hardCostsFormatted"`
 }
 
-// PartnerStatementDisbursement
+// PartnerStatementDisbursement models details about disbursements related to
+// partner statements.
 type PartnerStatementDisbursement struct {
 	// ID is the disbursement id.
 	ID string `json:"id"`
@@ -6609,7 +6613,7 @@ type PartnerStatementDisbursement struct {
 	AmountFormatted string `json:"amountFormatted"`
 }
 
-// PartnerStatementAdjustment
+// PartnerStatementAdjustment models partner statement adjustments.
 type PartnerStatementAdjustment struct {
 	// ID is the adjustment id.
 	ID string `json:"id"`
@@ -6649,7 +6653,7 @@ type MerchantInvoiceListRequest struct {
 	EndDate *time.Time `json:"endDate"`
 }
 
-// MerchantInvoiceListResponse
+// MerchantInvoiceListResponse models a response to an invoice list request.
 type MerchantInvoiceListResponse struct {
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
@@ -6665,7 +6669,8 @@ type MerchantInvoiceListResponse struct {
 	Invoices []MerchantInvoiceSummary `json:"invoices"`
 }
 
-// MerchantInvoiceSummary
+// MerchantInvoiceSummary models basic information about a merchant invoice
+// for use in list or search results.
 type MerchantInvoiceSummary struct {
 	// ID is the id owner of the invoice.
 	ID string `json:"id"`
@@ -6702,7 +6707,8 @@ type MerchantInvoiceDetailRequest struct {
 	ID string `json:"id"`
 }
 
-// MerchantInvoiceDetailResponse
+// MerchantInvoiceDetailResponse models detailed merchant invoice or statement
+// information.
 type MerchantInvoiceDetailResponse struct {
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
@@ -6791,7 +6797,7 @@ type MerchantInvoiceDetailResponse struct {
 	Deposits []StatementDeposit `json:"deposits"`
 }
 
-// InvoiceLineItem
+// InvoiceLineItem models a single invoice or merchant statement line item.
 type InvoiceLineItem struct {
 	// ID is the line item id.
 	ID string `json:"id"`
@@ -6852,7 +6858,7 @@ type InvoiceLineItem struct {
 	LineItems []InvoiceLineItem `json:"lineItems"`
 }
 
-// InvoicePayment
+// InvoicePayment models information about payments against an invoice
 type InvoicePayment struct {
 	// ID is the line item id.
 	ID string `json:"id"`
@@ -6889,7 +6895,8 @@ type InvoicePayment struct {
 	AmountFormatted string `json:"amountFormatted"`
 }
 
-// StatementDeposit
+// StatementDeposit models information about merchant deposits during a
+// statement period.
 type StatementDeposit struct {
 	// ID is the line item id.
 	ID string `json:"id"`
@@ -6941,7 +6948,8 @@ type PartnerCommissionBreakdownRequest struct {
 	StatementID string `json:"statementId"`
 }
 
-// PartnerCommissionBreakdownResponse
+// PartnerCommissionBreakdownResponse models detailed information about how
+// partner commissions were calculated for a statement.
 type PartnerCommissionBreakdownResponse struct {
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
@@ -7103,7 +7111,7 @@ type PartnerCommissionBreakdownResponse struct {
 	CardBrandCostDetails []AggregateBillingLineItem `json:"cardBrandCostDetails"`
 }
 
-// BuyRateLineItem
+// BuyRateLineItem models a single buy rate calculation line item.
 type BuyRateLineItem struct {
 	// Description provides a basic description of the line item.
 	Description string `json:"description"`
@@ -7142,7 +7150,8 @@ type BuyRateLineItem struct {
 	TotalFormatted string `json:"totalFormatted"`
 }
 
-// AggregateBillingLineItem
+// AggregateBillingLineItem models low level aggregated and nested data line
+// items.
 type AggregateBillingLineItem struct {
 	// ID is the line item identifier.
 	ID string `json:"id"`
@@ -7174,7 +7183,8 @@ type AggregateBillingLineItem struct {
 	DetailLines []AggregateBillingLineItem `json:"detailLines"`
 }
 
-// AggregateBillingLineItemStats
+// AggregateBillingLineItemStats models statistics for low level aggregation
+// line items.
 type AggregateBillingLineItemStats struct {
 	// Min is the min value in the set.
 	Min string `json:"min"`
