@@ -304,6 +304,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processMerchantInvoiceDetail(client, args)
 	case "partner-statement-detail":
 		processPartnerStatementDetail(client, args)
+	case "partner-commission-breakdown":
+		processPartnerCommissionBreakdown(client, args)
 	case "partner-statements":
 		processPartnerStatements(client, args)
 	case "pricing":
@@ -481,6 +483,27 @@ func processUnlinkToken(client *blockchyp.Client, args blockchyp.CommandLineArgu
 	}
 
 	dumpResponse(&args, ack)
+
+}
+
+func processPartnerCommissionBreakdown(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	validateRequired(args.StatementID, "statementId")
+
+	request := blockchyp.PartnerCommissionBreakdownRequest{
+		StatementID: args.StatementID,
+	}
+
+	res, err := client.PartnerCommissionBreakdown(request)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
 
 }
 

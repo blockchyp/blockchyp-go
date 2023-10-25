@@ -1371,6 +1371,22 @@ func (client *Client) PricingPolicy(request PricingPolicyRequest) (*PricingPolic
 	return &response, err
 }
 
+// PartnerCommissionBreakdown returns low level details for how partner
+// commissions were calculated for a specific merchant statement.
+func (client *Client) PartnerCommissionBreakdown(request PartnerCommissionBreakdownRequest) (*PartnerCommissionBreakdownResponse, error) {
+	var response PartnerCommissionBreakdownResponse
+
+	err := client.GatewayRequest("/api/partner-commission-breakdown", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // MerchantProfile returns profile information for a merchant.
 func (client *Client) MerchantProfile(request MerchantProfileRequest) (*MerchantProfileResponse, error) {
 	var response MerchantProfileResponse
