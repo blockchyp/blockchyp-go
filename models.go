@@ -6859,7 +6859,7 @@ type InvoiceLineItem struct {
 	// PriceExtendedFormatted is the string formatted extended price.
 	PriceExtendedFormatted string `json:"priceExtendedFormatted"`
 
-	// LineItems
+	// LineItems is the list of nested line items, if any.
 	LineItems []InvoiceLineItem `json:"lineItems"`
 }
 
