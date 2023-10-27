@@ -6404,7 +6404,7 @@ type PartnerStatementListResponse struct {
 	// result.
 	ResponseDescription string `json:"responseDescription"`
 
-	// Statements
+	// Statements is the list of statements summaries.
 	Statements []PartnerStatementSummary `json:"statements"`
 }
 
@@ -6791,13 +6791,14 @@ type MerchantInvoiceDetailResponse struct {
 	// invoice.
 	BillingAddress *Address `json:"billingAddress"`
 
-	// LineItems
+	// LineItems is the list of line item details associated with the invoice.
 	LineItems []InvoiceLineItem `json:"lineItems"`
 
-	// Payments
+	// Payments is the list of payments collected against the invoice.
 	Payments []InvoicePayment `json:"payments"`
 
-	// Deposits
+	// Deposits is the list of merchant settlements disbursed during the
+	// statement period.
 	Deposits []StatementDeposit `json:"deposits"`
 }
 
@@ -6862,7 +6863,7 @@ type InvoiceLineItem struct {
 	LineItems []InvoiceLineItem `json:"lineItems"`
 }
 
-// InvoicePayment models information about payments against an invoice
+// InvoicePayment models information about payments against an invoice.
 type InvoicePayment struct {
 	// ID is the line item id.
 	ID string `json:"id"`
