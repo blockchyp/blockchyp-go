@@ -5266,7 +5266,7 @@ type MerchantUser struct {
 	// Type is the type of user account.
 	Type string `json:"type"`
 
-	// Roles are the role codes assigned to this user.
+	// Roles is the role codes assigned to this user.
 	Roles []string `json:"roles"`
 
 	// Locked indicates whether or not this user account is locked.
@@ -6475,13 +6475,14 @@ type PartnerStatementDetailResponse struct {
 	// Status is the status of the statement.
 	Status string `json:"status"`
 
-	// LineItems
+	// LineItems is the line item detail associated with the statement.
 	LineItems []PartnerStatementLineItem `json:"lineItems"`
 
-	// Adjustments
+	// Adjustments is the list of adjustments made against the statement, if any.
 	Adjustments []PartnerStatementAdjustment `json:"adjustments"`
 
-	// Disbursements
+	// Disbursements is the list of partner disbursements made against the
+	// partner statement.
 	Disbursements []PartnerStatementDisbursement `json:"disbursements"`
 }
 
@@ -6490,6 +6491,9 @@ type PartnerStatementDetailResponse struct {
 type PartnerStatementLineItem struct {
 	// ID is the line item id.
 	ID string `json:"id"`
+
+	// InvoiceID is the invoice id for the underlying merchant statement.
+	InvoiceID string `json:"invoiceId"`
 
 	// TotalFees is the total fees charged to the merchant.
 	TotalFees float64 `json:"totalFees"`
@@ -6512,7 +6516,7 @@ type PartnerStatementLineItem struct {
 	// MerchantName is the corporate name of the merchant.
 	MerchantName string `json:"merchantName"`
 
-	// DBAName is the dba name of the merchant
+	// DBAName is the dba name of the merchant.
 	DBAName string `json:"dbaName"`
 
 	// StatementDate is the date the statement was generated.
@@ -6665,7 +6669,7 @@ type MerchantInvoiceListResponse struct {
 	// result.
 	ResponseDescription string `json:"responseDescription"`
 
-	// Invoices
+	// Invoices is the list of invoices returned by the request.
 	Invoices []MerchantInvoiceSummary `json:"invoices"`
 }
 
@@ -6905,10 +6909,10 @@ type StatementDeposit struct {
 	// funds were deposited.
 	TransactionCount int64 `json:"transactionCount"`
 
-	// BatchID is batch id associated with the deposit.
+	// BatchID is the batch id associated with the deposit.
 	BatchID string `json:"batchId"`
 
-	// FeesPaid are the prepaid fees associated with the batch.
+	// FeesPaid is the prepaid fees associated with the batch.
 	FeesPaid float64 `json:"feesPaid"`
 
 	// FeesPaidFormatted is the currency formatted form of prepaid fees.
@@ -7101,13 +7105,16 @@ type PartnerCommissionBreakdownResponse struct {
 	// markup.
 	PartnerPercentageFormatted string `json:"partnerPercentageFormatted"`
 
-	// BuyRateLineItems
+	// BuyRateLineItems is the list of line items documenting how the total buy
+	// rate was calculated.
 	BuyRateLineItems []BuyRateLineItem `json:"buyRateLineItems"`
 
-	// RevenueDetails
+	// RevenueDetails is the list of detail lines describing how revenue was
+	// calculated and collected by the sponsor bank.
 	RevenueDetails []AggregateBillingLineItem `json:"revenueDetails"`
 
-	// CardBrandCostDetails
+	// CardBrandCostDetails is the nested list of costs levied by the card
+	// brands, grouped by card brand and type.
 	CardBrandCostDetails []AggregateBillingLineItem `json:"cardBrandCostDetails"`
 }
 

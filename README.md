@@ -5540,8 +5540,8 @@ func partnerStatementsExample() {
 The API returns detailed information about a specific partner statement.  Aggregate data is returned along with
 line item level data for each underlying merchant statement.
 
-Use the merchant statement id with the *Merchant Statement Detail* API and the *Partner Commission Breakdown* API 
-to get the merchant statement and the card brand fee and misc cost breakdown respectively.
+Use the merchant invoice id with the *Merchant Statement Detail* API and the *Partner Commission Breakdown* API 
+to get the merchant statement and the card brand fee cost breakdown respectively.
 
 
 
@@ -5650,7 +5650,13 @@ func merchantInvoicesExample() {
 * **API Credential Types:** Partner
 * **Required Role:** Partner API Access
 
-The API returns detailed information about a specific merchant statement.
+The API returns detailed information about a specific merchant statement or invoice.
+
+All line items are returned a topographically sorted tree modeling the nested line item structure of the 
+invoice.  Details about any payments posted against the invoice are returned.
+
+It the invoice is a merchant statement, details about every merchant deposit that occurred during the statement period
+are also returned.
 
 
 
@@ -5702,7 +5708,9 @@ func merchantInvoiceDetailExample() {
 * **API Credential Types:** Partner
 * **Required Role:** Partner API Access
 
-This API allows partners to pull down the low level data used to compute a partner commission for a specific merchant statuement.
+This API allows partners to pull down the low level data used to compute a partner commission for a specific merchant statement.
+
+The `statementId` is required and must be the id of a valid merchant invoice of type `statement`.
 
 
 
