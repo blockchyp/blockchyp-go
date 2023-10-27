@@ -17,20 +17,20 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
-func TestPartnerStatements(t *testing.T) {
+func TestMerchantInvoices(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
 	client := config.newTestClient(t, "")
 
 	// setup request object
-	request := blockchyp.PartnerStatementListRequest{
+	request := blockchyp.MerchantInvoiceListRequest{
 		Test: true,
 	}
 
 	logObj(t, "Request:", request)
 
-	response, err := client.PartnerStatements(request)
+	response, err := client.MerchantInvoices(request)
 
 	assert.NoError(err)
 

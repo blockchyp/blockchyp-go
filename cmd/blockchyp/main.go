@@ -555,6 +555,7 @@ func processMerchantInvoices(client *blockchyp.Client, args blockchyp.CommandLin
 
 	if args.MerchantID != "" {
 		request.MerchantID = &args.MerchantID
+		request.InvoiceType = &args.Type
 	}
 
 	if args.StartDate != "" {
