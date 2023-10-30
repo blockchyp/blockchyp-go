@@ -5385,6 +5385,376 @@ func deleteTestMerchantExample() {
 
 ```
 
+### Partner Utilities
+
+
+These partner only APIs give ISV partners advanced reporting and tools for managing their portfolio.
+
+Most of the APIs below are for portfolio reporting and range from basic partner commission statements
+to individual statements with all underlying card brand data.
+
+We also provide a pricing policy API that enables partners to pull down the current pricing rules
+in force for any merchant in their portfolio.
+
+<aside class="info">
+<b>Currency Data</b>
+<p>
+All partner APIs return currency and percentage values in two formats: floating point and formatted strings.
+</p>
+<p>
+It's recommended that all developers use the formatted string as this will ensure the most precise values.
+Floating point numbers are usually not appropriate for currency or fixed point decimal numbers as
+the underlying binary encoding can lead to errors in precision.  We provide floating point values
+only as a convenience for developers want to save development time and can live with approximated
+values in their use case.
+</p>
+</aside>
+
+
+
+#### Retrieve Pricing Policy
+
+
+
+* **API Credential Types:** Partner
+* **Required Role:** Partner API Access
+
+The API returns the current pricing policy for a merchant.  This API is valid for partner scoped API credentials
+and `merchantId` is a required parameter.  By default this API returns the currently in-force pricing policy for a merchant,
+but other inactive policies can be returned by providing the `id` parameter.
+
+Buy rates for interchange plus and fixed rate pricing are always returned, but only the pricing related to the 
+pricing model type (flat rate or interchange plus) are actually used in fee calculation.
+
+Each pricing level returns three values: `buyRate`, `current`, and `limit`.  The actual price the merchant will pay is 
+given in the `current` field.  The other values reflect the contract minimum (`buyRate`) and maximum (`limit`) range
+the partner can use when changing prices.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func pricingPolicyExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.PricingPolicyRequest{}
+
+    response, err := client.PricingPolicy(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Partner Statements
+
+
+
+* **API Credential Types:** Partner
+* **Required Role:** Partner API Access
+
+The API returns a list of partner residual statements.  By default, all statements are returned with the most recent
+statements listed first.  Optional date parameters (`startDate` and `endDate`) can filter statements to a specific date range.
+
+The list of statements returns basic information about statements like volume, transaction count, and commissions earned.
+
+Use the `id` returned with each statement summary with the *Partner Statement Detail* API to pull down full details.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func partnerStatementsExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.PartnerStatementListRequest{}
+
+    response, err := client.PartnerStatements(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Partner Statement Detail
+
+
+
+* **API Credential Types:** Partner
+* **Required Role:** Partner API Access
+
+The API returns detailed information about a specific partner statement.  Aggregate data is returned along with
+line item level data for each underlying merchant statement.
+
+Use the merchant invoice id with the *Merchant Statement Detail* API and the *Partner Commission Breakdown* API 
+to get the merchant statement and the card brand fee cost breakdown respectively.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func partnerStatementDetailExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.PartnerStatementDetailRequest{}
+
+    response, err := client.PartnerStatementDetail(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Merchant Invoices
+
+
+
+* **API Credential Types:** Partner or Merchant
+* **Required Role:** Partner API Access or Merchant API 
+
+The API returns a list of merchant statements and invoices.  By default, all invoices are returned with the most recent
+statements listed first.  Optional date parameters (`startDate` and `endDate`) can be used to filter statements by date
+range. 
+
+The `invoiceType` parameter can also be used to filter invoices by type.  Invoices could be conventional invoices, such
+as those generated when ordering terminals or gift cards, or invoices could be merchant statements.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func merchantInvoicesExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.MerchantInvoiceListRequest{}
+
+    response, err := client.MerchantInvoices(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Merchant Invoice Detail
+
+
+
+* **API Credential Types:** Partner
+* **Required Role:** Partner API Access
+
+The API returns detailed information about a specific merchant statement or invoice.
+
+All line items are returned a topographically sorted tree modeling the nested line item structure of the 
+invoice.  Details about any payments posted against the invoice are returned.
+
+It the invoice is a merchant statement, details about every merchant deposit that occurred during the statement period
+are also returned.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func merchantInvoiceDetailExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.MerchantInvoiceDetailRequest{}
+
+    response, err := client.MerchantInvoiceDetail(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Partner Commission Breakdown
+
+
+
+* **API Credential Types:** Partner
+* **Required Role:** Partner API Access
+
+This API allows partners to pull down the low level data used to compute a partner commission for a specific merchant statement.
+
+The `statementId` is required and must be the id of a valid merchant invoice of type `statement`.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func partnerCommissionBreakdownExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.PartnerCommissionBreakdownRequest{}
+
+    response, err := client.PartnerCommissionBreakdown(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
 
 
 

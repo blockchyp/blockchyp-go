@@ -191,6 +191,11 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.Recurring, "recurring", false, "flags a transaction as recurring.")
 	flag.BoolVar(&args.MIT, "mit", false, "manually sets the MIT flag.")
 	flag.BoolVar(&args.CIT, "cit", false, "manually sets the CIT flag.")
+	flag.StringVar(&args.PONumber, "po", "", "purchase order for L2 transactions")
+	flag.StringVar(&args.SupplierReferenceNumber, "srn", "", "supplier reference number for L2 transactions")
+	flag.StringVar(&args.PolicyID, "policy", "", "policy id for pricing policy related operations")
+	flag.StringVar(&args.StatementID, "statementId", "", "statement id for partner or merchant statement operations")
+	flag.StringVar(&args.InvoiceID, "invoiceId", "", "invoice id for partner or merchant statement/invoice operations")
 	flag.Parse()
 
 	if args.Version {
@@ -293,6 +298,18 @@ func processCommand(args blockchyp.CommandLineArguments) {
 	}
 
 	switch cmd {
+	case "merchant-invoices":
+		processMerchantInvoices(client, args)
+	case "merchant-invoice-detail":
+		processMerchantInvoiceDetail(client, args)
+	case "partner-statement-detail":
+		processPartnerStatementDetail(client, args)
+	case "partner-commission-breakdown":
+		processPartnerCommissionBreakdown(client, args)
+	case "partner-statements":
+		processPartnerStatements(client, args)
+	case "pricing":
+		processPricing(client, args)
 	case "sideload":
 		processSideLoad(client, args)
 	case "add-test-merchant":
@@ -466,6 +483,164 @@ func processUnlinkToken(client *blockchyp.Client, args blockchyp.CommandLineArgu
 	}
 
 	dumpResponse(&args, ack)
+
+}
+
+func processPartnerCommissionBreakdown(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	validateRequired(args.StatementID, "statementId")
+
+	request := blockchyp.PartnerCommissionBreakdownRequest{
+		StatementID: args.StatementID,
+	}
+
+	res, err := client.PartnerCommissionBreakdown(request)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
+
+}
+
+func processMerchantInvoiceDetail(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	validateRequired(args.InvoiceID, "invoiceId")
+
+	request := blockchyp.MerchantInvoiceDetailRequest{
+		ID: args.InvoiceID,
+	}
+
+	res, err := client.MerchantInvoiceDetail(request)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
+
+}
+
+func processPartnerStatementDetail(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	validateRequired(args.StatementID, "statementId")
+
+	request := blockchyp.PartnerStatementDetailRequest{
+		ID: args.StatementID,
+	}
+
+	res, err := client.PartnerStatementDetail(request)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
+
+}
+
+func processMerchantInvoices(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := blockchyp.MerchantInvoiceListRequest{}
+
+	if args.MerchantID != "" {
+		request.MerchantID = &args.MerchantID
+		request.InvoiceType = &args.Type
+	}
+
+	if args.StartDate != "" {
+		ts, err := parseTimestamp(args.StartDate)
+		if err != nil {
+			handleError(&args, err)
+			return
+		}
+		request.StartDate = &ts
+	}
+	if args.EndDate != "" {
+		ts, err := parseTimestamp(args.EndDate)
+		if err != nil {
+			handleError(&args, err)
+			return
+		}
+		request.EndDate = &ts
+	}
+
+	res, err := client.MerchantInvoices(request)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
+
+}
+
+func processPartnerStatements(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := blockchyp.PartnerStatementListRequest{}
+
+	if args.StartDate != "" {
+		ts, err := parseTimestamp(args.StartDate)
+		if err != nil {
+			handleError(&args, err)
+			return
+		}
+		request.StartDate = &ts
+	}
+	if args.EndDate != "" {
+		ts, err := parseTimestamp(args.EndDate)
+		if err != nil {
+			handleError(&args, err)
+			return
+		}
+		request.EndDate = &ts
+	}
+
+	res, err := client.PartnerStatements(request)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
+
+}
+
+func processPricing(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	validateRequired(args.MerchantID, "merchantId")
+
+	request := blockchyp.PricingPolicyRequest{
+		MerchantID: args.MerchantID,
+		ID:         args.PolicyID,
+	}
+
+	res, err := client.PricingPolicy(request)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
 
 }
 
@@ -1389,6 +1564,9 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			TestCase:                   args.TestCase,
 			Mit:                        args.MIT,
 			Cit:                        args.CIT,
+			PAN:                        args.PAN,
+			ExpMonth:                   args.ExpiryMonth,
+			ExpYear:                    args.ExpiryYear,
 		}
 
 		if args.Debit {
@@ -1629,8 +1807,8 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 	if !parseJSONInput(args, req) {
 
 		validateRequired(args.Amount, "amount")
-		if (args.TerminalName == "") && (args.Token == "") && (args.PAN == "") {
-			fatalError("-terminal or -token requred")
+		if (args.TerminalName == "") && (args.Token == "") && (args.PAN == "") && (args.TransactionID == "") {
+			fatalError("-terminal, -token, or -txId required")
 		}
 
 		req = &blockchyp.AuthorizationRequest{
@@ -1672,6 +1850,9 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			TestCase:                   args.TestCase,
 			Mit:                        args.MIT,
 			Cit:                        args.CIT,
+			TransactionID:              args.TransactionID,
+			PurchaseOrderNumber:        args.PONumber,
+			SupplierReferenceNumber:    args.SupplierReferenceNumber,
 		}
 
 		displayTx := assembleDisplayTransaction(args)

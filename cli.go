@@ -119,6 +119,7 @@ type CommandLineArguments struct {
 	CryptoReceiveAddress        string `arg:"receiveAddress"`
 	Label                       string `arg:"label"`
 	DBAName                     string `arg:"dbaName"`
+	PolicyID                    string `arg:"policyId"`
 	MerchantID                  string `arg:"merchantId"`
 	TerminalID                  string `arg:"terminalId"`
 	Code                        string `arg:"code"`
@@ -158,6 +159,10 @@ type CommandLineArguments struct {
 	TestCase                    string `args:"testCase"`
 	CIT                         bool   `args:"cit"`
 	MIT                         bool   `args:"mit"`
+	PONumber                    string `args:"po"`
+	SupplierReferenceNumber     string `args:"srn"`
+	StatementID                 string `json:"statementId"`
+	InvoiceID                   string `json:"invoiceId"`
 }
 
 var defaultSettings = &ConfigSettings{
