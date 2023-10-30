@@ -1295,6 +1295,98 @@ func (client *Client) TransactionHistory(request TransactionHistoryRequest) (*Tr
 	return &response, err
 }
 
+// PricingPolicy returns pricing policy for a merchant.
+func (client *Client) PricingPolicy(request PricingPolicyRequest) (*PricingPolicyResponse, error) {
+	var response PricingPolicyResponse
+
+	err := client.GatewayRequest("/api/read-pricing-policy", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// PartnerStatements returns a list of partner statements.
+func (client *Client) PartnerStatements(request PartnerStatementListRequest) (*PartnerStatementListResponse, error) {
+	var response PartnerStatementListResponse
+
+	err := client.GatewayRequest("/api/partner-statement-list", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// PartnerStatementDetail returns detail for a single partner statement.
+func (client *Client) PartnerStatementDetail(request PartnerStatementDetailRequest) (*PartnerStatementDetailResponse, error) {
+	var response PartnerStatementDetailResponse
+
+	err := client.GatewayRequest("/api/partner-statement-detail", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// MerchantInvoices returns a list of merchant invoices.
+func (client *Client) MerchantInvoices(request MerchantInvoiceListRequest) (*MerchantInvoiceListResponse, error) {
+	var response MerchantInvoiceListResponse
+
+	err := client.GatewayRequest("/api/merchant-invoice-list", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// MerchantInvoiceDetail returns detail for a single merchant-invoice
+// statement.
+func (client *Client) MerchantInvoiceDetail(request MerchantInvoiceDetailRequest) (*MerchantInvoiceDetailResponse, error) {
+	var response MerchantInvoiceDetailResponse
+
+	err := client.GatewayRequest("/api/merchant-invoice-detail", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// PartnerCommissionBreakdown returns low level details for how partner
+// commissions were calculated for a specific merchant statement.
+func (client *Client) PartnerCommissionBreakdown(request PartnerCommissionBreakdownRequest) (*PartnerCommissionBreakdownResponse, error) {
+	var response PartnerCommissionBreakdownResponse
+
+	err := client.GatewayRequest("/api/partner-commission-breakdown", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // MerchantProfile returns profile information for a merchant.
 func (client *Client) MerchantProfile(request MerchantProfileRequest) (*MerchantProfileResponse, error) {
 	var response MerchantProfileResponse

@@ -1201,6 +1201,22 @@ type AuthorizationRequest struct {
 	// transaction.
 	Recurring bool `json:"recurring,omitempty"`
 
+	// Cit manually sets the CIT (Customer Initiated Transaction) flag.
+	Cit bool `json:"cit,omitempty"`
+
+	// Mit manually sets the MIT (Merchant Initiated Transaction) flag.
+	Mit bool `json:"mit,omitempty"`
+
+	// PurchaseOrderNumber is the purchase order number, if known.
+	PurchaseOrderNumber string `json:"purchaseOrderNumber,omitempty"`
+
+	// SupplierReferenceNumber is the supplier reference number, if known.
+	SupplierReferenceNumber string `json:"supplierReferenceNumber,omitempty"`
+
+	// LineItems is an item to display. Can be overwritten or appended, based on
+	// the request type.
+	LineItems []*TransactionDisplayItem `json:"lineItems"`
+
 	// AltPrices is a map of alternate currencies and the price in each currency.
 	// Use only if you want to set your own exchange rate for a crypto
 	// transaction.
@@ -1629,6 +1645,12 @@ type RefundRequest struct {
 	// asyncronously. Use with caution and in conjunction with the transaction
 	// status API.
 	AsyncReversals bool `json:"asyncReversals,omitempty"`
+
+	// Cit manually sets the CIT (Customer Initiated Transaction) flag.
+	Cit bool `json:"cit,omitempty"`
+
+	// Mit manually sets the MIT (Merchant Initiated Transaction) flag.
+	Mit bool `json:"mit,omitempty"`
 }
 
 // CaptureRequest contains the information needed to capture a preauth.
@@ -5244,7 +5266,7 @@ type MerchantUser struct {
 	// Type is the type of user account.
 	Type string `json:"type"`
 
-	// Roles are the role codes assigned to this user.
+	// Roles is the role codes assigned to this user.
 	Roles []string `json:"roles"`
 
 	// Locked indicates whether or not this user account is locked.
@@ -6174,6 +6196,1012 @@ type BrandingAssetResponse struct {
 
 	// Results enumerates all branding assets in a given credential scope.
 	Results []BrandingAsset `json:"results"`
+}
+
+// PricingPolicyRequest models a request to retrieve pricing policy
+// information. The default policy for the merchant is returned if no idea is
+// provided.
+type PricingPolicyRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// ID is an optional id used to retrieve a specific pricing policy.
+	ID string `json:"id"`
+
+	// MerchantID is an optional merchant id if this request is submitted via
+	// partner credentials.
+	MerchantID string `json:"merchantId"`
+}
+
+// PricePoint models a single set of pricing values for a pricing policy.
+type PricePoint struct {
+	// BuyRate is the string representation of a per transaction minimum.
+	BuyRate string `json:"buyRate"`
+
+	// Current is the string representation of the current fee per transaction.
+	Current string `json:"current"`
+
+	// Limit is the string representation of a per transaction gouge limit.
+	Limit string `json:"limit"`
+}
+
+// PricingPolicyResponse models a the response to a pricing policy request.
+type PricingPolicyResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ID is the id owner of the pricing policy.
+	ID string `json:"id"`
+
+	// PartnerID is the id of the partner associated with this pricing policy.
+	PartnerID string `json:"partnerId"`
+
+	// MerchantID is the id of the merchant associated with this pricing policy.
+	MerchantID string `json:"merchantId"`
+
+	// Enabled indicates whether or not a pricing policy is enabled.
+	Enabled bool `json:"enabled"`
+
+	// Timestamp is the date and time when the pricing policy was created.
+	Timestamp string `json:"timestamp"`
+
+	// Description is the description of the pricing policy.
+	Description string `json:"description"`
+
+	// PolicyType is type of pricing policy (flat vs interchange).
+	PolicyType string `json:"policyType"`
+
+	// PartnerMarkupSplit is the percentage split of the of buy rate markup with
+	// BlockChyp.
+	PartnerMarkupSplit string `json:"partnerMarkupSplit"`
+
+	// StandardFlatRate is the flat rate percentage for standard card present
+	// transactions.
+	StandardFlatRate PricePoint `json:"standardFlatRate"`
+
+	// DebitFlatRate is the flat rate percentage for debit card transactions.
+	DebitFlatRate PricePoint `json:"debitFlatRate"`
+
+	// EcommerceFlatRate is the flat rate percentage for ecommerce transactions.
+	EcommerceFlatRate PricePoint `json:"ecommerceFlatRate"`
+
+	// KeyedFlatRate is the flat rate percentage for keyed/manual transactions.
+	KeyedFlatRate PricePoint `json:"keyedFlatRate"`
+
+	// PremiumFlatRate is the flat rate percentage for premium (high rewards)
+	// card transactions.
+	PremiumFlatRate PricePoint `json:"premiumFlatRate"`
+
+	// StandardInterchangeMarkup is the interchange markup percentage for
+	// standard card present transactions.
+	StandardInterchangeMarkup PricePoint `json:"standardInterchangeMarkup"`
+
+	// DebitInterchangeMarkup is the interchange markup percentage for debit card
+	// transactions.
+	DebitInterchangeMarkup PricePoint `json:"debitInterchangeMarkup"`
+
+	// EcommerceInterchangeMarkup is the interchange markup percentage for
+	// ecommerce transactions.
+	EcommerceInterchangeMarkup PricePoint `json:"ecommerceInterchangeMarkup"`
+
+	// KeyedInterchangeMarkup is the interchange markup percentage for
+	// keyed/manual transactions.
+	KeyedInterchangeMarkup PricePoint `json:"keyedInterchangeMarkup"`
+
+	// PremiumInterchangeMarkup is the interchange markup percentage for premium
+	// (high rewards) card transactions.
+	PremiumInterchangeMarkup PricePoint `json:"premiumInterchangeMarkup"`
+
+	// StandardTransactionFee is the transaction fee for standard card present
+	// transactions.
+	StandardTransactionFee PricePoint `json:"standardTransactionFee"`
+
+	// DebitTransactionFee is the transaction fee for debit card transactions.
+	DebitTransactionFee PricePoint `json:"debitTransactionFee"`
+
+	// EcommerceTransactionFee is the transaction fee for ecommerce transactions.
+	EcommerceTransactionFee PricePoint `json:"ecommerceTransactionFee"`
+
+	// KeyedTransactionFee is the transaction fee for keyed/manual transactions.
+	KeyedTransactionFee PricePoint `json:"keyedTransactionFee"`
+
+	// PremiumTransactionFee is the transaction fee for premium (high rewards)
+	// card transactions.
+	PremiumTransactionFee PricePoint `json:"premiumTransactionFee"`
+
+	// EBTTransactionFee is the transaction fee for EBT card transactions.
+	EBTTransactionFee PricePoint `json:"ebtTransactionFee"`
+
+	// MonthlyFee is a flat fee charged per month.
+	MonthlyFee PricePoint `json:"monthlyFee"`
+
+	// AnnualFee is a flat fee charged per year.
+	AnnualFee PricePoint `json:"annualFee"`
+
+	// ChargebackFee is the fee per dispute or chargeback.
+	ChargebackFee PricePoint `json:"chargebackFee"`
+
+	// AVSFee is the fee per address verification operation.
+	AVSFee PricePoint `json:"avsFee"`
+
+	// BatchFee is the fee per batch.
+	BatchFee PricePoint `json:"batchFee"`
+
+	// VoiceAuthFee is the voice authorization fee.
+	VoiceAuthFee PricePoint `json:"voiceAuthFee"`
+
+	// AccountSetupFee is the one time account setup fee.
+	AccountSetupFee PricePoint `json:"accountSetupFee"`
+}
+
+// PartnerStatementListRequest models a request to retrieve a list of partner
+// statements.
+type PartnerStatementListRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// StartDate optional start date filter for batch history.
+	StartDate *time.Time `json:"startDate"`
+
+	// EndDate optional end date filter for batch history.
+	EndDate *time.Time `json:"endDate"`
+}
+
+// PartnerStatementSummary models a basic information about partner statements
+// for use in list or search results.
+type PartnerStatementSummary struct {
+	// ID is the id owner of the pricing policy.
+	ID string `json:"id"`
+
+	// StatementDate is the date the statement was generated.
+	StatementDate time.Time `json:"statementDate"`
+
+	// TotalVolume is total volume in numeric format.
+	TotalVolume float64 `json:"totalVolume"`
+
+	// TotalVolumeFormatted is the string formatted total volume on the
+	// statement.
+	TotalVolumeFormatted string `json:"totalVolumeFormatted"`
+
+	// TransactionCount is the total volume on the statement.
+	TransactionCount int64 `json:"transactionCount"`
+
+	// PartnerCommission is the commission earned on the portfolio during the
+	// statement period.
+	PartnerCommission float64 `json:"partnerCommission"`
+
+	// PartnerCommissionFormatted is the string formatted total volume on the
+	// statement.
+	PartnerCommissionFormatted string `json:"partnerCommissionFormatted"`
+
+	// Status is the status of the statement.
+	Status string `json:"status"`
+}
+
+// PartnerStatementListResponse models results to a partner statement list
+// inquiry.
+type PartnerStatementListResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Statements is the list of statements summaries.
+	Statements []PartnerStatementSummary `json:"statements"`
+}
+
+// PartnerStatementDetailRequest models a request to retrieve detailed partner
+// statement information.
+type PartnerStatementDetailRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// ID optional start date filter for batch history.
+	ID string `json:"id"`
+}
+
+// PartnerStatementDetailResponse models a response to retrieve detailed
+// partner statement information.
+type PartnerStatementDetailResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ID optional start date filter for batch history.
+	ID string `json:"id"`
+
+	// PartnerID is the id of the partner associated with the statement.
+	PartnerID string `json:"partnerId"`
+
+	// PartnerName is the name of the partner associated with the statement.
+	PartnerName string `json:"partnerName"`
+
+	// StatementDate is the date the statement was generated.
+	StatementDate time.Time `json:"statementDate"`
+
+	// TotalVolume is total volume in numeric format.
+	TotalVolume float64 `json:"totalVolume"`
+
+	// TotalVolumeFormatted is the string formatted total volume on the
+	// statement.
+	TotalVolumeFormatted string `json:"totalVolumeFormatted"`
+
+	// TransactionCount is the total volume on the statement.
+	TransactionCount int64 `json:"transactionCount"`
+
+	// PartnerCommission is the commission earned on the portfolio during the
+	// statement period.
+	PartnerCommission float64 `json:"partnerCommission"`
+
+	// PartnerCommissionFormatted is the string formatted partner commission on
+	// the statement.
+	PartnerCommissionFormatted string `json:"partnerCommissionFormatted"`
+
+	// PartnerCommissionsOnVolume is the partner commission earned on the
+	// portfolio during the statement period as a ratio against volume.
+	PartnerCommissionsOnVolume float64 `json:"partnerCommissionsOnVolume"`
+
+	// PartnerCommissionsOnVolumeFormatted is the string formatted version of
+	// partner commissions as a percentage of volume.
+	PartnerCommissionsOnVolumeFormatted string `json:"partnerCommissionsOnVolumeFormatted"`
+
+	// Status is the status of the statement.
+	Status string `json:"status"`
+
+	// LineItems is the line item detail associated with the statement.
+	LineItems []PartnerStatementLineItem `json:"lineItems"`
+
+	// Adjustments is the list of adjustments made against the statement, if any.
+	Adjustments []PartnerStatementAdjustment `json:"adjustments"`
+
+	// Disbursements is the list of partner disbursements made against the
+	// partner statement.
+	Disbursements []PartnerStatementDisbursement `json:"disbursements"`
+}
+
+// PartnerStatementLineItem models line item level data for a partner
+// statement.
+type PartnerStatementLineItem struct {
+	// ID is the line item id.
+	ID string `json:"id"`
+
+	// InvoiceID is the invoice id for the underlying merchant statement.
+	InvoiceID string `json:"invoiceId"`
+
+	// TotalFees is the total fees charged to the merchant.
+	TotalFees float64 `json:"totalFees"`
+
+	// TotalFeesFormatted is the total fees charge formatted as a currency
+	// string.
+	TotalFeesFormatted string `json:"totalFeesFormatted"`
+
+	// TotalFeesOnVolume is the total fees charged to the merchant as ratio of
+	// volume.
+	TotalFeesOnVolume float64 `json:"totalFeesOnVolume"`
+
+	// TotalFeesOnVolumeFormatted is the total fees charged to the merchant as
+	// percentage of volume.
+	TotalFeesOnVolumeFormatted string `json:"totalFeesOnVolumeFormatted"`
+
+	// MerchantID is the id of the merchant.
+	MerchantID string `json:"merchantId"`
+
+	// MerchantName is the corporate name of the merchant.
+	MerchantName string `json:"merchantName"`
+
+	// DBAName is the dba name of the merchant.
+	DBAName string `json:"dbaName"`
+
+	// StatementDate is the date the statement was generated.
+	StatementDate time.Time `json:"statementDate"`
+
+	// Volume is volume in numeric format.
+	Volume float64 `json:"volume"`
+
+	// VolumeFormatted is the string formatted total volume on the statement.
+	VolumeFormatted string `json:"volumeFormatted"`
+
+	// TransactionCount is the total volume on the statement.
+	TransactionCount int64 `json:"transactionCount"`
+
+	// Interchange is the total interchange fees incurred this period.
+	Interchange float64 `json:"interchange"`
+
+	// InterchangeFormatted is the currency formatted form of interchange.
+	InterchangeFormatted string `json:"interchangeFormatted"`
+
+	// InterchangeOnVolume is the total interchange as a ratio on volume incurred
+	// this period.
+	InterchangeOnVolume float64 `json:"interchangeOnVolume"`
+
+	// InterchangeOnVolumeFormatted is the total interchange as a percentage of
+	// volume.
+	InterchangeOnVolumeFormatted string `json:"interchangeOnVolumeFormatted"`
+
+	// Assessments is the total card brand assessments fees incurred this period.
+	Assessments float64 `json:"assessments"`
+
+	// AssessmentsFormatted is the currency formatted form of card brand
+	// assessments.
+	AssessmentsFormatted string `json:"assessmentsFormatted"`
+
+	// AssessmentsOnVolume is the total card brand assessments as a ratio on
+	// volume incurred this period.
+	AssessmentsOnVolume float64 `json:"assessmentsOnVolume"`
+
+	// AssessmentsOnVolumeFormatted is the total card brand assessments as a
+	// percentage of volume.
+	AssessmentsOnVolumeFormatted string `json:"assessmentsOnVolumeFormatted"`
+
+	// PartnerCommission is the commission earned on the portfolio during the
+	// statement period.
+	PartnerCommission float64 `json:"partnerCommission"`
+
+	// PartnerCommissionFormatted is the string formatted total volume on the
+	// statement.
+	PartnerCommissionFormatted string `json:"partnerCommissionFormatted"`
+
+	// BuyRate is the total fees charge to the partner due to buy rates.
+	BuyRate float64 `json:"buyRate"`
+
+	// BuyRateFormatted is the currency formatted form of partner buy rate.
+	BuyRateFormatted string `json:"buyRateFormatted"`
+
+	// HardCosts refers to card brand fees shared between BlockChyp and the
+	// partner.
+	HardCosts float64 `json:"hardCosts"`
+
+	// HardCostsFormatted is the currency formatted form of hard costs.
+	HardCostsFormatted string `json:"hardCostsFormatted"`
+}
+
+// PartnerStatementDisbursement models details about disbursements related to
+// partner statements.
+type PartnerStatementDisbursement struct {
+	// ID is the disbursement id.
+	ID string `json:"id"`
+
+	// Timestamp is date and time the disbursement was processed.
+	Timestamp time.Time `json:"timestamp"`
+
+	// TransactionType is the type of disbursement transaction.
+	TransactionType string `json:"transactionType"`
+
+	// PaymentType is the payment method used to fund the disbursement.
+	PaymentType string `json:"paymentType"`
+
+	// MaskedPAN is the masked account number into which funds were deposited.
+	MaskedPAN string `json:"maskedPan"`
+
+	// Pending indicates that payment is still pending.
+	Pending bool `json:"pending"`
+
+	// Approved indicates that payment is approved.
+	Approved bool `json:"approved"`
+
+	// ResponseDescription is a response description from the disbursement
+	// payment platform, in any.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Amount is the amount disbursed in floating point format.
+	Amount float64 `json:"amount"`
+
+	// AmountFormatted is the currency formatted form of amount.
+	AmountFormatted string `json:"amountFormatted"`
+}
+
+// PartnerStatementAdjustment models partner statement adjustments.
+type PartnerStatementAdjustment struct {
+	// ID is the adjustment id.
+	ID string `json:"id"`
+
+	// Timestamp is the date and time the disbursement was posted to the account.
+	Timestamp time.Time `json:"timestamp"`
+
+	// Description is a description of the adjustment.
+	Description string `json:"description"`
+
+	// Amount is the amount in floating point format.
+	Amount float64 `json:"amount"`
+
+	// AmountFormatted is the currency formatted form of amount.
+	AmountFormatted string `json:"amountFormatted"`
+}
+
+// MerchantInvoiceListRequest models a request to retrieve a list of partner
+// statements.
+type MerchantInvoiceListRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// MerchantID optional merchant id for partner scoped requests.
+	MerchantID *string `json:"merchantId"`
+
+	// InvoiceType optional type to filter normal invoices vs statements.
+	InvoiceType *string `json:"invoiceType"`
+
+	// StartDate optional start date filter for batch history.
+	StartDate *time.Time `json:"startDate"`
+
+	// EndDate optional end date filter for batch history.
+	EndDate *time.Time `json:"endDate"`
+}
+
+// MerchantInvoiceListResponse models a response to an invoice list request.
+type MerchantInvoiceListResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Invoices is the list of invoices returned by the request.
+	Invoices []MerchantInvoiceSummary `json:"invoices"`
+}
+
+// MerchantInvoiceSummary models basic information about a merchant invoice
+// for use in list or search results.
+type MerchantInvoiceSummary struct {
+	// ID is the id owner of the invoice.
+	ID string `json:"id"`
+
+	// DateCreated is the date the statement was generated.
+	DateCreated time.Time `json:"dateCreated"`
+
+	// GrandTotal is the grand total.
+	GrandTotal float64 `json:"grandTotal"`
+
+	// GrandTotalFormatted is the string formatted grand total.
+	GrandTotalFormatted string `json:"grandTotalFormatted"`
+
+	// Status is the status of the statement.
+	Status string `json:"status"`
+
+	// InvoiceType identifies the invoice type.
+	InvoiceType string `json:"invoiceType"`
+
+	// Paid indicates whether or not the invoice had been paid.
+	Paid bool `json:"paid"`
+}
+
+// MerchantInvoiceDetailRequest models a request to retrieve detailed merchant
+// invoice information.
+type MerchantInvoiceDetailRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// ID is the invoice id.
+	ID string `json:"id"`
+}
+
+// MerchantInvoiceDetailResponse models detailed merchant invoice or statement
+// information.
+type MerchantInvoiceDetailResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ID optional start date filter for batch history.
+	ID string `json:"id"`
+
+	// MerchantID is the id of the merchant associated with the statement.
+	MerchantID string `json:"merchantId"`
+
+	// CorporateName is the corporate name of the merchant associated with the
+	// statement.
+	CorporateName string `json:"corporateName"`
+
+	// DBAName is the dba name of the merchant associated with the statement.
+	DBAName string `json:"dbaName"`
+
+	// DateCreated is the date the statement was generated.
+	DateCreated time.Time `json:"dateCreated"`
+
+	// Status is the current status of the invoice.
+	Status string `json:"status"`
+
+	// InvoiceType is the type of invoice (statement or invoice).
+	InvoiceType string `json:"invoiceType"`
+
+	// PricingType is the type of pricing used for the invoice (typically flat
+	// rate or or interchange plus).
+	PricingType string `json:"pricingType"`
+
+	// Paid indicates whether or not the invoice has been paid.
+	Paid bool `json:"paid"`
+
+	// GrandTotal is the grand total.
+	GrandTotal float64 `json:"grandTotal"`
+
+	// GrandTotalFormatted is the string formatted grand total.
+	GrandTotalFormatted string `json:"grandTotalFormatted"`
+
+	// Subtotal is the subtotal before shipping and tax.
+	Subtotal float64 `json:"subtotal"`
+
+	// SubotalFormatted is the string formatted subtotal before shipping and tax.
+	SubotalFormatted string `json:"subotalFormatted"`
+
+	// TaxTotal is the total sales tax.
+	TaxTotal float64 `json:"taxTotal"`
+
+	// TaxTotalFormatted is the string formatted total sales tax.
+	TaxTotalFormatted string `json:"taxTotalFormatted"`
+
+	// ShippingCost is the total cost of shipping.
+	ShippingCost float64 `json:"shippingCost"`
+
+	// ShippingCostFormatted is the string formatted total cost of shipping.
+	ShippingCostFormatted string `json:"shippingCostFormatted"`
+
+	// BalanceDue is the total unpaid balance on the invoice.
+	BalanceDue float64 `json:"balanceDue"`
+
+	// BalanceDueFormatted is the string formatted unpaid balance on the invoice.
+	BalanceDueFormatted string `json:"balanceDueFormatted"`
+
+	// ShippingAddress is the shipping or physical address associated with the
+	// invoice.
+	ShippingAddress *Address `json:"shippingAddress"`
+
+	// BillingAddress is the billing or mailing address associated with the
+	// invoice.
+	BillingAddress *Address `json:"billingAddress"`
+
+	// LineItems is the list of line item details associated with the invoice.
+	LineItems []InvoiceLineItem `json:"lineItems"`
+
+	// Payments is the list of payments collected against the invoice.
+	Payments []InvoicePayment `json:"payments"`
+
+	// Deposits is the list of merchant settlements disbursed during the
+	// statement period.
+	Deposits []StatementDeposit `json:"deposits"`
+}
+
+// InvoiceLineItem models a single invoice or merchant statement line item.
+type InvoiceLineItem struct {
+	// ID is the line item id.
+	ID string `json:"id"`
+
+	// LineType is the type of line item.
+	LineType string `json:"lineType"`
+
+	// ProductID is the product id for standard invoices.
+	ProductID string `json:"productId"`
+
+	// Quantity is the quantity associated with the line item.
+	Quantity int64 `json:"quantity"`
+
+	// Description is the description associated with the line item.
+	Description string `json:"description"`
+
+	// Explanation is an alternate explanation.
+	Explanation string `json:"explanation"`
+
+	// TransactionCount is the transaction count associated with any transaction
+	// based fees.
+	TransactionCount int64 `json:"transactionCount"`
+
+	// Volume is the transaction volume associated with any fees.
+	Volume float64 `json:"volume"`
+
+	// VolumeFormatted is the string formatted volume.
+	VolumeFormatted string `json:"volumeFormatted"`
+
+	// PerTransactionFee is the per transaction fee.
+	PerTransactionFee float64 `json:"perTransactionFee"`
+
+	// PerTransactionFeeFormatted is the string formatted per transaction fee.
+	PerTransactionFeeFormatted string `json:"perTransactionFeeFormatted"`
+
+	// TransactionPercentage is the percentage (as floating point ratio) fee
+	// assessed on volume.
+	TransactionPercentage float64 `json:"transactionPercentage"`
+
+	// TransactionPercentageFormatted is the string formatted transaction fee
+	// percentage.
+	TransactionPercentageFormatted string `json:"transactionPercentageFormatted"`
+
+	// Price is the quantity price associated.
+	Price float64 `json:"price"`
+
+	// PriceFormatted is the string formatted price associated with a
+	// conventional line item.
+	PriceFormatted string `json:"priceFormatted"`
+
+	// PriceExtended is the extended price .
+	PriceExtended float64 `json:"priceExtended"`
+
+	// PriceExtendedFormatted is the string formatted extended price.
+	PriceExtendedFormatted string `json:"priceExtendedFormatted"`
+
+	// LineItems is the list of nested line items, if any.
+	LineItems []InvoiceLineItem `json:"lineItems"`
+}
+
+// InvoicePayment models information about payments against an invoice.
+type InvoicePayment struct {
+	// ID is the line item id.
+	ID string `json:"id"`
+
+	// Timestamp is timestamp the payment was authorized.
+	Timestamp time.Time `json:"timestamp"`
+
+	// TransactionType is the type of disbursement transaction.
+	TransactionType string `json:"transactionType"`
+
+	// PaymentType is the payment method used to fund the disbursement.
+	PaymentType string `json:"paymentType"`
+
+	// AuthCode is the auth code associated with credit card payment methods.
+	AuthCode string `json:"authCode"`
+
+	// MaskedPAN is the masked account number into which funds were deposited.
+	MaskedPAN string `json:"maskedPan"`
+
+	// Pending indicates that payment is still pending.
+	Pending bool `json:"pending"`
+
+	// Approved indicates that payment is approved.
+	Approved bool `json:"approved"`
+
+	// ResponseDescription is a response description from the disbursement
+	// payment platform, in any.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Amount is the amount disbursed in floating point format.
+	Amount float64 `json:"amount"`
+
+	// AmountFormatted is the currency formatted form of amount.
+	AmountFormatted string `json:"amountFormatted"`
+}
+
+// StatementDeposit models information about merchant deposits during a
+// statement period.
+type StatementDeposit struct {
+	// ID is the line item id.
+	ID string `json:"id"`
+
+	// TransactionCount is the number of transactions in the batch for which
+	// funds were deposited.
+	TransactionCount int64 `json:"transactionCount"`
+
+	// BatchID is the batch id associated with the deposit.
+	BatchID string `json:"batchId"`
+
+	// FeesPaid is the prepaid fees associated with the batch.
+	FeesPaid float64 `json:"feesPaid"`
+
+	// FeesPaidFormatted is the currency formatted form of prepaid fees.
+	FeesPaidFormatted string `json:"feesPaidFormatted"`
+
+	// NetDeposit is the net deposit released to the merchant.
+	NetDeposit float64 `json:"netDeposit"`
+
+	// NetDepositFormatted is the currency formatted net deposit released to the
+	// merchant.
+	NetDepositFormatted string `json:"netDepositFormatted"`
+
+	// TotalSales is the total sales in the batch.
+	TotalSales float64 `json:"totalSales"`
+
+	// TotalSalesFormatted is the currency formatted total sales in the batch.
+	TotalSalesFormatted string `json:"totalSalesFormatted"`
+
+	// TotalRefunds is the total refunds in the batch.
+	TotalRefunds float64 `json:"totalRefunds"`
+
+	// TotalRefundsFormatted is the currency formatted total refunds in the
+	// batch.
+	TotalRefundsFormatted string `json:"totalRefundsFormatted"`
+}
+
+// PartnerCommissionBreakdownRequest models a request to retrieve detailed
+// merchant invoice information.
+type PartnerCommissionBreakdownRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// StatementID is the invoice or statement id.
+	StatementID string `json:"statementId"`
+}
+
+// PartnerCommissionBreakdownResponse models detailed information about how
+// partner commissions were calculated for a statement.
+type PartnerCommissionBreakdownResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// InvoiceID is the invoice (statement id) for which the commissions were
+	// calculated.
+	InvoiceID string `json:"invoiceId"`
+
+	// PartnerName is the partner name.
+	PartnerName string `json:"partnerName"`
+
+	// PartnerStatementID is the partner statement id.
+	PartnerStatementID string `json:"partnerStatementId"`
+
+	// PartnerStatementDate is the partner statement date.
+	PartnerStatementDate time.Time `json:"partnerStatementDate"`
+
+	// MerchantID is the merchant id.
+	MerchantID string `json:"merchantId"`
+
+	// MerchantCompanyName is the merchant's corporate name.
+	MerchantCompanyName string `json:"merchantCompanyName"`
+
+	// MerchantDBAName is the merchant's dba name.
+	MerchantDBAName string `json:"merchantDbaName"`
+
+	// GrandTotal is the grand total.
+	GrandTotal float64 `json:"grandTotal"`
+
+	// GrandTotalFormatted is the currency formatted grand total.
+	GrandTotalFormatted string `json:"grandTotalFormatted"`
+
+	// TotalFees is the total fees.
+	TotalFees float64 `json:"totalFees"`
+
+	// TotalFeesFormatted is the currency formatted total fees.
+	TotalFeesFormatted string `json:"totalFeesFormatted"`
+
+	// TotalDue is the total due the partner for this merchant statement.
+	TotalDue float64 `json:"totalDue"`
+
+	// TotalDueFormatted is the currency formatted total due the partner for this
+	// merchant statement.
+	TotalDueFormatted string `json:"totalDueFormatted"`
+
+	// TotalVolume is the total volume during the statement period.
+	TotalVolume float64 `json:"totalVolume"`
+
+	// TotalVolumeFormatted is the currency formatted total volume during the
+	// statement period.
+	TotalVolumeFormatted string `json:"totalVolumeFormatted"`
+
+	// TotalTransactions is the total number of transactions processed during the
+	// statement period.
+	TotalTransactions int64 `json:"totalTransactions"`
+
+	// PartnerResidual is the residual earned by the partner.
+	PartnerResidual float64 `json:"partnerResidual"`
+
+	// PartnerResidualFormatted is the currency formatted residual earned by the
+	// partner.
+	PartnerResidualFormatted string `json:"partnerResidualFormatted"`
+
+	// Interchange is the total interchange charged during the statement period.
+	Interchange float64 `json:"interchange"`
+
+	// InterchangeFormatted is the currency formatted total interchange charged
+	// during the statement period.
+	InterchangeFormatted string `json:"interchangeFormatted"`
+
+	// Assessments is the total assessments charged during the statement period.
+	Assessments float64 `json:"assessments"`
+
+	// AssessmentsFormatted is the currency formatted assessments charged during
+	// the statement period.
+	AssessmentsFormatted string `json:"assessmentsFormatted"`
+
+	// TotalPassthrough is the total of passthrough costs.
+	TotalPassthrough float64 `json:"totalPassthrough"`
+
+	// TotalPassthroughFormatted is the currency formatted total of passthrough
+	// costs.
+	TotalPassthroughFormatted string `json:"totalPassthroughFormatted"`
+
+	// TotalNonPassthrough is the total of non passthrough costs.
+	TotalNonPassthrough float64 `json:"totalNonPassthrough"`
+
+	// TotalNonPassthroughFormatted is the currency formatted total of non
+	// passthrough costs.
+	TotalNonPassthroughFormatted string `json:"totalNonPassthroughFormatted"`
+
+	// TotalCardBrandFees is the total of all card brand fees.
+	TotalCardBrandFees float64 `json:"totalCardBrandFees"`
+
+	// TotalCardBrandFeesFormatted is the currency formatted total of all card
+	// brand fees.
+	TotalCardBrandFeesFormatted string `json:"totalCardBrandFeesFormatted"`
+
+	// TotalBuyRate is the total buy rate.
+	TotalBuyRate float64 `json:"totalBuyRate"`
+
+	// TotalBuyRateFormatted is the currency formatted total buy rate.
+	TotalBuyRateFormatted string `json:"totalBuyRateFormatted"`
+
+	// BuyRateBeforePassthrough is the total buy rate before passthrough costs.
+	BuyRateBeforePassthrough float64 `json:"buyRateBeforePassthrough"`
+
+	// BuyRateBeforePassthroughFormatted is the currency formatted total buy rate
+	// before passthrough costs.
+	BuyRateBeforePassthroughFormatted string `json:"buyRateBeforePassthroughFormatted"`
+
+	// NetMarkup is the net markup split between BlockChyp and the partner.
+	NetMarkup float64 `json:"netMarkup"`
+
+	// NetMarkupFormatted is the currency formatted net markup split between
+	// BlockChyp and the partner.
+	NetMarkupFormatted string `json:"netMarkupFormatted"`
+
+	// PartnerNonPassthroughShare is the partner's total share of non passthrough
+	// hard costs.
+	PartnerNonPassthroughShare float64 `json:"partnerNonPassthroughShare"`
+
+	// PartnerNonPassthroughShareFormatted is the currency formatted partner's
+	// total share of non passthrough hard costs.
+	PartnerNonPassthroughShareFormatted string `json:"partnerNonPassthroughShareFormatted"`
+
+	// ChargebackFees is the total of chargeback fees assessed during the
+	// statement period.
+	ChargebackFees float64 `json:"chargebackFees"`
+
+	// ChargebackFeesFormatted is the currency formatted total of chargeback fees
+	// assessed during the statement period.
+	ChargebackFeesFormatted string `json:"chargebackFeesFormatted"`
+
+	// ChargebackCount is the total number of chargebacks during the period.
+	ChargebackCount int64 `json:"chargebackCount"`
+
+	// PartnerPercentage is the partner's share of markup.
+	PartnerPercentage float64 `json:"partnerPercentage"`
+
+	// PartnerPercentageFormatted is the currency formatted partner's share of
+	// markup.
+	PartnerPercentageFormatted string `json:"partnerPercentageFormatted"`
+
+	// BuyRateLineItems is the list of line items documenting how the total buy
+	// rate was calculated.
+	BuyRateLineItems []BuyRateLineItem `json:"buyRateLineItems"`
+
+	// RevenueDetails is the list of detail lines describing how revenue was
+	// calculated and collected by the sponsor bank.
+	RevenueDetails []AggregateBillingLineItem `json:"revenueDetails"`
+
+	// CardBrandCostDetails is the nested list of costs levied by the card
+	// brands, grouped by card brand and type.
+	CardBrandCostDetails []AggregateBillingLineItem `json:"cardBrandCostDetails"`
+}
+
+// BuyRateLineItem models a single buy rate calculation line item.
+type BuyRateLineItem struct {
+	// Description provides a basic description of the line item.
+	Description string `json:"description"`
+
+	// Volume is the volume related to this line item.
+	Volume float64 `json:"volume"`
+
+	// VolumeFormatted is the currency formatted volume related to this line
+	// item.
+	VolumeFormatted string `json:"volumeFormatted"`
+
+	// VolumeRate is the rate on volume charged for this line item.
+	VolumeRate float64 `json:"volumeRate"`
+
+	// VolumeRateFormatted is the string formatted rate on volume charged for
+	// this line item.
+	VolumeRateFormatted string `json:"volumeRateFormatted"`
+
+	// Count is the count associated with this line item.
+	Count int64 `json:"count"`
+
+	// CountRate is the rate per item charged for this line item.
+	CountRate float64 `json:"countRate"`
+
+	// CountRateFormatted is the string formatted rate per item charged for this
+	// line item.
+	CountRateFormatted string `json:"countRateFormatted"`
+
+	// RateSummary provides a narrative description of the rate.
+	RateSummary string `json:"rateSummary"`
+
+	// Total is the total amount for the line item.
+	Total float64 `json:"total"`
+
+	// TotalFormatted is the string formatted total for the line item.
+	TotalFormatted string `json:"totalFormatted"`
+}
+
+// AggregateBillingLineItem models low level aggregated and nested data line
+// items.
+type AggregateBillingLineItem struct {
+	// ID is the line item identifier.
+	ID string `json:"id"`
+
+	// Description provides a basic description of the line item.
+	Description string `json:"description"`
+
+	// Expandable indicates that a line item has nested information.
+	Expandable bool `json:"expandable"`
+
+	// Negative indicates the total is a negative number.
+	Negative bool `json:"negative"`
+
+	// Total is the total for the line item.
+	Total float64 `json:"total"`
+
+	// TotalFormatted is the currency formatted total for the line item.
+	TotalFormatted string `json:"totalFormatted"`
+
+	// PerTranFeeRange is the range of count based fees charged for the given
+	// line item.
+	PerTranFeeRange *AggregateBillingLineItemStats `json:"perTranFeeRange"`
+
+	// TransactionPercentageRange is the range of percentage based fees charged
+	// for the given line item.
+	TransactionPercentageRange *AggregateBillingLineItemStats `json:"transactionPercentageRange"`
+
+	// DetailLines encapsulated drill down or detail lines.
+	DetailLines []AggregateBillingLineItem `json:"detailLines"`
+}
+
+// AggregateBillingLineItemStats models statistics for low level aggregation
+// line items.
+type AggregateBillingLineItemStats struct {
+	// Min is the min value in the set.
+	Min string `json:"min"`
+
+	// Avg is the avg value in the set.
+	Avg string `json:"avg"`
+
+	// Max is the max value in the set.
+	Max string `json:"max"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature
