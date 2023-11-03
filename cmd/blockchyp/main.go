@@ -196,6 +196,8 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.PolicyID, "policy", "", "policy id for pricing policy related operations")
 	flag.StringVar(&args.StatementID, "statementId", "", "statement id for partner or merchant statement operations")
 	flag.StringVar(&args.InvoiceID, "invoiceId", "", "invoice id for partner or merchant statement/invoice operations")
+	flag.IntVar(&args.ShipmentNumber, "shipmentNumber", 0, "indicates the shipment number in a split shipment order.")
+	flag.IntVar(&args.ShipmentCount, "shipmentCount", 0, "indicates the total number of shipments in a split shipment order.")
 	flag.Parse()
 
 	if args.Version {
@@ -1683,6 +1685,8 @@ func processCapture(client *blockchyp.Client, args blockchyp.CommandLineArgument
 			TransactionID:      args.TransactionID,
 			TransactionRef:     args.TransactionRef,
 			TestCase:           args.TestCase,
+			ShipmentNumber:     args.ShipmentNumber,
+			ShipmentCount:      args.ShipmentCount,
 		}
 	}
 

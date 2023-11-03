@@ -1724,6 +1724,13 @@ type CaptureRequest struct {
 
 	// TaxAmount is the tax amount.
 	TaxAmount string `json:"taxAmount,omitempty"`
+
+	// ShipmentCount indicates the number of shipments the original authorization
+	// will be broken into.
+	ShipmentCount int `json:"shipmentCount"`
+
+	// ShipmentNumber indicates which shipment this particular capture is for.
+	ShipmentNumber int `json:"shipmentNumber"`
 }
 
 // CaptureResponse contains the response to a capture request.

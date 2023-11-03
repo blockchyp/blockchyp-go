@@ -163,6 +163,8 @@ type CommandLineArguments struct {
 	SupplierReferenceNumber     string `args:"srn"`
 	StatementID                 string `json:"statementId"`
 	InvoiceID                   string `json:"invoiceId"`
+	ShipmentNumber              int    `json:"shipmentNumber"`
+	ShipmentCount               int    `json:"shipmentCount"`
 }
 
 var defaultSettings = &ConfigSettings{
