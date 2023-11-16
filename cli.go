@@ -165,6 +165,7 @@ type CommandLineArguments struct {
 	InvoiceID                   string `json:"invoiceId"`
 	ShipmentNumber              int    `json:"shipmentNumber"`
 	ShipmentCount               int    `json:"shipmentCount"`
+	EntryMethod                 string `json:"entryMethod"`
 }
 
 var defaultSettings = &ConfigSettings{

@@ -198,6 +198,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.InvoiceID, "invoiceId", "", "invoice id for partner or merchant statement/invoice operations")
 	flag.IntVar(&args.ShipmentNumber, "shipmentNumber", 0, "indicates the shipment number in a split shipment order.")
 	flag.IntVar(&args.ShipmentCount, "shipmentCount", 0, "indicates the total number of shipments in a split shipment order.")
+	flag.StringVar(&args.EntryMethod, "entryMethod", "", "is the method by which the payment card was entered.")
 	flag.Parse()
 
 	if args.Version {
@@ -1783,6 +1784,7 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			Force:              args.Force,
 			TransactionRef:     args.TransactionRef,
 			ResetConnection:    args.ResetConnection,
+			EntryMethod:        args.EntryMethod,
 		}
 		if hasCustomerFields(args) {
 			req.Customer = populateCustomer(args)
