@@ -1207,6 +1207,10 @@ type AuthorizationRequest struct {
 	// Mit manually sets the MIT (Merchant Initiated Transaction) flag.
 	Mit bool `json:"mit,omitempty"`
 
+	// Subscription indicates that this transaction and any using this token
+	// should be treated as a subscription recurring transaction
+	Subscription bool `json:"subscription,omitempty"`
+
 	// PurchaseOrderNumber is the purchase order number, if known.
 	PurchaseOrderNumber string `json:"purchaseOrderNumber,omitempty"`
 
@@ -2150,6 +2154,14 @@ type EnrollRequest struct {
 
 	// Customer customer with which the new token should be associated.
 	Customer *Customer `json:"customer"`
+
+	// Recurring indicates that this transaction should be treated as a recurring
+	// transaction.
+	Recurring bool `json:"recurring,omitempty"`
+
+	// Subscription indicates that this transaction and any using this token
+	// should be treated as a subscription recurring transaction
+	Subscription bool `json:"subscription,omitempty"`
 }
 
 // EnrollResponse contains the response to an enroll request.
