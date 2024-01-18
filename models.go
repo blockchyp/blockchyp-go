@@ -1,4 +1,4 @@
-// Copyright 2019-2023 BlockChyp, Inc. All rights reserved. Use of this code
+// Copyright 2019-2024 BlockChyp, Inc. All rights reserved. Use of this code
 // is governed by a license that can be found in the LICENSE file.
 //
 // This file was generated automatically by the BlockChyp SDK Generator.
@@ -1207,8 +1207,8 @@ type AuthorizationRequest struct {
 	// Mit manually sets the MIT (Merchant Initiated Transaction) flag.
 	Mit bool `json:"mit,omitempty"`
 
-	// Subscription indicates that this transaction and any using this token
-	// should be treated as a subscription recurring transaction
+	// Subscription indicates that this transaction should be treated as a
+	// subscription recurring transaction.
 	Subscription bool `json:"subscription,omitempty"`
 
 	// PurchaseOrderNumber is the purchase order number, if known.
@@ -2160,7 +2160,7 @@ type EnrollRequest struct {
 	Recurring bool `json:"recurring,omitempty"`
 
 	// Subscription indicates that this transaction and any using this token
-	// should be treated as a subscription recurring transaction
+	// should be treated as a subscription recurring transaction.
 	Subscription bool `json:"subscription,omitempty"`
 }
 
@@ -5948,6 +5948,12 @@ type MediaLibraryResponse struct {
 
 	// ResultCount total number of results accessible through paging.
 	ResultCount int `json:"resultCount"`
+
+	// Pages total number of pages.
+	Pages int `json:"pages"`
+
+	// CurrentPage page currently selected through paging.
+	CurrentPage int `json:"currentPage"`
 
 	// Results enumerates all media assets available in the context.
 	Results []MediaMetadata `json:"results"`
