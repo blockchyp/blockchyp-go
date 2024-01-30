@@ -1387,6 +1387,22 @@ func (client *Client) PartnerCommissionBreakdown(request PartnerCommissionBreakd
 	return &response, err
 }
 
+// MerchantCredentialGeneration generates and returns api credentials for a
+// given merchant.
+func (client *Client) MerchantCredentialGeneration(request MerchantCredentialGenerationRequest) (*MerchantCredentialGenerationResponse, error) {
+	var response MerchantCredentialGenerationResponse
+
+	err := client.GatewayRequest("/api/creds/generateMerchant", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // MerchantProfile returns profile information for a merchant.
 func (client *Client) MerchantProfile(request MerchantProfileRequest) (*MerchantProfileResponse, error) {
 	var response MerchantProfileResponse

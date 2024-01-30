@@ -167,6 +167,9 @@ type CommandLineArguments struct {
 	ShipmentNumber              int    `json:"shipmentNumber"`
 	ShipmentCount               int    `json:"shipmentCount"`
 	EntryMethod                 string `json:"entryMethod"`
+	DeleteProtected             bool   `json:"deteleProtected"`
+	Roles                       string `json:"roles"`
+	Notes                       string `json:"notes"`
 }
 
 var defaultSettings = &ConfigSettings{

@@ -7144,6 +7144,52 @@ type PartnerCommissionBreakdownResponse struct {
 	CardBrandCostDetails []AggregateBillingLineItem `json:"cardBrandCostDetails"`
 }
 
+// MerchantCredentialGenerationRequest models a request to generate merchant
+// api credentials.
+type MerchantCredentialGenerationRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// MerchantID is the merchant id.
+	MerchantID string `json:"merchantId"`
+
+	// DeleteProtected protects the credentials from deletion.
+	DeleteProtected bool `json:"deleteProtected"`
+
+	// Roles an optional array of role codes that will be assigned to the
+	// credentials.
+	Roles []string `json:"roles"`
+
+	// Notes free form description of the purpose or intent behind the
+	// credentials.
+	Notes string `json:"notes"`
+}
+
+// MerchantCredentialGenerationResponse contains merchant api credential data.
+type MerchantCredentialGenerationResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// APIKey is the merchant api key.
+	APIKey string `json:"apiKey"`
+
+	// BearerToken is the merchant bearer token.
+	BearerToken string `json:"bearerToken"`
+
+	// SigningKey is the merchant signing key.
+	SigningKey string `json:"signingKey"`
+}
+
 // BuyRateLineItem models a single buy rate calculation line item.
 type BuyRateLineItem struct {
 	// Description provides a basic description of the line item.

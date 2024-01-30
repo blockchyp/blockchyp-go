@@ -5755,6 +5755,66 @@ func partnerCommissionBreakdownExample() {
 
 ```
 
+#### Merchant Credential Generation
+
+
+
+* **API Credential Types:** Partner
+* **Required Role:** Partner API Access
+
+This API allows partners to generate API credentials for a merchant.
+
+The `merchantId` is required and must be the id of a valid merchant.
+
+Credentials are not delete protected by default. Pass in `deleteProtected` to enable delete protection.
+
+The optional `notes` field will populate the notes in the credentials.
+
+By default no roles will be assigned unless valid, comma-delimited, role codes are passed in the `roles` field.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func merchantCredentialGenerationExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.MerchantCredentialGenerationRequest{}
+
+    response, err := client.MerchantCredentialGeneration(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
 
 
 
