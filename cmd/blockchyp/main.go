@@ -191,11 +191,18 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.Recurring, "recurring", false, "flags a transaction as recurring.")
 	flag.BoolVar(&args.MIT, "mit", false, "manually sets the MIT flag.")
 	flag.BoolVar(&args.CIT, "cit", false, "manually sets the CIT flag.")
+	flag.BoolVar(&args.Subscription, "subscription", false, "flags a transaction as a subscription.")
 	flag.StringVar(&args.PONumber, "po", "", "purchase order for L2 transactions")
 	flag.StringVar(&args.SupplierReferenceNumber, "srn", "", "supplier reference number for L2 transactions")
 	flag.StringVar(&args.PolicyID, "policy", "", "policy id for pricing policy related operations")
 	flag.StringVar(&args.StatementID, "statementId", "", "statement id for partner or merchant statement operations")
 	flag.StringVar(&args.InvoiceID, "invoiceId", "", "invoice id for partner or merchant statement/invoice operations")
+	flag.IntVar(&args.ShipmentNumber, "shipmentNumber", 0, "indicates the shipment number in a split shipment order.")
+	flag.IntVar(&args.ShipmentCount, "shipmentCount", 0, "indicates the total number of shipments in a split shipment order.")
+	flag.StringVar(&args.EntryMethod, "entryMethod", "", "is the method by which the payment card was entered.")
+	flag.BoolVar(&args.DeleteProtected, "deleteProtected", false, "protects the credentials from deletion")
+	flag.StringVar(&args.Roles, "roles", "", "an optional array of role codes that will be assigned to the credentials")
+	flag.StringVar(&args.Notes, "notes", "", "free form description of the purpose or intent behind the credentials")
 	flag.Parse()
 
 	if args.Version {
@@ -306,6 +313,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processPartnerStatementDetail(client, args)
 	case "partner-commission-breakdown":
 		processPartnerCommissionBreakdown(client, args)
+	case "merchant-credential-generation":
+		processMerchantCredentialGeneration(client, args)
 	case "partner-statements":
 		processPartnerStatements(client, args)
 	case "pricing":
@@ -495,6 +504,33 @@ func processPartnerCommissionBreakdown(client *blockchyp.Client, args blockchyp.
 	}
 
 	res, err := client.PartnerCommissionBreakdown(request)
+
+	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
+		res.ResponseDescription = blockchyp.ResponseTimedOut
+	} else if err != nil {
+		handleError(&args, err)
+		return
+	}
+
+	dumpResponse(&args, res)
+
+}
+
+func processMerchantCredentialGeneration(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	validateRequired(args.MerchantID, "merchantId")
+
+	request := blockchyp.MerchantCredentialGenerationRequest{
+		MerchantID:      args.MerchantID,
+		DeleteProtected: args.DeleteProtected,
+		Notes:           args.Notes,
+	}
+
+	if args.Roles != "" {
+		request.Roles = strings.Split(args.Roles, ",")
+	}
+
+	res, err := client.MerchantCredentialGeneration(request)
 
 	if nErr, ok := err.(net.Error); ok && nErr.Timeout() {
 		res.ResponseDescription = blockchyp.ResponseTimedOut
@@ -1683,6 +1719,8 @@ func processCapture(client *blockchyp.Client, args blockchyp.CommandLineArgument
 			TransactionID:      args.TransactionID,
 			TransactionRef:     args.TransactionRef,
 			TestCase:           args.TestCase,
+			ShipmentNumber:     args.ShipmentNumber,
+			ShipmentCount:      args.ShipmentCount,
 		}
 	}
 
@@ -1779,6 +1817,9 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			Force:              args.Force,
 			TransactionRef:     args.TransactionRef,
 			ResetConnection:    args.ResetConnection,
+			EntryMethod:        args.EntryMethod,
+			Recurring:          args.Recurring,
+			Subscription:       args.Subscription,
 		}
 		if hasCustomerFields(args) {
 			req.Customer = populateCustomer(args)
@@ -1850,6 +1891,7 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			TestCase:                   args.TestCase,
 			Mit:                        args.MIT,
 			Cit:                        args.CIT,
+			Subscription:               args.Subscription,
 			TransactionID:              args.TransactionID,
 			PurchaseOrderNumber:        args.PONumber,
 			SupplierReferenceNumber:    args.SupplierReferenceNumber,

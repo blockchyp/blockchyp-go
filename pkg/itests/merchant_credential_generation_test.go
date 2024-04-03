@@ -17,24 +17,21 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
-func TestCaptureSignature(t *testing.T) {
+func TestMerchantCredentialGeneration(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
 	client := config.newTestClient(t, "")
 
-	processTestDelay(t, config, "CaptureSignature")
-
 	// setup request object
-	request := blockchyp.CaptureSignatureRequest{
-		TerminalName: config.DefaultTerminalName,
-		SigFormat:    blockchyp.SignatureFormatPNG,
-		SigWidth:     200,
+	request := blockchyp.MerchantCredentialGenerationRequest{
+		Test:       true,
+		MerchantID: "<MERCHANT ID>",
 	}
 
 	logObj(t, "Request:", request)
 
-	response, err := client.CaptureSignature(request)
+	response, err := client.MerchantCredentialGeneration(request)
 
 	assert.NoError(err)
 
@@ -42,5 +39,4 @@ func TestCaptureSignature(t *testing.T) {
 
 	// response assertions
 	assert.True(response.Success)
-	assert.True(len(response.SigFile) >= 0)
 }
