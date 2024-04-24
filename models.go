@@ -1182,6 +1182,9 @@ type AuthorizationRequest struct {
 	// vault alongside the authorization.
 	Enroll bool `json:"enroll,omitempty"`
 
+	// BypassDupeFilter indicates duplicate detection should be bypassed.
+	BypassDupeFilter bool `json:"bypassDupeFilter,omitempty"`
+
 	// Description contains a narrative description of the transaction.
 	Description string `json:"description,omitempty"`
 

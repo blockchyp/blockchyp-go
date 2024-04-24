@@ -569,7 +569,8 @@ func processPartnerStatementDetail(client *blockchyp.Client, args blockchyp.Comm
 	validateRequired(args.StatementID, "statementId")
 
 	request := blockchyp.PartnerStatementDetailRequest{
-		ID: args.StatementID,
+		ID:   args.StatementID,
+		Test: args.Test,
 	}
 
 	res, err := client.PartnerStatementDetail(request)
@@ -665,6 +666,7 @@ func processPricing(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	request := blockchyp.PricingPolicyRequest{
 		MerchantID: args.MerchantID,
 		ID:         args.PolicyID,
+		Test:       args.Test,
 	}
 
 	res, err := client.PricingPolicy(request)

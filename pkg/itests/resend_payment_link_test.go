@@ -61,6 +61,7 @@ func TestResendPaymentLink(t *testing.T) {
 
 	// setup request object
 	request := blockchyp.ResendPaymentLinkRequest{
+		Test:     true,
 		LinkCode: setupResponse.LinkCode,
 	}
 

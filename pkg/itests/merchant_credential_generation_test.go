@@ -21,12 +21,26 @@ func TestMerchantCredentialGeneration(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
-	client := config.newTestClient(t, "")
+	client := config.newTestClient(t, "partner")
+
+	// setup request object
+	setupRequest := blockchyp.AddTestMerchantRequest{
+		DBAName:     "Test Merchant",
+		CompanyName: "Test Merchant",
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.AddTestMerchant(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
 
 	// setup request object
 	request := blockchyp.MerchantCredentialGenerationRequest{
 		Test:       true,
-		MerchantID: "<MERCHANT ID>",
+		MerchantID: setupResponse.MerchantID,
 	}
 
 	logObj(t, "Request:", request)

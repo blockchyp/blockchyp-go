@@ -61,6 +61,7 @@ func TestCancelPaymentLink(t *testing.T) {
 
 	// setup request object
 	request := blockchyp.CancelPaymentLinkRequest{
+		Test:     true,
 		LinkCode: setupResponse.LinkCode,
 	}
 
