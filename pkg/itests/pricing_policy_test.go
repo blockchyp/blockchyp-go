@@ -1,7 +1,7 @@
 //go:build integration
 // +build integration
 
-// Copyright 2019-2023 BlockChyp, Inc. All rights reserved. Use of this code
+// Copyright 2019-2024 BlockChyp, Inc. All rights reserved. Use of this code
 // is governed by a license that can be found in the LICENSE file.
 //
 // This file was generated automatically by the BlockChyp SDK Generator.
@@ -21,12 +21,26 @@ func TestPricingPolicy(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
-	client := config.newTestClient(t, "")
+	client := config.newTestClient(t, "partner")
+
+	// setup request object
+	setupRequest := blockchyp.AddTestMerchantRequest{
+		DBAName:     "Test Merchant",
+		CompanyName: "Test Merchant",
+	}
+
+	logObj(t, "Request:", setupRequest)
+
+	setupResponse, err := client.AddTestMerchant(setupRequest)
+
+	assert.NoError(err)
+
+	logObj(t, "Response:", setupResponse)
 
 	// setup request object
 	request := blockchyp.PricingPolicyRequest{
 		Test:       true,
-		MerchantID: "<MERCHANT ID>",
+		MerchantID: setupResponse.MerchantID,
 	}
 
 	logObj(t, "Request:", request)

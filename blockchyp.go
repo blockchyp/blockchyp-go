@@ -1,4 +1,4 @@
-// Copyright 2019-2023 BlockChyp, Inc. All rights reserved. Use of this code
+// Copyright 2019-2024 BlockChyp, Inc. All rights reserved. Use of this code
 // is governed by a license that can be found in the LICENSE file.
 //
 // This file was generated automatically by the BlockChyp SDK Generator.
@@ -1467,6 +1467,22 @@ func (client *Client) DeleteToken(request DeleteTokenRequest) (*DeleteTokenRespo
 	var response DeleteTokenResponse
 
 	err := client.GatewayRequest("/api/token/"+request.Token, "DELETE", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// MerchantCredentialGeneration generates and returns api credentials for a
+// given merchant.
+func (client *Client) MerchantCredentialGeneration(request MerchantCredentialGenerationRequest) (*MerchantCredentialGenerationResponse, error) {
+	var response MerchantCredentialGenerationResponse
+
+	err := client.DashboardRequest("/api/generate-merchant-creds", "POST", request, &response, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut

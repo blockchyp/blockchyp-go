@@ -1,4 +1,4 @@
-// Copyright 2019-2023 BlockChyp, Inc. All rights reserved. Use of this code
+// Copyright 2019-2024 BlockChyp, Inc. All rights reserved. Use of this code
 // is governed by a license that can be found in the LICENSE file.
 //
 // This file was generated automatically by the BlockChyp SDK Generator.
@@ -1182,6 +1182,9 @@ type AuthorizationRequest struct {
 	// vault alongside the authorization.
 	Enroll bool `json:"enroll,omitempty"`
 
+	// BypassDupeFilter indicates duplicate detection should be bypassed.
+	BypassDupeFilter bool `json:"bypassDupeFilter,omitempty"`
+
 	// Description contains a narrative description of the transaction.
 	Description string `json:"description,omitempty"`
 
@@ -1206,6 +1209,10 @@ type AuthorizationRequest struct {
 
 	// Mit manually sets the MIT (Merchant Initiated Transaction) flag.
 	Mit bool `json:"mit,omitempty"`
+
+	// Subscription indicates that this transaction should be treated as a
+	// subscription recurring transaction.
+	Subscription bool `json:"subscription,omitempty"`
 
 	// PurchaseOrderNumber is the purchase order number, if known.
 	PurchaseOrderNumber string `json:"purchaseOrderNumber,omitempty"`
@@ -1724,6 +1731,13 @@ type CaptureRequest struct {
 
 	// TaxAmount is the tax amount.
 	TaxAmount string `json:"taxAmount,omitempty"`
+
+	// ShipmentCount indicates the number of shipments the original authorization
+	// will be broken into.
+	ShipmentCount int `json:"shipmentCount"`
+
+	// ShipmentNumber indicates which shipment this particular capture is for.
+	ShipmentNumber int `json:"shipmentNumber"`
 }
 
 // CaptureResponse contains the response to a capture request.
@@ -2143,6 +2157,14 @@ type EnrollRequest struct {
 
 	// Customer customer with which the new token should be associated.
 	Customer *Customer `json:"customer"`
+
+	// Recurring indicates that this transaction should be treated as a recurring
+	// transaction.
+	Recurring bool `json:"recurring,omitempty"`
+
+	// Subscription indicates that this transaction and any using this token
+	// should be treated as a subscription recurring transaction.
+	Subscription bool `json:"subscription,omitempty"`
 }
 
 // EnrollResponse contains the response to an enroll request.
@@ -5930,6 +5952,12 @@ type MediaLibraryResponse struct {
 	// ResultCount total number of results accessible through paging.
 	ResultCount int `json:"resultCount"`
 
+	// Pages total number of pages.
+	Pages int `json:"pages"`
+
+	// CurrentPage page currently selected through paging.
+	CurrentPage int `json:"currentPage"`
+
 	// Results enumerates all media assets available in the context.
 	Results []MediaMetadata `json:"results"`
 }
@@ -7117,6 +7145,52 @@ type PartnerCommissionBreakdownResponse struct {
 	// CardBrandCostDetails is the nested list of costs levied by the card
 	// brands, grouped by card brand and type.
 	CardBrandCostDetails []AggregateBillingLineItem `json:"cardBrandCostDetails"`
+}
+
+// MerchantCredentialGenerationRequest models a request to generate merchant
+// api credentials.
+type MerchantCredentialGenerationRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// MerchantID is the merchant id.
+	MerchantID string `json:"merchantId"`
+
+	// DeleteProtected protects the credentials from deletion.
+	DeleteProtected bool `json:"deleteProtected"`
+
+	// Roles an optional array of role codes that will be assigned to the
+	// credentials.
+	Roles []string `json:"roles"`
+
+	// Notes free form description of the purpose or intent behind the
+	// credentials.
+	Notes string `json:"notes"`
+}
+
+// MerchantCredentialGenerationResponse contains merchant api credential data.
+type MerchantCredentialGenerationResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// APIKey is the merchant api key.
+	APIKey string `json:"apiKey"`
+
+	// BearerToken is the merchant bearer token.
+	BearerToken string `json:"bearerToken"`
+
+	// SigningKey is the merchant signing key.
+	SigningKey string `json:"signingKey"`
 }
 
 // BuyRateLineItem models a single buy rate calculation line item.

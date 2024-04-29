@@ -1,7 +1,7 @@
 //go:build integration
 // +build integration
 
-// Copyright 2019-2023 BlockChyp, Inc. All rights reserved. Use of this code
+// Copyright 2019-2024 BlockChyp, Inc. All rights reserved. Use of this code
 // is governed by a license that can be found in the LICENSE file.
 //
 // This file was generated automatically by the BlockChyp SDK Generator.
@@ -25,11 +25,12 @@ func TestSimpleCapture(t *testing.T) {
 
 	// setup request object
 	setupRequest := blockchyp.AuthorizationRequest{
-		PAN:      "4111111111111111",
-		ExpMonth: "12",
-		ExpYear:  "2025",
-		Amount:   "25.55",
-		Test:     true,
+		PAN:              "4111111111111111",
+		ExpMonth:         "12",
+		ExpYear:          "2025",
+		Amount:           "42.45",
+		Test:             true,
+		BypassDupeFilter: true,
 	}
 
 	logObj(t, "Request:", setupRequest)

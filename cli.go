@@ -159,10 +159,17 @@ type CommandLineArguments struct {
 	TestCase                    string `args:"testCase"`
 	CIT                         bool   `args:"cit"`
 	MIT                         bool   `args:"mit"`
+	Subscription                bool   `args:"subscription"`
 	PONumber                    string `args:"po"`
 	SupplierReferenceNumber     string `args:"srn"`
 	StatementID                 string `json:"statementId"`
 	InvoiceID                   string `json:"invoiceId"`
+	ShipmentNumber              int    `json:"shipmentNumber"`
+	ShipmentCount               int    `json:"shipmentCount"`
+	EntryMethod                 string `json:"entryMethod"`
+	DeleteProtected             bool   `json:"deteleProtected"`
+	Roles                       string `json:"roles"`
+	Notes                       string `json:"notes"`
 }
 
 var defaultSettings = &ConfigSettings{
