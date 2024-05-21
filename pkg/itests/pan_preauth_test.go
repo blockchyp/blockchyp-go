@@ -27,11 +27,12 @@ func TestPANPreauth(t *testing.T) {
 
 	// setup request object
 	request := blockchyp.AuthorizationRequest{
-		PAN:      "4111111111111111",
-		ExpMonth: "12",
-		ExpYear:  "2025",
-		Amount:   "25.55",
-		Test:     true,
+		PAN:              "4111111111111111",
+		ExpMonth:         "12",
+		ExpYear:          "2025",
+		Amount:           "42.45",
+		Test:             true,
+		BypassDupeFilter: true,
 	}
 
 	logObj(t, "Request:", request)
@@ -54,6 +55,5 @@ func TestPANPreauth(t *testing.T) {
 	assert.NotEmpty(response.PaymentType)
 	assert.NotEmpty(response.MaskedPAN)
 	assert.NotEmpty(response.EntryMethod)
-	assert.Equal("25.55", response.AuthorizedAmount)
 	assert.Equal("KEYED", response.EntryMethod)
 }

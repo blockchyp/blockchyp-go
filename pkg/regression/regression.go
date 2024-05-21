@@ -7,6 +7,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/blockchyp/blockchyp-go/v2"
 	"log"
 	"os"
 	"os/exec"

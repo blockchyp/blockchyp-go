@@ -21,7 +21,7 @@ func TestPartnerCommissionBreakdown(t *testing.T) {
 	assert := assert.New(t)
 
 	config := loadTestConfiguration(t)
-	client := config.newTestClient(t, "")
+	client := config.newTestClient(t, "partner")
 
 	// setup request object
 	request := blockchyp.PartnerCommissionBreakdownRequest{
