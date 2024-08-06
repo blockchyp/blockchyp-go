@@ -5898,6 +5898,8 @@ Here's the full list with links to their GitHub repositories.
 
 [Node.js/JavaScript SDK](https://github.com/blockchyp/blockchyp-js)
 
+[Typescript SDK](https://github.com/blockchyp/blockchyp-ts)
+
 [Java SDK](https://github.com/blockchyp/blockchyp-java)
 
 [.net/C# SDK](https://github.com/blockchyp/blockchyp-csharp)
@@ -5909,3 +5911,5 @@ Here's the full list with links to their GitHub repositories.
 [Python SDK](https://github.com/blockchyp/blockchyp-python)
 
 [iOS (Objective-C/Swift) SDK](https://github.com/blockchyp/blockchyp-ios)
+
+[Rust SDK](https://github.com/blockchyp/blockchyp-rust)
