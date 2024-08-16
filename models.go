@@ -1275,6 +1275,11 @@ type AuthorizationRequest struct {
 	// asyncronously. Use with caution and in conjunction with the transaction
 	// status API.
 	AsyncReversals bool `json:"asyncReversals,omitempty"`
+
+	// PassthroughSurcharge is a passthrough surcharge amount. This surcharge
+	// amount will be passed directly to the gateway and is not directly
+	// calculated.
+	PassthroughSurcharge string `json:"passthroughSurcharge,omitempty"`
 }
 
 // BalanceRequest contains a request for the remaining balance on a payment
