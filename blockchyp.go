@@ -1555,6 +1555,21 @@ func (client *Client) InviteMerchantUser(request InviteMerchantUserRequest) (*Ac
 	return &response, err
 }
 
+// AddGatewayMerchant adds a live gateway merchant account.
+func (client *Client) AddGatewayMerchant(request AddGatewayMerchantRequest) (*MerchantProfileResponse, error) {
+	var response MerchantProfileResponse
+
+	err := client.DashboardRequest("/api/add-gateway-merchant", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // AddTestMerchant adds a test merchant account.
 func (client *Client) AddTestMerchant(request AddTestMerchantRequest) (*MerchantProfileResponse, error) {
 	var response MerchantProfileResponse

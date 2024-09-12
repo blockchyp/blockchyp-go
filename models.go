@@ -4234,6 +4234,19 @@ type AddTestMerchantRequest struct {
 	Timeout int `json:"timeout"`
 }
 
+// AddGatewayMerchantRequest models basic information needed to create a
+// gateway merchant.
+type AddGatewayMerchantRequest struct {
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Profile is the merchant profile to be boarded.
+	Profile MerchantProfile `json:"profile"`
+
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+}
+
 // MerchantProfileRequest models a request for information about the merchant
 // profile.
 type MerchantProfileRequest struct {
@@ -4436,6 +4449,9 @@ type MerchantProfile struct {
 	// MerchantID is the merchant id.
 	MerchantID string `json:"merchantId"`
 
+	// BankMid is the primary bank mid.
+	BankMid string `json:"bankMid"`
+
 	// CompanyName is the merchant's company name.
 	CompanyName string `json:"companyName"`
 
@@ -4616,6 +4632,9 @@ type MerchantProfileResponse struct {
 
 	// MerchantID is the merchant id.
 	MerchantID string `json:"merchantId"`
+
+	// BankMid is the primary bank mid.
+	BankMid string `json:"bankMid"`
 
 	// CompanyName is the merchant's company name.
 	CompanyName string `json:"companyName"`
@@ -5319,6 +5338,36 @@ type MerchantPlatformsResponse struct {
 
 	// Results enumerates merchant platform settings.
 	Results []MerchantPlatform `json:"results"`
+}
+
+// UpdateMerchantPlatformRequest is used to up platform configuration for
+// gateway merchants.
+type UpdateMerchantPlatformRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Platform is the merchant platform configuration.
+	Platform MerchantPlatform `json:"platform"`
+}
+
+// UpdateMerchantPlatformResponse echoes back the state of the current
+// platform configuration after a change.
+type UpdateMerchantPlatformResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Platform is the current platform configuration.
+	Platform MerchantPlatform `json:"platform"`
 }
 
 // MerchantPlatform contains details about a merchant board platform
@@ -7174,6 +7223,10 @@ type MerchantCredentialGenerationRequest struct {
 	// Notes free form description of the purpose or intent behind the
 	// credentials.
 	Notes string `json:"notes"`
+
+	// CredentialType type of credentials to generate, either API or TOKENIZING.
+	// Defaults to API.
+	CredentialType string `json:"credentialType"`
 }
 
 // MerchantCredentialGenerationResponse contains merchant api credential data.
@@ -7196,6 +7249,9 @@ type MerchantCredentialGenerationResponse struct {
 
 	// SigningKey is the merchant signing key.
 	SigningKey string `json:"signingKey"`
+
+	// TokenizingKey is the tokenizing key.
+	TokenizingKey string `json:"tokenizingKey"`
 }
 
 // BuyRateLineItem models a single buy rate calculation line item.

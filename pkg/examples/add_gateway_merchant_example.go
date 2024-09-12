@@ -7,7 +7,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
-func updateMerchantPlatformsExample() {
+func addGatewayMerchantExample() {
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -19,9 +19,14 @@ func updateMerchantPlatformsExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.MerchantPlatform{}
+	request := blockchyp.AddGatewayMerchantRequest{
+		Profile: blockchyp.MerchantProfile{
+			DBAName:     "DBA Name",
+			CompanyName: "Corporate Entity Name",
+		},
+	}
 
-	response, err := client.UpdateMerchantPlatforms(request)
+	response, err := client.AddGatewayMerchant(request)
 
 	if err != nil {
 		log.Fatal(err)
