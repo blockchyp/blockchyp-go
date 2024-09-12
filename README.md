@@ -5273,6 +5273,67 @@ func inviteMerchantUserExample() {
 
 ```
 
+#### Add Gateway Merchant
+
+
+
+* **API Credential Types:** Partner
+* **Required Role:** Gateway Boarding
+
+This is a partner level API that can be used to manually board gateway merchants.  Use this API in conjunction
+with Platform Configuration to instantly board gateway merchants.  Note that most partners don't have 
+permission to do this and are unlikely to get it.
+
+Settings can be changed by using the Update Merchant API.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func addGatewayMerchantExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.AddGatewayMerchantRequest{
+        Profile: blockchyp.MerchantProfile{
+            DBAName:     "DBA Name",
+            CompanyName: "Corporate Entity Name",
+        },
+    }
+
+    response, err := client.AddGatewayMerchant(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
 #### Add Test Merchant
 
 

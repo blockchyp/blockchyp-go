@@ -170,6 +170,7 @@ type CommandLineArguments struct {
 	DeleteProtected             bool   `json:"deteleProtected"`
 	Roles                       string `json:"roles"`
 	Notes                       string `json:"notes"`
+	CredType                    string `json:"credType"`
 }
 
 var defaultSettings = &ConfigSettings{

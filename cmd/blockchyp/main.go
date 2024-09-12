@@ -203,6 +203,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.DeleteProtected, "deleteProtected", false, "protects the credentials from deletion")
 	flag.StringVar(&args.Roles, "roles", "", "an optional array of role codes that will be assigned to the credentials")
 	flag.StringVar(&args.Notes, "notes", "", "free form description of the purpose or intent behind the credentials")
+	flag.StringVar(&args.CredType, "credType", "", "is the type of credential to be generated, API or TOKENIZING")
 	flag.Parse()
 
 	if args.Version {
@@ -323,6 +324,12 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processSideLoad(client, args)
 	case "add-test-merchant":
 		processAddTestMerchant(client, args)
+	case "add-gateway-merchant":
+		processAddGatewayMerchant(client, args)
+	case "merchant-platforms":
+		processMerchantPlatforms(client, args)
+	case "update-merchant-platforms":
+		processUpdateMerchantPlatform(client, args)
 	case "delete-test-merchant":
 		processDeleteTestMerchant(client, args)
 	case "invite-merchant-user":
@@ -524,6 +531,7 @@ func processMerchantCredentialGeneration(client *blockchyp.Client, args blockchy
 		MerchantID:      args.MerchantID,
 		DeleteProtected: args.DeleteProtected,
 		Notes:           args.Notes,
+		CredentialType:  args.CredType,
 	}
 
 	if args.Roles != "" {
@@ -2328,6 +2336,53 @@ func processAddTestMerchant(client *blockchyp.Client, args blockchyp.CommandLine
 		}
 	}
 	res, err := client.AddTestMerchant(*req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processUpdateMerchantPlatform(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := &blockchyp.MerchantPlatform{}
+
+	if !parseJSONInput(args, req) {
+		handleError(&args, errors.New("unable to parse platform json"))
+	}
+	res, err := client.UpdateMerchantPlatforms(*req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processMerchantPlatforms(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := blockchyp.MerchantProfileRequest{
+		MerchantID: args.MerchantID,
+	}
+
+	res, err := client.MerchantPlatforms(req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processAddGatewayMerchant(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := &blockchyp.AddGatewayMerchantRequest{}
+
+	if !parseJSONInput(args, req) {
+		validateRequired(args.CompanyName, "companyName")
+		req = &blockchyp.AddGatewayMerchantRequest{
+			Profile: blockchyp.MerchantProfile{
+				DBAName:     args.DBAName,
+				CompanyName: args.CompanyName,
+			},
+		}
+	}
+	res, err := client.AddGatewayMerchant(*req)
 	if err != nil {
 		handleError(&args, err)
 	}
