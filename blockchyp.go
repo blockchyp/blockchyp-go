@@ -1493,6 +1493,21 @@ func (client *Client) MerchantCredentialGeneration(request MerchantCredentialGen
 	return &response, err
 }
 
+// SubmitApplication submits and application to add a new merchant account.
+func (client *Client) SubmitApplication(request SubmitApplicationRequest) (*Acknowledgement, error) {
+	var response Acknowledgement
+
+	err := client.DashboardRequest("/api/submit-application", "POST", request, &response, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // GetMerchants adds a test merchant account.
 func (client *Client) GetMerchants(request GetMerchantsRequest) (*GetMerchantsResponse, error) {
 	var response GetMerchantsResponse

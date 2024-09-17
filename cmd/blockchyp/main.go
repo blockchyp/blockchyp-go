@@ -186,24 +186,24 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.Incremental, "incremental", false, "force incremental firmware downloads")
 	flag.BoolVar(&args.ChipRejection, "chipRejection", false, "simulates a chip rejection")
 	flag.BoolVar(&args.OutOfOrderReversal, "outOfOrderReversal", false, "simulates an out of order auto reversal")
-	flag.BoolVar(&args.AsyncReversals, "asyncReversals", false, "causes auto-reversals to run asynchronously")
+	flag.BoolVar(&args.AsyncReversals, "asyncReversals", false, "causes auto-reversals to run asynchronously.")
 	flag.BoolVar(&args.CardOnFile, "cardOnFile", false, "flags a transaction as MOTO / card on file.")
 	flag.BoolVar(&args.Recurring, "recurring", false, "flags a transaction as recurring.")
 	flag.BoolVar(&args.MIT, "mit", false, "manually sets the MIT flag.")
 	flag.BoolVar(&args.CIT, "cit", false, "manually sets the CIT flag.")
 	flag.BoolVar(&args.Subscription, "subscription", false, "flags a transaction as a subscription.")
 	flag.StringVar(&args.PONumber, "po", "", "purchase order for L2 transactions")
-	flag.StringVar(&args.SupplierReferenceNumber, "srn", "", "supplier reference number for L2 transactions")
-	flag.StringVar(&args.PolicyID, "policy", "", "policy id for pricing policy related operations")
-	flag.StringVar(&args.StatementID, "statementId", "", "statement id for partner or merchant statement operations")
-	flag.StringVar(&args.InvoiceID, "invoiceId", "", "invoice id for partner or merchant statement/invoice operations")
+	flag.StringVar(&args.SupplierReferenceNumber, "srn", "", "supplier reference number for L2 transactions.")
+	flag.StringVar(&args.PolicyID, "policy", "", "policy id for pricing policy related operations.")
+	flag.StringVar(&args.StatementID, "statementId", "", "statement id for partner or merchant statement operations.")
+	flag.StringVar(&args.InvoiceID, "invoiceId", "", "invoice id for partner or merchant statement/invoice operations.")
 	flag.IntVar(&args.ShipmentNumber, "shipmentNumber", 0, "indicates the shipment number in a split shipment order.")
 	flag.IntVar(&args.ShipmentCount, "shipmentCount", 0, "indicates the total number of shipments in a split shipment order.")
 	flag.StringVar(&args.EntryMethod, "entryMethod", "", "is the method by which the payment card was entered.")
-	flag.BoolVar(&args.DeleteProtected, "deleteProtected", false, "protects the credentials from deletion")
-	flag.StringVar(&args.Roles, "roles", "", "an optional array of role codes that will be assigned to the credentials")
-	flag.StringVar(&args.Notes, "notes", "", "free form description of the purpose or intent behind the credentials")
-	flag.StringVar(&args.CredType, "credType", "", "is the type of credential to be generated, API or TOKENIZING")
+	flag.BoolVar(&args.DeleteProtected, "deleteProtected", false, "protects the credentials from deletion.")
+	flag.StringVar(&args.Roles, "roles", "", "an optional array of role codes that will be assigned to the credentials.")
+	flag.StringVar(&args.Notes, "notes", "", "free form description of the purpose or intent behind the credentials.")
+	flag.StringVar(&args.CredType, "credType", "", "is the type of credential to be generated, API or TOKENIZING.")
 	flag.Parse()
 
 	if args.Version {
@@ -476,6 +476,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processUnlinkToken(client, args)
 	case "drop-terminal-socket":
 		processDropSocket(client, args)
+	case "submit-application":
+		processSubmitApplication(client, args)
 	default:
 		fatalErrorf("unknown command: %s", cmd)
 	}
@@ -2745,6 +2747,24 @@ func processTokenDelete(client *blockchyp.Client, args blockchyp.CommandLineArgu
 		handleError(&args, err)
 	}
 	dumpResponse(&args, res)
+}
+
+func processSubmitApplication(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	request := &blockchyp.SubmitApplicationRequest{}
+
+	if !parseJSONInput(args, request) {
+		if (args.JSON == "") && args.JSONFile == "" {
+			fatalError("-json or -jsonFile required")
+		}
+	}
+
+	ack, err := client.SubmitApplication(*request)
+	if err != nil {
+		handleError(&args, err)
+	}
+
+	dumpResponse(&args, ack)
 }
 
 func parseTimestamp(ts string) (time.Time, error) {

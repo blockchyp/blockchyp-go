@@ -7339,6 +7339,400 @@ type AggregateBillingLineItemStats struct {
 	Max string `json:"max"`
 }
 
+// Owner models an individual with 25% or more ownership interest in a
+// company.
+type Owner struct {
+	// FirstName is the first name of the owner.
+	FirstName string `json:"firstName"`
+
+	// LastName is the last name of the owner.
+	LastName string `json:"lastName"`
+
+	// JobTitle is the job title of the owner.
+	JobTitle string `json:"jobTitle"`
+
+	// TaxIDNumber is the tax identification number (SSN) of the owner.
+	TaxIDNumber string `json:"taxIdNumber"`
+
+	// PhoneNumber is the phone number of the owner.
+	PhoneNumber string `json:"phoneNumber"`
+
+	// Dob is the date of birth of the owner in mm/dd/yyyy format.
+	Dob string `json:"dob"`
+
+	// Ownership is the percentage of ownership.
+	Ownership string `json:"ownership"`
+
+	// Address is the address of the owner.
+	Address Address `json:"address"`
+
+	// Email is the email address of the owner.
+	Email string `json:"email"`
+
+	// SingleLineAddress A single line representation of the owner's address.
+	SingleLineAddress string `json:"singleLineAddress"`
+
+	// EntityType is the type of entity this owner represents.
+	EntityType string `json:"entityType"`
+
+	// DlNumber is the driver's license number of the owner.
+	DlNumber string `json:"dlNumber"`
+
+	// DlStateOrProvince is the state that issued the owner's driver's license.
+	DlStateOrProvince string `json:"dlStateOrProvince"`
+
+	// DlExpiration is the expiration date of the owner's driver's license.
+	DlExpiration string `json:"dlExpiration"`
+}
+
+// ApplicationAccount models a bank account associated with an application.
+type ApplicationAccount struct {
+	// Name is the name of the bank account.
+	Name string `json:"name"`
+
+	// Bank is the name of the bank.
+	Bank string `json:"bank"`
+
+	// AccountHolderName is the name of the account holder.
+	AccountHolderName string `json:"accountHolderName"`
+
+	// RoutingNumber is the routing number of the bank.
+	RoutingNumber string `json:"routingNumber"`
+
+	// AccountNumber is the account number.
+	AccountNumber string `json:"accountNumber"`
+}
+
+// MerchantApplication models a merchant application form to add a merchant
+// account.
+type MerchantApplication struct {
+	// InviteCode is the invite code for the merchant.
+	InviteCode string `json:"inviteCode"`
+
+	// DBAName is the business name your customers know you by (DBA Name).
+	DBAName string `json:"dbaName"`
+
+	// CorporateName is the name of the legal entity you file your taxes under.
+	CorporateName string `json:"corporateName"`
+
+	// WebSite is the business website.
+	WebSite string `json:"webSite"`
+
+	// TaxIDNumber is the business tax identification number (EIN).
+	TaxIDNumber string `json:"taxIdNumber"`
+
+	// EntityType is the type of business entity.
+	EntityType string `json:"entityType"`
+
+	// StateOfIncorporation is the state where the business is incorporated.
+	StateOfIncorporation string `json:"stateOfIncorporation"`
+
+	// MerchantType is the primary type of business (e.g., Retail, Service,
+	// etc.).
+	MerchantType string `json:"merchantType"`
+
+	// BusinessDescription A short description of the products and services sold.
+	BusinessDescription string `json:"businessDescription"`
+
+	// YearsInBusiness is the number of years the business has been operating.
+	YearsInBusiness string `json:"yearsInBusiness"`
+
+	// BusinessPhoneNumber is the business telephone number.
+	BusinessPhoneNumber string `json:"businessPhoneNumber"`
+
+	// PhysicalAddress is the physical address of the business.
+	PhysicalAddress Address `json:"physicalAddress"`
+
+	// MailingAddress is the mailing address of the business.
+	MailingAddress Address `json:"mailingAddress"`
+
+	// ContactFirstName is the first name of the primary contact.
+	ContactFirstName string `json:"contactFirstName"`
+
+	// ContactLastName is the last name of the primary contact.
+	ContactLastName string `json:"contactLastName"`
+
+	// ContactPhoneNumber is the phone number of the primary contact.
+	ContactPhoneNumber string `json:"contactPhoneNumber"`
+
+	// ContactEmail is the email address of the primary contact.
+	ContactEmail string `json:"contactEmail"`
+
+	// ContactTitle is the job title of the primary contact.
+	ContactTitle string `json:"contactTitle"`
+
+	// ContactTaxIDNumber is the tax identification number (SSN) of the primary
+	// contact.
+	ContactTaxIDNumber string `json:"contactTaxIdNumber"`
+
+	// ContactDob is the date of birth of the primary contact.
+	ContactDob string `json:"contactDOB"`
+
+	// ContactDlNumber is the driver's license number of the primary contact.
+	ContactDlNumber string `json:"contactDlNumber"`
+
+	// ContactDlStateOrProvince is the state that issued the primary contact's
+	// driver's license.
+	ContactDlStateOrProvince string `json:"contactDlStateOrProvince"`
+
+	// ContactDlExpiration is the expiration date of the primary contact's
+	// driver's license.
+	ContactDlExpiration string `json:"contactDlExpiration"`
+
+	// ContactHomeAddress is the home address of the primary contact.
+	ContactHomeAddress Address `json:"contactHomeAddress"`
+
+	// ContactRole is the role of the primary contact in the business.
+	ContactRole string `json:"contactRole"`
+
+	// Owners List of individuals with 25% or more ownership in the company.
+	Owners []*Owner `json:"owners"`
+
+	// ManualAccount is the bank account information for the business.
+	ManualAccount ApplicationAccount `json:"manualAccount"`
+
+	// AverageTransaction is the average transaction amount.
+	AverageTransaction string `json:"averageTransaction"`
+
+	// HighTransaction is the highest expected transaction amount.
+	HighTransaction string `json:"highTransaction"`
+
+	// AverageMonth is the average monthly transaction volume.
+	AverageMonth string `json:"averageMonth"`
+
+	// HighMonth is the highest expected monthly transaction volume.
+	HighMonth string `json:"highMonth"`
+
+	// RefundPolicy is the refund policy of the business.
+	RefundPolicy string `json:"refundPolicy"`
+
+	// RefundDays is the number of days after purchase that refunds can be
+	// issued.
+	RefundDays string `json:"refundDays"`
+
+	// TimeZone is the time zone of the business.
+	TimeZone string `json:"timeZone"`
+
+	// BatchCloseTime is the time when the daily batch should close.
+	BatchCloseTime string `json:"batchCloseTime"`
+
+	// MultipleLocations Indicates if the business has multiple locations.
+	MultipleLocations string `json:"multipleLocations"`
+
+	// LocationName is the name of this specific business location.
+	LocationName string `json:"locationName"`
+
+	// StoreNumber is the store number for this location.
+	StoreNumber string `json:"storeNumber"`
+
+	// EBTRequested Indicates if the business wants to accept EBT cards.
+	EBTRequested string `json:"ebtRequested"`
+
+	// FnsNumber is the FNS number issued by the USDA for EBT processing.
+	FnsNumber string `json:"fnsNumber"`
+
+	// Ecommerce Indicates if the business plans to accept payments through a
+	// website.
+	Ecommerce string `json:"ecommerce"`
+
+	// DropShipping Indicates if suppliers ship products directly to customers.
+	DropShipping bool `json:"dropShipping"`
+
+	// CardPresentPercentage is the percentage of transactions that will be chip
+	// or swipe.
+	CardPresentPercentage string `json:"cardPresentPercentage"`
+
+	// PhoneOrderPercentage is the percentage of transactions that will be phone
+	// orders.
+	PhoneOrderPercentage string `json:"phoneOrderPercentage"`
+
+	// EcomPercentage is the percentage of transactions that will be e-commerce.
+	EcomPercentage string `json:"ecomPercentage"`
+
+	// BillBeforeShipmentDays is the number of days before shipment that
+	// customers are charged.
+	BillBeforeShipmentDays string `json:"billBeforeShipmentDays"`
+
+	// SubscriptionsSupported Indicates if the business plans to process
+	// recurring payments.
+	SubscriptionsSupported string `json:"subscriptionsSupported"`
+
+	// SubscriptionFrequency is the frequency of recurring payments (if
+	// applicable).
+	SubscriptionFrequency string `json:"subscriptionFrequency"`
+
+	// SignerName is the full legal name of the person signing the application.
+	SignerName string `json:"signerName"`
+}
+
+// SubmitApplicationRequest models a merchant application submission request
+// to add a new merchant account.
+type SubmitApplicationRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// InviteCode is the invite code for the merchant.
+	InviteCode string `json:"inviteCode"`
+
+	// DBAName is the business name your customers know you by (DBA Name).
+	DBAName string `json:"dbaName"`
+
+	// CorporateName is the name of the legal entity you file your taxes under.
+	CorporateName string `json:"corporateName"`
+
+	// WebSite is the business website.
+	WebSite string `json:"webSite"`
+
+	// TaxIDNumber is the business tax identification number (EIN).
+	TaxIDNumber string `json:"taxIdNumber"`
+
+	// EntityType is the type of business entity.
+	EntityType string `json:"entityType"`
+
+	// StateOfIncorporation is the state where the business is incorporated.
+	StateOfIncorporation string `json:"stateOfIncorporation"`
+
+	// MerchantType is the primary type of business (e.g., Retail, Service,
+	// etc.).
+	MerchantType string `json:"merchantType"`
+
+	// BusinessDescription A short description of the products and services sold.
+	BusinessDescription string `json:"businessDescription"`
+
+	// YearsInBusiness is the number of years the business has been operating.
+	YearsInBusiness string `json:"yearsInBusiness"`
+
+	// BusinessPhoneNumber is the business telephone number.
+	BusinessPhoneNumber string `json:"businessPhoneNumber"`
+
+	// PhysicalAddress is the physical address of the business.
+	PhysicalAddress Address `json:"physicalAddress"`
+
+	// MailingAddress is the mailing address of the business.
+	MailingAddress Address `json:"mailingAddress"`
+
+	// ContactFirstName is the first name of the primary contact.
+	ContactFirstName string `json:"contactFirstName"`
+
+	// ContactLastName is the last name of the primary contact.
+	ContactLastName string `json:"contactLastName"`
+
+	// ContactPhoneNumber is the phone number of the primary contact.
+	ContactPhoneNumber string `json:"contactPhoneNumber"`
+
+	// ContactEmail is the email address of the primary contact.
+	ContactEmail string `json:"contactEmail"`
+
+	// ContactTitle is the job title of the primary contact.
+	ContactTitle string `json:"contactTitle"`
+
+	// ContactTaxIDNumber is the tax identification number (SSN) of the primary
+	// contact.
+	ContactTaxIDNumber string `json:"contactTaxIdNumber"`
+
+	// ContactDob is the date of birth of the primary contact.
+	ContactDob string `json:"contactDOB"`
+
+	// ContactDlNumber is the driver's license number of the primary contact.
+	ContactDlNumber string `json:"contactDlNumber"`
+
+	// ContactDlStateOrProvince is the state that issued the primary contact's
+	// driver's license.
+	ContactDlStateOrProvince string `json:"contactDlStateOrProvince"`
+
+	// ContactDlExpiration is the expiration date of the primary contact's
+	// driver's license.
+	ContactDlExpiration string `json:"contactDlExpiration"`
+
+	// ContactHomeAddress is the home address of the primary contact.
+	ContactHomeAddress Address `json:"contactHomeAddress"`
+
+	// ContactRole is the role of the primary contact in the business.
+	ContactRole string `json:"contactRole"`
+
+	// Owners List of individuals with 25% or more ownership in the company.
+	Owners []*Owner `json:"owners"`
+
+	// ManualAccount is the bank account information for the business.
+	ManualAccount ApplicationAccount `json:"manualAccount"`
+
+	// AverageTransaction is the average transaction amount.
+	AverageTransaction string `json:"averageTransaction"`
+
+	// HighTransaction is the highest expected transaction amount.
+	HighTransaction string `json:"highTransaction"`
+
+	// AverageMonth is the average monthly transaction volume.
+	AverageMonth string `json:"averageMonth"`
+
+	// HighMonth is the highest expected monthly transaction volume.
+	HighMonth string `json:"highMonth"`
+
+	// RefundPolicy is the refund policy of the business.
+	RefundPolicy string `json:"refundPolicy"`
+
+	// RefundDays is the number of days after purchase that refunds can be
+	// issued.
+	RefundDays string `json:"refundDays"`
+
+	// TimeZone is the time zone of the business.
+	TimeZone string `json:"timeZone"`
+
+	// BatchCloseTime is the time when the daily batch should close.
+	BatchCloseTime string `json:"batchCloseTime"`
+
+	// MultipleLocations Indicates if the business has multiple locations.
+	MultipleLocations string `json:"multipleLocations"`
+
+	// LocationName is the name of this specific business location.
+	LocationName string `json:"locationName"`
+
+	// StoreNumber is the store number for this location.
+	StoreNumber string `json:"storeNumber"`
+
+	// EBTRequested Indicates if the business wants to accept EBT cards.
+	EBTRequested string `json:"ebtRequested"`
+
+	// FnsNumber is the FNS number issued by the USDA for EBT processing.
+	FnsNumber string `json:"fnsNumber"`
+
+	// Ecommerce Indicates if the business plans to accept payments through a
+	// website.
+	Ecommerce string `json:"ecommerce"`
+
+	// DropShipping Indicates if suppliers ship products directly to customers.
+	DropShipping bool `json:"dropShipping"`
+
+	// CardPresentPercentage is the percentage of transactions that will be chip
+	// or swipe.
+	CardPresentPercentage string `json:"cardPresentPercentage"`
+
+	// PhoneOrderPercentage is the percentage of transactions that will be phone
+	// orders.
+	PhoneOrderPercentage string `json:"phoneOrderPercentage"`
+
+	// EcomPercentage is the percentage of transactions that will be e-commerce.
+	EcomPercentage string `json:"ecomPercentage"`
+
+	// BillBeforeShipmentDays is the number of days before shipment that
+	// customers are charged.
+	BillBeforeShipmentDays string `json:"billBeforeShipmentDays"`
+
+	// SubscriptionsSupported Indicates if the business plans to process
+	// recurring payments.
+	SubscriptionsSupported string `json:"subscriptionsSupported"`
+
+	// SubscriptionFrequency is the frequency of recurring payments (if
+	// applicable).
+	SubscriptionFrequency string `json:"subscriptionFrequency"`
+
+	// SignerName is the full legal name of the person signing the application.
+	SignerName string `json:"signerName"`
+}
+
 // TerminalCaptureSignatureRequest contains a request for customer signature
 // data.
 type TerminalCaptureSignatureRequest struct {
