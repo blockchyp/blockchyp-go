@@ -203,6 +203,10 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.BoolVar(&args.DeleteProtected, "deleteProtected", false, "protects the credentials from deletion.")
 	flag.StringVar(&args.Roles, "roles", "", "an optional array of role codes that will be assigned to the credentials.")
 	flag.StringVar(&args.Notes, "notes", "", "free form description of the purpose or intent behind the credentials.")
+	flag.BoolVar(&args.Healthcare, "healthcare", false, "indicates this transaction is HSA/FSA")
+	flag.StringVar(&args.HealthcareTotal, "healthcareTotal", "", "total amount of healthcare")
+	flag.StringVar(&args.EBTTotal, "ebtTotal", "", "total amount of ebt")
+	flag.BoolVar(&args.CardMetadataLookup, "cardMetadataLookup", false, "requests card metatdata instead of enrolling a card.")
 	flag.StringVar(&args.CredType, "credType", "", "is the type of credential to be generated, API or TOKENIZING.")
 	flag.Parse()
 
@@ -476,6 +480,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processUnlinkToken(client, args)
 	case "drop-terminal-socket":
 		processDropSocket(client, args)
+	case "card-metadata":
+		processCardMetadata(client, args)
 	case "submit-application":
 		processSubmitApplication(client, args)
 	default:
@@ -1615,6 +1621,7 @@ func processRefund(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			PAN:                        args.PAN,
 			ExpMonth:                   args.ExpiryMonth,
 			ExpYear:                    args.ExpiryYear,
+			CardMetadataLookup:         args.CardMetadataLookup,
 		}
 
 		if args.Debit {
@@ -1832,6 +1839,7 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			EntryMethod:        args.EntryMethod,
 			Recurring:          args.Recurring,
 			Subscription:       args.Subscription,
+			CardMetadataLookup: args.CardMetadataLookup,
 		}
 		if hasCustomerFields(args) {
 			req.Customer = populateCustomer(args)
@@ -1907,6 +1915,10 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			TransactionID:              args.TransactionID,
 			PurchaseOrderNumber:        args.PONumber,
 			SupplierReferenceNumber:    args.SupplierReferenceNumber,
+			Healthcare:                 args.Healthcare,
+			HealthcareTotal:            args.HealthcareTotal,
+			EBTTotal:                   args.EBTTotal,
+			CardMetadataLookup:         args.CardMetadataLookup,
 		}
 
 		displayTx := assembleDisplayTransaction(args)
@@ -2746,6 +2758,49 @@ func processTokenDelete(client *blockchyp.Client, args blockchyp.CommandLineArgu
 	if err != nil {
 		handleError(&args, err)
 	}
+	dumpResponse(&args, res)
+}
+
+func processCardMetadata(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := &blockchyp.CardMetadataRequest{}
+
+	if !parseJSONInput(args, req) {
+
+		if (args.TerminalName == "") && (args.Token == "") && (args.PAN == "") {
+			fatalError("-terminal or -token requred")
+		}
+
+		req = &blockchyp.CardMetadataRequest{
+			Timeout:            args.Timeout,
+			Test:               args.Test,
+			TransactionRef:     args.TransactionRef,
+			WaitForRemovedCard: args.WaitForRemovedCard,
+			Force:              args.Force,
+			Token:              args.Token,
+			PAN:                args.PAN,
+			ExpMonth:           args.ExpiryMonth,
+			ExpYear:            args.ExpiryYear,
+			Address:            args.Address,
+			PostalCode:         args.PostalCode,
+			ManualEntry:        args.ManualEntry,
+			TerminalName:       args.TerminalName,
+			ResetConnection:    args.ResetConnection,
+		}
+
+		if args.Debit {
+			req.CardType = blockchyp.CardTypeDebit
+		} else if args.EBT {
+			req.CardType = blockchyp.CardTypeEBT
+		}
+	}
+
+	res, err := client.CardMetadata(*req)
+
+	if err != nil {
+		handleError(&args, err)
+	}
+
 	dumpResponse(&args, res)
 }
 

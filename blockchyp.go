@@ -371,6 +371,53 @@ func (client *Client) Enroll(request EnrollRequest) (*EnrollResponse, error) {
 	return &response, err
 }
 
+// CardMetadata retrieves card metadata.
+func (client *Client) CardMetadata(request CardMetadataRequest) (*CardMetadataResponse, error) {
+	var response CardMetadataResponse
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/api/card-metadata", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalCardMetadataRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "/api/card-metadata", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/api/card-metadata", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
 // GiftActivate activates or recharges a gift card.
 func (client *Client) GiftActivate(request GiftActivateRequest) (*GiftActivateResponse, error) {
 	var response GiftActivateResponse
