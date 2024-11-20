@@ -170,6 +170,10 @@ type CommandLineArguments struct {
 	DeleteProtected             bool   `json:"deteleProtected"`
 	Roles                       string `json:"roles"`
 	Notes                       string `json:"notes"`
+	Healthcare                  bool   `json:"healthcare"`
+	HealthcareTotal             string `json:"healthcareTotal"`
+	EBTTotal                    string `json:"ebtTotal"`
+	CardMetadataLookup          bool   `json:"cardMetadataLookup"`
 	CredType                    string `json:"credType"`
 }
 

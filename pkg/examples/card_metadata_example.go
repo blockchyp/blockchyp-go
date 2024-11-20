@@ -7,7 +7,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
-func merchantCredentialGenerationExample() {
+func cardMetadataExample() {
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -19,11 +19,12 @@ func merchantCredentialGenerationExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.MerchantCredentialGenerationRequest{
-		MerchantID: "<MERCHANT ID>",
+	request := blockchyp.CardMetadataRequest{
+		Test:         true,
+		TerminalName: "Test Terminal",
 	}
 
-	response, err := client.MerchantCredentialGeneration(request)
+	response, err := client.CardMetadata(request)
 
 	if err != nil {
 		log.Fatal(err)
@@ -31,7 +32,7 @@ func merchantCredentialGenerationExample() {
 
 	//process the result
 	if response.Success {
-		fmt.Println("Success")
+		fmt.Println("success")
 	}
 
 	fmt.Printf("Response: %+v\n", response)

@@ -7,7 +7,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
-func merchantCredentialGenerationExample() {
+func submitApplicationExample() {
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -19,11 +19,9 @@ func merchantCredentialGenerationExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.MerchantCredentialGenerationRequest{
-		MerchantID: "<MERCHANT ID>",
-	}
+	request := blockchyp.SubmitApplicationRequest{}
 
-	response, err := client.MerchantCredentialGeneration(request)
+	response, err := client.SubmitApplication(request)
 
 	if err != nil {
 		log.Fatal(err)
