@@ -1,4 +1,4 @@
-// Copyright 2019-2024 BlockChyp, Inc. All rights reserved. Use of this code
+// Copyright 2019-2025 BlockChyp, Inc. All rights reserved. Use of this code
 // is governed by a license that can be found in the LICENSE file.
 //
 // This file was generated automatically by the BlockChyp SDK Generator.
@@ -4872,6 +4872,10 @@ type MerchantProfile struct {
 
 	// BankAccounts bank accounts for split bank account merchants.
 	BankAccounts []BankAccount `json:"bankAccounts"`
+
+	// PassthroughSurchargeEnabled indicates that a merchant is allowed to send a
+	// surcharge amount directly to the gateway.
+	PassthroughSurchargeEnabled bool `json:"passthroughSurchargeEnabled"`
 }
 
 // MerchantProfileResponse models a response for a single merchant profile.
@@ -5056,6 +5060,10 @@ type MerchantProfileResponse struct {
 
 	// BankAccounts bank accounts for split bank account merchants.
 	BankAccounts []BankAccount `json:"bankAccounts"`
+
+	// PassthroughSurchargeEnabled indicates that a merchant is allowed to send a
+	// surcharge amount directly to the gateway.
+	PassthroughSurchargeEnabled bool `json:"passthroughSurchargeEnabled"`
 }
 
 // BankAccount models meta data about a merchant bank account.
