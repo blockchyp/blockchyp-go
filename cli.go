@@ -175,6 +175,10 @@ type CommandLineArguments struct {
 	EBTTotal                    string `json:"ebtTotal"`
 	CardMetadataLookup          bool   `json:"cardMetadataLookup"`
 	CredType                    string `json:"credType"`
+	RoutingNumber               string `json:"routingNumber"`
+	AccountType                 string `json:"accountType"`
+	AccountHolderType           string `json:"accountHolderType"`
+	BankName                    string `json:"bankName"`
 }
 
 var defaultSettings = &ConfigSettings{
