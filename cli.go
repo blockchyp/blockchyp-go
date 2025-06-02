@@ -179,6 +179,7 @@ type CommandLineArguments struct {
 	AccountType                 string `json:"accountType"`
 	AccountHolderType           string `json:"accountHolderType"`
 	BankName                    string `json:"bankName"`
+	CardHolderName              string `json:"cardHolderName"`
 }
 
 var defaultSettings = &ConfigSettings{

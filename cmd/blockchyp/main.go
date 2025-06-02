@@ -212,7 +212,8 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.AccountType, "accountType", "", "is the account type (checking, saving) for ACH transactions.")
 	flag.StringVar(&args.AccountHolderType, "accountHolderType", "", "is the account holder type (personal, business) for ACH transactions.")
 	flag.StringVar(&args.BankName, "bankName", "", "is the bank name for ACH transactions.")
-	
+	flag.StringVar(&args.CardHolderName, "cardHolderName", "", "is the card holder name.")
+
 	flag.Parse()
 
 	if args.Version {
@@ -1849,6 +1850,7 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			AccountHolderType:  args.AccountHolderType,
 			BankName:           args.BankName,
 			RoutingNumber:      args.RoutingNumber,
+			CardholderName:     args.CardHolderName,
 		}
 		if hasCustomerFields(args) {
 			req.Customer = populateCustomer(args)
