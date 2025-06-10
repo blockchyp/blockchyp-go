@@ -975,6 +975,18 @@ type CustomerToken struct {
 	// PaymentType payment type.
 	PaymentType string `json:"paymentType"`
 
+	// AccountType bank account type (checking, saving).
+	AccountType string `json:"accountType"`
+
+	// AccountHolderType bank account holder type (personal, business).
+	AccountHolderType string `json:"accountHolderType"`
+
+	// BankName bank name.
+	BankName string `json:"bankName"`
+
+	// RoutingNumber routing number.
+	RoutingNumber string `json:"routingNumber"`
+
 	// Customers models customer records associated with a payment token.
 	Customers []Customer `json:"customers"`
 }
@@ -2421,6 +2433,17 @@ type EnrollRequest struct {
 	// CardMetadataLookup indicates that this transaction will include a card
 	// metadata lookup.
 	CardMetadataLookup bool `json:"cardMetadataLookup,omitempty"`
+
+	// AccountType indicates the type of account (checking, savings, etc) for an
+	// ACH payment method.
+	AccountType string `json:"accountType,omitempty"`
+
+	// AccountHolderType indicates the type of account holder (personal,
+	// business, etc) for an ACH payment method.
+	AccountHolderType string `json:"accountHolderType,omitempty"`
+
+	// BankName indicates the bank name for an ACH payment method.
+	BankName string `json:"bankName,omitempty"`
 }
 
 // EnrollResponse contains the response to an enroll request.
@@ -2535,6 +2558,17 @@ type EnrollResponse struct {
 	// CardMetadata contains details about a payment card derived from its
 	// BIN/IIN.
 	CardMetadata *CardMetadata `json:"cardMetadata,omitempty"`
+
+	// AccountType indicates the type of account (checking, savings, etc) for an
+	// ACH payment method.
+	AccountType string `json:"accountType,omitempty"`
+
+	// AccountHolderType indicates the type of account holder (personal,
+	// business, etc) for an ACH payment method.
+	AccountHolderType string `json:"accountHolderType,omitempty"`
+
+	// BankName indicates the bank name for an ACH payment method.
+	BankName string `json:"bankName,omitempty"`
 }
 
 // ClearTerminalRequest contains the information needed to enroll a new

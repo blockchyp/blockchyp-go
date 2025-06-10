@@ -208,6 +208,12 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.EBTTotal, "ebtTotal", "", "total amount of ebt")
 	flag.BoolVar(&args.CardMetadataLookup, "cardMetadataLookup", false, "requests card metatdata instead of enrolling a card.")
 	flag.StringVar(&args.CredType, "credType", "", "is the type of credential to be generated, API or TOKENIZING.")
+	flag.StringVar(&args.RoutingNumber, "routingNumber", "", "is the routing number for ACH transactions.")
+	flag.StringVar(&args.AccountType, "accountType", "", "is the account type (checking, saving) for ACH transactions.")
+	flag.StringVar(&args.AccountHolderType, "accountHolderType", "", "is the account holder type (personal, business) for ACH transactions.")
+	flag.StringVar(&args.BankName, "bankName", "", "is the bank name for ACH transactions.")
+	flag.StringVar(&args.CardHolderName, "cardHolderName", "", "is the card holder name.")
+
 	flag.Parse()
 
 	if args.Version {
@@ -1840,6 +1846,11 @@ func processEnroll(client *blockchyp.Client, args blockchyp.CommandLineArguments
 			Recurring:          args.Recurring,
 			Subscription:       args.Subscription,
 			CardMetadataLookup: args.CardMetadataLookup,
+			AccountType:        args.AccountType,
+			AccountHolderType:  args.AccountHolderType,
+			BankName:           args.BankName,
+			RoutingNumber:      args.RoutingNumber,
+			CardholderName:     args.CardHolderName,
 		}
 		if hasCustomerFields(args) {
 			req.Customer = populateCustomer(args)
