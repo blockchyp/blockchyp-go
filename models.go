@@ -987,6 +987,13 @@ type CustomerToken struct {
 	// RoutingNumber routing number.
 	RoutingNumber string `json:"routingNumber"`
 
+	// TokenHash token hash (generated with a static salt, Merchant ID,
+	// Registration Date and PAN.
+	TokenHash string `json:"tokenHash"`
+
+	// Bin card bin.
+	Bin string `json:"bin"`
+
 	// Customers models customer records associated with a payment token.
 	Customers []Customer `json:"customers"`
 }
@@ -2569,6 +2576,13 @@ type EnrollResponse struct {
 
 	// BankName indicates the bank name for an ACH payment method.
 	BankName string `json:"bankName,omitempty"`
+
+	// TokenHash indicates the token hash (generated with a static salt, Merchant
+	// ID, Registration Date and PAN).
+	TokenHash string `json:"tokenHash,omitempty"`
+
+	// Bin indicates the first 8 digits of the card aka the BIN.
+	Bin string `json:"bin,omitempty"`
 }
 
 // ClearTerminalRequest contains the information needed to enroll a new
