@@ -26,7 +26,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Granting private modules access
-        run: git config --global url."https://${{ secrets.STAX_BOT_PAT }}:x-oauth-basic@github.com/blockchyp".insteadOf "https://github.com/blockchyp"
+        run: git config --global url."https://${{ secrets.SDK_GEN_REPO_TOKEN }}:x-oauth-basic@github.com/blockchyp".insteadOf "https://github.com/blockchyp"
       - name: Temporary Git Workaround
         run: git config --global --add safe.directory /__w/blockchyp-go/blockchyp-go
         if: github.repository == 'blockchyp/blockchyp-go'
@@ -63,7 +63,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Granting private modules access
-        run: git config --global url."https://${{ secrets.STAX_BOT_PAT }}:x-oauth-basic@github.com/blockchyp".insteadOf "https://github.com/blockchyp"
+        run: git config --global url."https://${{ secrets.SDK_GEN_REPO_TOKEN }}:x-oauth-basic@github.com/blockchyp".insteadOf "https://github.com/blockchyp"
       - name: Temporary Git Workaround
         run: git config --global --add safe.directory /__w/blockchyp-go/blockchyp-go
         if: github.repository == 'blockchyp/blockchyp-go'
@@ -98,7 +98,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Granting private modules access
-        run: git config --global url."https://${{ secrets.STAX_BOT_PAT }}:x-oauth-basic@github.com/blockchyp".insteadOf "https://github.com/blockchyp"
+        run: git config --global url."https://${{ secrets.SDK_GEN_REPO_TOKEN }}:x-oauth-basic@github.com/blockchyp".insteadOf "https://github.com/blockchyp"
       - name: Temporary Git Workaround
         run: git config --global --add safe.directory /__w/blockchyp-go/blockchyp-go
         if: github.repository == 'blockchyp/blockchyp-go'
