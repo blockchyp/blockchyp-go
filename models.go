@@ -1529,6 +1529,9 @@ type CardMetadataResponse struct {
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
 
+	// CVVResponse contains the CVV verification result if CVV was submitted.
+	CVVResponse string `json:"cvvResponse,omitempty"`
+
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
@@ -1738,6 +1741,9 @@ type BalanceResponse struct {
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
+
+	// CVVResponse contains the CVV verification result if CVV was submitted.
+	CVVResponse string `json:"cvvResponse,omitempty"`
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
@@ -2144,6 +2150,9 @@ type CaptureResponse struct {
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
 
+	// CVVResponse contains the CVV verification result if CVV was submitted.
+	CVVResponse string `json:"cvvResponse,omitempty"`
+
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
@@ -2299,6 +2308,9 @@ type VoidResponse struct {
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
+
+	// CVVResponse contains the CVV verification result if CVV was submitted.
+	CVVResponse string `json:"cvvResponse,omitempty"`
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
@@ -2548,6 +2560,9 @@ type EnrollResponse struct {
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
+
+	// CVVResponse contains the CVV verification result if CVV was submitted.
+	CVVResponse string `json:"cvvResponse,omitempty"`
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
@@ -3189,6 +3204,9 @@ type AuthorizationResponse struct {
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
 
+	// CVVResponse contains the CVV verification result if CVV was submitted.
+	CVVResponse string `json:"cvvResponse,omitempty"`
+
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
 
@@ -3504,6 +3522,9 @@ type TransactionStatus struct {
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
+
+	// CVVResponse contains the CVV verification result if CVV was submitted.
+	CVVResponse string `json:"cvvResponse,omitempty"`
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions `json:"receiptSuggestions"`
@@ -4924,6 +4945,26 @@ type MerchantProfile struct {
 	// PassthroughSurchargeEnabled indicates that a merchant is allowed to send a
 	// surcharge amount directly to the gateway.
 	PassthroughSurchargeEnabled bool `json:"passthroughSurchargeEnabled"`
+
+	// CVVVerificationEnabled indicates that CVV verification is enabled for
+	// manually entered transactions.
+	CVVVerificationEnabled bool `json:"cvvVerificationEnabled"`
+
+	// CVVVerificationNenabled indicates that CVV mismatch (N) responses should
+	// be declined.
+	CVVVerificationNenabled bool `json:"cvvVerificationNEnabled"`
+
+	// CVVVerificationPenabled indicates that CVV not processed (P) responses
+	// should be declined.
+	CVVVerificationPenabled bool `json:"cvvVerificationPEnabled"`
+
+	// CVVVerificationSenabled indicates that CVV should be on card but is not
+	// indicated (S) responses should be declined.
+	CVVVerificationSenabled bool `json:"cvvVerificationSEnabled"`
+
+	// CVVVerificationUenabled indicates that issuer not certified or has not
+	// provided encryption key (U) responses should be declined.
+	CVVVerificationUenabled bool `json:"cvvVerificationUEnabled"`
 }
 
 // MerchantProfileResponse models a response for a single merchant profile.
@@ -5112,6 +5153,26 @@ type MerchantProfileResponse struct {
 	// PassthroughSurchargeEnabled indicates that a merchant is allowed to send a
 	// surcharge amount directly to the gateway.
 	PassthroughSurchargeEnabled bool `json:"passthroughSurchargeEnabled"`
+
+	// CVVVerificationEnabled indicates that CVV verification is enabled for
+	// manually entered transactions.
+	CVVVerificationEnabled bool `json:"cvvVerificationEnabled"`
+
+	// CVVVerificationNenabled indicates that CVV mismatch (N) responses should
+	// be declined.
+	CVVVerificationNenabled bool `json:"cvvVerificationNEnabled"`
+
+	// CVVVerificationPenabled indicates that CVV not processed (P) responses
+	// should be declined.
+	CVVVerificationPenabled bool `json:"cvvVerificationPEnabled"`
+
+	// CVVVerificationSenabled indicates that CVV should be on card but is not
+	// indicated (S) responses should be declined.
+	CVVVerificationSenabled bool `json:"cvvVerificationSEnabled"`
+
+	// CVVVerificationUenabled indicates that issuer not certified or has not
+	// provided encryption key (U) responses should be declined.
+	CVVVerificationUenabled bool `json:"cvvVerificationUEnabled"`
 }
 
 // BankAccount models meta data about a merchant bank account.
@@ -8383,6 +8444,9 @@ type PaymentMethodResponse struct {
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse
+
+	// CVVResponse contains the CVV verification result if CVV was submitted.
+	CVVResponse string
 
 	// ReceiptSuggestions contains suggested receipt fields.
 	ReceiptSuggestions ReceiptSuggestions
