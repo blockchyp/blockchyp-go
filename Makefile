@@ -37,7 +37,7 @@ ZIP := zip
 
 # Integration test config
 export BC_TEST_DELAY := 5
-IMAGE := golang:1.20-buster
+IMAGE := golang:1.23-bullseye
 SCMROOT := $(shell git rev-parse --show-toplevel)
 PWD := $(shell pwd)
 CACHE := $(HOME)/.local/share/blockchyp/itest-cache
