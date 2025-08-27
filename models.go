@@ -4965,6 +4965,12 @@ type MerchantProfile struct {
 	// CVVVerificationUenabled indicates that issuer not certified or has not
 	// provided encryption key (U) responses should be declined.
 	CVVVerificationUenabled bool `json:"cvvVerificationUEnabled"`
+
+	// AVSRule indicates the AVS (Address Verification Service) rule to apply.
+	// Allowed values are 'allow_all', 'require_full_match', 'require_zip_match',
+	// 'require_address_match'. If avsRule is empty, then merchant follows
+	// partner setting
+	AVSRule string `json:"avsRule"`
 }
 
 // MerchantProfileResponse models a response for a single merchant profile.
@@ -5173,6 +5179,12 @@ type MerchantProfileResponse struct {
 	// CVVVerificationUenabled indicates that issuer not certified or has not
 	// provided encryption key (U) responses should be declined.
 	CVVVerificationUenabled bool `json:"cvvVerificationUEnabled"`
+
+	// AVSRule indicates the AVS (Address Verification Service) rule to apply.
+	// Allowed values are 'allow_all', 'require_full_match', 'require_zip_match',
+	// 'require_address_match'. If avsRule is empty, then merchant follows
+	// partner setting
+	AVSRule string `json:"avsRule"`
 }
 
 // BankAccount models meta data about a merchant bank account.
