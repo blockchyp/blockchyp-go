@@ -4971,6 +4971,11 @@ type MerchantProfile struct {
 	// 'require_address_match'. If avsRule is empty, then merchant follows
 	// partner setting
 	AVSRule string `json:"avsRule"`
+
+	// AccountUpdaterEnrolled flag indicating whether or not account updater is
+	// enrolled. Note that only merchant's whose partner is enrolled will be
+	// processed by the account updater.
+	AccountUpdaterEnrolled bool `json:"accountUpdaterEnrolled"`
 }
 
 // MerchantProfileResponse models a response for a single merchant profile.
@@ -5185,6 +5190,11 @@ type MerchantProfileResponse struct {
 	// 'require_address_match'. If avsRule is empty, then merchant follows
 	// partner setting
 	AVSRule string `json:"avsRule"`
+
+	// AccountUpdaterEnrolled flag indicating whether or not account updater is
+	// enrolled. Note that only merchant's whose partner is enrolled will be
+	// processed by the account updater.
+	AccountUpdaterEnrolled bool `json:"accountUpdaterEnrolled"`
 }
 
 // BankAccount models meta data about a merchant bank account.
