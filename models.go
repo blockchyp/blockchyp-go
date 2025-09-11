@@ -4979,6 +4979,11 @@ type MerchantProfile struct {
 	// FollowPartnerAVSSettings indicates that the merchant follows the partner's
 	// AVS settings.
 	FollowPartnerAVSSettings bool `json:"followPartnerAvsSettings"`
+
+	// AccountUpdaterEnrolled flag indicating whether or not account updater is
+	// enrolled. Note that only merchant's whose partner is enrolled will be
+	// processed by the account updater.
+	AccountUpdaterEnrolled bool `json:"accountUpdaterEnrolled"`
 }
 
 // MerchantProfileResponse models a response for a single merchant profile.
@@ -5201,6 +5206,11 @@ type MerchantProfileResponse struct {
 	// FollowPartnerAVSSettings indicates that the merchant follows the partner's
 	// AVS settings.
 	FollowPartnerAVSSettings bool `json:"followPartnerAvsSettings"`
+
+	// AccountUpdaterEnrolled flag indicating whether or not account updater is
+	// enrolled. Note that only merchant's whose partner is enrolled will be
+	// processed by the account updater.
+	AccountUpdaterEnrolled bool `json:"accountUpdaterEnrolled"`
 }
 
 // BankAccount models meta data about a merchant bank account.
