@@ -4966,11 +4966,24 @@ type MerchantProfile struct {
 	// provided encryption key (U) responses should be declined.
 	CVVVerificationUenabled bool `json:"cvvVerificationUEnabled"`
 
+	// FollowPartnerCVVSettings indicates that the merchant follows the partner's
+	// CVV settings.
+	FollowPartnerCVVSettings bool `json:"followPartnerCvvSettings"`
+
 	// AVSRule indicates the AVS (Address Verification Service) rule to apply.
 	// Allowed values are 'allow_all', 'require_full_match', 'require_zip_match',
 	// 'require_address_match'. If avsRule is empty, then merchant follows
 	// partner setting
 	AVSRule string `json:"avsRule"`
+
+	// FollowPartnerAVSSettings indicates that the merchant follows the partner's
+	// AVS settings.
+	FollowPartnerAVSSettings bool `json:"followPartnerAvsSettings"`
+
+	// AccountUpdaterEnrolled flag indicating whether or not account updater is
+	// enrolled. Note that only merchant's whose partner is enrolled will be
+	// processed by the account updater.
+	AccountUpdaterEnrolled bool `json:"accountUpdaterEnrolled"`
 }
 
 // MerchantProfileResponse models a response for a single merchant profile.
@@ -5180,11 +5193,24 @@ type MerchantProfileResponse struct {
 	// provided encryption key (U) responses should be declined.
 	CVVVerificationUenabled bool `json:"cvvVerificationUEnabled"`
 
+	// FollowPartnerCVVSettings indicates that the merchant follows the partner's
+	// CVV settings.
+	FollowPartnerCVVSettings bool `json:"followPartnerCvvSettings"`
+
 	// AVSRule indicates the AVS (Address Verification Service) rule to apply.
 	// Allowed values are 'allow_all', 'require_full_match', 'require_zip_match',
 	// 'require_address_match'. If avsRule is empty, then merchant follows
 	// partner setting
 	AVSRule string `json:"avsRule"`
+
+	// FollowPartnerAVSSettings indicates that the merchant follows the partner's
+	// AVS settings.
+	FollowPartnerAVSSettings bool `json:"followPartnerAvsSettings"`
+
+	// AccountUpdaterEnrolled flag indicating whether or not account updater is
+	// enrolled. Note that only merchant's whose partner is enrolled will be
+	// processed by the account updater.
+	AccountUpdaterEnrolled bool `json:"accountUpdaterEnrolled"`
 }
 
 // BankAccount models meta data about a merchant bank account.

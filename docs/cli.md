@@ -287,7 +287,7 @@ $ ./blockchyp -test -type=charge -terminal="Test Terminal" -amount="25.55" -out=
 | `-query`   | Search query for use with the customer search API. | `-query="gavin"`  |
 | `-orderRef`   | Order reference that can be associated with a payment link.   | `-orderRef=MYID`  |
 | `-callbackUrl`   | Optional callback URL that should be notified when a customer submits payment for a payment link. | `-callbackUrl=https://yourdomain.com/payment-callback`  |
-| `-surcharge`   | Adds a surcharge to a transaction if cash discount is enabled for the mercahnt.  | `-surcharge`  |
+| `-surcharge`   | Adds a surcharge to a transaction if cash discount is enabled for the merchant.  | `-surcharge`  |
 | `-cashDiscount`   | Reduces the transaction amount by the processing fee if the presented card is a debit card and cash discounting is enabled.  |  `-cashDiscount`  |
 
 
