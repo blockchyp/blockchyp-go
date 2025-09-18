@@ -4984,6 +4984,10 @@ type MerchantProfile struct {
 	// enrolled. Note that only merchant's whose partner is enrolled will be
 	// processed by the account updater.
 	AccountUpdaterEnrolled bool `json:"accountUpdaterEnrolled"`
+
+	// BypassEnrollAuthEnabled indicates whether the merchant should bypass an
+	// auth with TSYS on Enrollment.
+	BypassEnrollAuthEnabled bool `json:"bypassEnrollAuthEnabled"`
 }
 
 // MerchantProfileResponse models a response for a single merchant profile.
@@ -5211,6 +5215,10 @@ type MerchantProfileResponse struct {
 	// enrolled. Note that only merchant's whose partner is enrolled will be
 	// processed by the account updater.
 	AccountUpdaterEnrolled bool `json:"accountUpdaterEnrolled"`
+
+	// BypassEnrollAuthEnabled indicates whether the merchant should bypass an
+	// auth with TSYS on Enrollment.
+	BypassEnrollAuthEnabled bool `json:"bypassEnrollAuthEnabled"`
 }
 
 // BankAccount models meta data about a merchant bank account.
