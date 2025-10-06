@@ -478,6 +478,8 @@ func processCommand(args blockchyp.CommandLineArguments) {
 		processCustomerDelete(client, args)
 	case "delete-token":
 		processTokenDelete(client, args)
+	case "update-token":
+		processUpdateToken(client, args)
 	case "token-metadata":
 		processTokenMetadata(client, args)
 	case "link-token":
@@ -2766,6 +2768,32 @@ func processTokenDelete(client *blockchyp.Client, args blockchyp.CommandLineArgu
 		}
 	}
 	res, err := client.DeleteToken(*req)
+	if err != nil {
+		handleError(&args, err)
+	}
+	dumpResponse(&args, res)
+}
+
+func processUpdateToken(client *blockchyp.Client, args blockchyp.CommandLineArguments) {
+
+	req := &blockchyp.UpdateTokenRequest{}
+
+	if !parseJSONInput(args, req) {
+		validateRequired(args.Token, "token")
+		req = &blockchyp.UpdateTokenRequest{
+			Timeout:           args.Timeout,
+			Token:             args.Token,
+			AccountHolderType: args.AccountHolderType,
+			AccountType:       args.AccountType,
+			BankName:          args.BankName,
+			CardHolderName:    args.CardHolderName,
+			ExpiryMonth:       args.ExpiryMonth,
+			ExpiryYear:        args.ExpiryYear,
+			Address:           args.Address,
+			PostalCode:        args.PostalCode,
+		}
+	}
+	res, err := client.UpdateToken(*req)
 	if err != nil {
 		handleError(&args, err)
 	}
