@@ -1509,6 +1509,21 @@ func (client *Client) UnlinkToken(request UnlinkTokenRequest) (*Acknowledgement,
 	return &response, err
 }
 
+// UpdateToken updates a payment token.
+func (client *Client) UpdateToken(request UpdateTokenRequest) (*UpdateTokenResponse, error) {
+	var response UpdateTokenResponse
+
+	err := client.GatewayRequest("/api/token/"+request.Token, "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // DeleteToken deletes a payment token.
 func (client *Client) DeleteToken(request DeleteTokenRequest) (*DeleteTokenResponse, error) {
 	var response DeleteTokenResponse
