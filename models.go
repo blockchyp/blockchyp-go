@@ -958,6 +958,58 @@ type TokenMetadataResponse struct {
 	CardMetadata *CardMetadata `json:"cardMetadata,omitempty"`
 }
 
+// UpdateTokenRequest updates a payment token.
+type UpdateTokenRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// Token the token to update.
+	Token string `json:"token"`
+
+	// AccountHolderType bank account holder type (personal or business).
+	AccountHolderType string `json:"accountHolderType"`
+
+	// AccountType bank account type (checking or saving).
+	AccountType string `json:"accountType"`
+
+	// BankName bank name.
+	BankName string `json:"bankName"`
+
+	// CardHolderName card holder name.
+	CardHolderName string `json:"cardHolderName"`
+
+	// ExpiryMonth expiry month.
+	ExpiryMonth string `json:"expiryMonth"`
+
+	// ExpiryYear expiry year.
+	ExpiryYear string `json:"expiryYear"`
+
+	// Address address.
+	Address string `json:"address"`
+
+	// PostalCode postal code.
+	PostalCode string `json:"postalCode"`
+}
+
+// UpdateTokenResponse contains the response to a update token request.
+type UpdateTokenResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Token the updated token for a given query.
+	Token CustomerToken `json:"token"`
+}
+
 // CustomerToken models a customer token.
 type CustomerToken struct {
 	// Token BlockChyp assigned customer id.
