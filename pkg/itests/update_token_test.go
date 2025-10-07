@@ -44,9 +44,9 @@ func TestUpdateToken(t *testing.T) {
 
 	// setup request object
 	request := blockchyp.UpdateTokenRequest{
-		Token:    setupResponse.Token,
-		ExpMonth: 12,
-		ExpYear:  2040,
+		Token:       setupResponse.Token,
+		ExpiryMonth: "12",
+		ExpiryYear:  "2040",
 	}
 
 	logObj(t, "Request:", request)
