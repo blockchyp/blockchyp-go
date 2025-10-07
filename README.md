@@ -3490,9 +3490,9 @@ func updateTokenExample() {
 
     // setup request object
     request := blockchyp.UpdateTokenRequest{
-        Token:    "<TOKEN>",
-        ExpMonth: 12,
-        ExpYear:  2040,
+        Token:       "<TOKEN>",
+        ExpiryMonth: "12",
+        ExpiryYear:  "2040",
     }
 
     response, err := client.UpdateToken(request)
