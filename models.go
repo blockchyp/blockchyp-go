@@ -1378,10 +1378,6 @@ type AuthorizationRequest struct {
 	// ExternalCustomerID indicates the external customer ID associated with the
 	// transaction
 	ExternalCustomerID string `json:"externalCustomerId,omitempty"`
-
-	// ExternalPoNumber indicates the external PO number associated with the
-	// transaction
-	ExternalPoNumber string `json:"externalPoNumber,omitempty"`
 }
 
 // CardMetadata contains essential information about a payment card derived
