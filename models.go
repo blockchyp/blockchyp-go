@@ -1368,6 +1368,16 @@ type AuthorizationRequest struct {
 	// CardMetadataLookup indicates that this transaction will include a card
 	// metadata lookup.
 	CardMetadataLookup bool `json:"cardMetadataLookup,omitempty"`
+
+	// ShippingAmount indicates the shipping cost associated with the transaction
+	ShippingAmount string `json:"shippingAmount,omitempty"`
+
+	// ProcessorID indicates the processor ID associated with the transaction
+	ProcessorID string `json:"processorId,omitempty"`
+
+	// ExternalCustomerID indicates the external customer ID associated with the
+	// transaction
+	ExternalCustomerID string `json:"externalCustomerId,omitempty"`
 }
 
 // CardMetadata contains essential information about a payment card derived
