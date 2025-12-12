@@ -1046,6 +1046,18 @@ type CustomerToken struct {
 	// Bin card bin.
 	Bin string `json:"bin"`
 
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
+
+	// CardHolderName is the card holder name.
+	CardHolderName string `json:"cardHolderName,omitempty"`
+
 	// Customers models customer records associated with a payment token.
 	Customers []Customer `json:"customers"`
 }
