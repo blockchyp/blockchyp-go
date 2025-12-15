@@ -1046,6 +1046,18 @@ type CustomerToken struct {
 	// Bin card bin.
 	Bin string `json:"bin"`
 
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
+
+	// CardHolderName is the card holder name.
+	CardHolderName string `json:"cardHolderName,omitempty"`
+
 	// Customers models customer records associated with a payment token.
 	Customers []Customer `json:"customers"`
 }
@@ -1180,6 +1192,9 @@ type AuthorizationRequest struct {
 	// PostalCode is the cardholder postal code for use with address
 	// verification.
 	PostalCode string `json:"postalCode,omitempty"`
+
+	// Country is the cardholder country.
+	Country string `json:"country,omitempty"`
 
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
@@ -1508,6 +1523,9 @@ type CardMetadataRequest struct {
 	// verification.
 	PostalCode string `json:"postalCode,omitempty"`
 
+	// Country is the cardholder country.
+	Country string `json:"country,omitempty"`
+
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
 	ManualEntry bool `json:"manualEntry,omitempty"`
@@ -1586,6 +1604,15 @@ type CardMetadataResponse struct {
 
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
+
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
 
 	// AVSResponse contains address verification results if address information
 	// was submitted.
@@ -1692,6 +1719,9 @@ type BalanceRequest struct {
 	// PostalCode is the cardholder postal code for use with address
 	// verification.
 	PostalCode string `json:"postalCode,omitempty"`
+
+	// Country is the cardholder country.
+	Country string `json:"country,omitempty"`
 
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
@@ -1800,6 +1830,15 @@ type BalanceResponse struct {
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
 
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
@@ -1903,6 +1942,9 @@ type RefundRequest struct {
 	// PostalCode is the cardholder postal code for use with address
 	// verification.
 	PostalCode string `json:"postalCode,omitempty"`
+
+	// Country is the cardholder country.
+	Country string `json:"country,omitempty"`
 
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
@@ -2208,6 +2250,15 @@ type CaptureResponse struct {
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
 
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
@@ -2367,6 +2418,15 @@ type VoidResponse struct {
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
 
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
@@ -2471,6 +2531,9 @@ type EnrollRequest struct {
 	// PostalCode is the cardholder postal code for use with address
 	// verification.
 	PostalCode string `json:"postalCode,omitempty"`
+
+	// Country is the cardholder country.
+	Country string `json:"country,omitempty"`
 
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
@@ -2618,6 +2681,15 @@ type EnrollResponse struct {
 
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
+
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
 
 	// AVSResponse contains address verification results if address information
 	// was submitted.
@@ -3262,6 +3334,15 @@ type AuthorizationResponse struct {
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
 
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
@@ -3580,6 +3661,15 @@ type TransactionStatus struct {
 
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
+
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
 
 	// AVSResponse contains address verification results if address information
 	// was submitted.
@@ -8549,6 +8639,15 @@ type PaymentMethodResponse struct {
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string
 
+	// PostalCode is the card postal code.
+	PostalCode string
+
+	// Address is the card address.
+	Address string
+
+	// Country is the card country.
+	Country string
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse
@@ -8712,6 +8811,9 @@ type PaymentMethod struct {
 	// PostalCode is the cardholder postal code for use with address
 	// verification.
 	PostalCode string
+
+	// Country is the cardholder country.
+	Country string
 
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
