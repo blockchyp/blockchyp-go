@@ -1,4 +1,4 @@
-// Copyright 2019-2025 BlockChyp, Inc. All rights reserved. Use of this code
+// Copyright 2019-2026 BlockChyp, Inc. All rights reserved. Use of this code
 // is governed by a license that can be found in the LICENSE file.
 //
 // This file was generated automatically by the BlockChyp SDK Generator.
@@ -4678,6 +4678,13 @@ type BatchDetailsResponse struct {
 
 	// VolumeByTerminal merchant's batch history in descending order.
 	VolumeByTerminal []TerminalVolume `json:"volumeByTerminal"`
+
+	// NetDeposit is the net volume for this batch, usually expected volume less
+	// daily fees volume.
+	NetDeposit string `json:"netDeposit"`
+
+	// DailyFees is the daily fees for this batch
+	DailyFees string `json:"dailyFees"`
 }
 
 // TerminalVolume models transaction volume for a single terminal.
