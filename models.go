@@ -1,4 +1,4 @@
-// Copyright 2019-2025 BlockChyp, Inc. All rights reserved. Use of this code
+// Copyright 2019-2026 BlockChyp, Inc. All rights reserved. Use of this code
 // is governed by a license that can be found in the LICENSE file.
 //
 // This file was generated automatically by the BlockChyp SDK Generator.
@@ -1046,6 +1046,18 @@ type CustomerToken struct {
 	// Bin card bin.
 	Bin string `json:"bin"`
 
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
+
+	// CardHolderName is the card holder name.
+	CardHolderName string `json:"cardHolderName,omitempty"`
+
 	// Customers models customer records associated with a payment token.
 	Customers []Customer `json:"customers"`
 }
@@ -1180,6 +1192,9 @@ type AuthorizationRequest struct {
 	// PostalCode is the cardholder postal code for use with address
 	// verification.
 	PostalCode string `json:"postalCode,omitempty"`
+
+	// Country is the cardholder country.
+	Country string `json:"country,omitempty"`
 
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
@@ -1368,6 +1383,16 @@ type AuthorizationRequest struct {
 	// CardMetadataLookup indicates that this transaction will include a card
 	// metadata lookup.
 	CardMetadataLookup bool `json:"cardMetadataLookup,omitempty"`
+
+	// ShippingAmount indicates the shipping cost associated with the transaction
+	ShippingAmount string `json:"shippingAmount,omitempty"`
+
+	// ProcessorID indicates the processor ID associated with the transaction
+	ProcessorID string `json:"processorId,omitempty"`
+
+	// ExternalCustomerID indicates the external customer ID associated with the
+	// transaction
+	ExternalCustomerID string `json:"externalCustomerId,omitempty"`
 }
 
 // CardMetadata contains essential information about a payment card derived
@@ -1498,6 +1523,9 @@ type CardMetadataRequest struct {
 	// verification.
 	PostalCode string `json:"postalCode,omitempty"`
 
+	// Country is the cardholder country.
+	Country string `json:"country,omitempty"`
+
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
 	ManualEntry bool `json:"manualEntry,omitempty"`
@@ -1576,6 +1604,15 @@ type CardMetadataResponse struct {
 
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
+
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
 
 	// AVSResponse contains address verification results if address information
 	// was submitted.
@@ -1682,6 +1719,9 @@ type BalanceRequest struct {
 	// PostalCode is the cardholder postal code for use with address
 	// verification.
 	PostalCode string `json:"postalCode,omitempty"`
+
+	// Country is the cardholder country.
+	Country string `json:"country,omitempty"`
 
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
@@ -1790,6 +1830,15 @@ type BalanceResponse struct {
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
 
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
@@ -1893,6 +1942,9 @@ type RefundRequest struct {
 	// PostalCode is the cardholder postal code for use with address
 	// verification.
 	PostalCode string `json:"postalCode,omitempty"`
+
+	// Country is the cardholder country.
+	Country string `json:"country,omitempty"`
 
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
@@ -2198,6 +2250,15 @@ type CaptureResponse struct {
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
 
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
@@ -2357,6 +2418,15 @@ type VoidResponse struct {
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
 
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
@@ -2461,6 +2531,9 @@ type EnrollRequest struct {
 	// PostalCode is the cardholder postal code for use with address
 	// verification.
 	PostalCode string `json:"postalCode,omitempty"`
+
+	// Country is the cardholder country.
+	Country string `json:"country,omitempty"`
 
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
@@ -2608,6 +2681,15 @@ type EnrollResponse struct {
 
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
+
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
 
 	// AVSResponse contains address verification results if address information
 	// was submitted.
@@ -3252,6 +3334,15 @@ type AuthorizationResponse struct {
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
 
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse `json:"avsResponse"`
@@ -3570,6 +3661,15 @@ type TransactionStatus struct {
 
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string `json:"expYear,omitempty"`
+
+	// PostalCode is the card postal code.
+	PostalCode string `json:"postalCode,omitempty"`
+
+	// Address is the card address.
+	Address string `json:"address,omitempty"`
+
+	// Country is the card country.
+	Country string `json:"country,omitempty"`
 
 	// AVSResponse contains address verification results if address information
 	// was submitted.
@@ -4578,6 +4678,13 @@ type BatchDetailsResponse struct {
 
 	// VolumeByTerminal merchant's batch history in descending order.
 	VolumeByTerminal []TerminalVolume `json:"volumeByTerminal"`
+
+	// NetDeposit is the net volume for this batch, usually expected volume less
+	// daily fees volume.
+	NetDeposit string `json:"netDeposit"`
+
+	// DailyFees is the daily fees for this batch
+	DailyFees string `json:"dailyFees"`
 }
 
 // TerminalVolume models transaction volume for a single terminal.
@@ -8207,6 +8314,169 @@ type SubmitApplicationRequest struct {
 	SignerName string `json:"signerName"`
 }
 
+// StateCheckSettings models settings related to state checks for a merchant.
+type StateCheckSettings struct {
+	// Enabled indicates if state checks are enabled for the merchant.
+	Enabled bool `json:"enabled"`
+
+	// SurchargeExemptStates is the list of states that are exempt from
+	// surcharges.
+	SurchargeExemptStates []string `json:"surchargeExemptStates"`
+}
+
+// MerchantSettings models merchant settings and configuration.
+type MerchantSettings struct {
+	// Account is the merchant account identifier.
+	Account string `json:"account"`
+
+	// Gateway is the gateway identifier.
+	Gateway string `json:"gateway"`
+
+	// SurchargingEnabled indicates whether surcharging is enabled for the
+	// merchant.
+	SurchargingEnabled bool `json:"surchargingEnabled"`
+
+	// CustomSurchargePercent is the custom surcharge percentage, if applicable.
+	CustomSurchargePercent *float64 `json:"customSurchargePercent"`
+
+	// ReducedRate indicates if reduced rate pricing is enabled.
+	ReducedRate *bool `json:"reducedRate"`
+
+	// InversePricingEnabled indicates if inverse pricing is enabled.
+	InversePricingEnabled *bool `json:"inversePricingEnabled"`
+
+	// CreditDiscountRate is the credit discount rate, if applicable.
+	CreditDiscountRate *float64 `json:"creditDiscountRate"`
+
+	// AcquiringSolution is the acquiring solution identifier.
+	AcquiringSolution string `json:"acquiringSolution"`
+
+	// AcceptDebit indicates whether the merchant accepts debit cards.
+	AcceptDebit *bool `json:"acceptDebit"`
+
+	// StateCheckSettings contains state check settings for the merchant.
+	StateCheckSettings *StateCheckSettings `json:"stateCheckSettings"`
+}
+
+// PricingRequestAttributes models the attributes for a pricing request.
+type PricingRequestAttributes struct {
+	// CardNumber is the card number for the pricing request.
+	CardNumber *string `json:"cardNumber"`
+
+	// Token is the payment token.
+	Token string `json:"token"`
+
+	// MerchantIdentifier is the merchant identifier.
+	MerchantIdentifier *string `json:"merchantIdentifier"`
+
+	// Amount is the transaction amount.
+	Amount float64 `json:"amount"`
+
+	// Country is the country code.
+	Country *string `json:"country"`
+
+	// PostalCode is the postal code.
+	PostalCode *string `json:"postalCode"`
+
+	// State is the state or province.
+	State *string `json:"state"`
+
+	// MerchantSettings contains merchant settings for the pricing request.
+	MerchantSettings *MerchantSettings `json:"merchantSettings"`
+}
+
+// PricingRequestData models the data wrapper for a pricing request.
+type PricingRequestData struct {
+	// Type is the type of the request.
+	Type string `json:"type"`
+
+	// Attributes contains the pricing request attributes.
+	Attributes PricingRequestAttributes `json:"attributes"`
+}
+
+// PricingRequest models a pricing request.
+type PricingRequest struct {
+	// Data contains the pricing request data.
+	Data PricingRequestData `json:"data"`
+}
+
+// PricingResponseAttributes models pricing response data for new handler for
+// pricing api responses.
+type PricingResponseAttributes struct {
+	// SurchargePercent is the surcharge percentage.
+	SurchargePercent float64 `json:"surchargePercent"`
+
+	// SurchargeAmount is the surcharge amount.
+	SurchargeAmount float64 `json:"surchargeAmount"`
+
+	// SurchargeExempt indicates if the transaction is exempt from surcharges.
+	SurchargeExempt bool `json:"surchargeExempt"`
+
+	// CardType is the type of card.
+	CardType string `json:"cardType"`
+
+	// CardToken is the card token.
+	CardToken *string `json:"cardToken"`
+
+	// Brand is the card brand.
+	Brand string `json:"brand"`
+
+	// Bin is the bank identification number.
+	Bin string `json:"bin"`
+
+	// CommercialIndicator is the commercial card indicator.
+	CommercialIndicator string `json:"commercialIndicator"`
+
+	// Disclosure is the disclosure statement.
+	Disclosure *string `json:"disclosure"`
+
+	// DebitCategory is the debit card category.
+	DebitCategory string `json:"debitCategory"`
+
+	// CountryIssued is the country where the card was issued.
+	CountryIssued string `json:"countryIssued"`
+
+	// UUID is the unique identifier for the pricing response.
+	UUID string `json:"uuid"`
+}
+
+// PricingResponseData models the data wrapper for a pricing response.
+type PricingResponseData struct {
+	// Type is the type of the response.
+	Type string `json:"type"`
+
+	// Attributes contains the pricing response attributes.
+	Attributes PricingResponseAttributes `json:"attributes"`
+}
+
+// ErrorType models an error response.
+type ErrorType struct {
+	// Status is the HTTP status code.
+	Status int `json:"status"`
+
+	// Title is the error title.
+	Title string `json:"title"`
+
+	// Detail is the detailed error message.
+	Detail string `json:"detail"`
+}
+
+// PricingResponse models a pricing response.
+type PricingResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Data contains the pricing response data.
+	Data PricingResponseData `json:"data"`
+}
+
 // TerminalCaptureSignatureRequest contains a request for customer signature
 // data.
 type TerminalCaptureSignatureRequest struct {
@@ -8539,6 +8809,15 @@ type PaymentMethodResponse struct {
 	// ExpYear is the card expiration year in YY format.
 	ExpYear string
 
+	// PostalCode is the card postal code.
+	PostalCode string
+
+	// Address is the card address.
+	Address string
+
+	// Country is the card country.
+	Country string
+
 	// AVSResponse contains address verification results if address information
 	// was submitted.
 	AVSResponse AVSResponse
@@ -8702,6 +8981,9 @@ type PaymentMethod struct {
 	// PostalCode is the cardholder postal code for use with address
 	// verification.
 	PostalCode string
+
+	// Country is the cardholder country.
+	Country string
 
 	// ManualEntry specifies that the payment entry method is a manual keyed
 	// transaction. If this is true, no other payment method will be accepted.
