@@ -8396,6 +8396,12 @@ type PricingRequestData struct {
 
 // PricingRequest models a pricing request.
 type PricingRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
 	// Data contains the pricing request data.
 	Data PricingRequestData `json:"data"`
 }
