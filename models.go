@@ -1384,15 +1384,38 @@ type AuthorizationRequest struct {
 	// metadata lookup.
 	CardMetadataLookup bool `json:"cardMetadataLookup,omitempty"`
 
-	// ShippingAmount indicates the shipping cost associated with the transaction
+	// TotalDiscountAmount is the total discount amount for the transaction, and
+	// will overide additive logic for line item discounts.
+	TotalDiscountAmount string `json:"totalDiscountAmount,omitempty"`
+
+	// ShippingAmount indicates the shipping cost associated with the
+	// transaction.
 	ShippingAmount string `json:"shippingAmount,omitempty"`
 
-	// ProcessorID indicates the processor ID associated with the transaction
+	// DutyAmount indicates the duty amount associated with the transaction.
+	DutyAmount string `json:"dutyAmount,omitempty"`
+
+	// ProcessorID indicates the processor ID associated with the transaction.
 	ProcessorID string `json:"processorId,omitempty"`
 
 	// ExternalCustomerID indicates the external customer ID associated with the
-	// transaction
+	// transaction.
 	ExternalCustomerID string `json:"externalCustomerId,omitempty"`
+
+	// DestinationCountryCode three character, numeric, ship-to country code.
+	// Defaults to '840' (USA) if not specified.
+	DestinationCountryCode string `json:"destinationCountryCode,omitempty"`
+
+	// ShipFromPostalCode nine character postal code for shipping origin
+	// addresses. For US addresses, this is a 5+4 ZIP or five digit ZIP.
+	ShipFromPostalCode string `json:"shipFromPostalCode,omitempty"`
+
+	// ShipToPostalCode nine character postal code for shipping destination
+	// addresses. For US addresses, this is a 5+4 ZIP or five digit ZIP.
+	ShipToPostalCode string `json:"shipToPostalCode,omitempty"`
+
+	// OrderDate indicates the purchase order date.
+	OrderDate *time.Time `json:"orderDate,omitempty"`
 }
 
 // CardMetadata contains essential information about a payment card derived
@@ -3742,6 +3765,17 @@ type TransactionDisplayItem struct {
 
 	// Discounts are displayed under their corresponding item.
 	Discounts []*TransactionDisplayDiscount `json:"discounts"`
+
+	// TaxAmount is the amount of any value added taxes which apply to the item.
+	TaxAmount string `json:"taxAmount,omitempty"`
+
+	// TaxRate is the tax rate as a percentage. Example: '8.5' for 8.5% tax rate.
+	TaxRate string `json:"taxRate,omitempty"`
+
+	// DiscountCode is how tax was applied to discounted items. '0' = no
+	// discount, '1' = tax calculated after discount, '2' = taxcalculated before
+	// discount.
+	DiscountCode string `json:"discountCode,omitempty"`
 }
 
 // TransactionDisplayTransaction contains the items to display on a terminal.
