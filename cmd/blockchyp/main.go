@@ -103,6 +103,12 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.LineItemExtended, "lineItemExtended", "", "line item extended total")
 	flag.StringVar(&args.LineItemDiscountDescription, "lineItemDiscountDescription", "", "line item discount description")
 	flag.StringVar(&args.LineItemDiscountAmount, "lineItemDiscountAmount", "", "line item discount description")
+	flag.StringVar(&args.LineItemTaxAmount, "lineItemTaxAmount", "", "line item tax amount")
+	flag.StringVar(&args.LineItemTaxRate, "lineItemTaxRate", "", "line item tax rate (percentage)")
+	flag.StringVar(&args.LineItemDiscountCode, "lineItemDiscountCode", "", "line item discount treatment code (single character)")
+	flag.StringVar(&args.LineItemCommodityCode, "lineItemCommodityCode", "", "line item commodity code")
+	flag.StringVar(&args.LineItemProductCode, "lineItemProductCode", "", "line item product code")
+	flag.StringVar(&args.LineItemUnitCode, "lineItemUnitCode", "", "line item unit of measure code")
 	flag.StringVar(&args.Prompt, "prompt", "", "prompt for boolean or text prompts")
 	flag.StringVar(&args.YesCaption, "yesCaption", "Yes", "caption for the 'yes' button")
 	flag.StringVar(&args.NoCaption, "noCaption", "No", "caption for the 'no' button")
@@ -213,6 +219,13 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.AccountHolderType, "accountHolderType", "", "is the account holder type (personal, business) for ACH transactions.")
 	flag.StringVar(&args.BankName, "bankName", "", "is the bank name for ACH transactions.")
 	flag.StringVar(&args.CardHolderName, "cardHolderName", "", "is the card holder name.")
+	flag.StringVar(&args.TotalDiscountAmount, "totalDiscountAmount", "", "total discount amount for the transaction")
+	flag.StringVar(&args.ShippingAmount, "shippingAmount", "", "shipping/freight cost for the transaction")
+	flag.StringVar(&args.DutyAmount, "dutyAmount", "", "duty amount for the transaction")
+	flag.StringVar(&args.ShipFromPostalCode, "shipFromPostalCode", "", "postal code for shipping origin")
+	flag.StringVar(&args.ShipToPostalCode, "shipToPostalCode", "", "postal code for shipping destination")
+	flag.StringVar(&args.DestinationCountryCode, "destinationCountryCode", "", "three character country code for shipping destination")
+	flag.StringVar(&args.OrderDate, "orderDate", "", "order date (format: YYYY-MM-DD)")
 
 	flag.Parse()
 
@@ -1408,6 +1421,12 @@ func assembleDisplayTransaction(args blockchyp.CommandLineArguments) *blockchyp.
 	extendeds := strings.Split(args.LineItemExtended, "|")
 	discounts := strings.Split(args.LineItemDiscountDescription, "|")
 	discountAmounts := strings.Split(args.LineItemDiscountAmount, "|")
+	taxAmounts := strings.Split(args.LineItemTaxAmount, "|")
+	taxRates := strings.Split(args.LineItemTaxRate, "|")
+	discountCodes := strings.Split(args.LineItemDiscountCode, "|")
+	commodityCodes := strings.Split(args.LineItemCommodityCode, "|")
+	productCodes := strings.Split(args.LineItemProductCode, "|")
+	unitCodes := strings.Split(args.LineItemUnitCode, "|")
 
 	lines := make([]*blockchyp.TransactionDisplayItem, 0)
 	for idx, desc := range descs {
@@ -1445,6 +1464,31 @@ func assembleDisplayTransaction(args blockchyp.CommandLineArguments) *blockchyp.
 
 			discountLines = append(discountLines, &discountLine)
 			line.Discounts = discountLines
+		}
+
+		// Add CEDP line item fields:
+		if len(taxAmounts) >= (idx + 1) {
+			line.TaxAmount = taxAmounts[idx]
+		}
+
+		if len(taxRates) >= (idx + 1) {
+			line.TaxRate = taxRates[idx]
+		}
+
+		if len(discountCodes) >= (idx + 1) {
+			line.DiscountCode = discountCodes[idx]
+		}
+
+		if len(commodityCodes) >= (idx + 1) {
+			line.CommodityCode = commodityCodes[idx]
+		}
+
+		if len(productCodes) >= (idx + 1) {
+			line.ProductCode = productCodes[idx]
+		}
+
+		if len(unitCodes) >= (idx + 1) {
+			line.UnitCode = unitCodes[idx]
 		}
 
 		lines = append(lines, line)
@@ -1932,6 +1976,12 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			HealthcareTotal:            args.HealthcareTotal,
 			EBTTotal:                   args.EBTTotal,
 			CardMetadataLookup:         args.CardMetadataLookup,
+			TotalDiscountAmount:        args.TotalDiscountAmount,
+			ShippingAmount:             args.ShippingAmount,
+			DutyAmount:                 args.DutyAmount,
+			ShipFromPostalCode:         args.ShipFromPostalCode,
+			ShipToPostalCode:           args.ShipToPostalCode,
+			DestinationCountryCode:     args.DestinationCountryCode,
 		}
 
 		displayTx := assembleDisplayTransaction(args)
@@ -1972,6 +2022,14 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 		if args.RoundingMode != "" {
 			mode := blockchyp.RoundingMode(args.RoundingMode)
 			req.RoundingMode = &mode
+		}
+
+		if args.OrderDate != "" {
+			orderDate, err := time.Parse("2006-01-02", args.OrderDate)
+			if err == nil {
+				req.OrderDate = &orderDate
+			}
+
 		}
 
 	}

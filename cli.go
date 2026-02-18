@@ -68,6 +68,12 @@ type CommandLineArguments struct {
 	LineItemExtended            string `arg:"lineItemExtended"`
 	LineItemDiscountDescription string `arg:"lineItemDiscountDescription"`
 	LineItemDiscountAmount      string `arg:"lineItemDiscountAmount"`
+	LineItemTaxAmount           string `arg:"lineItemTaxAmount"`
+	LineItemTaxRate             string `arg:"lineItemTaxRate"`
+	LineItemDiscountCode        string `arg:"lineItemDiscountCode"`
+	LineItemCommodityCode       string `arg:"lineItemCommodityCode"`
+	LineItemProductCode         string `arg:"lineItemProductCode"`
+	LineItemUnitCode            string `arg:"lineItemUnitCode"`
 	Prompt                      string `arg:"prompt"`
 	PromptType                  string `arg:"promptType"`
 	YesCaption                  string `arg:"yesCaption"`
@@ -180,6 +186,13 @@ type CommandLineArguments struct {
 	AccountHolderType           string `json:"accountHolderType"`
 	BankName                    string `json:"bankName"`
 	CardHolderName              string `json:"cardHolderName"`
+	TotalDiscountAmount         string `arg:"totalDiscountAmount"`
+	ShippingAmount              string `arg:"shippingAmount"`
+	DutyAmount                  string `arg:"dutyAmount"`
+	ShipFromPostalCode          string `arg:"shipFromPostalCode"`
+	ShipToPostalCode            string `arg:"shipToPostalCode"`
+	DestinationCountryCode      string `arg:"destinationCountryCode"`
+	OrderDate                   string `arg:"orderDate"`
 }
 
 var defaultSettings = &ConfigSettings{
