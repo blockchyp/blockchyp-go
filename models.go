@@ -8358,8 +8358,8 @@ type StateCheckSettings struct {
 	SurchargeExemptStates []string `json:"surchargeExemptStates"`
 }
 
-// MerchantSettings models merchant settings and configuration.
-type MerchantSettings struct {
+// PricingMerchantSettings models merchant settings and configuration.
+type PricingMerchantSettings struct {
 	// Account is the merchant account identifier.
 	Account string `json:"account"`
 
@@ -8416,7 +8416,7 @@ type PricingRequestAttributes struct {
 	State *string `json:"state"`
 
 	// MerchantSettings contains merchant settings for the pricing request.
-	MerchantSettings *MerchantSettings `json:"merchantSettings"`
+	MerchantSettings *PricingMerchantSettings `json:"merchantSettings"`
 }
 
 // PricingRequestData models the data wrapper for a pricing request.
