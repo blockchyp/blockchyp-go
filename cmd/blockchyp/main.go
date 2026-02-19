@@ -140,6 +140,7 @@ func parseArgs() blockchyp.CommandLineArguments {
 	flag.StringVar(&args.Query, "query", "", "search string")
 	flag.StringVar(&args.CallbackURL, "callbackUrl", "", "optional callback url to which a response is posted for payment links")
 	flag.BoolVar(&args.Surcharge, "surcharge", false, "adds fee surcharges to transactions, if eligible.")
+	flag.StringVar(&args.PassthroughSurcharge, "passthroughSurcharge", "", "this surcharge amount will be passed directly to the gateway and is not directly calculated.")
 	flag.BoolVar(&args.CashDiscount, "cashDiscount", false, "adds a cash discount to transactions, if eligible")
 	flag.StringVar(&args.PostalCode, "postalCode", "", "postal code to use for address verification")
 	flag.StringVar(&args.Address, "address", "", "street address to use for address verification")
@@ -1780,18 +1781,19 @@ func processCapture(client *blockchyp.Client, args blockchyp.CommandLineArgument
 	if !parseJSONInput(args, req) {
 		validateRequired(args.TransactionID, "tx")
 		req = &blockchyp.CaptureRequest{
-			Amount:             args.Amount,
-			TaxAmount:          args.TaxAmount,
-			Test:               args.Test,
-			Timeout:            args.Timeout,
-			WaitForRemovedCard: args.WaitForRemovedCard,
-			Force:              args.Force,
-			TipAmount:          args.TipAmount,
-			TransactionID:      args.TransactionID,
-			TransactionRef:     args.TransactionRef,
-			TestCase:           args.TestCase,
-			ShipmentNumber:     args.ShipmentNumber,
-			ShipmentCount:      args.ShipmentCount,
+			Amount:               args.Amount,
+			TaxAmount:            args.TaxAmount,
+			Test:                 args.Test,
+			Timeout:              args.Timeout,
+			WaitForRemovedCard:   args.WaitForRemovedCard,
+			Force:                args.Force,
+			TipAmount:            args.TipAmount,
+			TransactionID:        args.TransactionID,
+			TransactionRef:       args.TransactionRef,
+			TestCase:             args.TestCase,
+			ShipmentNumber:       args.ShipmentNumber,
+			ShipmentCount:        args.ShipmentCount,
+			PassthroughSurcharge: args.PassthroughSurcharge,
 		}
 	}
 
@@ -1950,6 +1952,7 @@ func processAuth(client *blockchyp.Client, args blockchyp.CommandLineArguments) 
 			SigFormat:                  blockchyp.SignatureFormat(args.SigFormat),
 			SigWidth:                   args.SigWidth,
 			Surcharge:                  args.Surcharge,
+			PassthroughSurcharge:       args.PassthroughSurcharge,
 			TaxAmount:                  args.TaxAmount,
 			TerminalName:               args.TerminalName,
 			Test:                       args.Test,

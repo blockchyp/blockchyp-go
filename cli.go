@@ -108,6 +108,7 @@ type CommandLineArguments struct {
 	CallbackURL                 string `arg:"callbackUrl"`
 	Surcharge                   bool   `arg:"surcharge"`
 	CashDiscount                bool   `arg:"cashDiscount"`
+	PassthroughSurcharge        string `arg:"passthroughSurcharge"`
 	PostalCode                  string `arg:"postalCode"`
 	Address                     string `arg:"address"`
 	Cashier                     bool   `arg:"cashier"`

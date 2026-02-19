@@ -2142,6 +2142,11 @@ type CaptureRequest struct {
 
 	// ShipmentNumber indicates which shipment this particular capture is for.
 	ShipmentNumber int `json:"shipmentNumber"`
+
+	// PassthroughSurcharge is a passthrough surcharge amount. This surcharge
+	// amount will be passed directly to the gateway and is not directly
+	// calculated.
+	PassthroughSurcharge string `json:"passthroughSurcharge,omitempty"`
 }
 
 // CaptureResponse contains the response to a capture request.
