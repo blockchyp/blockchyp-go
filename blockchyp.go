@@ -1093,6 +1093,21 @@ func (client *Client) Locate(request LocateRequest) (*LocateResponse, error) {
 	return &response, err
 }
 
+// SurchargeReview calculates surcharge information for a payment request.
+func (client *Client) SurchargeReview(request PricingRequest) (*PricingResponse, error) {
+	var response PricingResponse
+
+	err := client.GatewayRequest("/api/surcharge-review", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // Capture captures a preauthorization.
 func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) {
 	var response CaptureResponse
