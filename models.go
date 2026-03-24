@@ -1416,6 +1416,13 @@ type AuthorizationRequest struct {
 
 	// OrderDate indicates the purchase order date.
 	OrderDate *time.Time `json:"orderDate,omitempty"`
+
+	// ShipmentCount indicates the number of shipments the original authorization
+	// will be broken into.
+	ShipmentCount int `json:"shipmentCount"`
+
+	// ShipmentNumber indicates which shipment this particular capture is for.
+	ShipmentNumber int `json:"shipmentNumber"`
 }
 
 // CardMetadata contains essential information about a payment card derived
