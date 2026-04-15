@@ -2310,6 +2310,10 @@ type CaptureResponse struct {
 
 	// Customers contains customer data, if any.
 	Customers []Customer `json:"customers"`
+
+	// EnhancedDataPassed indicates whether enhanced data was passed for the
+	// transaction.
+	EnhancedDataPassed *bool `json:"enhancedDataPassed,omitempty"`
 }
 
 // VoidRequest contains a void request.
@@ -3413,6 +3417,10 @@ type AuthorizationResponse struct {
 	// CardMetadata contains details about a payment card derived from its
 	// BIN/IIN.
 	CardMetadata *CardMetadata `json:"cardMetadata,omitempty"`
+
+	// EnhancedDataPassed indicates whether enhanced data was passed for the
+	// transaction.
+	EnhancedDataPassed *bool `json:"enhancedDataPassed,omitempty"`
 }
 
 // TransactionStatusRequest models the request for updated information about a
