@@ -8420,9 +8420,24 @@ type SurchargeReviewRequest struct {
 	PricingPlan string `json:"pricingPlan"`
 }
 
-// PricingResponseAttributes models pricing response data for new handler for
-// pricing api responses.
-type PricingResponseAttributes struct {
+// SurchargeReviewResponse models a surcharge review response.
+type SurchargeReviewResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// TotalWithSurchargeAmount is the total amount including surcharge.
+	TotalWithSurchargeAmount string `json:"totalWithSurchargeAmount"`
+
+	// Type is the type of the response.
+	Type string `json:"type"`
+
 	// SurchargePercent is the surcharge percentage.
 	SurchargePercent string `json:"surchargePercent"`
 
@@ -8445,56 +8460,44 @@ type PricingResponseAttributes struct {
 	Bin string `json:"bin"`
 
 	// CommercialIndicator is the commercial card indicator.
-	CommercialIndicator string `json:"commercialIndicator"`
+	CommercialIndicator string `json:"commercialIndicator,omitempty"`
+
+	// IsCommercial indicates if the card is commercial.
+	IsCommercial bool `json:"isCommercial"`
+
+	// IsRegulated indicates if the card is Durbin-regulated (US debit).
+	IsRegulated bool `json:"isRegulated"`
+
+	// ExemptionReason is the reason for the exemption.
+	ExemptionReason string `json:"exemptionReason,omitempty"`
+
+	// DebitFeeAmount is the debit fee amount.
+	DebitFeeAmount string `json:"debitFeeAmount,omitempty"`
 
 	// Disclosure is the disclosure statement.
-	Disclosure *string `json:"disclosure"`
+	Disclosure string `json:"disclosure,omitempty"`
 
 	// DebitCategory is the debit card category.
-	DebitCategory string `json:"debitCategory"`
+	DebitCategory string `json:"debitCategory,omitempty"`
 
-	// CountryIssued is the country where the card was issued.
-	CountryIssued string `json:"countryIssued"`
+	// CountryCode is the country where the card was issued.
+	CountryCode string `json:"countryCode"`
+
+	// State only included if state was sent in request OR derived from ZIP code.
+	State string `json:"state,omitempty"`
 
 	// UUID is the unique identifier for the pricing response.
 	UUID string `json:"uuid"`
-}
 
-// PricingResponseData models the data wrapper for a pricing response.
-type PricingResponseData struct {
-	// Type is the type of the response.
-	Type string `json:"type"`
+	// ExpirationDate is the expiration date of the card.
+	ExpirationDate string `json:"expirationDate,omitempty"`
 
-	// Attributes contains the pricing response attributes.
-	Attributes PricingResponseAttributes `json:"attributes"`
-}
+	// DisclosureAdditional when surcharging is enabled AND state is 'CO'
+	// (Colorado-specific statutory language).
+	DisclosureAdditional string `json:"disclosureAdditional,omitempty"`
 
-// ErrorType models an error response.
-type ErrorType struct {
-	// Status is the HTTP status code.
-	Status int `json:"status"`
-
-	// Title is the error title.
-	Title string `json:"title"`
-
-	// Detail is the detailed error message.
-	Detail string `json:"detail"`
-}
-
-// SurchargeReviewResponse models a surcharge review response.
-type SurchargeReviewResponse struct {
-	// Success indicates whether or not the request succeeded.
-	Success bool `json:"success"`
-
-	// Error is the error, if an error occurred.
-	Error string `json:"error"`
-
-	// ResponseDescription contains a narrative description of the transaction
-	// result.
-	ResponseDescription string `json:"responseDescription"`
-
-	// Data contains the pricing response data.
-	Data PricingResponseData `json:"data"`
+	// CardholderInfo is the cardholder information.
+	CardholderInfo string `json:"cardholderInfo,omitempty"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature
