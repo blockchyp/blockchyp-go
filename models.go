@@ -8420,20 +8420,24 @@ type SurchargeReviewRequest struct {
 	PricingPlan string `json:"pricingPlan"`
 }
 
-// SurchargeReviewResponse models a surcharge review response.
-type SurchargeReviewResponse struct {
-	// Success indicates whether or not the request succeeded.
-	Success bool `json:"success"`
+// SurchargeReviewResponseData models the data included in a surcharge review
+// response.
+type SurchargeReviewResponseData struct {
+	// Type is the type of the response.
+	Type string `json:"type"`
 
-	// Error is the error, if an error occurred.
-	Error string `json:"error"`
+	// Attributes is the attributes of the response.
+	Attributes SurchargeAttributeResponseData `json:"attributes"`
+}
 
-	// ResponseDescription contains a narrative description of the transaction
-	// result.
-	ResponseDescription string `json:"responseDescription"`
-
+// SurchargeAttributeResponseData models the surcharge attributes included in
+// a surcharge review response.
+type SurchargeAttributeResponseData struct {
 	// TotalWithSurchargeAmount is the total amount including surcharge.
 	TotalWithSurchargeAmount string `json:"totalWithSurchargeAmount"`
+
+	// Success indicates if the surcharge review was successful.
+	Success bool `json:"success"`
 
 	// Type is the type of the response.
 	Type string `json:"type"`
@@ -8498,6 +8502,22 @@ type SurchargeReviewResponse struct {
 
 	// CardholderInfo is the cardholder information.
 	CardholderInfo string `json:"cardholderInfo,omitempty"`
+}
+
+// SurchargeReviewResponse models a surcharge review response.
+type SurchargeReviewResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// Data is the data included in the surcharge review response.
+	Data SurchargeReviewResponseData `json:"data"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature
