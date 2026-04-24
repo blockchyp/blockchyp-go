@@ -1113,7 +1113,7 @@ func (client *Client) SurchargeReview(request SurchargeReviewRequest) (*Surcharg
 func (client *Client) TransientKey(request TransientKeyRequest) (*TransientKeyResponse, error) {
 	var response TransientKeyResponse
 
-	err := client.GatewayRequest("/api/transient-credentials", "GET", request, &response, request.Test, request.Timeout)
+	err := client.GatewayRequest("/api/transient-credentials", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
