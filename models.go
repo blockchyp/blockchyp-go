@@ -8520,6 +8520,41 @@ type SurchargeReviewResponse struct {
 	Data SurchargeReviewResponseData `json:"data"`
 }
 
+// TransientKeyRequest models a request for short-lived API credentials.
+type TransientKeyRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// OneTime restricts the returned credentials to a single API call when true.
+	OneTime bool `json:"oneTime,omitempty"`
+}
+
+// TransientKeyResponse models a response containing short-lived API
+// credentials.
+type TransientKeyResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// APIKey is the transient API key.
+	APIKey string `json:"apiKey"`
+
+	// BearerToken is the transient bearer token.
+	BearerToken string `json:"bearerToken"`
+
+	// SigningKey is the transient signing key.
+	SigningKey string `json:"signingKey"`
+}
+
 // TerminalCaptureSignatureRequest contains a request for customer signature
 // data.
 type TerminalCaptureSignatureRequest struct {

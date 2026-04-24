@@ -1108,6 +1108,22 @@ func (client *Client) SurchargeReview(request SurchargeReviewRequest) (*Surcharg
 	return &response, err
 }
 
+// TransientKey generates a short-lived API key scoped to terminal and payment
+// operations.
+func (client *Client) TransientKey(request TransientKeyRequest) (*TransientKeyResponse, error) {
+	var response TransientKeyResponse
+
+	err := client.GatewayRequest("/api/transient-credentials", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
 // Capture captures a preauthorization.
 func (client *Client) Capture(request CaptureRequest) (*CaptureResponse, error) {
 	var response CaptureResponse
