@@ -163,7 +163,7 @@ func surchargeReviewExample() {
     client := blockchyp.NewClient(creds)
 
     // setup request object
-    request := blockchyp.PricingRequest{}
+    request := blockchyp.SurchargeReviewRequest{}
 
     response, err := client.SurchargeReview(request)
 

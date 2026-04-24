@@ -1094,8 +1094,8 @@ func (client *Client) Locate(request LocateRequest) (*LocateResponse, error) {
 }
 
 // SurchargeReview calculates surcharge information for a payment request.
-func (client *Client) SurchargeReview(request PricingRequest) (*PricingResponse, error) {
-	var response PricingResponse
+func (client *Client) SurchargeReview(request SurchargeReviewRequest) (*SurchargeReviewResponse, error) {
+	var response SurchargeReviewResponse
 
 	err := client.GatewayRequest("/api/surcharge-review", "POST", request, &response, request.Test, request.Timeout)
 
