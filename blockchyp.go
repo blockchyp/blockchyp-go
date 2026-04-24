@@ -1,4 +1,4 @@
-// Copyright 2019-2025 BlockChyp, Inc. All rights reserved. Use of this code
+// Copyright 2019-2026 BlockChyp, Inc. All rights reserved. Use of this code
 // is governed by a license that can be found in the LICENSE file.
 //
 // This file was generated automatically by the BlockChyp SDK Generator.
@@ -1083,6 +1083,37 @@ func (client *Client) Locate(request LocateRequest) (*LocateResponse, error) {
 	var response LocateResponse
 
 	err := client.GatewayRequest("/api/terminal-locate", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// SurchargeReview calculates surcharge information for a payment request.
+func (client *Client) SurchargeReview(request SurchargeReviewRequest) (*SurchargeReviewResponse, error) {
+	var response SurchargeReviewResponse
+
+	err := client.GatewayRequest("/api/surcharge-review", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TransientKey generates a short-lived API key scoped to terminal and payment
+// operations.
+func (client *Client) TransientKey(request TransientKeyRequest) (*TransientKeyResponse, error) {
+	var response TransientKeyResponse
+
+	err := client.GatewayRequest("/api/transient-credentials", "GET", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
