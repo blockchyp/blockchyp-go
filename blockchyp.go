@@ -1094,10 +1094,26 @@ func (client *Client) Locate(request LocateRequest) (*LocateResponse, error) {
 }
 
 // SurchargeReview calculates surcharge information for a payment request.
-func (client *Client) SurchargeReview(request PricingRequest) (*PricingResponse, error) {
-	var response PricingResponse
+func (client *Client) SurchargeReview(request SurchargeReviewRequest) (*SurchargeReviewResponse, error) {
+	var response SurchargeReviewResponse
 
 	err := client.GatewayRequest("/api/surcharge-review", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TransientKey generates a short-lived API key scoped to terminal and payment
+// operations.
+func (client *Client) TransientKey(request TransientKeyRequest) (*TransientKeyResponse, error) {
+	var response TransientKeyResponse
+
+	err := client.GatewayRequest("/api/transient-credentials", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut

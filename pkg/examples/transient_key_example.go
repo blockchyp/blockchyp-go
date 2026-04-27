@@ -7,7 +7,7 @@ import (
 	blockchyp "github.com/blockchyp/blockchyp-go/v2"
 )
 
-func surchargeReviewExample() {
+func transientKeyExample() {
 	// sample credentials
 	creds := blockchyp.APICredentials{
 		APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
@@ -19,9 +19,9 @@ func surchargeReviewExample() {
 	client := blockchyp.NewClient(creds)
 
 	// setup request object
-	request := blockchyp.SurchargeReviewRequest{}
+	request := blockchyp.TransientKeyRequest{}
 
-	response, err := client.SurchargeReview(request)
+	response, err := client.TransientKey(request)
 
 	if err != nil {
 		log.Fatal(err)

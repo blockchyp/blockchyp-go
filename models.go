@@ -1423,6 +1423,10 @@ type AuthorizationRequest struct {
 
 	// ShipmentNumber indicates which shipment this particular capture is for.
 	ShipmentNumber int `json:"shipmentNumber"`
+
+	// ExternalPartnerMetadata is an optional field that can be used to pass
+	// through data to external partners.
+	ExternalPartnerMetadata string `json:"externalPartnerMetadata,omitempty"`
 }
 
 // CardMetadata contains essential information about a payment card derived
@@ -2310,6 +2314,10 @@ type CaptureResponse struct {
 
 	// Customers contains customer data, if any.
 	Customers []Customer `json:"customers"`
+
+	// EnhancedDataPassed indicates whether enhanced data was passed for the
+	// transaction.
+	EnhancedDataPassed *bool `json:"enhancedDataPassed,omitempty"`
 }
 
 // VoidRequest contains a void request.
@@ -3413,6 +3421,10 @@ type AuthorizationResponse struct {
 	// CardMetadata contains details about a payment card derived from its
 	// BIN/IIN.
 	CardMetadata *CardMetadata `json:"cardMetadata,omitempty"`
+
+	// EnhancedDataPassed indicates whether enhanced data was passed for the
+	// transaction.
+	EnhancedDataPassed *bool `json:"enhancedDataPassed,omitempty"`
 }
 
 // TransactionStatusRequest models the request for updated information about a
@@ -8360,106 +8372,81 @@ type SubmitApplicationRequest struct {
 	SignerName string `json:"signerName"`
 }
 
-// StateCheckSettings models settings related to state checks for a merchant.
-type StateCheckSettings struct {
-	// Enabled indicates if state checks are enabled for the merchant.
-	Enabled bool `json:"enabled"`
-
-	// SurchargeExemptStates is the list of states that are exempt from
-	// surcharges.
-	SurchargeExemptStates []string `json:"surchargeExemptStates"`
-}
-
-// PricingMerchantSettings models merchant settings and configuration.
-type PricingMerchantSettings struct {
-	// Account is the merchant account identifier.
-	Account string `json:"account"`
-
-	// Gateway is the gateway identifier.
-	Gateway string `json:"gateway"`
-
-	// SurchargingEnabled indicates whether surcharging is enabled for the
-	// merchant.
-	SurchargingEnabled bool `json:"surchargingEnabled"`
-
-	// CustomSurchargePercent is the custom surcharge percentage, if applicable.
-	CustomSurchargePercent *float64 `json:"customSurchargePercent"`
-
-	// ReducedRate indicates if reduced rate pricing is enabled.
-	ReducedRate *bool `json:"reducedRate"`
-
-	// InversePricingEnabled indicates if inverse pricing is enabled.
-	InversePricingEnabled *bool `json:"inversePricingEnabled"`
-
-	// CreditDiscountRate is the credit discount rate, if applicable.
-	CreditDiscountRate *float64 `json:"creditDiscountRate"`
-
-	// AcquiringSolution is the acquiring solution identifier.
-	AcquiringSolution string `json:"acquiringSolution"`
-
-	// AcceptDebit indicates whether the merchant accepts debit cards.
-	AcceptDebit *bool `json:"acceptDebit"`
-
-	// StateCheckSettings contains state check settings for the merchant.
-	StateCheckSettings *StateCheckSettings `json:"stateCheckSettings"`
-}
-
-// PricingRequestAttributes models the attributes for a pricing request.
-type PricingRequestAttributes struct {
-	// CardNumber is the card number for the pricing request.
-	CardNumber *string `json:"cardNumber"`
-
-	// Token is the payment token.
-	Token string `json:"token"`
-
-	// MerchantIdentifier is the merchant identifier.
-	MerchantIdentifier *string `json:"merchantIdentifier"`
-
-	// Amount is the transaction amount.
-	Amount float64 `json:"amount"`
-
-	// Country is the country code.
-	Country *string `json:"country"`
-
-	// PostalCode is the postal code.
-	PostalCode *string `json:"postalCode"`
-
-	// State is the state or province.
-	State *string `json:"state"`
-
-	// MerchantSettings contains merchant settings for the pricing request.
-	MerchantSettings *PricingMerchantSettings `json:"merchantSettings"`
-}
-
-// PricingRequestData models the data wrapper for a pricing request.
-type PricingRequestData struct {
-	// Type is the type of the request.
-	Type string `json:"type"`
-
-	// Attributes contains the pricing request attributes.
-	Attributes PricingRequestAttributes `json:"attributes"`
-}
-
-// PricingRequest models a pricing request.
-type PricingRequest struct {
+// SurchargeReviewRequest models a surcharge review request.
+type SurchargeReviewRequest struct {
 	// Timeout is the request timeout in seconds.
 	Timeout int `json:"timeout"`
 
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
-	// Data contains the pricing request data.
-	Data PricingRequestData `json:"data"`
+	// CardNumber is the card number for the pricing request.
+	CardNumber *string `json:"cardNumber"`
+
+	// Token is the payment token.
+	Token *string `json:"token"`
+
+	// Amount is the transaction amount.
+	Amount *string `json:"amount"`
+
+	// SurchargeRate is the surcharge rate.
+	SurchargeRate *string `json:"surchargeRate"`
+
+	// DebitTransFee is the debit transaction fee.
+	DebitTransFee *string `json:"debitTransFee"`
+
+	// DebitDiscountRate is the debit discount rate.
+	DebitDiscountRate *string `json:"debitDiscountRate"`
+
+	// SurchargePolicy is the surcharge policy.
+	SurchargePolicy string `json:"surchargePolicy"`
+
+	// ExcludedMerchantStates is the list of excluded merchant states.
+	ExcludedMerchantStates []string `json:"excludedMerchantStates"`
+
+	// Zip is the zip code.
+	Zip string `json:"zip"`
+
+	// State is the state or province.
+	State string `json:"state"`
+
+	// ExemptForeignCards indicates if foreign cards are exempt.
+	ExemptForeignCards bool `json:"exemptForeignCards"`
+
+	// SurchargingMode is the surcharging mode.
+	SurchargingMode string `json:"surchargingMode"`
+
+	// PricingPlan is the pricing plan.
+	PricingPlan string `json:"pricingPlan"`
 }
 
-// PricingResponseAttributes models pricing response data for new handler for
-// pricing api responses.
-type PricingResponseAttributes struct {
+// SurchargeReviewResponseData models the data included in a surcharge review
+// response.
+type SurchargeReviewResponseData struct {
+	// Type is the type of the response.
+	Type string `json:"type"`
+
+	// Attributes is the attributes of the response.
+	Attributes SurchargeAttributeResponseData `json:"attributes"`
+}
+
+// SurchargeAttributeResponseData models the surcharge attributes included in
+// a surcharge review response.
+type SurchargeAttributeResponseData struct {
+	// TotalWithSurchargeAmount is the total amount including surcharge.
+	TotalWithSurchargeAmount string `json:"totalWithSurchargeAmount"`
+
+	// Success indicates if the surcharge review was successful.
+	Success bool `json:"success"`
+
+	// Type is the type of the response.
+	Type string `json:"type"`
+
 	// SurchargePercent is the surcharge percentage.
-	SurchargePercent float64 `json:"surchargePercent"`
+	SurchargePercent string `json:"surchargePercent"`
 
 	// SurchargeAmount is the surcharge amount.
-	SurchargeAmount float64 `json:"surchargeAmount"`
+	SurchargeAmount string `json:"surchargeAmount"`
 
 	// SurchargeExempt indicates if the transaction is exempt from surcharges.
 	SurchargeExempt bool `json:"surchargeExempt"`
@@ -8477,44 +8464,48 @@ type PricingResponseAttributes struct {
 	Bin string `json:"bin"`
 
 	// CommercialIndicator is the commercial card indicator.
-	CommercialIndicator string `json:"commercialIndicator"`
+	CommercialIndicator string `json:"commercialIndicator,omitempty"`
+
+	// IsCommercial indicates if the card is commercial.
+	IsCommercial bool `json:"isCommercial"`
+
+	// IsRegulated indicates if the card is Durbin-regulated (US debit).
+	IsRegulated bool `json:"isRegulated"`
+
+	// ExemptionReason is the reason for the exemption.
+	ExemptionReason string `json:"exemptionReason,omitempty"`
+
+	// DebitFeeAmount is the debit fee amount.
+	DebitFeeAmount string `json:"debitFeeAmount,omitempty"`
 
 	// Disclosure is the disclosure statement.
-	Disclosure *string `json:"disclosure"`
+	Disclosure string `json:"disclosure,omitempty"`
 
 	// DebitCategory is the debit card category.
-	DebitCategory string `json:"debitCategory"`
+	DebitCategory string `json:"debitCategory,omitempty"`
 
-	// CountryIssued is the country where the card was issued.
-	CountryIssued string `json:"countryIssued"`
+	// CountryCode is the country where the card was issued.
+	CountryCode string `json:"countryCode"`
+
+	// State only included if state was sent in request OR derived from ZIP code.
+	State string `json:"state,omitempty"`
 
 	// UUID is the unique identifier for the pricing response.
 	UUID string `json:"uuid"`
+
+	// ExpirationDate is the expiration date of the card.
+	ExpirationDate string `json:"expirationDate,omitempty"`
+
+	// DisclosureAdditional when surcharging is enabled AND state is 'CO'
+	// (Colorado-specific statutory language).
+	DisclosureAdditional string `json:"disclosureAdditional,omitempty"`
+
+	// CardholderInfo is the cardholder information.
+	CardholderInfo string `json:"cardholderInfo,omitempty"`
 }
 
-// PricingResponseData models the data wrapper for a pricing response.
-type PricingResponseData struct {
-	// Type is the type of the response.
-	Type string `json:"type"`
-
-	// Attributes contains the pricing response attributes.
-	Attributes PricingResponseAttributes `json:"attributes"`
-}
-
-// ErrorType models an error response.
-type ErrorType struct {
-	// Status is the HTTP status code.
-	Status int `json:"status"`
-
-	// Title is the error title.
-	Title string `json:"title"`
-
-	// Detail is the detailed error message.
-	Detail string `json:"detail"`
-}
-
-// PricingResponse models a pricing response.
-type PricingResponse struct {
+// SurchargeReviewResponse models a surcharge review response.
+type SurchargeReviewResponse struct {
 	// Success indicates whether or not the request succeeded.
 	Success bool `json:"success"`
 
@@ -8525,8 +8516,43 @@ type PricingResponse struct {
 	// result.
 	ResponseDescription string `json:"responseDescription"`
 
-	// Data contains the pricing response data.
-	Data PricingResponseData `json:"data"`
+	// Data is the data included in the surcharge review response.
+	Data SurchargeReviewResponseData `json:"data"`
+}
+
+// TransientKeyRequest models a request for short-lived API credentials.
+type TransientKeyRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// OneTime restricts the returned credentials to a single API call when true.
+	OneTime bool `json:"oneTime,omitempty"`
+}
+
+// TransientKeyResponse models a response containing short-lived API
+// credentials.
+type TransientKeyResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// APIKey is the transient API key.
+	APIKey string `json:"apiKey"`
+
+	// BearerToken is the transient bearer token.
+	BearerToken string `json:"bearerToken"`
+
+	// SigningKey is the transient signing key.
+	SigningKey string `json:"signingKey"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature
