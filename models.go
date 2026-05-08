@@ -1058,6 +1058,9 @@ type CustomerToken struct {
 	// CardHolderName is the card holder name.
 	CardHolderName string `json:"cardHolderName,omitempty"`
 
+	// HasCVV indicates whether the token was enrolled with a CVV value present.
+	HasCVV bool `json:"hasCvv"`
+
 	// Customers models customer records associated with a payment token.
 	Customers []Customer `json:"customers"`
 }
@@ -2775,6 +2778,9 @@ type EnrollResponse struct {
 
 	// Bin indicates the first 8 digits of the card aka the BIN.
 	Bin string `json:"bin,omitempty"`
+
+	// HasCVV indicates whether the token was enrolled with a CVV value present.
+	HasCVV bool `json:"hasCvv"`
 }
 
 // ClearTerminalRequest contains the information needed to enroll a new
@@ -4741,7 +4747,7 @@ type BatchDetailsResponse struct {
 	// daily fees volume.
 	NetDeposit string `json:"netDeposit"`
 
-	// DailyFees is the daily fees for this batch
+	// DailyFees is the daily fees for this batch.
 	DailyFees string `json:"dailyFees"`
 }
 
