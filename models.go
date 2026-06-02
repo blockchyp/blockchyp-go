@@ -1430,6 +1430,15 @@ type AuthorizationRequest struct {
 	// ExternalPartnerMetadata is an optional field that can be used to pass
 	// through data to external partners.
 	ExternalPartnerMetadata string `json:"externalPartnerMetadata,omitempty"`
+
+	// ExternalCustomerEmail is the external customer's email address.
+	ExternalCustomerEmail string `json:"externalCustomerEmail,omitempty"`
+
+	// ExternalCustomerPhone is the external customer's phone number.
+	ExternalCustomerPhone string `json:"externalCustomerPhone,omitempty"`
+
+	// ExternalCustomerCompany is the external customer's company name.
+	ExternalCustomerCompany string `json:"externalCustomerCompany,omitempty"`
 }
 
 // CardMetadata contains essential information about a payment card derived
