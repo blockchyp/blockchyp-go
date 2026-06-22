@@ -5220,6 +5220,14 @@ type MerchantProfile struct {
 	// BypassEnrollAuthEnabled indicates whether the merchant should bypass an
 	// auth with TSYS on Enrollment.
 	BypassEnrollAuthEnabled bool `json:"bypassEnrollAuthEnabled"`
+
+	// FollowPartnerServiceFeeEnabled indicates that the merchant follows the
+	// partner's service fee settings.
+	FollowPartnerServiceFeeEnabled bool `json:"followPartnerServiceFeeEnabled"`
+
+	// ServiceFeeEnabled indicates that the merchant is configured to apply a
+	// service fee.
+	ServiceFeeEnabled bool `json:"serviceFeeEnabled"`
 }
 
 // MerchantProfileResponse models a response for a single merchant profile.
@@ -5451,6 +5459,14 @@ type MerchantProfileResponse struct {
 	// BypassEnrollAuthEnabled indicates whether the merchant should bypass an
 	// auth with TSYS on Enrollment.
 	BypassEnrollAuthEnabled bool `json:"bypassEnrollAuthEnabled"`
+
+	// FollowPartnerServiceFeeEnabled indicates that the merchant follows the
+	// partner's service fee settings.
+	FollowPartnerServiceFeeEnabled bool `json:"followPartnerServiceFeeEnabled"`
+
+	// ServiceFeeEnabled indicates that the merchant is configured to apply a
+	// service fee.
+	ServiceFeeEnabled bool `json:"serviceFeeEnabled"`
 }
 
 // BankAccount models meta data about a merchant bank account.
