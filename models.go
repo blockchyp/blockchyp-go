@@ -5228,6 +5228,14 @@ type MerchantProfile struct {
 	// ServiceFeeEnabled indicates that the merchant is configured to apply a
 	// service fee.
 	ServiceFeeEnabled bool `json:"serviceFeeEnabled"`
+
+	// FollowPartnerCVVCacheEnabled indicates that the merchant follows the
+	// partner's CVV cache settings.
+	FollowPartnerCVVCacheEnabled bool `json:"followPartnerCvvCacheEnabled"`
+
+	// CVVCacheEnabled indicates that the merchant is configured to apply a CVV
+	// cache.
+	CVVCacheEnabled bool `json:"cvvCacheEnabled"`
 }
 
 // MerchantProfileResponse models a response for a single merchant profile.
@@ -5467,6 +5475,14 @@ type MerchantProfileResponse struct {
 	// ServiceFeeEnabled indicates that the merchant is configured to apply a
 	// service fee.
 	ServiceFeeEnabled bool `json:"serviceFeeEnabled"`
+
+	// FollowPartnerCVVCacheEnabled indicates that the merchant follows the
+	// partner's CVV cache settings.
+	FollowPartnerCVVCacheEnabled bool `json:"followPartnerCvvCacheEnabled"`
+
+	// CVVCacheEnabled indicates that the merchant is configured to apply a CVV
+	// cache.
+	CVVCacheEnabled bool `json:"cvvCacheEnabled"`
 }
 
 // BankAccount models meta data about a merchant bank account.
