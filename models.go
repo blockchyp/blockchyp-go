@@ -5229,9 +5229,9 @@ type MerchantProfile struct {
 	// service fee.
 	ServiceFeeEnabled bool `json:"serviceFeeEnabled"`
 
-	// FollowPartnerCvvcacheEnabled indicates that the merchant follows the
+	// FollowPartnerCVVCacheEnabled indicates that the merchant follows the
 	// partner's CVV cache settings.
-	FollowPartnerCvvcacheEnabled bool `json:"followPartnerCVVCacheEnabled"`
+	FollowPartnerCVVCacheEnabled bool `json:"followPartnerCvvCacheEnabled"`
 
 	// CVVCacheEnabled indicates that the merchant is configured to apply a CVV
 	// cache.
@@ -5476,9 +5476,9 @@ type MerchantProfileResponse struct {
 	// service fee.
 	ServiceFeeEnabled bool `json:"serviceFeeEnabled"`
 
-	// FollowPartnerCvvcacheEnabled indicates that the merchant follows the
+	// FollowPartnerCVVCacheEnabled indicates that the merchant follows the
 	// partner's CVV cache settings.
-	FollowPartnerCvvcacheEnabled bool `json:"followPartnerCVVCacheEnabled"`
+	FollowPartnerCVVCacheEnabled bool `json:"followPartnerCvvCacheEnabled"`
 
 	// CVVCacheEnabled indicates that the merchant is configured to apply a CVV
 	// cache.
