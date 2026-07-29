@@ -8458,7 +8458,7 @@ type SurchargeReviewRequest struct {
 	State string `json:"state"`
 
 	// ExemptForeignCards indicates if foreign cards are exempt.
-	ExemptForeignCards bool `json:"exemptForeignCards"`
+	ExemptForeignCards *bool `json:"exemptForeignCards,omitempty"`
 
 	// SurchargingMode is the surcharging mode.
 	SurchargingMode string `json:"surchargingMode"`
