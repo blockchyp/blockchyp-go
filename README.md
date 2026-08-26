@@ -124,6 +124,108 @@ These are the core payment APIs used to execute and work with payment transactio
 
 
 
+#### Surcharge Review
+
+
+
+* **API Credential Types:** Merchant
+* **Required Role:** Payment API Access
+
+This API calculates surcharge information for a payment request.
+
+If you're using BlockChyp's surcharging features, you can use this endpoint
+to preview the surcharge amounts before processing a transaction. This allows
+you to display accurate pricing information to customers before completing
+the payment.
+
+
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func surchargeReviewExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.SurchargeReviewRequest{}
+
+    response, err := client.SurchargeReview(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
+#### Transient Key
+
+Generates a short-lived API key scoped to terminal and payment operations.
+
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    blockchyp "github.com/blockchyp/blockchyp-go/v2"
+)
+
+func transientKeyExample() {
+    // sample credentials
+    creds := blockchyp.APICredentials{
+        APIKey:      "ZDSMMZLGRPBPRTJUBTAFBYZ33Q",
+        BearerToken: "ZLBW5NR4U5PKD5PNP3ZP3OZS5U",
+        SigningKey:  "9c6a5e8e763df1c9256e3d72bd7f53dfbd07312938131c75b3bfd254da787947",
+    }
+
+    // instantiate the client
+    client := blockchyp.NewClient(creds)
+
+    // setup request object
+    request := blockchyp.TransientKeyRequest{}
+
+    response, err := client.TransientKey(request)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //process the result
+    if response.Success {
+        fmt.Println("Success")
+    }
+
+    fmt.Printf("Response: %+v\n", response)
+}
+
+```
+
 #### Charge
 
 

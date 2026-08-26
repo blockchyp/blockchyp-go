@@ -12,6 +12,7 @@ import (
 	"io"
 	"io/ioutil"
 	"math"
+	crand "crypto/rand"
 	"math/rand"
 	"net/http"
 	"net/http/httputil"
@@ -345,8 +346,11 @@ func computeHmac(headers APIRequestHeaders, signingKey string) (string, error) {
 }
 
 func generateNonce() string {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	result := make([]byte, 32)
-	r.Read(result)
+	if _, err := crand.Read(result); err != nil {
+		// Fall back to time-seeded PRNG only if crypto/rand is unavailable (very unusual).
+		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+		r.Read(result)
+	}
 	return hex.EncodeToString(result)
 }
