@@ -188,6 +188,10 @@ type ReceiptSuggestions struct {
 	// CashDiscount is the discount applied to the transaction for payment
 	// methods ineligible for surcharges.
 	CashDiscount string `json:"cashDiscount,omitempty"`
+
+	// ServiceFeeAmount is the amount added to the transaction to cover
+	// processing fees.
+	ServiceFeeAmount string `json:"serviceFeeAmount,omitempty"`
 }
 
 // Acknowledgement contains a basic api acknowledgement.
@@ -1159,7 +1163,7 @@ type AuthorizationRequest struct {
 	TestCase string `json:"testCase,omitempty"`
 
 	// Token is the payment token to be used for this transaction. This should be
-	// used for recurring transactions.
+	// used for recurring transactions. The /enroll endpoint ignores this field.
 	Token string `json:"token,omitempty"`
 
 	// Track1 contains track 1 magnetic stripe data.
@@ -1532,7 +1536,7 @@ type CardMetadataRequest struct {
 	TestCase string `json:"testCase,omitempty"`
 
 	// Token is the payment token to be used for this transaction. This should be
-	// used for recurring transactions.
+	// used for recurring transactions. The /enroll endpoint ignores this field.
 	Token string `json:"token,omitempty"`
 
 	// Track1 contains track 1 magnetic stripe data.
@@ -1729,7 +1733,7 @@ type BalanceRequest struct {
 	TestCase string `json:"testCase,omitempty"`
 
 	// Token is the payment token to be used for this transaction. This should be
-	// used for recurring transactions.
+	// used for recurring transactions. The /enroll endpoint ignores this field.
 	Token string `json:"token,omitempty"`
 
 	// Track1 contains track 1 magnetic stripe data.
@@ -1952,7 +1956,7 @@ type RefundRequest struct {
 	TestCase string `json:"testCase,omitempty"`
 
 	// Token is the payment token to be used for this transaction. This should be
-	// used for recurring transactions.
+	// used for recurring transactions. The /enroll endpoint ignores this field.
 	Token string `json:"token,omitempty"`
 
 	// Track1 contains track 1 magnetic stripe data.
@@ -2327,6 +2331,9 @@ type CaptureResponse struct {
 	// Customers contains customer data, if any.
 	Customers []Customer `json:"customers"`
 
+	// Status indicates the current status of a transaction.
+	Status string `json:"status,omitempty"`
+
 	// EnhancedDataPassed indicates whether enhanced data was passed for the
 	// transaction.
 	EnhancedDataPassed *bool `json:"enhancedDataPassed,omitempty"`
@@ -2501,6 +2508,9 @@ type VoidResponse struct {
 
 	// SigFile contains the hex encoded signature data.
 	SigFile string `json:"sigFile,omitempty"`
+
+	// Status indicates the current status of a transaction.
+	Status string `json:"status,omitempty"`
 }
 
 // EnrollRequest contains the information needed to enroll a new payment
@@ -2550,7 +2560,7 @@ type EnrollRequest struct {
 	TestCase string `json:"testCase,omitempty"`
 
 	// Token is the payment token to be used for this transaction. This should be
-	// used for recurring transactions.
+	// used for recurring transactions. The /enroll endpoint ignores this field.
 	Token string `json:"token,omitempty"`
 
 	// Track1 contains track 1 magnetic stripe data.
@@ -8458,7 +8468,7 @@ type SurchargeReviewRequest struct {
 	State string `json:"state"`
 
 	// ExemptForeignCards indicates if foreign cards are exempt.
-	ExemptForeignCards bool `json:"exemptForeignCards"`
+	ExemptForeignCards *bool `json:"exemptForeignCards,omitempty"`
 
 	// SurchargingMode is the surcharging mode.
 	SurchargingMode string `json:"surchargingMode"`
@@ -9070,7 +9080,7 @@ func (r PaymentAmounts) From(raw interface{}) (result PaymentAmounts, ok bool) {
 // PaymentMethod contains request details about a payment method.
 type PaymentMethod struct {
 	// Token is the payment token to be used for this transaction. This should be
-	// used for recurring transactions.
+	// used for recurring transactions. The /enroll endpoint ignores this field.
 	Token string
 
 	// Track1 contains track 1 magnetic stripe data.
