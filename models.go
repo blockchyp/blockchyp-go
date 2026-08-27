@@ -188,6 +188,10 @@ type ReceiptSuggestions struct {
 	// CashDiscount is the discount applied to the transaction for payment
 	// methods ineligible for surcharges.
 	CashDiscount string `json:"cashDiscount,omitempty"`
+
+	// ServiceFeeAmount is the amount added to the transaction to cover
+	// processing fees.
+	ServiceFeeAmount string `json:"serviceFeeAmount,omitempty"`
 }
 
 // Acknowledgement contains a basic api acknowledgement.
