@@ -8620,6 +8620,14 @@ type ServiceFeeRequest struct {
 	// Test specifies whether or not to route transaction to the test gateway.
 	Test bool `json:"test"`
 
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
+
 	// PAN is the primary account number (PAN) of the card.
 	PAN string `json:"pan"`
 
@@ -8774,12 +8782,6 @@ type TerminalListQueuedTransactionsRequest struct {
 type TerminalDeleteQueuedTransactionRequest struct {
 	APICredentials
 	Request DeleteQueuedTransactionRequest `json:"request"`
-}
-
-// TerminalServiceFeeRequest models a request for terminal service fees.
-type TerminalServiceFeeRequest struct {
-	APICredentials
-	Request ServiceFeeRequest `json:"request"`
 }
 
 // AbstractAcknowledgement contains fields which should be returned with
