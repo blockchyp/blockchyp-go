@@ -1,4 +1,4 @@
-// Copyright 2019-2025 BlockChyp, Inc. All rights reserved. Use of this code
+// Copyright 2019-2026 BlockChyp, Inc. All rights reserved. Use of this code
 // is governed by a license that can be found in the LICENSE file.
 //
 // This file was generated automatically by the BlockChyp SDK Generator.
@@ -937,6 +937,53 @@ func (client *Client) TextPrompt(request TextPromptRequest) (*TextPromptResponse
 	return &response, err
 }
 
+// ServiceFee calculates the service fee for a transaction.
+func (client *Client) ServiceFee(request ServiceFeeRequest) (*ServiceFeeResponse, error) {
+	var response ServiceFeeResponse
+	var err error
+
+	if err := populateSignatureOptions(&request); err != nil {
+		return nil, err
+	}
+
+	if request.TerminalName != "" {
+		var route TerminalRoute
+		route, err = client.resolveTerminalRoute(request.TerminalName)
+		if err != nil {
+			if errors.Is(err, ErrUnknownTerminal) {
+				response.ResponseDescription = ResponseUnknownTerminal
+				return &response, err
+			}
+
+			return nil, err
+		}
+
+		if route.CloudRelayEnabled {
+			err = client.RelayRequest("/api/service-fee", "POST", request, &response, request.Test, request.Timeout)
+		} else {
+			authRequest := TerminalServiceFeeRequest{
+				APICredentials: route.TransientCredentials,
+				Request:        request,
+			}
+			err = client.terminalRequest(route, "", "POST", authRequest, &response, request.Timeout)
+		}
+	} else {
+		err = client.GatewayRequest("/api/service-fee", "POST", request, &response, request.Test, request.Timeout)
+	}
+
+	if timeout, ok := err.(net.Error); ok && timeout.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	if err := handleSignature(request, &response); err != nil {
+		log.Printf("Failed to write signature: %+v", err)
+	}
+
+	return &response, err
+}
+
 // ListQueuedTransactions returns a list of queued transactions on a terminal.
 func (client *Client) ListQueuedTransactions(request ListQueuedTransactionsRequest) (*ListQueuedTransactionsResponse, error) {
 	var response ListQueuedTransactionsResponse
@@ -1083,6 +1130,37 @@ func (client *Client) Locate(request LocateRequest) (*LocateResponse, error) {
 	var response LocateResponse
 
 	err := client.GatewayRequest("/api/terminal-locate", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// SurchargeReview calculates surcharge information for a payment request.
+func (client *Client) SurchargeReview(request SurchargeReviewRequest) (*SurchargeReviewResponse, error) {
+	var response SurchargeReviewResponse
+
+	err := client.GatewayRequest("/api/surcharge-review", "POST", request, &response, request.Test, request.Timeout)
+
+	if err, ok := err.(net.Error); ok && err.Timeout() {
+		response.ResponseDescription = ResponseTimedOut
+	} else if err != nil {
+		response.ResponseDescription = err.Error()
+	}
+
+	return &response, err
+}
+
+// TransientKey generates a short-lived API key scoped to terminal and payment
+// operations.
+func (client *Client) TransientKey(request TransientKeyRequest) (*TransientKeyResponse, error) {
+	var response TransientKeyResponse
+
+	err := client.GatewayRequest("/api/transient-credentials", "POST", request, &response, request.Test, request.Timeout)
 
 	if err, ok := err.(net.Error); ok && err.Timeout() {
 		response.ResponseDescription = ResponseTimedOut
