@@ -965,7 +965,7 @@ func (client *Client) ServiceFee(request ServiceFeeRequest) (*ServiceFeeResponse
 				APICredentials: route.TransientCredentials,
 				Request:        request,
 			}
-			err = client.terminalRequest(route, "", "POST", authRequest, &response, request.Timeout)
+			err = client.terminalRequest(route, "/api/service-fee", "POST", authRequest, &response, request.Timeout)
 		}
 	} else {
 		err = client.GatewayRequest("/api/service-fee", "POST", request, &response, request.Test, request.Timeout)

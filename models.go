@@ -8784,6 +8784,12 @@ type TerminalDeleteQueuedTransactionRequest struct {
 	Request DeleteQueuedTransactionRequest `json:"request"`
 }
 
+// TerminalServiceFeeRequest models a request for terminal service fees.
+type TerminalServiceFeeRequest struct {
+	APICredentials
+	Request ServiceFeeRequest `json:"request"`
+}
+
 // AbstractAcknowledgement contains fields which should be returned with
 // standard requests.
 type AbstractAcknowledgement struct {
