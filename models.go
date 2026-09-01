@@ -8633,6 +8633,24 @@ type ServiceFeeRequest struct {
 
 	// Amount is the transaction amount.
 	Amount string `json:"amount"`
+
+	// Sig is the signature for the request.
+	Sig string `json:"sig"`
+
+	// Nonce is the nonce for the request.
+	Nonce string `json:"nonce"`
+
+	// MerchantKey is the merchant key for the request.
+	MerchantKey string `json:"merchantKey"`
+
+	// TerminalKey is the terminal key for the request.
+	TerminalKey string `json:"terminalKey"`
+
+	// TerminalDukptKey is the terminal DUKPT key for the request.
+	TerminalDukptKey string `json:"terminalDukptKey"`
+
+	// SigTimestamp is the signature timestamp for the request.
+	SigTimestamp string `json:"sigTimestamp"`
 }
 
 // ServiceFeeResponse models a response for terminal service fees.
