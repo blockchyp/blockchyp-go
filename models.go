@@ -8475,6 +8475,12 @@ type SurchargeReviewRequest struct {
 
 	// PricingPlan is the pricing plan.
 	PricingPlan string `json:"pricingPlan"`
+
+	// StaxMerchantID is the Stax merchant UUID for cross-system tracing.
+	StaxMerchantID *string `json:"staxMerchantId"`
+
+	// StaxTransactionID is the Stax transaction UUID for cross-system tracing.
+	StaxTransactionID *string `json:"staxTransactionId"`
 }
 
 // SurchargeReviewResponseData models the data included in a surcharge review
