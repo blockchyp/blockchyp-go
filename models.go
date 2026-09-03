@@ -8595,7 +8595,7 @@ type TransientKeyRequest struct {
 	OneTime bool `json:"oneTime,omitempty"`
 
 	// UserID is the user ID associated with the transient credentials.
-	UserID string `json:"userId,omitempty"`
+	UserID *string `json:"userId,omitempty"`
 }
 
 // TransientKeyResponse models a response containing short-lived API
