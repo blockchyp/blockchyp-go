@@ -188,6 +188,10 @@ type ReceiptSuggestions struct {
 	// CashDiscount is the discount applied to the transaction for payment
 	// methods ineligible for surcharges.
 	CashDiscount string `json:"cashDiscount,omitempty"`
+
+	// ServiceFeeAmount is the amount added to the transaction to cover
+	// processing fees.
+	ServiceFeeAmount string `json:"serviceFeeAmount,omitempty"`
 }
 
 // Acknowledgement contains a basic api acknowledgement.
@@ -8471,6 +8475,12 @@ type SurchargeReviewRequest struct {
 
 	// PricingPlan is the pricing plan.
 	PricingPlan string `json:"pricingPlan"`
+
+	// StaxMerchantID is the Stax merchant UUID for cross-system tracing.
+	StaxMerchantID *string `json:"staxMerchantId"`
+
+	// StaxTransactionID is the Stax transaction UUID for cross-system tracing.
+	StaxTransactionID *string `json:"staxTransactionId"`
 }
 
 // SurchargeReviewResponseData models the data included in a surcharge review
@@ -8583,6 +8593,9 @@ type TransientKeyRequest struct {
 
 	// OneTime restricts the returned credentials to a single API call when true.
 	OneTime bool `json:"oneTime,omitempty"`
+
+	// UserID is the user ID associated with the transient credentials.
+	UserID *string `json:"userId,omitempty"`
 }
 
 // TransientKeyResponse models a response containing short-lived API
@@ -8606,6 +8619,56 @@ type TransientKeyResponse struct {
 
 	// SigningKey is the transient signing key.
 	SigningKey string `json:"signingKey"`
+}
+
+// ServiceFeeRequest models a request for terminal service fees.
+type ServiceFeeRequest struct {
+	// Timeout is the request timeout in seconds.
+	Timeout int `json:"timeout"`
+
+	// Test specifies whether or not to route transaction to the test gateway.
+	Test bool `json:"test"`
+
+	// TerminalName is the name of the target payment terminal.
+	TerminalName string `json:"terminalName,omitempty"`
+
+	// ResetConnection forces the terminal cloud connection to be reset while a
+	// transactions is in flight. This is a diagnostic settings that can be used
+	// only for test transactions.
+	ResetConnection bool `json:"resetConnection"`
+
+	// PAN is the primary account number (PAN) of the card.
+	PAN string `json:"pan"`
+
+	// Amount is the transaction amount.
+	Amount string `json:"amount"`
+
+	// TerminalDukptKey is the terminal DUKPT key for the request.
+	TerminalDukptKey string `json:"terminalDukptKey"`
+
+	// TransactionEntropy is the hex encoded transaction entropy used to derive
+	// the DUKPT transaction key.
+	TransactionEntropy string `json:"transactionEntropy"`
+}
+
+// ServiceFeeResponse models a response for terminal service fees.
+type ServiceFeeResponse struct {
+	// Success indicates whether or not the request succeeded.
+	Success bool `json:"success"`
+
+	// Error is the error, if an error occurred.
+	Error string `json:"error"`
+
+	// ResponseDescription contains a narrative description of the transaction
+	// result.
+	ResponseDescription string `json:"responseDescription"`
+
+	// ServiceFeeAmount is the amount of the service fee.
+	ServiceFeeAmount string `json:"serviceFeeAmount"`
+
+	// TotalWithServiceFee is the total transaction amount including the service
+	// fee.
+	TotalWithServiceFee string `json:"totalWithServiceFee"`
 }
 
 // TerminalCaptureSignatureRequest contains a request for customer signature
@@ -8735,6 +8798,12 @@ type TerminalListQueuedTransactionsRequest struct {
 type TerminalDeleteQueuedTransactionRequest struct {
 	APICredentials
 	Request DeleteQueuedTransactionRequest `json:"request"`
+}
+
+// TerminalServiceFeeRequest models a request for terminal service fees.
+type TerminalServiceFeeRequest struct {
+	APICredentials
+	Request ServiceFeeRequest `json:"request"`
 }
 
 // AbstractAcknowledgement contains fields which should be returned with
