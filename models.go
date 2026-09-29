@@ -1443,6 +1443,11 @@ type AuthorizationRequest struct {
 
 	// ExternalCustomerCompany is the external customer's company name.
 	ExternalCustomerCompany string `json:"externalCustomerCompany,omitempty"`
+
+	// ExternalTransactionRef is the external merchant's own reference for the
+	// transaction. It is stored with the transaction and echoed back on the
+	// response, and is not used for duplicate detection.
+	ExternalTransactionRef string `json:"externalTransactionRef,omitempty"`
 }
 
 // CardMetadata contains essential information about a payment card derived
@@ -3450,6 +3455,11 @@ type AuthorizationResponse struct {
 	// EnhancedDataPassed indicates whether enhanced data was passed for the
 	// transaction.
 	EnhancedDataPassed *bool `json:"enhancedDataPassed,omitempty"`
+
+	// ExternalTransactionRef is the external merchant's own reference for the
+	// transaction. It is stored with the transaction and echoed back on the
+	// response, and is not used for duplicate detection.
+	ExternalTransactionRef string `json:"externalTransactionRef,omitempty"`
 }
 
 // TransactionStatusRequest models the request for updated information about a
@@ -8593,6 +8603,9 @@ type TransientKeyRequest struct {
 
 	// OneTime restricts the returned credentials to a single API call when true.
 	OneTime bool `json:"oneTime,omitempty"`
+
+	// UserID is the user ID associated with the transient credentials.
+	UserID *string `json:"userId,omitempty"`
 }
 
 // TransientKeyResponse models a response containing short-lived API
