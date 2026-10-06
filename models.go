@@ -5047,6 +5047,9 @@ type MerchantProfile struct {
 	// ContactNumber is the contact number for the merchant.
 	ContactNumber string `json:"contactNumber"`
 
+	// ContactEmail is the contact email address for the merchant.
+	ContactEmail string `json:"contactEmail"`
+
 	// LocationName is the location name.
 	LocationName string `json:"locationName"`
 
@@ -5293,6 +5296,9 @@ type MerchantProfileResponse struct {
 
 	// ContactNumber is the contact number for the merchant.
 	ContactNumber string `json:"contactNumber"`
+
+	// ContactEmail is the contact email address for the merchant.
+	ContactEmail string `json:"contactEmail"`
 
 	// LocationName is the location name.
 	LocationName string `json:"locationName"`
