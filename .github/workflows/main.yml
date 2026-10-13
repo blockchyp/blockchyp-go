@@ -14,7 +14,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: golang:1.23-bullseye
+      image: golang:1.23-bookworm
     steps:
       - uses: act10ns/slack@44541246747a30eb3102d87f7a4cc5471b0ffb7d # v2.1.0
         with:
@@ -45,7 +45,7 @@ jobs:
   test-build:
     runs-on: ubuntu-latest
     container:
-      image: golang:1.23-bullseye
+      image: golang:1.23-bookworm
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') && (contains(github.ref_name, 'preview') || contains(github.ref_name, 'develop')) }}
     needs: [ test ]
     steps:
@@ -80,7 +80,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     container:
-      image: golang:1.23-bullseye
+      image: golang:1.23-bookworm
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') && startsWith(github.ref_name, 'v') }}
     needs: [ test ]
     steps:
