@@ -5,7 +5,7 @@ require (
 	github.com/josephspurrier/goversioninfo v0.0.0-20180220052333-42534847954b
 	github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024
 	github.com/mgechev/revive v0.0.0-20181210140514-b4cc152955fb
-	github.com/sirupsen/logrus v1.9.0
+	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/lint v0.0.0-20181217174547-8f45f776aaf1
 )
@@ -24,7 +24,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
 	golang.org/x/tools v0.0.0-20181221235234-d00ac6d27372 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
 go 1.23
